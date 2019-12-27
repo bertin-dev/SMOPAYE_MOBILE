@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/textColorGray1"
+    tools:context=".Apropos.LogicielsTiers">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textColorBlack"
+                android:textStyle="bold"
+                android:padding="20dp"
+                android:textSize="25sp"
+                android:text="SeekArc - version 1.0"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:textSize="15sp"
+                android:text="Copyright(C) 2011, Triggertrap Ltd. SeekArc est distribué sous licenceMIT Plus d'info: https://github.com"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textColorBlack"
+                android:textStyle="bold"
+                android:padding="20dp"
+                android:textSize="25sp"
+                android:text="Changelog - version 1.1.2"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:textSize="15sp"
+                android:text="Cette librairie a été partiellement modifiée pour satisfaire les besoins du projet.
+Changelog est distribuée sous licence Apache 2.0 Plus d'info: https://www.githug.com"
+                />
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textColorBlack"
+                android:textStyle="bold"
+                android:padding="20dp"
+                android:textSize="25sp"
+                android:text="Volley - version 1.1.1"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:textSize="15sp"
+                android:text="Copyright (C) 2012 The Android Open Source Project Volley est distribué sous licence Apache, Version 2.0 Plus d'info: https://github.com/google/volley"
+                />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</ScrollView>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.ezpass.smopaye_mobile">
+
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_FRAMEBUFFER" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE" /> <!-- Sony -->
+    <uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE" /> <!-- HTC -->
+    <uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.htc.launcher.permission.UPDATE_SHORTCUT" />
+    <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="com.android.hardware.Camera.focus"/>
+
+    <application
+        android:name=".NotifApp"
+        android:allowBackup="true"
+        android:icon="@drawable/logo2"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".PayerFacture" />
+        <activity android:name=".vuesAdmin.AccueilEnvoiNotifGoogleUser" />
+        <activity android:name=".vuesAdmin.ModifSuppGoogleUser" />
+        <activity android:name=".vuesAdmin.AccueilUserGoogle" />
+        <activity android:name=".vuesAdmin.ListUserGoogle" />
+        <activity android:name=".vuesAdmin.ListUserAndAgentEdited" />
+        <activity android:name=".vuesAdmin.SouscriptionGoogleOnly" />
+        <activity android:name=".ServicesIndisponible" />
+        <activity android:name=".Slide3_offre_smopaye" />
+        <activity android:name=".vuesAdmin.ModifListUserAndAgents" />
+        <activity
+            android:name=".vuesAdmin.ListeUserAndAgents"
+            android:parentActivityName=".vuesAdmin.GestionAccepteur" />
+        <activity android:name=".PayerAbonnement" />
+        <activity
+            android:name=".Assistance.HomeAssistanceOnline"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Assistance.MessageActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Assistance.DetailsAgenceSmopaye"
+            android:parentActivityName=".Assistance.AgenceSmopaye" />
+        <activity
+            android:name=".Assistance.AgenceSmopaye"
+            android:parentActivityName=".Assistance.BoutiqueSmopaye" />
+        <activity
+            android:name=".Assistance.GrandPublic"
+            android:parentActivityName=".Assistance.ServiceClientSmopaye" />
+        <activity android:name=".TutorielUtilise" />
+        <activity
+            android:name=".Assistance.BoutiqueSmopaye"
+            android:parentActivityName=".Assistance.Menu_Assistance" />
+        <activity android:name=".Assistance.ServiceClientSmopaye" />
+        <activity android:name=".Assistance.Menu_Assistance" />
+        <activity android:name=".Apropos.LogicielsTiers" />
+        <activity android:name=".Apropos.InformationLegales" />
+        <activity android:name=".Apropos.Apropos" />
+        <activity android:name=".DemarrageOffreSmopaye" />
+        <activity
+            android:name=".Transfert"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".WebViewMonetbil"
+            android:parentActivityName=".vuesUtilisateur.RechargePropreCompte" /> <!-- tools:replace="android:appComponentFactory" -->
+        <activity
+            android:name=".vuesAccepteur.RetraitAccepteur"
+            android:parentActivityName=".vuesAccepteur.MenuRetraitTelecollecte" />
+        <activity
+            android:name=".vuesAdmin.ListeAccepteursSimple"
+            android:parentActivityName=".vuesAdmin.GestionAccepteur" />
+        <activity android:name=".vuesAdmin.Modification" />
+        <activity
+            android:name=".vuesAdmin.ListeAccepteurs"
+            android:parentActivityName=".vuesAdmin.GestionAccepteur" />
+        <activity android:name=".drawerNavigation.WebSite" />
+        <activity android:name=".Tutoriel" />
+        <activity
+            android:name=".vuesUtilisateur.ModifierCompte"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".vuesAgent.MenuRechargeCompteAgent"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".vuesAgent.RechargeAgent"
+            android:parentActivityName=".vuesAgent.MenuRechargeCompteAgent" />
+        <activity
+            android:name=".MenuHistoriqueTransaction"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".HistoriqueTransactions"
+            android:parentActivityName=".MenuHistoriqueTransaction" />
+        <activity
+            android:name=".vuesUtilisateur.RechargeAutreCompte"
+            android:parentActivityName=".vuesUtilisateur.MenuRechargeCompte" />
+        <activity
+            android:name=".vuesUtilisateur.RechargePropreCompte"
+            android:parentActivityName=".vuesUtilisateur.MenuRechargeCompte" />
+        <activity
+            android:name=".vuesAdmin.Menu_GestionComptes"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".vuesUtilisateur.Souscription" />
+        <activity
+            android:name=".vuesAdmin.GestionUtilisateursAgents"
+            android:parentActivityName=".vuesAdmin.Menu_GestionComptes" />
+        <activity
+            android:name=".vuesAdmin.GestionAccepteur"
+            android:parentActivityName=".vuesAdmin.Menu_GestionComptes" />
+        <activity android:name=".drawerNavigation.Accueil_OffreSmopaye" />
+        <activity
+            android:name=".vuesAccepteur.ConsulterSolde"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".vuesAccepteur.VerifierNumCarte"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".vuesUtilisateur.MenuRechargeCompte"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".vuesAccepteur.ConsulterRecette"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".vuesAccepteur.MenuRetraitTelecollecte"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".vuesAccepteur.DebitCarte"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".HideShowAndroidEditTextPassword" />
+        <activity android:name=".Login" />
+        <activity android:name=".Demarrage">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+
+            <!--
+            h<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            -->
+        </activity>
+
+        <receiver android:name=".NotifReceiver" />
+
+        <service
+            android:name=".RemoteNotifications.MyFirebaseIdService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".RemoteNotifications.MyFirebaseMessaging"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!--QR CODE-->
+        <activity android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="portrait"
+            tools:replace="screenOrientation">
+
+        </activity>
+
+    </application>
+
+</manifest>

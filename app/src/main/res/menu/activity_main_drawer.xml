@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_offreSmopaye"
+            android:icon="@drawable/ic_card_travel_black_24dp"
+            android:title="@string/offreSmopayeDrawer" />
+        <item
+            android:id="@+id/nav_siteWeb"
+            android:icon="@drawable/ic_public_black_24dp"
+            android:title="@string/siteWebDrawer" />
+
+        <item
+            android:id="@+id/nav_transfert"
+            android:icon="@drawable/ic_import_export_black_24dp"
+            android:title="@string/transfert" />
+        <item
+            android:id="@+id/nav_abonnement"
+            android:icon="@drawable/ic_play_circle_filled_black_24dp"
+            android:title="@string/RenouvelerAbonnement" />
+
+        <!--<item
+            android:id="@+id/nav_Payer_Facture"
+            android:icon="@drawable/ic_facture_24dp"
+            android:title="@string/payerFacture" />-->
+
+
+        <item
+            android:id="@+id/nav_Assistance_EnLigne"
+            android:icon="@drawable/ic_chat_black_24dp"
+            android:title="@string/assistanceOncline" />
+
+
+        <item
+            android:id="@+id/nav_QuestionFrequentes"
+            android:visible="false"
+            android:icon="@drawable/ic_help_black_24dp"
+            android:title="@string/questionsFrequentesDrawer" />
+
+
+        <item
+            android:id="@+id/nav_deconnexion"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:title="@string/deconnexion" />
+
+    </group>
+
+        <item android:title="@string/config">
+        <menu>
+            <item
+                android:id="@+id/nav_parametres"
+                android:visible="false"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="@string/parametreDrawer" />
+        </menu>
+    </item>
+
+</menu>

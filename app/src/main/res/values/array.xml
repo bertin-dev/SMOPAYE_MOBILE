@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+
+    <string-array name="Type">
+        <item >Agent</item>
+        <item>Utilisateur</item>
+        <item>Administrateur</item>
+        <item>Accepteur</item>
+    </string-array>
+
+
+    <string-array name="genre">
+        <item >MASCULIN</item>
+        <item>FEMININ</item>
+    </string-array>
+
+    <string-array name="operateurs">
+        <item >ORANGE</item>
+        <item >MTN</item>
+        <item >EU</item>
+    </string-array>
+
+    <string-array name="typeChauffeur">
+        <item >moto_taxi</item>
+        <item>Chauffeur</item>
+        <item>cargo</item>
+        <item>bus inter urbain</item>
+        <item>Commerçant</item>
+        <item>restaurant etudiant</item>
+        <item>Chauffeur</item>
+        <item>autre</item>
+    </string-array>
+
+    <string-array name="typePJ">
+        <item >CNI</item>
+        <item>passport</item>
+        <item>recipissé</item>
+        <item>carte de séjour</item>
+        <item>carte d\'étudiant</item>
+    </string-array>
+
+
+
+
+
+</resources>

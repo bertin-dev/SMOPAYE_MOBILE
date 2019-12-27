@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_Accueil1"
+        android:title="@string/accueilBottomNav"
+        android:icon="@drawable/ic_home_black_24dp"/>
+
+    <item
+        android:id="@+id/nav_maCarte1"
+        android:title="@string/maCarteBottomNav"
+        android:icon="@drawable/ic_credit_card_black_24dp"/>
+
+    <item
+        android:id="@+id/nav_pointSmopaye1"
+        android:title="@string/pointSmopayeBottomNav"
+        android:icon="@drawable/ic_place_black_24dp"/>
+
+
+    <item
+        android:id="@+id/nav_notifications1"
+        android:title="@string/notificationBottomNav"
+        android:icon="@drawable/ic_notifications_black_24dp"/>
+
+</menu>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <!--VERSION RESPONSIVE POUR TELEPHONE-->
+    <!--app:cardUseCompatPadding="true"-->
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="top"
+        app:cardCornerRadius="4dp"
+        app:elevation="10dp"
+        app:cardElevation="10dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="100"
+                android:background="@drawable/border_bottom_gray"
+                >
+
+                <TextView
+                    android:id="@+id/date_transaction"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="15H30min"
+                    android:textStyle="normal"
+                    android:textSize="20sp"
+                    android:gravity="start"
+                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_weight="75"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeStepGranularity="2sp"/>
+
+                <TextView
+                    android:id="@+id/title_montant"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/montant"
+                    android:textStyle="normal"
+                    android:textSize="20sp"
+                    android:gravity="end"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_weight="25"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeStepGranularity="2sp"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
+                    android:layout_weight="30"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/title_donataire"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/donataire"
+                        android:textStyle="bold"
+                        android:textColor="@color/textColorBlack"
+                        android:textSize="18sp"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeStepGranularity="2sp"
+                        />
+                    <TextView
+                        android:id="@+id/title_donataire_valeur"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/nomDonataire"
+                        android:textStyle="italic"
+                        android:textSize="15sp"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeStepGranularity="2sp"
+                        />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="15"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/border_bottom_gray_big"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="30"
+                    android:paddingRight="1dp"
+                    android:background="@drawable/border_right_slim_gray"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/title_beneficiaire"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/beneficier"
+                        android:textStyle="bold"
+                        android:textColor="@color/textColorBlack"
+                        android:textSize="18sp"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeStepGranularity="2sp"
+                        />
+                    <TextView
+                        android:id="@+id/title_beneficiaire_valeur"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/nomBeneficier"
+                        android:textStyle="italic"
+                        android:textSize="15sp"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeStepGranularity="2sp"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:layout_weight="25"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/title_montant_valeur"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/valeurMontant"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:gravity="center"
+                        android:textColor="@color/textColorBlack"
+                        android:textSize="20sp"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeStepGranularity="2sp"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

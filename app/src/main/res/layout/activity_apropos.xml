@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:id="@+id/apropos"
+    android:background="@color/textColorGray1"
+    tools:context=".Apropos.Apropos">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="100"
+        android:gravity="center">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:gravity="center"
+            android:background="@drawable/bg_propos">
+            <!--<ImageView
+                android:layout_width="180dp"
+                android:layout_height="70dp"
+                android:src="@drawable/logo" />-->
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+
+            android:layout_gravity="center_horizontal|center_vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/textColorBlack"
+                android:layout_marginTop="5dp"
+                android:padding="10dp"
+                android:text="@string/titreApp" />
+
+            <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/textColorBlack"
+                android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:text="@string/version" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/textColorBlack"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:text="@string/propriete" />
+
+        </LinearLayout>
+
+
+        <ListView
+            android:id="@+id/listAide"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:orientation="vertical"
+            android:textColor="@color/textColorBlack"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+</ScrollView>

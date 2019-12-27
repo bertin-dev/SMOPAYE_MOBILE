@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="75dp"
+        android:layout_marginStart="75dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:src="@drawable/tpe" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/slide_1_title"
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="@dimen/desc_padding"
+            android:layout_marginRight="@dimen/desc_padding"
+            android:textSize="@dimen/slide_title" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="#fef2f2"
+            android:layout_marginLeft="@dimen/desc_padding"
+            android:layout_marginRight="@dimen/desc_padding"
+            android:text="@string/slide_2_desc"
+            android:textColor="@color/textColorStandard"
+            android:textSize="@dimen/slide_desc" />
+
+
+        <TextView
+            android:id="@+id/btndebit"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textColor="#ffffff"
+            android:padding="14dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:textAllCaps="false"
+            android:shadowDx="@android:integer/config_longAnimTime"
+            android:background="@drawable/btn_rounded_red"
+            android:text="@string/cmdTPEZPASS" />
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "522117224549",
+    "firebase_url": "https://service-smopaye.firebaseio.com",
+    "project_id": "service-smopaye",
+    "storage_bucket": "service-smopaye.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522117224549:android:a4b1f4578ab766ac5d4e8c",
+        "android_client_info": {
+          "package_name": "com.ezpass.smopaye_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "522117224549-96i3his79797p73s2sia8fhf398gu0rc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ezpass.smopaye_mobile",
+            "certificate_hash": "0257ca6a475d11e5f9a9ca2421a55952c0757544"
+          }
+        },
+        {
+          "client_id": "522117224549-cvc5va71c1trklcdk78gbiigni1ac4jo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAE6P5kj1QexMfwOEF-jbjonPRG1VtPidw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "522117224549-cvc5va71c1trklcdk78gbiigni1ac4jo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

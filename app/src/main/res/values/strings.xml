@@ -1,0 +1,308 @@
+<resources>
+    <string name="app_name">SMOPAYE MOBILE</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="config">CONFIGURATION</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_send">Send</string>
+
+    <string name="chargement">Chargement En cours…</string>
+
+    <string name="telephone">Téléphone</string>
+    <string name="mdp">Mot de Passe</string>
+    <string name="connexion">Se connecter</string>
+    <string name="forget">Tu as oublié ton mot de passe ?</string>
+
+
+    <string name="telecollecte_retrait">Télécollecte et Retrait</string>
+    <string name="debitCarte">Débit Carte</string>
+    <string name="verification">Vérification</string>
+    <string name="consulterSolde">Consulter Solde</string>
+    <string name="rechargeComptes">Recharge Comptes</string>
+    <string name="consulterRecettes">Consulter Recettes</string>
+
+    <string name="montant">Montant</string>
+    <string name="montantApayer">Montant A Payer</string>
+    <string name="passerCarte">Passer la Carte</string>
+    <string name="modifier">Modifier</string>
+
+
+    <string name="card_type">Card Type: </string>
+    <string name="type_b">Type B</string>
+    <string name="type_a">Type A</string>
+    <string name="atqa_data">ATQA: </string>
+    <string name="atqb_data">ATQB: </string>
+    <string name="pupi_data">PUPI: </string>
+    <string name="sak_data">SAK: </string>
+    <string name="uid_data">UID: </string>
+
+
+    <string name="stautDialogAlert">Opération Effectuée avec Succès</string>
+    <string name="infoEnTeteAlertDialog">Information</string>
+    <string name="descriptionImgAlertDialog">Success</string>
+
+    <string name="retraitChauffeur">Faire un Retrait</string>
+    <string name="telecollecteChauffeur">Faire une Télécollecte</string>
+    <string name="telecollecte">Télécollecte</string>
+
+
+    <string name="montantAccumule">Montant accumulé</string>
+    <string name="rechargeMaCarte">Recharge ma Carte</string>
+    <string name="recharge">Recharge</string>
+    <string name="historique">Historique</string>
+    <string name="rechargeUneAutreCarte">Recharge d\'une autre Carte</string>
+    <string name="rechargeCommerciaux">Recharge pour Commerciaux</string>
+
+    <string name="numCarte">N° Carte</string>
+    <string name="votreNumCarte">Votre Numéro de Carte est :</string>
+
+
+    <string name="numdelaCarte">Numéro de la Carte</string>
+    <string name="consulter">Consulter</string>
+
+    <string name="consultSoldeDeLaCarte">Consulter le solde de la carte</string>
+    <string name="utiliserAutreCarte">Utiliser une autre carte</string>
+
+
+    <string name="next">Passer</string>
+    <string name="skip">Ne plus afficher ce message</string>
+    <string name="terminer">Terminer</string>
+    <string name="slide_1_title">Terminal E-ZPASS</string>
+    <string name="slide_2_desc"> Le Terminal E-ZPASS est un terminal de paiement performant au format amovible. Cet appareil de dernière génération permet aux commerçants d\'accepter les paiments partout et à tout moment. </string>
+    <string name="cmdTPEZPASS">Commander Terminal E-ZPASS</string>
+
+    <string name="slide_3_title">Carte E-ZPASS</string>
+    <string name="slide_3_desc"> Payez sans contrainte de petite monnaie ! Contrôlez vos dépenses ! Protégez-vous contre les risques de vols et de faux billets avec la carte E-ZPASS. </string>
+    <!-- <string name="cmdCarteEZPASS"><a href="http://www.google.com">Commander votre Carte E-ZPASS</a></string>-->
+    <string name="cmdCarteEZPASS">Commander votre Carte E-ZPASS</string>
+
+
+    <string name="listAccepteur">Liste Agents et Users</string>
+    <string name="ModifAccepteur">Modification</string>
+    <string name="SuppAccepteur">Suppression</string>
+
+
+    <string name="NombreAgents"> Nombre Agents</string>
+    <!--<string name="ArgentsActif">Agents Actifs</string>
+    <string name="AgentsInactifs">Agents Inactif  </string>-->
+
+    <string name="NombreAccepteurs">Nombre Accepteurs</string>
+    <string name="AccepteurActifs">Accepteurs Actifs</string>
+    <string name="AccepteurInactif">Accepteurs Inactif</string>
+
+    <string name="nom">Nom</string>
+    <string name="prenom">Prénom</string>
+    <string name="numero">Téléphone</string>
+    <string name="cni">N° Pièce Justificative</string>
+    <string name="enregistrer">Enregistrer</string>
+
+    <string name="categorie">Catégorie</string>
+    <string name="statut">STATUT</string>
+    <string name="genre">Genre</string>
+
+    <string name="typePj">Type de Pièce</string>
+
+    <string name="admin">Administrateur</string>
+    <string name="statutAdmin">Détenteur de carte</string>
+    <string name="souscription">Souscription</string>
+    <string name="gesComptes">Gestion comptes</string>
+
+    <string name="gesAccepteur">Gestion Accepteurs</string>
+    <string name="gesUserAgent">Gestion Utilisateurs et Agents</string>
+    <string name="userGoogle">Utilisateurs Google</string>
+    <string name="effectuer">éffectuer</string>
+    <string name="numdeCarte">Numéro de Carte</string>
+    <string name="numdeCarteDonataire">N° de carte donataire</string>
+    <string name="numdeCarteBeneficiaire">N° de carte bénéficiaire</string>
+
+    <string name="apropos">Apropos</string>
+    <string name="tuto">Tutorial</string>
+    <string name="monCompte">Mon Compte</string>
+
+
+    <string name="etatStatut">Accepteur</string>
+    <string name="typeEtatStatut">Chauffeur</string>
+
+    <string name="agents">Agents</string>
+    <string name="typeAgents">Détenteur de carte</string>
+
+    <string name="user">Utilisateur</string>
+    <string name="typeUser">Détenteur de carte</string>
+
+
+    <string name="subTitle">Recharge</string>
+    <string name="donataire">Donataire</string>
+    <string name="nomDonataire">Modjo</string>
+    <string name="beneficier">Bénéficier</string>
+    <string name="nomBeneficier">Modjo</string>
+    <string name="valeurMontant">4 000 F</string>
+
+    <string name="RechargePourAgent">Recharge pour agent</string>
+    <string name="DebitDeCarte">Débit de carte</string>
+    <string name="Debit">Débit</string>
+
+    <string name="operateur">Opérateur</string>
+
+    <string name="ancienPass">Ancien Mot de Passe</string>
+    <string name="nouveauPass">Nouveau Mot de Passe</string>
+    <string name="confirmPass">Confirmer Mot de Passe</string>
+    <string name="valider">Valider</string>
+
+
+    <string name="accueilBottomNav">Accueil</string>
+    <string name="maCarteBottomNav">Ma Carte</string>
+    <string name="pointSmopayeBottomNav">Point Smopaye</string>
+    <string name="notificationBottomNav">Notifications</string>
+
+    <string name="offreSmopayeDrawer">Offres Smopaye</string>
+    <string name="siteWebDrawer">Site Web</string>
+    <string name="questionsFrequentesDrawer">Questions Fréquentes</string>
+    <string name="parametreDrawer">Paramètres</string>
+    <string name="deconnexion">Déconnexion</string>
+
+    <string name="Off">Off</string>
+    <string name="On">On</string>
+
+    <string name="utilisateur">Utilisateur</string>
+    <string name="agent">Agent</string>
+    <string name="accepteur">Accepteur</string>
+    <string name="administrateur">Administrateur</string>
+    <string name="information">Information</string>
+    <string name="champsVide">Un ou plusieurs Champs sont vides</string>
+    <string name="moinNeufChiffre">Votre Téléphone contient moin de 9 chiffres</string>
+    <string name="bloque">votre compte est bloqué</string>
+    <string name="adresse">Adresse</string>
+    <string name="connexionserver">Connexion au Serveur</string>
+    <string name="attenteReponseServer">Attente d\'une Réponse </string>
+    <string name="attenteCarte">Attente d\'une Carte </string>
+    <string name="passageCarte">Passer la Carte</string>
+    <string name="champsInvlid">Un ou plusieurs champs sont Invalid</string>
+    <string name="passDeConfirmation">Le mot de passe et le mot de passe de confirmation sont différents</string>
+    <string name="nbrChiffreInferieur">Nombre de Chiffre inférieur à 9</string>
+    <string name="transfert">Transfert</string>
+    <string name="RenouvelerAbonnement">Renouveler Abonnement</string>
+
+    <string name="operation_fail">Opération Echoué</string>
+    <string name="operation_succss">Opération Success</string>
+    <string name="transaction_success">Opération Effectuée avec success</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="beneficiaire">Téléphone Bénéficiaire</string>
+    <string name="montantBeneficiaire">Montant Bénéficiaire</string>
+    <string name="entrez_le_montant">Entrez le Montant</string>
+
+
+    <string name="dateExp">Date d\'expiration de la carte</string>
+    <string name="typeCarte">Type de carte</string>
+    <string name="valeurCarte">Carte magnétique MA1</string>
+    <string name="verouCarte">Verouiller la carte</string>
+    <string name="balancerCarte">Balancer ce bouton pour empêcher toute transaction venant d\'elle</string>
+    <string name="DateExpLongFormat">Lundi, le 25 decembre 2020</string>
+
+    <string name="verouillerCarte">Êtes-vous sure de vouloir vérouiller votre carte?</string>
+    <string name="deverouillerCarte">Êtes-vous sure de vouloir Devérouiller votre carte?</string>
+    <string name="titreApp">SMOPAYE MOBILE</string>
+    <string name="version">Version: 1.2.2</string>
+    <string name="propriete">Propriété SMOPAYE. Tous droits réservés.</string>
+
+
+    <string name="chatterAvecExpert">Chatter avec un expert SMOPAYE</string>
+    <string name="assistanceEnligne">ASSISTANCE EN LIGNE</string>
+    <string name="assistanceOncline">Assistance en Ligne</string>
+    <string name="contactezNous">Contactez-Nous</string>
+    <string name="serviceClient">Service Client SMOPAYE</string>
+    <string name="boutiqueSmopaye">BOUTIQUES SMOPAYE</string>
+    <string name="trouverProduitSmopaye">Retrouvez tous les produits, offres et services dans les boutiques Smpopaye</string>
+    <string name="serviceClient7j7">Nous vous accueillons 7j/7, 24h/24</string>
+    <string name="ClientGrandPublic">Grand public</string>
+    <!--<string name="ClientEntreprise">Client Entreprise</string>-->
+    <string name="Facebook">Facebook</string>
+    <string name="Twitter">Twitter</string>
+    <string name="offreService">Trouver tous les produits, offres et services dans votre boutique la plus proche</string>
+    <string name="agenceSmopaye">Agence SMOPAYE</string>
+    <string name="proximite">A proximité</string>
+    <string name="zone">Par zone</string>
+    <string name="msgGrdPublic">Le Centre d\'appel est joignable  7j/7 de 24h/24. Depuis un post fixe vous pouvez composer le +237 222 231 744 ou +237 698 768 351</string>
+    <string name="msgEntreprise">Le Centre d\'appel est joignable  7j/7 de 24h/24</string>
+    <string name="callFromForeign">DEPUIS L\'ETRANGER</string>
+    <string name="callFromCameroun">DEPUIS LE CAMEROUN</string>
+    <string name="grandPublic">Grand Public</string>
+    <string name="grandEntreprise">entreprise</string>
+
+    <string name="yde">YAOUNDE</string>
+    <string name="adresseV">Retrouvez nos commerciaux dans la zone de (Camair/Omnisport/Soa) ou rendez-vous dans nos locaux.</string>
+    <string name="services">Services</string>
+    <string name="servicesV">Vente des cartes, recharge de carte, location des TPEs, journal de transaction effectuées</string>
+    <string name="horaire">Horaires d\'ouverture</string>
+    <string name="horaireV">Lundi-Vendredi: de 08h00 à 17h</string>
+
+    <string name="impossibleRegister">Vous ne pouvez plus vous inscrire avec ce numéro de téléphone</string>
+    <string name="abonnement">Abonnement</string>
+
+
+    <string name="AbonnementMensuel">Mensuel</string>
+    <string name="AbonnementHebdomadaire">Hebdomadaire</string>
+    <string name="AbonnementService">Service</string>
+    <string name="politiqueDeConfifentialite">En appuyant sur Inscription, vous acceptez nos Conditions générales d\'utilisation, notre Politique de confidentialité. Vous recevrez peut-être des notifications par texto (sms) de notre part.</string>
+
+
+    <string name="Authentification">Authentification</string>
+    <string name="typeAbonnement">Hebdomadaire</string>
+    <string name="libelleAbonnementChoisi">Abonnement choisis</string>
+    <string name="libelleCarteAbonement">N° Carte</string>
+    <string name="numCarteAbonement">12345678</string>
+
+    <string name="VotreAbonnement">Votre Abonnement : </string>
+    <string name="dateExpiration">Votre date d\'expiration : </string>
+
+
+    <string name="editeur">Editeur</string>
+    <string name="editeurValeur">SYSTEME MULTI-SERVICES D\'OFFRE DE PAIEMENT ELECTRONIQUE Société A responsabilité Limité au capital de 5 000 000 FCFA dont le Siège Social est situé au Centre Commercial, Rue 1.075 Montée Ane-Rouge, B.P 14736 Yaoundé inscrite au registre du Commerce et du Crédit Mobilier (RCCM) du tribunal de premier instance de la ville de Yaoundé sous le numéro RC/YAO/2018/B/820, Numéro de contribuable M121812732687J, Numéro identifiant unique M1217127732687J</string>
+    <string name="hebergeur">Hebergeur</string>
+    <string name="hebergeurValeur">Play Store</string>
+    <string name="nousContacter">Nous Contacter</string>
+    <string name="nousContacterValeur">Pour toute information sur l\'application E-ZPASS by SMOPAYE, contactez le service client à l\'adresse suivante: Support@smopaye.cm</string>
+
+    <string name="serviceIndisponible">Service Indisponible.</string>
+    <string name="connexionIntrouvable">Connexion internet introuvable.</string>
+    <string name="msgConnexionInternetIntrouvable">Bien vouloir vérifier votre wifi ou activer les données mobiles dans les paramètres de votre appareil.</string>
+    <string name="reessayer">REESSAYER</string>
+
+    <string name="NotificationsVides">Notifications vides</string>
+    <string name="connexionLimite">Connexion internet Limitée.</string>
+    <string name="pasDeConnexionInternet">Pas de connexion internet.</string>
+
+
+    <string name="delete">Supprimer</string>
+    <string name="SouscriptionGoogle">Souscription Google</string>
+    <string name="listUserGoogle">Liste Utilisateurs Google</string>
+
+    <string name="modifierEffectue">MODIFICATION EFFECTUEE</string>
+    <string name="suppressionEffectue">MODIFICATION EFFECTUEE</string>
+
+    <string name="sendNotifAllGoogleUser">Envoi des Notifications</string>
+    <string name="sendNotifAllUser">Tous les utilisateurs</string>
+    <string name="sendNotifOneUser">Un utilisateur</string>
+    <string name="insertMsgNotif">votre message.</string>
+
+    <string name="insertTitreNotif">votre titre.</string>
+    <string name="envoiNotif">Notification envoyé avec succès.</string>
+    <string name="supprimer">Supprimer</string>
+    <string name="rechercher">Recherche</string>
+    <string name="payerFacture">Payer vos Factures</string>
+    <string name="HistoriqueVides">Historique Transactions vides</string>
+
+    <string name="qrcode">QR Code</string>
+</resources>

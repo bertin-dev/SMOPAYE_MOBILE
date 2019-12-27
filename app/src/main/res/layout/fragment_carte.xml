@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:layout_gravity="center">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#f3f2f2">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:background="#ddccb5"
+        android:layout_marginTop="50dp"
+        android:foregroundGravity="center_vertical|center_horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:paddingTop="5dp"
+                android:layout_gravity="center"
+                android:paddingBottom="5dp"
+                android:paddingLeft="35dp"
+                android:paddingStart="35dp"
+                android:paddingRight="35dp"
+                android:paddingEnd="35dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/carte_smopaye"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:weightSum="100"
+            android:background="@color/white"
+            android:foregroundGravity="center_vertical|center_horizontal">
+
+          <LinearLayout
+              android:layout_width="0dp"
+              android:layout_weight="50"
+              android:layout_height="wrap_content"
+              android:padding="5dp"
+              android:background="@drawable/border_right">
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:textSize="15sp"
+                  android:textColor="#000"
+                  android:layout_gravity="center"
+                  android:layout_marginTop="20dp"
+                  android:padding="12dp"
+                  android:textAlignment="center"
+                  android:text="@string/consultSoldeDeLaCarte"
+                  android:layout_height="wrap_content" />
+          </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="50"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:padding="1dp"
+                    android:src="@drawable/ic_lock_outline_black_64dp"/>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:background="@color/white"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:textColor="#000"
+                    android:textSize="15sp"
+                    android:text="@string/utiliserAutreCarte"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="30dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:paddingRight="30dp"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="@string/libelleCarteAbonement"/>
+            <TextView
+                android:id="@+id/CarteNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#262626"
+                android:textSize="15sp"
+                android:text="@string/numCarteAbonement"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="@string/typeCarte"/>
+            <TextView
+                android:id="@+id/tVtypeCarte"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#262626"
+                android:textSize="15sp"
+                android:text="@string/valeurCarte"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="@string/libelleAbonnementChoisi"/>
+            <TextView
+                android:id="@+id/tAbonnement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#262626"
+                android:textSize="15sp"
+                android:text="@string/typeAbonnement"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="@string/dateExp"/>
+            <TextView
+                android:id="@+id/tVdateExpirationCarte"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#262626"
+                android:textSize="15sp"
+                android:text="@string/DateExpLongFormat"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="100dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="@string/verouCarte"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="100"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/etatDelaCarte"
+                    android:layout_width="0dp"
+                    android:layout_weight="80"
+                    android:layout_height="wrap_content"
+                    android:textColor="#262626"
+                    android:textSize="15sp"
+                    android:text="@string/balancerCarte"/>
+
+                <Switch
+                    android:id="@+id/sWtVerouillerCarte"
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:checked="false"
+                    android:textOff="@string/Off"
+                    android:textOn="@string/On"
+                    android:background="@color/bgColorStandard"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+
+</LinearLayout>
+
+
+
+</ScrollView>
