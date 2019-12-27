@@ -70,8 +70,9 @@ public class MainActivity extends AppCompatActivity
     FirebaseUser fuser;
     //DatabaseReference reference;
 
-    private String numCarte = "";
-    private String montantQR = "";
+    private String carteAccepteur = "";
+    private String carteUtilisateur = "";
+    private String montant = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -305,17 +306,6 @@ public class MainActivity extends AppCompatActivity
 
 
         updateToken(FirebaseInstanceId.getInstance().getToken());
-
-
-
-        /*FragmentManager fm = getSupportFragmentManager();
-        Fragment f = fm.findFragmentById(R.id.fragmentContainer);
-
-        if (f == null) {
-            f = AccueilFragment.newInstance("Start Application");
-            fm.beginTransaction().add(R.id.fragmentContainer, f).commit();
-        }*/
-
     }
 
     @Override
@@ -328,31 +318,25 @@ public class MainActivity extends AppCompatActivity
 // handle scan result
 
         if(scanResult != null && scanResult.getContents() != null){
-
-            openDialog();
-
-            FragmentManager fm = getSupportFragmentManager();
-            Fragment newFrame = AccueilFragment.newInstanceQRCode(scanResult.toString(), numCarte, montantQR);
-            fm.beginTransaction().replace(R.id.fragment_container, newFrame).commit();
+            openDialog(scanResult.getContents());
+            /*FragmentManager fm = getSupportFragmentManager();
+            Fragment newFrame = AccueilFragment.newInstanceQRCode(scanResult.toString(), carteUtilisateur, montant);
+            fm.beginTransaction().replace(R.id.fragment_container, newFrame).commit();*/
         }
-
-
-
     }
 
 
-    public void openDialog() {
-        QRCodeModalDialog exampleDialog = new QRCodeModalDialog();
+    public void openDialog(String contenu) {
+        QRCodeModalDialog exampleDialog = new QRCodeModalDialog().newInstanceCode(contenu);
         exampleDialog.show(getSupportFragmentManager(), "example dialog");
     }
 
     @Override
-    public void applyTexts(String carte, String montant) {
-        numCarte = carte;
-        montantQR = montant;
+    public void applyTexts(String numCarteAccepteur, String numCarteUtilisateur, String montantUtilisateur) {
+        this.carteAccepteur = numCarteAccepteur;
+        this.carteUtilisateur = numCarteUtilisateur;
+        this.montant = montantUtilisateur;
 
-        Toast.makeText(this, numCarte, Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, montantQR, Toast.LENGTH_SHORT).show();
     }
 
     @Override

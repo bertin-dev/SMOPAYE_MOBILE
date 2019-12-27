@@ -24,6 +24,13 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
     String tmp_data = "";
 
 
+    public QRCodeModalDialog newInstanceCode(String contenu) {
+        Bundle args = new Bundle();
+        args.putString("contenuCode", contenu);
+        QRCodeModalDialog frag = new QRCodeModalDialog();
+        frag.setArguments(args);
+        return frag;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -62,20 +69,21 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String numCarteQR = edit_num_carte.getText().toString().trim();
-                        String montantQR = editTextMontant.getText().toString().trim();
+                        String numCarteAccepteur = (String) getArguments().getString("contenuCode");
+                        String numCarteUser = edit_num_carte.getText().toString().trim();
+                        String montant = editTextMontant.getText().toString().trim();
 
-                        if(numCarteQR.equalsIgnoreCase("")){
+                        if(numCarteUser.equalsIgnoreCase("")){
                             Toast.makeText(getContext(), "Veuillez inserer votre N° Carte", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
-                        if(montantQR.equalsIgnoreCase("")) {
+                        if(montant.equalsIgnoreCase("")) {
                             Toast.makeText(getContext(), "Veuillez inserer votre montant", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
-                            listener.applyTexts(numCarteQR, montantQR);
+                            listener.applyTexts(numCarteAccepteur, numCarteUser, montant);
                     }
                 });
 
@@ -95,6 +103,6 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
     }
 
     public interface ExampleDialogListener {
-        void applyTexts(String qrcode, String montant);
+        void applyTexts(String numCarteAccepteur, String numCarteUtilisateur, String montantUtilisateur);
     }
 }

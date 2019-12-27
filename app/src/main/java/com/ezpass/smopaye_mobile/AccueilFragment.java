@@ -46,15 +46,13 @@ public class AccueilFragment extends Fragment {
     String file = "tmp_number";
     int c;
     String temp_number = "";
-    String code, numCarte, montant;
-
-    private static final String EXTRA_CODE = "com.example.testingcodereading.code";
+    //String code, numCarte, montant;
 
     public AccueilFragment() {
         // Required empty public constructor
     }
 
-    public static AccueilFragment newInstanceQRCode(String codeQR, String numCarte, String MontantQR) {
+    /*public static AccueilFragment newInstanceQRCode(String codeQR, String numCarte, String MontantQR) {
         Bundle args = new Bundle();
         args.putSerializable(EXTRA_CODE, codeQR);
         args.putString("carte", numCarte);
@@ -62,15 +60,15 @@ public class AccueilFragment extends Fragment {
         AccueilFragment fragment = new AccueilFragment();
         fragment.setArguments(args);
         return fragment;
-    }
+    }*/
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        code = (String) getArguments().getSerializable(EXTRA_CODE);
+        /*code = (String) getArguments().getSerializable(EXTRA_CODE);
         numCarte = (String) getArguments().getString("carte");
-        montant = (String) getArguments().getString("montant");
+        montant = (String) getArguments().getString("montant");*/
     }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
