@@ -6,8 +6,11 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -36,6 +39,7 @@ import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
 import com.ezpass.smopaye_mobile.drawerNavigation.Accueil_OffreSmopaye;
 import com.ezpass.smopaye_mobile.drawerNavigation.WebSite;
 import com.ezpass.smopaye_mobile.vuesAccepteur.ModalDialogRetraitAccepteur;
+import com.ezpass.smopaye_mobile.vuesAccepteur.TabLayoutScrollable;
 import com.ezpass.smopaye_mobile.vuesAdmin.AccueilFragmentAdmin;
 import com.ezpass.smopaye_mobile.vuesAgent.AccueilFragmentAgent;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.AccueilFragmentUser;
@@ -53,6 +57,14 @@ import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.BottomBarTab;
 import com.roughike.bottombar.OnTabSelectListener;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 
 
@@ -326,8 +338,8 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void openDialog(String contenu) {
-        QRCodeModalDialog exampleDialog = new QRCodeModalDialog().newInstanceCode(contenu);
+    public void openDialog(String accepteurNumCarte) {
+        QRCodeModalDialog exampleDialog = new QRCodeModalDialog().newInstanceCode(accepteurNumCarte);
         exampleDialog.show(getSupportFragmentManager(), "example dialog");
     }
 
@@ -336,7 +348,7 @@ public class MainActivity extends AppCompatActivity
         this.carteAccepteur = numCarteAccepteur;
         this.carteUtilisateur = numCarteUtilisateur;
         this.montant = montantUtilisateur;
-
+        new GetHttpResponse(numCarteAccepteur, numCarteUtilisateur, montantUtilisateur).execute();
     }
 
     @Override
@@ -571,6 +583,101 @@ public class MainActivity extends AppCompatActivity
        Token token1 = new Token(token);
        reference1.child(fuser.getUid()).setValue(token1);
    }
+
+    public class GetHttpResponse extends AsyncTask<Void, Void, Void> {
+
+        private String accepteurNumber;
+        private String userNumber;
+        private String userAmont;
+
+        public GetHttpResponse(String accepteurNumber, String userNumber, String userAmont) {
+            this.accepteurNumber = accepteurNumber;
+            this.userNumber = userNumber;
+            this.userAmont = userAmont;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Toast.makeText(MainActivity.this, this.accepteurNumber, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            //LoadQRCode();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Toast.makeText(MainActivity.this, this.userAmont, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    /*private void LoadQRCode){
+        //connection
+        try{
+
+            final Uri.Builder builder = new Uri.Builder();
+            builder.appendQueryParameter("auth","Card");
+            builder.appendQueryParameter("login", "historyChange");
+            builder.appendQueryParameter("dateDeal", fullDate);
+            builder.appendQueryParameter("TelDeal", temp_number);
+            builder.appendQueryParameter("TypeDeal", typHistTransaction);
+            builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
+            builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
+
+            //Connexion au serveur
+            //URL url = new URL("http://192.168.20.11:1234/listing.php"+builder.build().toString());
+            URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
+
+            // URL url = new URL(urlAddress+"?auth="+param1+"&login="+param2+"&dateDeal="+param3+"&TelDeal="+param4+"&TypeDeal="+param5+"&fgfggergJHGS="+param6+"&uhtdgG18="+param7);
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("GET");
+            is = new BufferedInputStream(con.getInputStream());
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+        //content
+        try{
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb = new StringBuilder();
+            while ((line = br.readLine()) != null){
+                sb.append(line + "\n");
+            }
+            is.close();
+            result=sb.toString();
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+        //JSON
+        try{
+            JSONArray ja = new JSONArray(result);
+            JSONObject jo = null;
+            montant_valeur = new String[ja.length()];
+            donataire_valeur = new String[ja.length()];
+            beneficiaire_valeur = new String[ja.length()];
+            date_HistoriqueTransaction = new String[ja.length()];
+
+            for(int i=0; i<=ja.length();i++){
+                jo = ja.getJSONObject(i);
+                donataire_valeur[i] = jo.getString("donateur");
+                beneficiaire_valeur[i] = jo.getString("beneficier");
+                montant_valeur[i] = jo.getString("montant") + "F";
+                date = defaultFormat.parse(jo.getString("temps") + ".0");
+                date_HistoriqueTransaction[i] = date.getHours() + "H " + date.getMinutes() + "min";
+            }
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }*/
 
 
 }

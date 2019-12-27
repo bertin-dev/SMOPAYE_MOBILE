@@ -24,9 +24,9 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
     String tmp_data = "";
 
 
-    public QRCodeModalDialog newInstanceCode(String contenu) {
+    public QRCodeModalDialog newInstanceCode(String numCarteAccepteur) {
         Bundle args = new Bundle();
-        args.putString("contenuCode", contenu);
+        args.putString("contenuCode", numCarteAccepteur);
         QRCodeModalDialog frag = new QRCodeModalDialog();
         frag.setArguments(args);
         return frag;
