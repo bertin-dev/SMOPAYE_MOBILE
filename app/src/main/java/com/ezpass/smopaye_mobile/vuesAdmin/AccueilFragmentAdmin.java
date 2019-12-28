@@ -174,36 +174,4 @@ public class AccueilFragmentAdmin  extends Fragment {
         return view;
     }
 
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        final IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-
-        if(result != null && result.getContents() != null){
-
-            new AlertDialog.Builder(getActivity())
-                    .setTitle("Scan Result")
-                    .setMessage(result.getContents())
-                    .setPositiveButton("Copy", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ClipboardManager manager = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
-                            ClipData data = ClipData.newPlainText("result", result.getContents());
-                            manager.setPrimaryClip(data);
-                        }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .create()
-                    .show();
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
 }
