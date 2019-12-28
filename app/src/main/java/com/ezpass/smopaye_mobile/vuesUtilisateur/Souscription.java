@@ -998,7 +998,12 @@ public class Souscription extends AppCompatActivity {
                                     title.setText(getString(R.string.information));
                                     imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
                                     statutOperation.setText(f1);
-                                    build_error.setPositiveButton("OK", null);
+                                    build_error.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    });
                                     build_error.setCancelable(false);
                                     build_error.setView(view);
                                     build_error.show();
