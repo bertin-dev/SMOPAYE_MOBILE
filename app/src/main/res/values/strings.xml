@@ -305,4 +305,6 @@
     <string name="HistoriqueVides">Historique Transactions vides</string>
 
     <string name="qrcode">QR Code</string>
+    <string name="imprimer">Imprimer</string>
+    <string name="authentificationQRCode">Authentification QR CODE</string>
 </resources>

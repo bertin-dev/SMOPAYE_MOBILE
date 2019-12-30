@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:background="@color/white"
+    tools:context=".QRCodeShow">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:gravity="center"
+            android:background="@drawable/bg3">
+            <ImageView
+                android:layout_width="180dp"
+                android:layout_height="70dp"
+                android:src="@drawable/logo" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/authWindows"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal|center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/authentificationQRCode"
+                android:textStyle="bold|italic"
+                android:textAlignment="center"
+                android:textColor="@color/bgColorStandard"
+                android:layout_marginTop="10pt"
+                android:background="@drawable/edittextborder"
+                android:textSize="25sp"/>
+
+
+            <ImageView
+                android:id="@+id/qrcode"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:padding="4dp"
+                android:layout_marginTop="20dp"
+                android:background="@android:color/holo_blue_light"/>
+
+
+            <TextView
+                android:id="@+id/card_number"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:text=""
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:focusable="true"
+                android:layout_marginTop="30dp"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_marginBottom="20dp"
+                    android:textAlignment="center"
+                    android:weightSum="100"
+                    android:layout_height="wrap_content">
+                    <Button
+                        android:id="@+id/btn_imprimer"
+                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:textColor="#ffffff"
+                        android:padding="10dp"
+                        android:textStyle="bold"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginLeft="50dp"
+                        android:layout_marginStart="50dp"
+                        android:shadowDx="@android:integer/config_longAnimTime"
+                        android:background="@drawable/btn_rounded"
+                        android:text="@string/imprimer" />
+
+                    <Button
+                        android:id="@+id/btn_enregistrer"
+                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:textColor="#ffffff"
+                        android:padding="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginRight="50dp"
+                        android:layout_marginEnd="50dp"
+                        android:textStyle="bold"
+                        android:shadowDx="@android:integer/config_longAnimTime"
+                        android:background="@drawable/btn_rounded"
+                        android:text="@string/enregistrer" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

@@ -19,9 +19,9 @@
     <uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="com.htc.launcher.permission.UPDATE_SHORTCUT" />
     <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-feature android:name="com.android.hardware.Camera.focus"/>
+    <uses-feature android:name="com.android.hardware.Camera.focus" />
 
     <application
         android:name=".NotifApp"
@@ -31,6 +31,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".QRCodeShow"></activity>
         <activity android:name=".PayerFacture" />
         <activity android:name=".vuesAdmin.AccueilEnvoiNotifGoogleUser" />
         <activity android:name=".vuesAdmin.ModifSuppGoogleUser" />
@@ -178,15 +179,11 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
-
-        <!--QR CODE-->
-        <activity android:name="com.journeyapps.barcodescanner.CaptureActivity"
+        </service> <!-- QR CODE -->
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
-            tools:replace="screenOrientation">
-
-        </activity>
-
+            tools:replace="screenOrientation"></activity>
     </application>
 
 </manifest>
