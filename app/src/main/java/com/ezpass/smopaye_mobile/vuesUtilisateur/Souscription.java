@@ -42,6 +42,7 @@ import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbUser;
 import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.NotifReceiver;
+import com.ezpass.smopaye_mobile.QRCodeShow;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.RemoteFragments.APIService;
 import com.ezpass.smopaye_mobile.RemoteModel.User;
@@ -991,6 +992,8 @@ public class Souscription extends AppCompatActivity {
                                             "default", "offline" , abonnement, shortDateFormat.format(aujourdhui));
 
 
+                                    String num_carte = numCarte.getText().toString().trim();
+
                                     View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
                                     TextView title = (TextView) view.findViewById(R.id.title);
                                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
@@ -1002,6 +1005,13 @@ public class Souscription extends AppCompatActivity {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
 
+                                            if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("accepteur")){
+                                                Intent intent = new Intent(Souscription.this, QRCodeShow.class);
+                                                intent.putExtra("id_carte", num_carte);
+                                                startActivity(intent);
+                                            } else {
+                                                return;
+                                            }
                                         }
                                     });
                                     build_error.setCancelable(false);

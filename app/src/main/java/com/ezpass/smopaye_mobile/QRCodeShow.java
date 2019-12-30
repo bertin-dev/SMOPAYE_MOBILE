@@ -53,6 +53,8 @@ public class QRCodeShow extends AppCompatActivity {
             } catch (WriterException e){
                 e.printStackTrace();
             }
+        } else{
+            Toast.makeText(this, "Une Erreur est survenue lors du scan du QR Code", Toast.LENGTH_SHORT).show();
         }
 
     }
