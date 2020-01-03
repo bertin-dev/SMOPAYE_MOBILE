@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.MenuHistoriqueTransaction;
+import com.ezpass.smopaye_mobile.MenuQRCode;
 import com.ezpass.smopaye_mobile.PayerFacture;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.ServicesIndisponible;
@@ -160,14 +161,18 @@ public class AccueilFragmentAdmin  extends Fragment {
         btnQrCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
+
+                Intent intent = new Intent(getActivity(), MenuQRCode.class);
+                startActivity(intent);
+
+                /*IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
                 intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
                 intentIntegrator.setCameraId(0);
                 intentIntegrator.setOrientationLocked(false);
                 intentIntegrator.setPrompt("Scan Encours...");
                 intentIntegrator.setBeepEnabled(true);
                 intentIntegrator.setBarcodeImageEnabled(true);
-                intentIntegrator.initiateScan();
+                intentIntegrator.initiateScan();*/
             }
         });
 

@@ -316,7 +316,15 @@ public class Souscription extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(nom.getText().toString().trim().equals("") || prenom.getText().toString().trim().equals("") || telephone.getText().toString().trim().equals("")
+                if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("accepteur")){
+                    Intent intent = new Intent(Souscription.this, QRCodeShow.class);
+                    intent.putExtra("id_carte", "dsfsd32132");
+                    startActivity(intent);
+                } else {
+                    return;
+                }
+
+               /* if(nom.getText().toString().trim().equals("") || prenom.getText().toString().trim().equals("") || telephone.getText().toString().trim().equals("")
                         || cni.getText().toString().trim().equals("") || adresse.getText().toString().trim().equals("") || numCarte.getText().toString().trim().equals("")) {
                     Toast.makeText(Souscription.this, getString(R.string.champsVide), Toast.LENGTH_SHORT).show();
 
@@ -534,7 +542,7 @@ public class Souscription extends AppCompatActivity {
                         build_error.setView(view);
                         build_error.show();
                     }
-                }
+                }*/
             }
 
         });

@@ -31,7 +31,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".QRCodeShow"></activity>
+        <activity android:name=".AffichageQRCode"></activity>
+        <activity android:name=".MenuQRCode" />
+        <activity android:name=".QRCodeShow" />
         <activity android:name=".PayerFacture" />
         <activity android:name=".vuesAdmin.AccueilEnvoiNotifGoogleUser" />
         <activity android:name=".vuesAdmin.ModifSuppGoogleUser" />
@@ -183,7 +185,7 @@
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
-            tools:replace="screenOrientation"></activity>
+            tools:replace="screenOrientation" />
     </application>
 
 </manifest>

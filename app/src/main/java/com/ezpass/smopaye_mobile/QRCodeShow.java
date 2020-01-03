@@ -1,11 +1,23 @@
 package com.ezpass.smopaye_mobile;
 
+import android.Manifest;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,16 +25,35 @@ import android.widget.Toast;
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
+import com.telpo.tps550.api.TelpoException;
+import com.telpo.tps550.api.printer.UsbThermalPrinter;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Hashtable;
 
 public class QRCodeShow extends AppCompatActivity {
 
     private String carte;
     private ImageView qr_code;
     private TextView card_number;
+    private Button btn_enregistrer, btn_imprimer;
+
+    private  Bitmap bitmap;
+    private String picturePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/test.bmp";
+
+
+    private String Result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +67,8 @@ public class QRCodeShow extends AppCompatActivity {
 
         qr_code = findViewById(R.id.qrcode);
         card_number = findViewById(R.id.card_number);
+        btn_enregistrer = (Button) findViewById(R.id.btn_enregistrer);
+        btn_imprimer = (Button) findViewById(R.id.btn_imprimer);
 
 
         Intent intent = getIntent();
@@ -48,7 +81,7 @@ public class QRCodeShow extends AppCompatActivity {
                 MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
                 BitMatrix bitMatrix = multiFormatWriter.encode(carte, BarcodeFormat.QR_CODE, 500, 500);
                 BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+                 bitmap = barcodeEncoder.createBitmap(bitMatrix);
                 qr_code.setImageBitmap(bitmap);
             } catch (WriterException e){
                 e.printStackTrace();
@@ -57,6 +90,134 @@ public class QRCodeShow extends AppCompatActivity {
             Toast.makeText(this, "Une Erreur est survenue lors du scan du QR Code", Toast.LENGTH_SHORT).show();
         }
 
+
+
+        btn_enregistrer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //savepicture();
+
+                // Get the bitmap from drawable object
+                Bitmap bitmap1 = bitmap;
+                ContextWrapper wrapper = new ContextWrapper(getApplicationContext());
+                File file1 = wrapper.getDir("Images",MODE_PRIVATE);
+
+                // Create a file to save the image
+                file1 = new File(file1, "qrcode"+".jpg");
+
+                try{
+                    OutputStream stream = null;
+                    stream = new FileOutputStream(file1);
+                    bitmap1.compress(Bitmap.CompressFormat.JPEG,100,stream);
+                    stream.flush();
+                    stream.close();
+
+                }catch (IOException e) // Catch the exception
+                {
+                    e.printStackTrace();
+                }
+
+                // Parse the gallery image url to uri
+                Uri savedImageURI = Uri.parse(file1.getAbsolutePath());
+
+                // Display the saved image to ImageView
+                //iv_saved.setImageURI(savedImageURI);
+
+                // Display saved image uri to TextView
+                //tv_saved.setText("Image saved in internal storage.\n" + savedImageURI);
+
+                Toast.makeText(wrapper, savedImageURI.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        btn_imprimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        UsbThermalPrinter usbThermalPrinter = new UsbThermalPrinter(QRCodeShow.this);
+                            try {
+                                usbThermalPrinter.start(1);
+                                Bitmap bitmap = CreateCode(carte, BarcodeFormat.QR_CODE, 256, 256);
+                                usbThermalPrinter.reset();
+                                usbThermalPrinter.setGray(7);
+                                usbThermalPrinter.setAlgin(UsbThermalPrinter.ALGIN_MIDDLE);
+                                usbThermalPrinter.printLogo(bitmap,false);
+                                usbThermalPrinter.walkPaper(10);
+                            } catch (TelpoException e) {
+                                e.printStackTrace();
+                                Result = e.toString();
+                                if (Result.equals("com.telpo.tps550.api.printer.NoPaperException")) {
+                                    Toast.makeText(QRCodeShow.this, "NoPaperException", Toast.LENGTH_SHORT).show();
+                                } else if (Result.equals("com.telpo.tps550.api.printer.OverHeatException")) {
+                                    Toast.makeText(QRCodeShow.this, "OverHeatException", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (WriterException e) {
+                                e.printStackTrace();
+                            } finally {
+                                usbThermalPrinter.stop();
+                            }
+
+                    }
+                }).start();
+            }
+        });
+
+    }
+
+    private void savepicture() {
+        File file = new File(picturePath);
+        if (!file.exists()) {
+            InputStream inputStream = null;
+            FileOutputStream fos = null;
+            byte[] tmp = new byte[1024];
+            try {
+                inputStream = getApplicationContext().getAssets().open("syhlogo.png");
+                fos = new FileOutputStream(file);
+                int length = 0;
+                while((length = inputStream.read(tmp)) > 0){
+                    fos.write(tmp, 0, length);
+                }
+                fos.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    inputStream.close();
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public Bitmap CreateCode(String str, com.google.zxing.BarcodeFormat type, int bmpWidth, int bmpHeight) throws WriterException {
+        Hashtable<EncodeHintType,String> mHashtable = new Hashtable<EncodeHintType,String>();
+        mHashtable.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+
+        BitMatrix matrix = new MultiFormatWriter().encode(str, type, bmpWidth, bmpHeight, mHashtable);
+        int width = matrix.getWidth();
+        int height = matrix.getHeight();
+
+        int[] pixels = new int[width * height];
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (matrix.get(x, y)) {
+                    pixels[y * width + x] = 0xff000000;
+                } else {
+                    pixels[y * width + x] = 0xffffffff;
+                }
+            }
+        }
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+        bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+        return bitmap;
     }
 
 
@@ -64,7 +225,7 @@ public class QRCodeShow extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main_qrcode, menu);
         return true;
     }
 
@@ -75,6 +236,9 @@ public class QRCodeShow extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        if(id == R.id.partage){
+            startShare();
+        }
         //noinspection SimplifiableIfStatement
         if (id == R.id.apropos) {
             Intent intent = new Intent(getApplicationContext(), Apropos.class);
@@ -105,4 +269,36 @@ public class QRCodeShow extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+
+    public void startShare() {
+        Bitmap bitmap = viewToBitmap(qr_code, qr_code.getWidth(), qr_code.getHeight());
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("image/*");
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        File file = new File(Environment.getExternalStorageDirectory() + File.separator + "ImageDemo.jpg");
+        try{
+            file.createNewFile();
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            fileOutputStream.write(byteArrayOutputStream.toByteArray());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///sdcard/ImageDemo.jpg"));
+        startActivity(Intent.createChooser(shareIntent, "Share Image"));
+    }
+
+
+    private static Bitmap viewToBitmap(View view, int width, int height){
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+        return bitmap;
+    }
+
 }

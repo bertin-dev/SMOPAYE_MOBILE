@@ -5,6 +5,7 @@
 
     <EditText
     android:id="@+id/edit_num_carte"
+        android:visibility="gone"
         android:textColor="@color/bgColorStandard"
         android:layout_marginBottom="20dp"
         android:layout_gravity="center"

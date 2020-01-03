@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--<item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="Mon Compte"
+        app:showAsAction="never" />-->
+
+
+   <!-- <item
+        android:title=""
+        app:showAsAction="">
+      <menu>
+          <item android:id="@+id/apropos"
+              android:orderInCategory="100"
+              android:icon="@drawable/ic_info_black_24dp"
+              app:showAsAction="ifRoom"
+              android:title="@string/apropos"/>
+
+          <item android:id="@+id/tuto"
+              android:orderInCategory="100"
+              android:icon="@drawable/ic_description_black_24dp"
+              app:showAsAction="ifRoom"
+              android:title="@string/tuto"/>
+      </menu>
+    </item>-->
+
+    <item android:id="@+id/partage"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_share_black_24dp"
+        app:showAsAction="ifRoom"
+        android:title="@string/partager"/>
+
+    <item android:id="@+id/apropos"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_info_black_24dp"
+        app:showAsAction="never"
+        android:title="@string/apropos"/>
+
+    <item android:id="@+id/tuto"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_description_black_24dp"
+        app:showAsAction="never"
+        android:title="@string/tuto"/>
+
+    <item android:id="@+id/modifierCompte"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_description_black_24dp"
+        app:showAsAction="never"
+        android:title="@string/monCompte"/>
+
+
+
+
+</menu>
+
+<!--  app:showAsAction="always" or  app:showAsAction="ifRoom" -->
