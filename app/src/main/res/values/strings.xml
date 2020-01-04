@@ -309,5 +309,5 @@
     <string name="authentificationQRCode">Authentification QR CODE</string>
     <string name="partager">Partager</string>
     <string name="scanQRCode">Scanner QR Code</string>
-    <string name="affichageQRCode">Lecture QR Code</string>
+    <string name="affichageQRCode">Lecteur QR Code</string>
 </resources>

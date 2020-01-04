@@ -40,6 +40,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Hashtable;
 
 public class QRCodeShow extends AppCompatActivity {
@@ -97,10 +99,11 @@ public class QRCodeShow extends AppCompatActivity {
             public void onClick(View v) {
                 //savepicture();
 
-                // Get the bitmap from drawable object
+                startSave();
+               /* // Get the bitmap from drawable object
                 Bitmap bitmap1 = bitmap;
                 ContextWrapper wrapper = new ContextWrapper(getApplicationContext());
-                File file1 = wrapper.getDir("Images",MODE_PRIVATE);
+                File file1 = wrapper.getDir("Img",MODE_PRIVATE);
 
                 // Create a file to save the image
                 file1 = new File(file1, "qrcode"+".jpg");
@@ -126,7 +129,7 @@ public class QRCodeShow extends AppCompatActivity {
                 // Display saved image uri to TextView
                 //tv_saved.setText("Image saved in internal storage.\n" + savedImageURI);
 
-                Toast.makeText(wrapper, savedImageURI.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(wrapper, savedImageURI.toString(), Toast.LENGTH_SHORT).show();*/
             }
         });
 
@@ -135,7 +138,7 @@ public class QRCodeShow extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                new Thread(new Runnable() {
+                /*new Thread(new Runnable() {
                     @Override
                     public void run() {
 
@@ -163,10 +166,54 @@ public class QRCodeShow extends AppCompatActivity {
                             }
 
                     }
-                }).start();
+                }).start();*/
+                Toast.makeText(QRCodeShow.this, "Indisponible", Toast.LENGTH_SHORT).show();
             }
         });
 
+    }
+
+    public void startSave() {
+        FileOutputStream fileOutputStream = null;
+        File file = getDisc();
+        if(!file.exists() && !file.mkdir()){
+            Toast.makeText(this, "Impossible de créer un répertoire pour enregistrer l'image", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_hhmmss");
+        String date = simpleDateFormat.format(new Date());
+        String name = "IMG_"+date+".jpg";
+        String file_name = file.getAbsolutePath()+"/"+name;
+        File new_file=new File(file_name);
+        try{
+            fileOutputStream = new FileOutputStream(new_file);
+            Bitmap bitmap = viewToBitmap(qr_code, qr_code.getWidth(), qr_code.getHeight());
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+            Toast.makeText(this, "Image Enregistré avec succès.", Toast.LENGTH_SHORT).show();
+            fileOutputStream.flush();
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        // Parse the gallery image url to uri
+        Uri savedImageURI = Uri.parse(file_name);
+
+        // Display the saved image to ImageView
+        //iv_saved.setImageURI(savedImageURI);
+
+        // Display saved image uri to TextView
+        //tv_saved.setText("Image saved in internal storage.\n" + savedImageURI);
+
+        Toast.makeText(this, savedImageURI.toString(), Toast.LENGTH_LONG).show();
+    }
+
+    private File getDisc() {
+        File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        return new File(file, "IMG_Smopaye");
     }
 
     private void savepicture() {
@@ -237,7 +284,8 @@ public class QRCodeShow extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id == R.id.partage){
-            startShare();
+            //startShare();
+            shareBitmap(viewToBitmap(qr_code, qr_code.getWidth(), qr_code.getHeight()));
         }
         //noinspection SimplifiableIfStatement
         if (id == R.id.apropos) {
@@ -272,7 +320,7 @@ public class QRCodeShow extends AppCompatActivity {
 
 
 
-
+    //methode qui fonctionnement uniquement avec les versions inférieur à Android 7.0
     public void startShare() {
         Bitmap bitmap = viewToBitmap(qr_code, qr_code.getWidth(), qr_code.getHeight());
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -290,7 +338,7 @@ public class QRCodeShow extends AppCompatActivity {
             e.printStackTrace();
         }
         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///sdcard/ImageDemo.jpg"));
-        startActivity(Intent.createChooser(shareIntent, "Share Image"));
+        startActivity(Intent.createChooser(shareIntent, "Smopaye Partage QR Code"));
     }
 
 
@@ -301,4 +349,33 @@ public class QRCodeShow extends AppCompatActivity {
         return bitmap;
     }
 
+    private void shareBitmap(Bitmap bitmap) {
+
+        /*final String shareText = " E-ZPASS by" + " "
+                + getString(R.string.app_name) + " developed by "
+                + "https://play.google.com/store/apps/details?id=" + getPackageName() + ": \n\n";*/
+
+
+        final String shareText = " E-ZPASS by" + " "
+                + getString(R.string.app_name) + ": \n\n";
+
+        try {
+            File file = new File(this.getExternalCacheDir(), "share.png");
+            FileOutputStream fOut = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+            fOut.flush();
+            fOut.close();
+            file.setReadable(true, false);
+            final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(Intent.EXTRA_TEXT, shareText);
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+            intent.setType("image/png");
+            startActivity(Intent.createChooser(intent, "E-ZPASS Partage via"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }
