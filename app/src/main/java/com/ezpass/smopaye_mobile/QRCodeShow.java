@@ -1,17 +1,10 @@
 package com.ezpass.smopaye_mobile;
 
-import android.Manifest;
-import android.content.ContextWrapper;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -30,8 +23,6 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
-import com.telpo.tps550.api.TelpoException;
-import com.telpo.tps550.api.printer.UsbThermalPrinter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -39,7 +30,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
@@ -76,7 +66,6 @@ public class QRCodeShow extends AppCompatActivity {
         Intent intent = getIntent();
         carte = intent.getStringExtra("id_carte");
         card_number.setText(carte);
-
 
         if(carte != null && !carte.isEmpty()){
             try {
