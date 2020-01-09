@@ -260,10 +260,10 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
         }
     }
 
-    private static HashMap<String, byte[]> getContentQRCode(String resultatContentQRCode)
+    /*private static HashMap<String, byte[]> getContentQRCode(String resultatContentQRCode)
     {
 
-       /* String [] split1 = resultatContentQRCode.split(",");
+        String [] split1 = resultatContentQRCode.split(",");
 
         String [] split2 = split1[0].split("=\\[");
         byte[] encrypt = split2[1].getBytes();
@@ -281,10 +281,10 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
         HashMap<String,byte[]> map = new HashMap<String,byte[]>();
         map.put("salt", encrypt);
         map.put("iv", iv);
-        map.put("encrypted", salt);*/
+        map.put("encrypted", salt);
 
 
-
+          //equivalence de ce qui est en haut
         String [] split = resultatContentQRCode.split(",");
         HashMap<String, byte[]> map = new HashMap<String, byte[]>();
         for(String temp : split){
@@ -294,7 +294,7 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
 
 
         return map;
-    }
+    }*/
 
 
     public void openDialog(String accepteurNumCarte) {
@@ -441,7 +441,7 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
                                             }
                                         }
                                         else{
-                                            Toast.makeText(MenuQRCode.this, "Impossible d'envoyer votre notification", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MenuQRCode.this, "Impossible d'envoyer votre notification\n utilisateur non reconnu.", Toast.LENGTH_LONG).show();
                                         }
 
                                     }
