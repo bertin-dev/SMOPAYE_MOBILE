@@ -31,7 +31,6 @@
     <string name="consulterRecettes">Consulter Recettes</string>
 
     <string name="montant">Montant</string>
-    <string name="montantApayer">Montant A Payer</string>
     <string name="passerCarte">Passer la Carte</string>
     <string name="modifier">Modifier</string>
 
@@ -214,7 +213,7 @@
     <string name="verouillerCarte">Êtes-vous sure de vouloir vérouiller votre carte?</string>
     <string name="deverouillerCarte">Êtes-vous sure de vouloir Devérouiller votre carte?</string>
     <string name="titreApp">SMOPAYE MOBILE</string>
-    <string name="version">Version: 1.2.2</string>
+    <!--<string name="version">Version: 1.2.2</string>-->
     <string name="propriete">Propriété SMOPAYE. Tous droits réservés.</string>
 
 
@@ -310,4 +309,7 @@
     <string name="partager">Partager</string>
     <string name="scanQRCode">Scanner QR Code</string>
     <string name="affichageQRCode">Lecteur QR Code</string>
+    <string name="montantApayer">Montant A Payer</string>
+    <string name="erreurQRcode">Impossible de Scanner le code QR.
+ Assurez-vous que vous êtes sur E-ZPASS by SMOPAYE et tentez de scanner à nouveau.</string>
 </resources>

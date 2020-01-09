@@ -16,6 +16,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,12 +62,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.ezpass.smopaye_mobile.ChaineConnexion.decryptData;
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
 public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.ExampleDialogListener{
@@ -231,11 +234,66 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
 // handle scan result
 
         if(scanResult != null && scanResult.getContents() != null){
-            openDialog(scanResult.getContents());
+
+            int pos = scanResult.getContents().indexOf("E-ZPASS");
+            if (pos >= 0) {
+                String carteNumber = scanResult.getContents().substring(7, 15).toUpperCase();
+                openDialog(carteNumber);
+            } else{
+                Toast.makeText(this, getString(R.string.erreurQRcode), Toast.LENGTH_SHORT).show();
+            }
+
+            /*String mdp = "E-ZPASS by " + getString(R.string.app_name) +  "/" + getPackageName() + "/123456789";
+            HashMap<String, byte[]> map1 = getContentQRCode(scanResult.getContents());
+            byte[] decrypted = decryptData(map1, mdp);
+            if (decrypted != null)
+            {
+                String decryptedString = new String(decrypted);
+                Log.e("MYAPP", "Decrypted String is : " + decryptedString);
+                Toast.makeText(this, decryptedString, Toast.LENGTH_SHORT).show();
+            }*/
+
+            //openDialog(scanResult.getContents());
             /*FragmentManager fm = getSupportFragmentManager();
             Fragment newFrame = AccueilFragment.newInstanceQRCode(scanResult.toString(), carteUtilisateur, montant);
             fm.beginTransaction().replace(R.id.fragment_container, newFrame).commit();*/
         }
+    }
+
+    private static HashMap<String, byte[]> getContentQRCode(String resultatContentQRCode)
+    {
+
+       /* String [] split1 = resultatContentQRCode.split(",");
+
+        String [] split2 = split1[0].split("=\\[");
+        byte[] encrypt = split2[1].getBytes();
+
+
+        String [] split3 = split1[1].split("=\\[");
+        byte[] iv = split3[1].getBytes();
+
+
+        String [] split4 = split1[2].split("=\\=[");
+        byte[] salt = split4[1].getBytes();
+
+
+
+        HashMap<String,byte[]> map = new HashMap<String,byte[]>();
+        map.put("salt", encrypt);
+        map.put("iv", iv);
+        map.put("encrypted", salt);*/
+
+
+
+        String [] split = resultatContentQRCode.split(",");
+        HashMap<String, byte[]> map = new HashMap<String, byte[]>();
+        for(String temp : split){
+            String [] tempo = temp.split("=\\[");
+            map.put(tempo[0],tempo[1].getBytes());
+        }
+
+
+        return map;
     }
 
 

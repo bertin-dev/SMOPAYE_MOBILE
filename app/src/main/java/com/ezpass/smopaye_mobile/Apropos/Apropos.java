@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ezpass.smopaye_mobile.Assistance.Menu_Assistance;
+import com.ezpass.smopaye_mobile.BuildConfig;
 import com.ezpass.smopaye_mobile.R;
 
 public class Apropos extends AppCompatActivity {
@@ -24,6 +25,7 @@ public class Apropos extends AppCompatActivity {
     //String [] typeAide = {"Informations légales", "Logiciels tiers", "Badge de confiance"};
     String [] typeAide = {"Informations légales"};
     private String retourBD, telephone;
+    private TextView versionName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,9 @@ public class Apropos extends AppCompatActivity {
         telephone = intent.getStringExtra("telephone");
 
         listView=(ListView)findViewById(R.id.listAide);
+        //version Name de l'application
+        versionName = (TextView) findViewById(R.id.versionName);
+        versionName.setText(BuildConfig.VERSION_NAME);
 
        /* ArrayAdapter<String> adapter =new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, typeAide);
         listView.setAdapter(adapter);*/

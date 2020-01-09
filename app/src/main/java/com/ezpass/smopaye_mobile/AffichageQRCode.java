@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.SecureRandom;
+import java.util.HashMap;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import static com.ezpass.smopaye_mobile.ChaineConnexion.encryptBytes;
+import static com.ezpass.smopaye_mobile.ChaineConnexion.getsecurity_keys;
 
 public class AffichageQRCode extends AppCompatActivity {
 
@@ -68,10 +80,32 @@ public class AffichageQRCode extends AppCompatActivity {
         String cardNumber = parts[10]; // 12345678
 
 
-        if(cardNumber != null && !cardNumber.isEmpty()){
+        String carteCrypte = "E-ZPASS" + cardNumber.toLowerCase() + getsecurity_keys();
+
+        if(!carteCrypte.isEmpty()){
             try {
                 MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-                BitMatrix bitMatrix = multiFormatWriter.encode(cardNumber, BarcodeFormat.QR_CODE, 500, 500);
+                BitMatrix bitMatrix = multiFormatWriter.encode(carteCrypte, BarcodeFormat.QR_CODE, 500, 500);
+                BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                bitmap = barcodeEncoder.createBitmap(bitMatrix);
+                qrcode.setImageBitmap(bitmap);
+            } catch (WriterException e){
+                e.printStackTrace();
+            }
+        } else{
+            Toast.makeText(this, "Une Erreur est survenue", Toast.LENGTH_SHORT).show();
+        }
+
+       /* //cryptage du numero de carte
+        byte[] bytes = cardNumber.getBytes();
+        String mdp = "E-ZPASS by " + getString(R.string.app_name) +  "/" + getPackageName() + "/123456789";
+        HashMap<String, byte[]> carteCrypte = encryptBytes(bytes, mdp);
+        Toast.makeText(this, carteCrypte.toString(), Toast.LENGTH_SHORT).show();
+
+        if(carteCrypte != null && !carteCrypte.isEmpty()){
+            try {
+                MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+                BitMatrix bitMatrix = multiFormatWriter.encode(carteCrypte.toString(), BarcodeFormat.QR_CODE, 500, 500);
                 BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
                 bitmap = barcodeEncoder.createBitmap(bitMatrix);
                 qrcode.setImageBitmap(bitmap);
@@ -83,7 +117,7 @@ public class AffichageQRCode extends AppCompatActivity {
         }
 
         // Display saved image uri to TextView
-        card_number.setText(cardNumber);
+        card_number.setText(String.valueOf(carteCrypte));*/
 
     }
 
@@ -195,4 +229,9 @@ public class AffichageQRCode extends AppCompatActivity {
         }
 
     }
+
+
+
+
+
 }

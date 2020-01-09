@@ -424,7 +424,7 @@ public class PayerFacture extends AppCompatActivity {
                                             for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                 User user = userSnapshot.getValue(User.class);
                                                 if (user.getId_carte().equals(id_carte_sm)) {
-                                                    RemoteNotification(user.getId(), user.getPrenom(), "Transfert", f, "success");
+                                                    RemoteNotification(user.getId(), user.getPrenom(), "Paiement Facture", f, "success");
                                                     //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                 } else {
                                                     Toast.makeText(PayerFacture.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
@@ -445,13 +445,13 @@ public class PayerFacture extends AppCompatActivity {
 
 
                                 //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                LocalNotification("Transfert", f);
+                                LocalNotification("Paiement Facture", f);
 
                                 ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                                 dbHandler = new DbHandler(getApplicationContext());
                                 aujourdhui = new Date();
                                 shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                dbHandler.insertUserDetails("Transfert", f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+                                dbHandler.insertUserDetails("Paiement Facture", f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
 
                                 build_error = new AlertDialog.Builder(PayerFacture.this);
@@ -485,7 +485,7 @@ public class PayerFacture extends AppCompatActivity {
                                             for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                 User user = userSnapshot.getValue(User.class);
                                                 if (user.getId_carte().equals(id_carte_sm)) {
-                                                    RemoteNotification(user.getId(), user.getPrenom(), "Transfert", f, "error");
+                                                    RemoteNotification(user.getId(), user.getPrenom(), "Paiement Facture", f, "error");
                                                     //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                 } else {
                                                     Toast.makeText(PayerFacture.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
@@ -506,13 +506,13 @@ public class PayerFacture extends AppCompatActivity {
 
 
                                 //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                LocalNotification("Transfert", f);
+                                LocalNotification("Paiement Facture", f);
 
                                 ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                                 dbHandler = new DbHandler(getApplicationContext());
                                 aujourdhui = new Date();
                                 shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                dbHandler.insertUserDetails("Transfert", f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+                                dbHandler.insertUserDetails("Paiement Facture", f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
 
                                 build_error = new AlertDialog.Builder(PayerFacture.this);
                                 View view = LayoutInflater.from(PayerFacture.this).inflate(R.layout.alert_dialog_success, null);

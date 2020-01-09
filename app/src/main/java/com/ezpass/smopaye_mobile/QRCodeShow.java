@@ -32,7 +32,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
+
+import static com.ezpass.smopaye_mobile.ChaineConnexion.encryptBytes;
+import static com.ezpass.smopaye_mobile.ChaineConnexion.getsecurity_keys;
 
 public class QRCodeShow extends AppCompatActivity {
 
@@ -43,9 +47,6 @@ public class QRCodeShow extends AppCompatActivity {
 
     private  Bitmap bitmap;
     private String picturePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/test.bmp";
-
-
-    private String Result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,21 +66,46 @@ public class QRCodeShow extends AppCompatActivity {
 
         Intent intent = getIntent();
         carte = intent.getStringExtra("id_carte");
-        card_number.setText(carte);
 
-        if(carte != null && !carte.isEmpty()){
+
+        String carteCrypte = "E-ZPASS" + carte.toLowerCase() + getsecurity_keys();
+
+        if(!carteCrypte.isEmpty()){
             try {
                 MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-                BitMatrix bitMatrix = multiFormatWriter.encode(carte, BarcodeFormat.QR_CODE, 500, 500);
+                BitMatrix bitMatrix = multiFormatWriter.encode(carteCrypte, BarcodeFormat.QR_CODE, 500, 500);
                 BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                 bitmap = barcodeEncoder.createBitmap(bitMatrix);
+                bitmap = barcodeEncoder.createBitmap(bitMatrix);
+                qr_code.setImageBitmap(bitmap);
+            } catch (WriterException e){
+                e.printStackTrace();
+            }
+        } else{
+            Toast.makeText(this, "Une Erreur est survenue", Toast.LENGTH_SHORT).show();
+        }
+
+        card_number.setText(String.valueOf(carteCrypte));
+
+        /*//cryptage du numero de carte
+        byte[] bytes = carte.getBytes();
+        String mdp = "E-ZPASS by " + getString(R.string.app_name) +  "/" + getPackageName() + "/123456789";
+        Toast.makeText(this, mdp, Toast.LENGTH_SHORT).show();
+        HashMap<String, byte[]> carteCrypte = encryptBytes(bytes, mdp);
+
+        if(carteCrypte != null && !carteCrypte.isEmpty()){
+            try {
+                MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+                BitMatrix bitMatrix = multiFormatWriter.encode(carteCrypte.toString(), BarcodeFormat.QR_CODE, 500, 500);
+                BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                bitmap = barcodeEncoder.createBitmap(bitMatrix);
                 qr_code.setImageBitmap(bitmap);
             } catch (WriterException e){
                 e.printStackTrace();
             }
         } else{
             Toast.makeText(this, "Une Erreur est survenue lors du scan du QR Code", Toast.LENGTH_SHORT).show();
-        }
+        }*/
+
 
 
 

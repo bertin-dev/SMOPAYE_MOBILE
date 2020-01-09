@@ -51,14 +51,14 @@
                 android:text="@string/titreApp" />
 
             <TextView
+            android:id="@+id/versionName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="@color/textColorBlack"
-                android:paddingLeft="10dp"
-            android:paddingStart="10dp"
-            android:text="@string/version" />
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp" />
 
             <TextView
                 android:layout_width="match_parent"
