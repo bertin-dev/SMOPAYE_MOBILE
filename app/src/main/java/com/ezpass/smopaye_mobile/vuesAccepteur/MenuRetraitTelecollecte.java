@@ -45,6 +45,7 @@ import com.ezpass.smopaye_mobile.RemoteNotifications.Data;
 import com.ezpass.smopaye_mobile.RemoteNotifications.MyResponse;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Sender;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
+import com.ezpass.smopaye_mobile.RetraitChezSmopaye;
 import com.ezpass.smopaye_mobile.Tutoriel;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.telecollecte.DatabaseManager;
@@ -91,7 +92,7 @@ import static com.telpo.tps550.api.util.StringUtil.toHexString;
 
 public class MenuRetraitTelecollecte extends AppCompatActivity {
 
-    private LinearLayout Retrait,telecollecteAccepteur;
+    private LinearLayout Retrait,telecollecteAccepteur, lnRetraitSmopaye;
     private AlertDialog.Builder build, build_error;
     private ProgressDialog progressDialog;
     private DatabaseManager databaseManager;
@@ -153,6 +154,7 @@ public class MenuRetraitTelecollecte extends AppCompatActivity {
         Retrait = (LinearLayout) findViewById(R.id.lnRetrait);
         telecollecteAccepteur = (LinearLayout) findViewById(R.id.lntelecollecteAccepteur);
         idCarteCacheTelecollecte = (EditText) findViewById(R.id.idCarteCacheTelecollecte);
+        lnRetraitSmopaye = (LinearLayout) findViewById(R.id.lnRetraitSmopaye);
         //comback = (ScrollView) findViewById(R.id.menuRetraitTelecollecte);
 
         build = new AlertDialog.Builder(this);
@@ -202,6 +204,16 @@ public class MenuRetraitTelecollecte extends AppCompatActivity {
                 startActivity(new Intent(MenuRetraitTelecollecte.this, RetraitAccepteur.class));
             }
         });
+
+        lnRetraitSmopaye.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MenuRetraitTelecollecte.this, RetraitChezSmopaye.class));
+            }
+        });
+
+
+
 
         telecollecteAccepteur.setOnClickListener(new View.OnClickListener() {
             @Override

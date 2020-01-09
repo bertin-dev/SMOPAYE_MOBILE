@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.ezpass.smopaye_mobile.Assistance.HomeAssistanceOnline;
 import com.ezpass.smopaye_mobile.MenuHistoriqueTransaction;
 import com.ezpass.smopaye_mobile.MenuQRCode;
+import com.ezpass.smopaye_mobile.MenuRetraitOperateur;
 import com.ezpass.smopaye_mobile.PayerFacture;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.ServicesIndisponible;
@@ -36,7 +37,7 @@ import static android.content.Context.CLIPBOARD_SERVICE;
 public class AccueilFragmentUser extends Fragment {
 
     TextView jour, jourSemaine, moisAnnee;
-    private LinearLayout btnRecharge, btnConsulter, btnPayerFacture, btnQrCode;
+    private LinearLayout btnRecharge, btnConsulter, btnPayerFacture, btnQrCode, btnRetraitOperateur;
     //private LinearLayout CheckCardNumber;
     FloatingActionButton assistanceOnline;
     private Button consulterHistoriqueUser;
@@ -168,6 +169,17 @@ public class AccueilFragmentUser extends Fragment {
                 intentIntegrator.setBeepEnabled(true);
                 intentIntegrator.setBarcodeImageEnabled(true);
                 intentIntegrator.initiateScan();*/
+            }
+        });
+
+
+        //paiement des factures
+        btnRetraitOperateur = (LinearLayout) view.findViewById(R.id.btnRetraitOperateur);
+        btnRetraitOperateur.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MenuRetraitOperateur.class);
+                startActivity(intent);
             }
         });
 

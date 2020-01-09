@@ -312,4 +312,7 @@
     <string name="montantApayer">Montant A Payer</string>
     <string name="erreurQRcode">Impossible de Scanner le code QR.
  Assurez-vous que vous êtes sur E-ZPASS by SMOPAYE et tentez de scanner à nouveau.</string>
+
+    <string name="retraitSmopaye">Retrait Chez Smopaye</string>
+    <string name="retraitOperateur">Retrait Chez un Opérateur</string>
 </resources>

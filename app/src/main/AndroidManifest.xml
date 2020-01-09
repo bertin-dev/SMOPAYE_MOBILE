@@ -31,7 +31,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AffichageQRCode"></activity>
+        <activity android:name=".RetraitChezSmopaye"></activity>
+        <activity android:name=".MenuRetraitOperateur" />
+        <activity android:name=".AffichageQRCode" />
         <activity android:name=".MenuQRCode" />
         <activity android:name=".QRCodeShow" />
         <activity android:name=".PayerFacture" />
