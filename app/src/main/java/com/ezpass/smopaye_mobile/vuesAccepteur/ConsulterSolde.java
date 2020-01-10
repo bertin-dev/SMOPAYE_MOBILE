@@ -17,11 +17,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -83,6 +85,8 @@ public class ConsulterSolde extends AppCompatActivity {
     ImageView conStatusIv;
     TextView titleNetworkLimited, msgNetworkLimited;
 
+    private Spinner typeSolde;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +101,7 @@ public class ConsulterSolde extends AppCompatActivity {
         btn = (Button)findViewById(R.id.soldeBtn);
         consulter = (Button) findViewById(R.id.consulter);
         editText = (EditText)findViewById(R.id.solde);
+        typeSolde = (Spinner) findViewById(R.id.typeSolde);
 
         authWindows = (LinearLayout) findViewById(R.id.authWindows);
         internetIndisponible = (LinearLayout) findViewById(R.id.internetIndisponible);
@@ -118,6 +123,21 @@ public class ConsulterSolde extends AppCompatActivity {
         catch (Exception e){
             e.printStackTrace();
         }
+
+
+
+        // Initializing a String Array
+        String[] statut1 = new String[]{
+                "DEPOT",
+                "UNITE"
+        };
+        // Initializing an ArrayAdapter
+        ArrayAdapter<String> spinnerArrayAdapter1 = new ArrayAdapter<String>(
+                this,R.layout.spinner_item,statut1);
+        spinnerArrayAdapter1.setDropDownViewResource(R.layout.spinner_item);
+        typeSolde.setAdapter(spinnerArrayAdapter1);
+
+
 
         btn.setOnClickListener(new View.OnClickListener() {
 
@@ -292,7 +312,8 @@ public class ConsulterSolde extends AppCompatActivity {
 
                                 builder.appendQueryParameter("aze","Card");
                                 builder.appendQueryParameter("qsd", "consulsolde");
-                                builder.appendQueryParameter("CARDN",editText.getText().toString().trim());
+                                builder.appendQueryParameter("CARDN", editText.getText().toString().trim());
+                                builder.appendQueryParameter("typesolde", typeSolde.getSelectedItem().toString().trim());
                                 //utilisation du numero de telephone annulée
                                 //builder.appendQueryParameter("tel", tmp_number);
                                 builder.appendQueryParameter("uniquser", tmp_number);

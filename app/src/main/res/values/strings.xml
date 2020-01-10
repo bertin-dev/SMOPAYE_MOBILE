@@ -315,4 +315,6 @@
 
     <string name="retraitSmopaye">Retrait Chez Smopaye</string>
     <string name="retraitOperateur">Retrait Chez un Opérateur</string>
+    <string name="consulterUnite">Consulter Unités</string>
+    <string name="typeSolde">Type de Solde : </string>
 </resources>

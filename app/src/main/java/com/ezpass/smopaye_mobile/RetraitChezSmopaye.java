@@ -57,6 +57,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -78,7 +79,6 @@ public class RetraitChezSmopaye extends AppCompatActivity {
 
     private EditText numTelDonataire, numCartSmopaye, montantSmopaye;
     private Button btnRetraitSmopaye, rbtnOpenNFC;
-    private String tel;
     private ProgressDialog progressDialog;
     /////////////////////////////////////////////////////////////////////////////////
     Handler handler;
@@ -116,6 +116,9 @@ public class RetraitChezSmopaye extends AppCompatActivity {
     ImageView conStatusIv;
     TextView titleNetworkLimited, msgNetworkLimited;
 
+    String file = "tmp_number";
+    int c;
+    String tmp_number = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,10 +150,18 @@ public class RetraitChezSmopaye extends AppCompatActivity {
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
 
-        Intent intent = getIntent();
-        tel = intent.getStringExtra("telephone");
-        if(tel != null)
-            numTelDonataire.setText(tel);
+        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
+        try{
+            FileInputStream fIn = openFileInput(file);
+            while ((c = fIn.read()) != -1){
+                tmp_number = tmp_number + Character.toString((char)c);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        numTelDonataire.setText(tmp_number);
 
 
         progressDialog = new ProgressDialog(RetraitChezSmopaye.this);
