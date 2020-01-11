@@ -172,7 +172,6 @@ public class Souscription extends AppCompatActivity {
 
     ArrayList<String> listStatut = new ArrayList<>();
     ArrayList<String> listChauffeur = new ArrayList<>();
-    SpinnerAdapter spin = null;
 
     List<String> sIds = new ArrayList<String>();
 
@@ -312,9 +311,7 @@ public class Souscription extends AppCompatActivity {
                 id_session[i] = jo.getString("id");
                 nom_session[i] = jo.getString("categoryName");
 
-                spin = new SpinnerAdapter();
-                /*spin.setId_s(id[i]);
-                spin.setCat_s(categorie_name[i]);*/
+
                 listStatut.add(nom_session[i]);
             }
         }
