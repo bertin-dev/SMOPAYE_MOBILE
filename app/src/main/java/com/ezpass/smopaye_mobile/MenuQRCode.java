@@ -368,12 +368,13 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
                     });
                     //*******************FIN*****
 
+
                     final Uri.Builder builder = new Uri.Builder();
                     builder.appendQueryParameter("auth","Card");
-                    builder.appendQueryParameter("login", "CallfuncQRcode");
+                    builder.appendQueryParameter("login", "transfert");
                     builder.appendQueryParameter("MONTANT", montantCliPayer);
-                    builder.appendQueryParameter("CARDNclt", numCarteCli);
-                    builder.appendQueryParameter("CARDNaccepyt", numCarteAccepteur);
+                    builder.appendQueryParameter("CARDNDON", numCarteCli);
+                    builder.appendQueryParameter("CARDN", numCarteAccepteur);
                     builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
                     builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
 
