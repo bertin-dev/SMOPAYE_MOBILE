@@ -65,7 +65,7 @@
     <string name="votreNumCarte">Votre Numéro de Carte est :</string>
 
 
-    <string name="numdelaCarte">Numéro de la Carte</string>
+    <string name="numdelaCarte">Numéro de Compte</string>
     <string name="consulter">Consulter</string>
 
     <string name="consultSoldeDeLaCarte">Consulter le solde de la carte</string>
@@ -308,7 +308,7 @@
     <string name="authentificationQRCode">Authentification QR CODE</string>
     <string name="partager">Partager</string>
     <string name="scanQRCode">Scanner QR Code</string>
-    <string name="affichageQRCode">Lecteur QR Code</string>
+    <string name="affichageQRCode">Accepter Paiement QR Code</string>
     <string name="montantApayer">Montant A Payer</string>
     <string name="erreurQRcode">Impossible de Scanner le code QR.
  Assurez-vous que vous êtes sur E-ZPASS by SMOPAYE et tentez de scanner à nouveau.</string>

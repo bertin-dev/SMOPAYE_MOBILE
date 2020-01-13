@@ -120,6 +120,13 @@ public class RetraitChezSmopaye extends AppCompatActivity {
     int c;
     String tmp_number = "";
 
+    /////////////////////////////////LIRE CONTENU DES FICHIERS////////////////////
+    String file2 = "tmp_data_user";
+    int c2;
+    String temp_data = "";
+
+    String cardNumber = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -163,6 +170,21 @@ public class RetraitChezSmopaye extends AppCompatActivity {
 
         numTelDonataire.setText(tmp_number);
 
+
+
+        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
+        try{
+            FileInputStream fIn2 = openFileInput(file2);
+            while ((c2 = fIn2.read()) != -1){
+                temp_data = temp_data + Character.toString((char)c2);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        String[] parts = temp_data.split("-");
+        cardNumber = parts[10]; // 12345678
 
         progressDialog = new ProgressDialog(RetraitChezSmopaye.this);
         rbtnOpenNFC.setOnClickListener(new View.OnClickListener() {
@@ -360,13 +382,14 @@ public class RetraitChezSmopaye extends AppCompatActivity {
                         }
                     });
                     //*******************FIN*****
-
                     Uri.Builder builder = new Uri.Builder();
                     builder.appendQueryParameter("auth","Card");
                     builder.appendQueryParameter("login", "transfert");
-                    builder.appendQueryParameter("telephone",numTelDonataire.getText().toString().trim());
+                    builder.appendQueryParameter("CARDNDON", cardNumber);
                     builder.appendQueryParameter("MONTANT",montantSmopaye.getText().toString().trim());
                     builder.appendQueryParameter("CARDN",numCartSmopaye.getText().toString().trim());
+                    builder.appendQueryParameter("infoplus", "retrait");
+                    builder.appendQueryParameter("telephone",numTelDonataire.getText().toString().trim());
                     builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
                     builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
 
