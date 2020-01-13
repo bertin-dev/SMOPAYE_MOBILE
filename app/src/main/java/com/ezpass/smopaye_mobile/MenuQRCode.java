@@ -414,7 +414,7 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
                             progressDialog.dismiss();
 
 
-                            int pos = f.toLowerCase().indexOf("succes");
+                            int pos = f.toLowerCase().indexOf("succès");
                             if (pos >= 0) {
 
 

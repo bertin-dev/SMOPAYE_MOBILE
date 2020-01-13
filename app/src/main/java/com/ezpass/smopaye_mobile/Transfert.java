@@ -398,7 +398,7 @@ public class Transfert extends AppCompatActivity {
                             progressDialog.dismiss();
 
 
-                            int pos = f.toLowerCase().indexOf("succes");
+                            int pos = f.toLowerCase().indexOf("succès");
                             if (pos >= 0) {
 
 
