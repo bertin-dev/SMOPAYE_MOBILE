@@ -58,6 +58,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -118,6 +119,13 @@ public class PayerFacture extends AppCompatActivity {
     ImageView conStatusIv;
     TextView titleNetworkLimited, msgNetworkLimited;
 
+    /////////////////////////////////LIRE CONTENU DES FICHIERS////////////////////
+    String file = "tmp_data_user";
+    int c;
+    String temp_data = "";
+
+    String cardNumber = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -152,6 +160,21 @@ public class PayerFacture extends AppCompatActivity {
         tel = intent.getStringExtra("telephone");
         if(tel != null)
             numTelDonataire.setText(tel);
+
+
+        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
+        try{
+            FileInputStream fIn = openFileInput(file);
+            while ((c = fIn.read()) != -1){
+                temp_data = temp_data + Character.toString((char)c);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        String[] parts = temp_data.split("-");
+        cardNumber = parts[10]; // 12345678
 
 
         progressDialog = new ProgressDialog(PayerFacture.this);
@@ -352,9 +375,9 @@ public class PayerFacture extends AppCompatActivity {
                     //*******************FIN*****
 
                     Uri.Builder builder = new Uri.Builder();
-
                     builder.appendQueryParameter("auth","Card");
-                    builder.appendQueryParameter("login", "DebitCard");
+                    builder.appendQueryParameter("login", "transfert");
+                    builder.appendQueryParameter("CARDNDON", cardNumber);
                     builder.appendQueryParameter("idTelephone", getSerialNumber().trim());
                     builder.appendQueryParameter("TELEPHONE", numTelDonataire.getText().toString().trim());
                     builder.appendQueryParameter("CARDN", numCarteBeneficiaire.getText().toString().trim());
