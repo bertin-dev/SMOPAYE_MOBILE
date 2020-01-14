@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -155,7 +156,6 @@ public class Souscription extends AppCompatActivity {
     String temp_number = "";
 
 
-    ListView listView;
     BufferedInputStream is;
     String line = null;
     String result = null;
@@ -171,262 +171,47 @@ public class Souscription extends AppCompatActivity {
     String adressUrl = "http://bertin-mounok.com/listing1.php";
 
     ArrayList<String> listStatut = new ArrayList<>();
-    ArrayList<String> listChauffeur = new ArrayList<>();
+    List<String> idStatut = new ArrayList<String>();
 
-    List<String> sIds = new ArrayList<String>();
+    ArrayList<String> listChauffeur = new ArrayList<>();
+    List<String> idChauffeur = new ArrayList<String>();
+    List<String> typeUserChauffeur = new ArrayList<String>();
+
+     String num_statut = "";
+     String num_categorie = "";
+
+
+    ArrayList<String> listUser = new ArrayList<>();
+    List<String> idUser = new ArrayList<String>();
+    List<String> typeUser = new ArrayList<String>();
+
+
+    ArrayList<String> autreUser = new ArrayList<>();
+    List<String> idAutreUser = new ArrayList<String>();
+    List<String> typeAutreUser = new ArrayList<String>();
+
+
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        statut = (Spinner) findViewById(R.id.statut);
-        typeChauffeur = (Spinner) findViewById(R.id.typeChauffeur);
-        //new loadDataSpinner().execute();
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+       // new loadDataSpinner().execute();
+
+
         StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
-        collectData();
-        //LoadSpinnerData();
 
-        /*ArrayAdapter adapt = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listSpinner);
-        sexe.setAdapter(adapt);*/
-
+        //chargement et affichage des données
+        LoadDBStatutInSpinner();
         //statut de la session
         ArrayAdapter<String> spinnerArrayAdapter1 = new ArrayAdapter<String>(
                 this,R.layout.spinner_item, listStatut);
         spinnerArrayAdapter1.setDropDownViewResource(R.layout.spinner_item);
         statut.setAdapter(spinnerArrayAdapter1);
 
-
-        //type de chauffeur
-        /*ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
-                this,R.layout.spinner_item, listChauffeur);
-        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
-        typeChauffeur.setAdapter(spinnerArrayAdapter);*/
-
-
-
-
-
-        statut.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                Toast.makeText(Souscription.this, sIds.get(position), Toast.LENGTH_SHORT).show();
-
-               /* if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("accepteur")){
-                    //typeChauffeur.setVisibility(View.VISIBLE);
-                    addItemsOnSpinner2();
-                }
-                else if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("utilisateur")){
-                    //typeChauffeur.setVisibility(View.VISIBLE);
-                    addItemsOnSpinner3();
-                }
-                else {
-                    addItemsOnSpinner1();
-                    // typeChauffeur.setVisibility(View.GONE);
-                    //typeChauffeur.setAd
-                }*/
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                return;
-            }
-        });
-
-
+        //chargement sans affichage des données
+        LoadDBCategorieInpinner();
     }
-
-
-
-    public class loadDataSpinner extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            LoadSpinnerData();
-            //customListView = new Custom_Layout_Historique(getApplicationContext(), montant_valeur, donataire_valeur, beneficiaire_valeur, date_HistoriqueTransaction);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-        }
-    }
-
-    private void LoadSpinnerData(){
-        //connection
-        try{
-
-            final Uri.Builder builder = new Uri.Builder();
-            builder.appendQueryParameter("auth","Users");
-            builder.appendQueryParameter("login", "register");
-            builder.appendQueryParameter("typeAbon", abonnement);
-            builder.appendQueryParameter("uniquser", temp_number);
-            builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
-            builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
-
-            //Connexion au serveur
-            //URL url = new URL("http://192.168.20.11:1234/listing.php"+builder.build().toString());
-            //URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
-            URL url = new URL(adressUrl);
-
-            // URL url = new URL(urlAddress+"?auth="+param1+"&login="+param2+"&dateDeal="+param3+"&TelDeal="+param4+"&TypeDeal="+param5+"&fgfggergJHGS="+param6+"&uhtdgG18="+param7);
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
-            con.setRequestMethod("GET");
-            is = new BufferedInputStream(con.getInputStream());
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
-
-        //content
-        try{
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            StringBuilder sb = new StringBuilder();
-            while ((line = br.readLine()) != null){
-                sb.append(line + "\n");
-            }
-            is.close();
-            result=sb.toString();
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
-
-        //JSON
-        try{
-            JSONArray ja = new JSONArray(result);
-            JSONObject jo = null;
-            listStatut.clear();
-
-            id_session = new String[ja.length()];
-            nom_session = new String[ja.length()];
-
-            for(int i=0; i<=ja.length();i++){
-                id_session[i] = jo.getString("id");
-                nom_session[i] = jo.getString("categoryName");
-
-
-                listStatut.add(nom_session[i]);
-            }
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
-    }
-
-
-
-
-
-    private void collectData(){
-//connection
-
-        try{
-            final Uri.Builder builder = new Uri.Builder();
-            builder.appendQueryParameter("auth","Users");
-            builder.appendQueryParameter("login", "register");
-            builder.appendQueryParameter("typeAbon", abonnement);
-            builder.appendQueryParameter("uniquser", temp_number);
-            builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
-            builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
-
-            URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
-
-            //URL url = new URL(adressUrl);
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
-            con.setRequestMethod("GET");
-            is = new BufferedInputStream(con.getInputStream());
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
-
-//content
-        try{
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            StringBuilder sb = new StringBuilder();
-            while ((line = br.readLine()) != null){
-                sb.append(line + "\n");
-            }
-            is.close();
-            result=sb.toString();
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
-
-//JSON
-        try{
-            JSONArray ja = new JSONArray(result);
-            JSONObject jo = null;
-            listStatut.clear();
-            //listChauffeur.clear();
-
-            sIds.clear();
-
-            id_session = new String[ja.length()];
-            nom_session = new String[ja.length()];
-
-            //IDCathegorie = new String[ja.length()];
-            //NOMCath = new String[ja.length()];
-            //typeuser = new String[ja.length()];
-
-            for(int i=0; i<=ja.length();i++){
-                jo = ja.getJSONObject(i);
-                id_session[i] = jo.getString("id_session");
-                nom_session[i] = jo.getString("nom_session");
-
-                //IDCathegorie[i] = jo.getString("IDCathegorie");
-                //NOMCath[i] = jo.getString("NOMCath");
-                //typeuser[i] = jo.getString("typeuser");
-
-                //spin = new SpinnerAdapter();
-                /*spin.setId_s(id[i]);
-                spin.setCat_s(categorie_name[i]);*/
-                listStatut.add(nom_session[i]);
-                //listChauffeur.add( NOMCath[i]);
-
-                sIds.add(id_session[i]);
-            }
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -443,9 +228,6 @@ public class Souscription extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
-
-
-
         progressDialog = new ProgressDialog(Souscription.this);
         build_error = new AlertDialog.Builder(Souscription.this);
 
@@ -455,14 +237,14 @@ public class Souscription extends AppCompatActivity {
         sexe = (Spinner) findViewById(R.id.sexe);
         telephone = (EditText) findViewById(R.id.numeroTel);
         cni = (EditText) findViewById(R.id.cni);
-        //statut = (Spinner) findViewById(R.id.statut);
+        statut = (Spinner) findViewById(R.id.statut);
         numCarte = (EditText) findViewById(R.id.numCarte);
         btnEnregistrer = (Button) findViewById(R.id.btnInscription);
         //btnAnnuler = (Button) findViewById(R.id.btnAnnuler);
         btnOpenNFC = (Button) findViewById(R.id.btnOpenNFC);
         // operateur = (Spinner) findViewById(R.id.operateurs);
 
-        //typeChauffeur = (Spinner) findViewById(R.id.typeChauffeur);
+        typeChauffeur = (Spinner) findViewById(R.id.typeChauffeur);
 
         adresse = (EditText) findViewById(R.id.adresse);
         AbonnementMensuel = (CheckBox) findViewById(R.id.AbonnementMensuel);
@@ -481,6 +263,12 @@ public class Souscription extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
+
+
+
+
+
+
 
 
 
@@ -580,6 +368,56 @@ public class Souscription extends AppCompatActivity {
             }
         });*/
 
+        statut.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                //Accepteur id = 2
+              if(idStatut.get(position).equalsIgnoreCase("2")){
+                  addItemsOnSpinner2();
+                  num_statut = idStatut.get(position);
+              }
+              //Utilisateur id = 1
+                else if(idStatut.get(position).equalsIgnoreCase("1")){
+                    addItemsOnSpinner3();
+                  num_statut = idStatut.get(position);
+                }
+              //Adminitrateur id = 3
+                else if(idStatut.get(position).equalsIgnoreCase("3")){
+                  addItemsOnSpinner1();
+                  num_statut = idStatut.get(position);
+              }
+              //Agent id = 4 et autre
+                else {
+                    addItemsOnSpinner1();
+                  num_statut = idStatut.get(position);
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+
+
+        typeChauffeur.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                for(String idd : idChauffeur){
+                    if(idd.equalsIgnoreCase(idChauffeur.get(position))){
+                        num_categorie = idd;
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
 
 
 
@@ -645,10 +483,12 @@ public class Souscription extends AppCompatActivity {
                                         builder.appendQueryParameter("GENRE", sexe.getSelectedItem().toString().trim().toUpperCase());
                                         builder.appendQueryParameter("TELEPHONE", telephone.getText().toString().trim());
                                         builder.appendQueryParameter("CNI", typePjustificative.getSelectedItem().toString().trim()+"-"+cni.getText().toString().trim());
-                                        builder.appendQueryParameter("sessioncompte", statut.getSelectedItem().toString().trim());
+                                        //builder.appendQueryParameter("sessioncompte", statut.getSelectedItem().toString().trim());
+                                        builder.appendQueryParameter("sessioncompte", num_statut);
                                         builder.appendQueryParameter("Adresse", adresse.getText().toString().trim());
                                         builder.appendQueryParameter("IDCARTE", numCarte.getText().toString().trim());
-                                        builder.appendQueryParameter("IDCathegorie", typeChauffeur.getSelectedItem().toString().trim());
+                                        //builder.appendQueryParameter("IDCathegorie", typeChauffeur.getSelectedItem().toString().trim());
+                                        builder.appendQueryParameter("IDCathegorie", num_categorie);
                                         builder.appendQueryParameter("typeAbon", abonnement);
                                         builder.appendQueryParameter("uniquser", temp_number);
 
@@ -1019,30 +859,42 @@ public class Souscription extends AppCompatActivity {
 
     public void addItemsOnSpinner3() {
 
+        //statique
         //spinner2 = (Spinner) findViewById(R.id.spinner2);
-        List<String> list = new ArrayList<String>();
+        /*List<String> list = new ArrayList<String>();
         list.add("étudiant");
         list.add("élève");
         list.add("particulier");
+
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
                 R.layout.spinner_item, list);
         dataAdapter.setDropDownViewResource(R.layout.spinner_item);
+        typeChauffeur.setAdapter(dataAdapter);*/
+
+        //dynamique
+        listUser.clear();
+        idUser.clear();
+        typeUser.clear();
+        for(int i=0; i<NOMCath.length; i++){
+
+            if(i>=5 && i<(NOMCath.length-1)){
+                listUser.add(NOMCath[i]);
+                idUser.add(IDCathegorie[i]);
+                typeUser.add(typeuser[i]);
+            }
+        }
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                R.layout.spinner_item, listUser);
+        dataAdapter.setDropDownViewResource(R.layout.spinner_item);
         typeChauffeur.setAdapter(dataAdapter);
-
-
-
-        /*ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
-                this,R.layout.spinner_item,typeChauffeur1);
-        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
-        typeChauffeur.setAdapter(spinnerArrayAdapter);*/
 
     }
 
 
     public void addItemsOnSpinner2() {
 
-        //spinner2 = (Spinner) findViewById(R.id.spinner2);
-        List<String> list = new ArrayList<String>();
+        //statique
+        /*List<String> list = new ArrayList<String>();
         list.add("moto_taxis");
         list.add("Chauffeur");
         list.add("mini-bus");
@@ -1053,26 +905,57 @@ public class Souscription extends AppCompatActivity {
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
                 R.layout.spinner_item, list);
         dataAdapter.setDropDownViewResource(R.layout.spinner_item);
-        typeChauffeur.setAdapter(dataAdapter);
+        typeChauffeur.setAdapter(dataAdapter);*/
+
+
+        //LoadDBCategorieInpinner();
+        //type de chauffeur
+
+        //ejection de quelques éléments de le liste
 
 
 
-        /*ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
-                this,R.layout.spinner_item,typeChauffeur1);
+        //dynamique
+        listChauffeur.clear();
+        idChauffeur.clear();
+        typeUserChauffeur.clear();
+        for(int i=0; i<NOMCath.length; i++){
+            if(i<5){
+                listChauffeur.add(NOMCath[i]);
+                idChauffeur.add(IDCathegorie[i]);
+                typeUserChauffeur.add(typeuser[i]);
+            }
+        }
+
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+                this,R.layout.spinner_item, listChauffeur);
         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
-        typeChauffeur.setAdapter(spinnerArrayAdapter);*/
-
+        typeChauffeur.setAdapter(spinnerArrayAdapter);
     }
 
     public void addItemsOnSpinner1() {
 
-        //spinner2 = (Spinner) findViewById(R.id.spinner2);
-        List<String> list = new ArrayList<String>();
+        //statique
+        /*List<String> list = new ArrayList<String>();
         list.add("smopaye");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
                 R.layout.spinner_item, list);
         dataAdapter.setDropDownViewResource(R.layout.spinner_item);
+        typeChauffeur.setAdapter(dataAdapter);*/
+
+        //dynamique
+        autreUser.clear();
+        idAutreUser.clear();
+        typeAutreUser.clear();
+        autreUser.add(NOMCath[NOMCath.length-1]);
+        idAutreUser.add(IDCathegorie[NOMCath.length-1]);
+        typeAutreUser.add(typeuser[NOMCath.length-1]);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                R.layout.spinner_item, autreUser);
+        dataAdapter.setDropDownViewResource(R.layout.spinner_item);
         typeChauffeur.setAdapter(dataAdapter);
+
+
     }
 
 
@@ -1464,6 +1347,162 @@ public class Souscription extends AppCompatActivity {
 
 
 
+    public class loadDataSpinner extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            LoadDBStatutInSpinner();
+            LoadDBCategorieInpinner();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+    }
+
+
+
+    private void LoadDBStatutInSpinner(){
+//connection
+        try{
+            final Uri.Builder builder = new Uri.Builder();
+            builder.appendQueryParameter("auth","Users");
+            builder.appendQueryParameter("login", "register");
+            builder.appendQueryParameter("infoname", "status");
+            builder.appendQueryParameter("uniquser", temp_number);
+            builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
+            builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
+
+            URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
+
+            //URL url = new URL(adressUrl);
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("GET");
+            is = new BufferedInputStream(con.getInputStream());
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+//content
+        try{
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb = new StringBuilder();
+            while ((line = br.readLine()) != null){
+                sb.append(line + "\n");
+            }
+            is.close();
+            result=sb.toString();
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+//JSON
+        try{
+            JSONArray ja = new JSONArray(result);
+            JSONObject jo = null;
+            listStatut.clear();
+
+            idStatut.clear();
+
+            id_session = new String[ja.length()];
+            nom_session = new String[ja.length()];
+
+
+            for(int i=0; i<=ja.length();i++){
+                jo = ja.getJSONObject(i);
+
+                id_session[i] = jo.getString("id_session");
+                nom_session[i] = jo.getString("nom_session");
+
+                listStatut.add(nom_session[i]);
+                idStatut.add(id_session[i]);
+            }
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+
+    private void LoadDBCategorieInpinner(){
+//connection
+
+        try{
+            final Uri.Builder builder = new Uri.Builder();
+            builder.appendQueryParameter("auth","Users");
+            builder.appendQueryParameter("login", "register");
+            builder.appendQueryParameter("infoname", "cath");
+            builder.appendQueryParameter("uniquser", temp_number);
+            builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
+            builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
+
+            URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
+
+            //URL url = new URL(adressUrl);
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("GET");
+            is = new BufferedInputStream(con.getInputStream());
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+//content
+        try{
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb = new StringBuilder();
+            while ((line = br.readLine()) != null){
+                sb.append(line + "\n");
+            }
+            is.close();
+            result=sb.toString();
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+//JSON
+        try{
+            JSONArray ja = new JSONArray(result);
+            JSONObject jo = null;
+
+            //listChauffeur.clear();
+            //idChauffeur.clear();
+            //typeUserChauffeur.clear();
+
+            IDCathegorie = new String[ja.length()];
+            NOMCath = new String[ja.length()];
+            typeuser = new String[ja.length()];
+
+            for(int i=0; i<=ja.length();i++){
+                jo = ja.getJSONObject(i);
+
+                IDCathegorie[i] = jo.getString("IDCathegorie");
+                NOMCath[i] = jo.getString("NOMCath");
+                typeuser[i] = jo.getString("typeuser");
+
+                //listChauffeur.add(NOMCath[i]);
+                //idChauffeur.add(IDCathegorie[i]);
+                //typeUserChauffeur.add(typeuser[i]);
+            }
+
+
+
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
 
 
 
