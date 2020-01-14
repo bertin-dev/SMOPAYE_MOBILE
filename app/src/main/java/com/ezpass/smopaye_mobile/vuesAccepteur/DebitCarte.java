@@ -541,7 +541,7 @@ public class DebitCarte extends AppCompatActivity {
                                                                             for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                                                 User user = userSnapshot.getValue(User.class);
                                                                                 if (user.getId_carte().equals(id_carte_sm)) {
-                                                                                    RemoteNotification(user.getId(), user.getPrenom(), "Transfert", f, "error");
+                                                                                    RemoteNotification(user.getId(), user.getPrenom(), "Débit Carte", f, "error");
                                                                                     //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                                                 } else {
                                                                                     Toast.makeText(DebitCarte.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
