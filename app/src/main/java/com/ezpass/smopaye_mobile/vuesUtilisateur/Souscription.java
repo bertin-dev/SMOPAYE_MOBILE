@@ -406,11 +406,42 @@ public class Souscription extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                for(String idd : idChauffeur){
+                /*for(String idd : idChauffeur){
                     if(idd.equalsIgnoreCase(idChauffeur.get(position))){
                         num_categorie = idd;
                     }
+                }*/
+
+                if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("particulier")){
+                    num_categorie = "41";
+                    Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("étudiant")){
+                    num_categorie = "42";
+                    Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("élève")){
+                    num_categorie = "43";
+                    Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("moto_taxis")){
+                    num_categorie = "7";
+                    Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("chauffeur")){
+                    num_categorie = "8";
+                    Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("mini-bus")){
+                    num_categorie = "9";
+                    Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("bus inter urbain")){
+                    num_categorie = "10";
+                    Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("restaurant étudiant")){
+                    num_categorie = "12";
+                    Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("smopaye")){
+                    num_categorie = "33";
+                    Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
                 }
+
+
             }
 
             @Override
@@ -877,7 +908,7 @@ public class Souscription extends AppCompatActivity {
         typeUser.clear();
         for(int i=0; i<NOMCath.length; i++){
 
-            if(i>=5 && i<(NOMCath.length-1)){
+            if(i>=6 && i<(NOMCath.length-1)){
                 listUser.add(NOMCath[i]);
                 idUser.add(IDCathegorie[i]);
                 typeUser.add(typeuser[i]);
@@ -1163,13 +1194,19 @@ public class Souscription extends AppCompatActivity {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
 
-                                            if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("accepteur")){
+                                             /*if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("accepteur")){
                                                 Intent intent = new Intent(Souscription.this, QRCodeShow.class);
                                                 intent.putExtra("id_carte", num_carte);
+                                                intent.putExtra("nom_prenom", nom1 + " " + prenom1);
                                                 startActivity(intent);
                                             } else {
                                                 return;
-                                            }
+                                            }*/
+
+                                            Intent intent = new Intent(Souscription.this, QRCodeShow.class);
+                                            intent.putExtra("id_carte", num_carte);
+                                            intent.putExtra("nom_prenom", nom1 + " " + prenom1);
+                                            startActivity(intent);
                                         }
                                     });
                                     build_error.setCancelable(false);
@@ -1410,20 +1447,17 @@ public class Souscription extends AppCompatActivity {
         try{
             JSONArray ja = new JSONArray(result);
             JSONObject jo = null;
-            listStatut.clear();
 
+            listStatut.clear();
             idStatut.clear();
 
             id_session = new String[ja.length()];
             nom_session = new String[ja.length()];
 
-
             for(int i=0; i<=ja.length();i++){
                 jo = ja.getJSONObject(i);
-
                 id_session[i] = jo.getString("id_session");
                 nom_session[i] = jo.getString("nom_session");
-
                 listStatut.add(nom_session[i]);
                 idStatut.add(id_session[i]);
             }
@@ -1476,10 +1510,6 @@ public class Souscription extends AppCompatActivity {
             JSONArray ja = new JSONArray(result);
             JSONObject jo = null;
 
-            //listChauffeur.clear();
-            //idChauffeur.clear();
-            //typeUserChauffeur.clear();
-
             IDCathegorie = new String[ja.length()];
             NOMCath = new String[ja.length()];
             typeuser = new String[ja.length()];
@@ -1490,13 +1520,7 @@ public class Souscription extends AppCompatActivity {
                 IDCathegorie[i] = jo.getString("IDCathegorie");
                 NOMCath[i] = jo.getString("NOMCath");
                 typeuser[i] = jo.getString("typeuser");
-
-                //listChauffeur.add(NOMCath[i]);
-                //idChauffeur.add(IDCathegorie[i]);
-                //typeUserChauffeur.add(typeuser[i]);
             }
-
-
 
         }
         catch (Exception ex){

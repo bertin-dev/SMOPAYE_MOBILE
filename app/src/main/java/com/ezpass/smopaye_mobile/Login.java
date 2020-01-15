@@ -350,7 +350,7 @@ public class Login extends AppCompatActivity {
 
                                 //String categorie = parts[4]; // chauffeur, moto_taxi, bus, cargo
 
-                                if(etat.equalsIgnoreCase("offline"))
+                                if(etat.toLowerCase().equalsIgnoreCase("offline"))
                                 {
                                     build_error = new AlertDialog.Builder(Login.this);
                                     View view = LayoutInflater.from(Login.this).inflate(R.layout.alert_dialog_success, null);
@@ -366,7 +366,7 @@ public class Login extends AppCompatActivity {
                                     build_error.show();
                                 }
 
-                                else if(session.equalsIgnoreCase("Utilisateur") && etat.equalsIgnoreCase("offline")){
+                                else if(session.toLowerCase().equalsIgnoreCase("utilisateur") && etat.equalsIgnoreCase("offline")){
                                     build_error = new AlertDialog.Builder(Login.this);
                                     View view = LayoutInflater.from(Login.this).inflate(R.layout.alert_dialog_success, null);
                                     TextView title = (TextView) view.findViewById(R.id.title);
@@ -381,7 +381,7 @@ public class Login extends AppCompatActivity {
                                     build_error.show();
                                 }
 
-                                else if(session.equalsIgnoreCase("Agent") && etat.equalsIgnoreCase("offline")){
+                                else if(session.toLowerCase().equalsIgnoreCase("agent") && etat.equalsIgnoreCase("offline")){
                                     build_error = new AlertDialog.Builder(Login.this);
                                     View view = LayoutInflater.from(Login.this).inflate(R.layout.alert_dialog_success, null);
                                     TextView title = (TextView) view.findViewById(R.id.title);

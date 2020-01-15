@@ -2,7 +2,9 @@ package com.ezpass.smopaye_mobile;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +25,8 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
+import com.telpo.tps550.api.TelpoException;
+import com.telpo.tps550.api.printer.UsbThermalPrinter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -40,13 +44,14 @@ import static com.ezpass.smopaye_mobile.ChaineConnexion.getsecurity_keys;
 
 public class QRCodeShow extends AppCompatActivity {
 
-    private String carte;
+    private String carte, nom_prenom;
     private ImageView qr_code;
     private TextView card_number;
     private Button btn_enregistrer, btn_imprimer;
 
     private  Bitmap bitmap;
     private String picturePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/test.bmp";
+    private String Result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +71,7 @@ public class QRCodeShow extends AppCompatActivity {
 
         Intent intent = getIntent();
         carte = intent.getStringExtra("id_carte");
+        nom_prenom = intent.getStringExtra("nom_prenom");
 
 
         String carteCrypte = "E-ZPASS" + carte.toLowerCase() + getsecurity_keys();
@@ -179,6 +185,57 @@ public class QRCodeShow extends AppCompatActivity {
                             } finally {
                                 usbThermalPrinter.stop();
                             }
+
+                    }
+                }).start();*/
+
+                //2eme methode d'impression avec logo de l'entreprise et le nom du détenteur de Code QR
+
+               /* new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        UsbThermalPrinter usbThermalPrinter = new UsbThermalPrinter(QRCodeShow.this);
+                        try {
+                            //lOGO DE l'Entreprise
+                            usbThermalPrinter.start(1);
+                            usbThermalPrinter.reset();
+                            usbThermalPrinter.setMonoSpace(true);
+                            usbThermalPrinter.setGray(7);
+                            usbThermalPrinter.setAlgin(UsbThermalPrinter.ALGIN_MIDDLE);
+                            Bitmap bitmap4 = BitmapFactory.decodeResource(QRCodeShow.this.getResources(), R.drawable.logo_moy);
+                            Bitmap bitmap5 = ThumbnailUtils.extractThumbnail(bitmap4, 244, 150);
+                            usbThermalPrinter.printLogo(bitmap5, true);
+
+                            usbThermalPrinter.setTextSize(30);
+                            usbThermalPrinter.addString("E-ZPASS");
+                            usbThermalPrinter.setAlgin(UsbThermalPrinter.ALGIN_LEFT);
+                            usbThermalPrinter.setTextSize(24);
+
+                            //QR CODE
+                            //usbThermalPrinter.start(1);
+                            Bitmap bitmap = CreateCode(carte, BarcodeFormat.QR_CODE, 384, 384);
+                            //usbThermalPrinter.reset();
+                            //usbThermalPrinter.setGray(7);
+                            usbThermalPrinter.setAlgin(UsbThermalPrinter.ALGIN_MIDDLE);
+                            usbThermalPrinter.printLogo(bitmap,true);
+
+                            usbThermalPrinter.addString(nom_prenom);
+                            usbThermalPrinter.printString();//permet d'imprimer le text
+                            usbThermalPrinter.walkPaper(10);
+                        } catch (TelpoException e) {
+                            e.printStackTrace();
+                            Result = e.toString();
+                            if (Result.equals("com.telpo.tps550.api.printer.NoPaperException")) {
+                                Toast.makeText(QRCodeShow.this, "NoPaperException", Toast.LENGTH_SHORT).show();
+                            } else if (Result.equals("com.telpo.tps550.api.printer.OverHeatException")) {
+                                Toast.makeText(QRCodeShow.this, "OverHeatException", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (WriterException e) {
+                            e.printStackTrace();
+                        } finally {
+                            usbThermalPrinter.stop();
+                        }
 
                     }
                 }).start();*/

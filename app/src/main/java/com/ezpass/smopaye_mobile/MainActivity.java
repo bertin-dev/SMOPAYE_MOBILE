@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity
         Bundle bundle1 = new Bundle();
 
 
-        if(session.equalsIgnoreCase("Administrateur")){
+        if(session.toLowerCase().equalsIgnoreCase("administrateur")){
             /*--------------------------------AJOUT DES ELEMENTS DANS LE HEADER DU  nav_header_main.xml---------------*/
 
         /*View header = LayoutInflater.from(this).inflate(R.layout.nav_header_main, null);
@@ -133,14 +133,14 @@ public class MainActivity extends AppCompatActivity
             statut.setText(session); // Accepteur, Administrateur, Utilisateur, Agent
             /*--------------------------------FIN---------------*/
 
-            if(etat.equalsIgnoreCase("Actif"))
+            if(etat.toLowerCase().equalsIgnoreCase("actif"))
                 selectedFragment1 = new AccueilFragmentAdmin();
             else {
                 selectedFragment1 = new AccueilFragmentUser();
                 statut.setText(getString(R.string.utilisateur));
             }
         }
-        else if(session.equalsIgnoreCase("Utilisateur")){
+        else if(session.toLowerCase().equalsIgnoreCase("utilisateur")){
             /*--------------------------------AJOUT DES ELEMENTS DANS LE HEADER DU  nav_header_main.xml---------------*/
             View header = navigationView.getHeaderView(0);
             statut = (TextView) header.findViewById(R.id.txt_statut);
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity
             /*--------------------------------FIN---------------*/
             selectedFragment1 = new AccueilFragmentUser();
         }
-        else if(session.equalsIgnoreCase("Agent"))
+        else if(session.toLowerCase().equalsIgnoreCase("agent"))
         {
             /*--------------------------------AJOUT DES ELEMENTS DANS LE HEADER DU  nav_header_main.xml---------------*/
             View header = navigationView.getHeaderView(0);
@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity
             statut_nom.setText(nomComplet);
             statut.setText(session); // Accepteur, Administrateur, Utilisateur, Agent
             /*--------------------------------FIN---------------*/
-            if(etat.equalsIgnoreCase("Actif"))
+            if(etat.toLowerCase().equalsIgnoreCase("actif"))
             {
                 bundle1.putString("result_BD", resultat_bd);
                 selectedFragment1 = new AccueilFragmentAgent();
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity
                 statut.setText(getString(R.string.utilisateur));
             }
         }
-        else if(session.equalsIgnoreCase("Accepteur"))  //il s 'agit d'un accepteur
+        else if(session.toLowerCase().equalsIgnoreCase("accepteur"))  //il s 'agit d'un accepteur
         {
             /*--------------------------------AJOUT DES ELEMENTS DANS LE HEADER DU  nav_header_main.xml---------------*/
             View header = navigationView.getHeaderView(0);
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity
             statut.setText(session); // Accepteur, Administrateur, Utilisateur, Agent
             /*--------------------------------FIN---------------*/
 
-            if(etat.equalsIgnoreCase("Actif")) {
+            if(etat.toLowerCase().equalsIgnoreCase("actif")) {
                 //bundle1.putString("telephone", telephone);
                 //bundle1.putString("result_BD", resultat_bd);
                 selectedFragment1 = new AccueilFragment();
@@ -233,16 +233,16 @@ public class MainActivity extends AppCompatActivity
                     case R.id.nav_Accueil:
                         getSupportActionBar().setTitle("Accueil");
                         //selectedFragment = new AccueilFragment();
-                        if(session1.equalsIgnoreCase("Administrateur"))
+                        if(session1.toLowerCase().equalsIgnoreCase("administrateur"))
                         {
-                            if(etat1.equalsIgnoreCase("Actif"))
+                            if(etat1.toLowerCase().equalsIgnoreCase("actif"))
                                 selectedFragment = new AccueilFragmentAdmin();
                             else
                                 selectedFragment = new AccueilFragmentUser();
                         }
-                        else if(session1.equalsIgnoreCase("Utilisateur"))
+                        else if(session1.toLowerCase().equalsIgnoreCase("utilisateur"))
                             selectedFragment = new AccueilFragmentUser();
-                        else if(session1.equalsIgnoreCase("Agent"))
+                        else if(session1.toLowerCase().equalsIgnoreCase("agent"))
                         {
                             bundle.putString("result_BD", resultat_bd);
                             selectedFragment = new AccueilFragmentAgent();
@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity
                         }
                         else //accepteur
                         {
-                            if(etat1.equalsIgnoreCase("Actif")) {
+                            if(etat1.toLowerCase().equalsIgnoreCase("actif")) {
                                 bundle.putString("result_BD", resultat_bd);
                                 selectedFragment = new AccueilFragment();
                                 selectedFragment.setArguments(bundle);
