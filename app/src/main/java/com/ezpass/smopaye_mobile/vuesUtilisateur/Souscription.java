@@ -96,6 +96,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.ContentValues.TAG;
+import static com.ezpass.smopaye_mobile.ChaineConnexion.getsecurity_keys;
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
 public class Souscription extends AppCompatActivity {
@@ -414,31 +415,31 @@ public class Souscription extends AppCompatActivity {
 
                 if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("particulier")){
                     num_categorie = "41";
-                    Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
                 } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("étudiant")){
                     num_categorie = "42";
-                    Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
                 } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("élève")){
                     num_categorie = "43";
-                    Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
                 } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("moto_taxis")){
                     num_categorie = "7";
-                    Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
                 } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("chauffeur")){
                     num_categorie = "8";
-                    Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
                 } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("mini-bus")){
                     num_categorie = "9";
-                    Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
                 } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("bus inter urbain")){
                     num_categorie = "10";
-                    Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
                 } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("restaurant étudiant")){
                     num_categorie = "12";
-                    Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
                 } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("smopaye")){
                     num_categorie = "33";
-                    Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -1204,7 +1205,7 @@ public class Souscription extends AppCompatActivity {
                                             }*/
 
                                             Intent intent = new Intent(Souscription.this, QRCodeShow.class);
-                                            intent.putExtra("id_carte", num_carte);
+                                            intent.putExtra("id_carte", "E-ZPASS" +num_carte + getsecurity_keys());
                                             intent.putExtra("nom_prenom", nom1 + " " + prenom1);
                                             startActivity(intent);
                                         }

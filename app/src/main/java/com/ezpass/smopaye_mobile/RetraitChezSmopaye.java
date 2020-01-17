@@ -389,7 +389,7 @@ public class RetraitChezSmopaye extends AppCompatActivity {
                     builder.appendQueryParameter("MONTANT",montantSmopaye.getText().toString().trim());
                     builder.appendQueryParameter("CARDN",numCartSmopaye.getText().toString().trim());
                     builder.appendQueryParameter("infoplus", "retrait");
-                    builder.appendQueryParameter("telephone",numTelDonataire.getText().toString().trim());
+                    builder.appendQueryParameter("uniquser",numTelDonataire.getText().toString().trim());
                     builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
                     builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
 
@@ -429,7 +429,7 @@ public class RetraitChezSmopaye extends AppCompatActivity {
                             progressDialog.dismiss();
 
 
-                            int pos = f.toLowerCase().indexOf("succes");
+                            int pos = f.toLowerCase().indexOf("succès");
                             if (pos >= 0) {
 
 
