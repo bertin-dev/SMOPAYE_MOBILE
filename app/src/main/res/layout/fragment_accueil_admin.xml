@@ -166,7 +166,7 @@
                             android:textStyle="italic"
                             android:textAlignment="gravity"
                             android:textColor="#262626"
-                            android:text="Consulter l'Historique de vos transactions éffectuées"
+                            android:text="@string/MsgConsulterHistorique"
                             android:textSize="14sp"
                             />
 

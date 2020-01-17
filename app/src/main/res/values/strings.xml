@@ -317,4 +317,7 @@
     <string name="retraitOperateur">Retrait Chez un Opérateur</string>
     <string name="consulterUnite">Consulter Unités</string>
     <string name="typeSolde">Type de Solde : </string>
+
+    <string name="MsgConsulterHistorique">Consulter l\'Historique de vos transactions éffectuées.</string>
+    <string name="MsgDescTransfert">Insérez le numero de compte du beneficiaire et le montant à tranferer, puis, appuyez sur effectuer.</string>
 </resources>
