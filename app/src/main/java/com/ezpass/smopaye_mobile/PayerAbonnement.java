@@ -82,7 +82,7 @@ import retrofit2.Response;
 import static android.content.ContentValues.TAG;
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
-public class PayerAbonnement extends AppCompatActivity {
+public class PayerAbonnement extends AppCompatActivity implements PasswordModalDialog.ExampleDialogListener{
 
 
     private CheckBox AbonnementMensuel, AbonnementHebdomadaire;
@@ -215,7 +215,7 @@ public class PayerAbonnement extends AppCompatActivity {
                     return;
                 }
 
-                paiement(ChaineConnexion.getAdresseURLsmopayeServer(), numCarteBeneficiaire.getText().toString().trim(), abonnement);
+                openDialog();
 
             }
         });
@@ -499,7 +499,7 @@ public class PayerAbonnement extends AppCompatActivity {
 
 
 
-    private void paiement(final String urladress, final String numCarte, final String typeAbonnement){
+    private void paiement(final String urladress, final String numCarte, final String typeAbonnement, String pass){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -526,6 +526,7 @@ public class PayerAbonnement extends AppCompatActivity {
                     builder.appendQueryParameter("login", "SaveAbon");
                     builder.appendQueryParameter("numcard", numCarte);
                     builder.appendQueryParameter("typeabon", typeAbonnement);
+                    builder.appendQueryParameter("mojyt", pass);
                     builder.appendQueryParameter("uniquser", temp_number);
                     builder.appendQueryParameter("fgfggergJHGS",ChaineConnexion.getEncrypted_password());
                     builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
@@ -830,5 +831,17 @@ public class PayerAbonnement extends AppCompatActivity {
     }
 
 
+    public void openDialog() {
+
+        PasswordModalDialog exampleDialog = new PasswordModalDialog();
+        exampleDialog.show(getSupportFragmentManager(), "ask password");
+
+    }
+
+    @Override
+    public void applyTexts(String pass) {
+
+        paiement(ChaineConnexion.getAdresseURLsmopayeServer(), numCarteBeneficiaire.getText().toString().trim(), abonnement, pass);
+    }
 
 }

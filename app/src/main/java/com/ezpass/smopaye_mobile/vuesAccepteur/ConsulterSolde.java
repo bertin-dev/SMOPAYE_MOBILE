@@ -29,9 +29,9 @@ import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
-import com.ezpass.smopaye_mobile.Login;
+import com.ezpass.smopaye_mobile.PasswordModalDialog;
+import com.ezpass.smopaye_mobile.QRCodeModalDialog;
 import com.ezpass.smopaye_mobile.R;
-import com.ezpass.smopaye_mobile.Tutoriel;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.telpo.tps550.api.TelpoException;
@@ -53,7 +53,7 @@ import java.util.Timer;
 
 import static android.content.ContentValues.TAG;
 
-public class ConsulterSolde extends AppCompatActivity {
+public class ConsulterSolde extends AppCompatActivity implements PasswordModalDialog.ExampleDialogListener{
 
     private Button btn, consulter;
     private EditText editText;
@@ -285,170 +285,8 @@ public class ConsulterSolde extends AppCompatActivity {
                     build_error.show();
                 }
                 else{
-                    Toast.makeText(ConsulterSolde.this, editText.getText().toString().trim(), Toast.LENGTH_SHORT).show();
-                    //-----------DEBUT
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
 
-                                //********************DEBUT***********
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        // On ajoute un message à notre progress dialog
-                                        progressDialog.setMessage(getString(R.string.connexionserver));
-                                        // On donne un titre à notre progress dialog
-                                        progressDialog.setTitle(getString(R.string.attenteReponseServer));
-                                        // On spécifie le style
-                                        //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                                        // On affiche notre message
-                                        progressDialog.show();
-                                        //build.setPositiveButton("ok", new View.OnClickListener()
-                                    }
-                                });
-                                //*******************FIN*****
-                                final Uri.Builder builder = new Uri.Builder();
-
-                                builder.appendQueryParameter("aze","Card");
-                                builder.appendQueryParameter("qsd", "consulsolde");
-                                builder.appendQueryParameter("CARDN", editText.getText().toString().trim());
-                                builder.appendQueryParameter("typesolde", typeSolde.getSelectedItem().toString().trim());
-                                //utilisation du numero de telephone annulée
-                                //builder.appendQueryParameter("tel", tmp_number);
-                                builder.appendQueryParameter("uniquser", tmp_number);
-                                builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
-                                builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
-
-                                URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
-                                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                                httpURLConnection.setConnectTimeout(5000);
-                                httpURLConnection.setRequestMethod("POST");
-                                httpURLConnection.connect();
-
-
-                                InputStream inputStream = httpURLConnection.getInputStream();
-
-                                final BufferedReader bufferedReader  =  new BufferedReader(new InputStreamReader(inputStream));
-
-                                String string="";
-                                String data="";
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(ConsulterSolde.this, "Encours de traitement...", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-
-                                while (bufferedReader.ready() || data==""){
-                                    data+=bufferedReader.readLine();
-                                }
-                                bufferedReader.close();
-                                inputStream.close();
-
-
-                                final String f = data.trim();
-
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-
-                                        int pos = f.toLowerCase().indexOf("solde");
-                                        if (pos >= 0) {
-                                            View view = LayoutInflater.from(ConsulterSolde.this).inflate(R.layout.alert_dialog_success, null);
-                                            TextView title = (TextView) view.findViewById(R.id.title);
-                                            TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                                            ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                                            title.setText(getString(R.string.information));
-                                            imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
-                                            statutOperation.setText(f);
-                                            build_error.setPositiveButton("OK", null);
-                                            build_error.setCancelable(false);
-                                            build_error.setView(view);
-                                            build_error.show();
-
-                                            progressDialog.dismiss();
-                                            Toast.makeText(ConsulterSolde.this, f, Toast.LENGTH_LONG).show();
-                                            editText.setText("");
-                                        }
-                                        else{
-                                            View view = LayoutInflater.from(ConsulterSolde.this).inflate(R.layout.alert_dialog_success, null);
-                                            TextView title = (TextView) view.findViewById(R.id.title);
-                                            TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                                            ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                                            title.setText(getString(R.string.information));
-                                            imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                                            statutOperation.setText(f);
-                                            build_error.setPositiveButton("OK", null);
-                                            build_error.setCancelable(false);
-                                            build_error.setView(view);
-                                            build_error.show();
-
-                                            progressDialog.dismiss();
-                                            Toast.makeText(ConsulterSolde.this, f, Toast.LENGTH_LONG).show();
-                                            editText.setText("");
-                                        }
-
-
-                                    }
-                                });
-
-
-                                //    JSONObject jsonObject = new JSONObject(data);
-                                //  jsonObject.getString("status");
-                                JSONArray jsonArray = new JSONArray(data);
-                                for (int i=0;i<jsonArray.length();i++){
-                                    final JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            try {
-                                                Toast.makeText(ConsulterSolde.this, jsonObject.getString("montant"), Toast.LENGTH_SHORT).show();
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    });
-                                }
-
-                            } catch (final IOException e) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        // Toast.makeText(Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        //Check si la connexion existe
-                                        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                                        NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
-                                        if(!(activeInfo != null && activeInfo.isConnected())){
-                                            progressDialog.dismiss();
-                                            authWindows.setVisibility(View.GONE);
-                                            internetIndisponible.setVisibility(View.VISIBLE);
-                                            Toast.makeText(ConsulterSolde.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
-                                        } else{
-                                            progressDialog.dismiss();
-                                            authWindows.setVisibility(View.GONE);
-                                            internetIndisponible.setVisibility(View.VISIBLE);
-                                            conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
-                                            titleNetworkLimited.setText(getString(R.string.connexionLimite));
-                                            //msgNetworkLimited.setText();
-                                            Toast.makeText(ConsulterSolde.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-                                e.printStackTrace();
-                                try {
-                                    Thread.sleep(2000);
-                                    // Toast.makeText(Consulter_Solde.this, "Impossible de se connecter au serveur", Toast.LENGTH_SHORT).show();
-                                } catch (InterruptedException e1) {
-                                    e1.printStackTrace();
-                                }
-                                progressDialog.dismiss();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }).start();
-                    //-----------FIN
+                    openDialog();
                 }
 
             }
@@ -595,5 +433,208 @@ public class ConsulterSolde extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void openDialog() {
+
+        PasswordModalDialog exampleDialog = new PasswordModalDialog();
+        exampleDialog.show(getSupportFragmentManager(), "ask password");
+
+    }
+
+    @Override
+    public void applyTexts(String pass) {
+
+        LoadSolde(pass);
+    }
+
+    private void LoadSolde(String pass) {
+
+        //-----------DEBUT
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    //********************DEBUT***********
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // On ajoute un message à notre progress dialog
+                            progressDialog.setMessage(getString(R.string.connexionserver));
+                            // On donne un titre à notre progress dialog
+                            progressDialog.setTitle(getString(R.string.attenteReponseServer));
+                            // On spécifie le style
+                            //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                            // On affiche notre message
+                            progressDialog.show();
+                            //build.setPositiveButton("ok", new View.OnClickListener()
+                        }
+                    });
+                    //*******************FIN*****
+                    final Uri.Builder builder = new Uri.Builder();
+
+                    builder.appendQueryParameter("aze","Card");
+                    builder.appendQueryParameter("qsd", "consulsolde");
+                    builder.appendQueryParameter("CARDN", editText.getText().toString().trim());
+                    builder.appendQueryParameter("typesolde", typeSolde.getSelectedItem().toString().trim());
+                    builder.appendQueryParameter("mojyt", pass);
+                    //utilisation du numero de telephone annulée
+                    //builder.appendQueryParameter("tel", tmp_number);
+                    builder.appendQueryParameter("uniquser", tmp_number);
+                    builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
+                    builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
+
+                    URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setConnectTimeout(5000);
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.connect();
+
+
+                    InputStream inputStream = httpURLConnection.getInputStream();
+
+                    final BufferedReader bufferedReader  =  new BufferedReader(new InputStreamReader(inputStream));
+
+                    String string="";
+                    String data="";
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(ConsulterSolde.this, "Encours de traitement...", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    while (bufferedReader.ready() || data==""){
+                        data+=bufferedReader.readLine();
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+
+
+                    final String f = data.trim();
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            int pos = f.toLowerCase().indexOf("solde");
+                            if (pos >= 0) {
+
+
+                                int pos2 = f.toLowerCase().indexOf("incorrecte");
+                                if (pos2 >= 0) {
+                                    View view = LayoutInflater.from(ConsulterSolde.this).inflate(R.layout.alert_dialog_success, null);
+                                    TextView title = (TextView) view.findViewById(R.id.title);
+                                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                                    title.setText(getString(R.string.information));
+                                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                                    statutOperation.setText(f);
+                                    build_error.setPositiveButton("OK", null);
+                                    build_error.setCancelable(false);
+                                    build_error.setView(view);
+                                    build_error.show();
+
+                                    progressDialog.dismiss();
+                                    Toast.makeText(ConsulterSolde.this, f, Toast.LENGTH_LONG).show();
+                                    editText.setText("");
+                                } else {
+                                    View view = LayoutInflater.from(ConsulterSolde.this).inflate(R.layout.alert_dialog_success, null);
+                                    TextView title = (TextView) view.findViewById(R.id.title);
+                                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                                    title.setText(getString(R.string.information));
+                                    imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
+                                    statutOperation.setText(f);
+                                    build_error.setPositiveButton("OK", null);
+                                    build_error.setCancelable(false);
+                                    build_error.setView(view);
+                                    build_error.show();
+
+                                    progressDialog.dismiss();
+                                    Toast.makeText(ConsulterSolde.this, f, Toast.LENGTH_LONG).show();
+                                    //editText.setText("");
+                                }
+                            }
+                            else{
+                                View view = LayoutInflater.from(ConsulterSolde.this).inflate(R.layout.alert_dialog_success, null);
+                                TextView title = (TextView) view.findViewById(R.id.title);
+                                TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                                ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                                title.setText(getString(R.string.information));
+                                imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                                statutOperation.setText(f);
+                                build_error.setPositiveButton("OK", null);
+                                build_error.setCancelable(false);
+                                build_error.setView(view);
+                                build_error.show();
+
+                                progressDialog.dismiss();
+                                Toast.makeText(ConsulterSolde.this, f, Toast.LENGTH_LONG).show();
+                                editText.setText("");
+                            }
+
+
+                        }
+                    });
+
+
+                    //    JSONObject jsonObject = new JSONObject(data);
+                    //  jsonObject.getString("status");
+                    JSONArray jsonArray = new JSONArray(data);
+                    for (int i=0;i<jsonArray.length();i++){
+                        final JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Toast.makeText(ConsulterSolde.this, jsonObject.getString("montant"), Toast.LENGTH_SHORT).show();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+
+                } catch (final IOException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Toast.makeText(Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            //Check si la connexion existe
+                            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
+                            if(!(activeInfo != null && activeInfo.isConnected())){
+                                progressDialog.dismiss();
+                                authWindows.setVisibility(View.GONE);
+                                internetIndisponible.setVisibility(View.VISIBLE);
+                                Toast.makeText(ConsulterSolde.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
+                            } else{
+                                progressDialog.dismiss();
+                                authWindows.setVisibility(View.GONE);
+                                internetIndisponible.setVisibility(View.VISIBLE);
+                                conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
+                                titleNetworkLimited.setText(getString(R.string.connexionLimite));
+                                //msgNetworkLimited.setText();
+                                Toast.makeText(ConsulterSolde.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    e.printStackTrace();
+                    try {
+                        Thread.sleep(2000);
+                        // Toast.makeText(Consulter_Solde.this, "Impossible de se connecter au serveur", Toast.LENGTH_SHORT).show();
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                    progressDialog.dismiss();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        //-----------FIN
     }
 }
