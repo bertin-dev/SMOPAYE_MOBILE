@@ -15,11 +15,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center"
+            android:gravity="top"
             android:background="#FFF"
             android:textAlignment="center"
             android:foregroundGravity="center_horizontal|center_vertical"
-            android:layout_gravity="center_horizontal|center_vertical">
+            android:layout_gravity="top">
 
             <LinearLayout
                 android:layout_height="wrap_content"
@@ -83,13 +83,64 @@
 
             </LinearLayout>
 
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="30dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="top"
+                android:foregroundGravity="top"
+                app:cardCornerRadius="4dp"
+                app:elevation="30dp"
+                app:cardElevation="10dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:orientation="horizontal">
+
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_weight="55"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:gravity="center"
+                            android:textStyle="italic|bold"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/bgColorStandard"
+                            android:text="@string/MsgDescDebitCarte"
+                            android:textSize="14sp" />
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
             <LinearLayout
                 android:id="@+id/authWindows"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:focusable="true"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="100dp"
                 android:focusableInTouchMode="true"
                 android:orientation="vertical">
 

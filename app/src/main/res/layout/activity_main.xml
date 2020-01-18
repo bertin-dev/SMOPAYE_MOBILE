@@ -35,7 +35,39 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
+            app:bb_activeTabColor="#ffae03"
             app:bb_tabXmlResource="@xml/bottombar_tabs_five" />
+
+
+        <!--
+            <com.roughike.bottombar.BottomBar
+            android:id="@+id/bottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            app:bb_tabXmlResource="@xml/bottombar_tabs_five"
+            app:bb_activeTabColor="@color/white"
+            app:bb_inActiveTabColor="@color/white"
+            android:background="@color/textColorGreen"
+            />
+
+            <com.roughike.bottombar.BottomBar
+            android:id="@+id/bottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            app:bb_tabXmlResource="@xml/bottombar_tabs_five"
+            app:bb_activeTabAlpha="1"
+            app:bb_activeTabColor="@color/white"
+            app:bb_behavior="shifting"
+            app:bb_inActiveTabAlpha="0.6"
+            app:bb_inActiveTabColor="#1B5E20"
+            app:bb_titleTextAppearance="@style/TextAppearance.AppCompat.Display4"
+            app:paddingEnd="0dp"
+            />
+
+
+            -->
 
     </RelativeLayout>
 

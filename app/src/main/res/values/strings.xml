@@ -24,7 +24,7 @@
 
 
     <string name="telecollecte_retrait">Télécollecte et Retrait</string>
-    <string name="debitCarte">Débit Carte</string>
+    <string name="debitCarte">Débit Compte</string>
     <string name="verification">Vérification</string>
     <string name="consulterSolde">Consulter Solde</string>
     <string name="rechargeComptes">Recharge Comptes</string>
@@ -55,14 +55,14 @@
 
 
     <string name="montantAccumule">Montant accumulé</string>
-    <string name="rechargeMaCarte">Recharge ma Carte</string>
+    <string name="rechargeMaCarte">Recharge mon Compte</string>
     <string name="recharge">Recharge</string>
     <string name="historique">Historique</string>
     <string name="rechargeUneAutreCarte">Recharge d\'une autre Carte</string>
     <string name="rechargeCommerciaux">Recharge pour Commerciaux</string>
 
-    <string name="numCarte">N° Carte</string>
-    <string name="votreNumCarte">Votre Numéro de Carte est :</string>
+    <string name="numCarte">N° Compte</string>
+    <string name="votreNumCarte">Votre Numéro de Compte est :</string>
 
 
     <string name="numdelaCarte">Numéro de Compte</string>
@@ -111,7 +111,7 @@
     <string name="typePj">Type de Pièce</string>
 
     <string name="admin">Administrateur</string>
-    <string name="statutAdmin">Détenteur de carte</string>
+    <string name="statutAdmin">Détenteur du Compte</string>
     <string name="souscription">Souscription</string>
     <string name="gesComptes">Gestion comptes</string>
 
@@ -119,9 +119,9 @@
     <string name="gesUserAgent">Gestion Utilisateurs et Agents</string>
     <string name="userGoogle">Utilisateurs Google</string>
     <string name="effectuer">éffectuer</string>
-    <string name="numdeCarte">Numéro de Carte</string>
-    <string name="numdeCarteDonataire">N° de carte donataire</string>
-    <string name="numdeCarteBeneficiaire">N° de carte bénéficiaire</string>
+    <string name="numdeCarte">Numéro du Compte</string>
+    <string name="numdeCarteDonataire">N° de Compte donataire</string>
+    <string name="numdeCarteBeneficiaire">N° de Compte bénéficiaire</string>
 
     <string name="apropos">Apropos</string>
     <string name="tuto">Tutorial</string>
@@ -158,7 +158,7 @@
 
 
     <string name="accueilBottomNav">Accueil</string>
-    <string name="maCarteBottomNav">Ma Carte</string>
+    <string name="maCarteBottomNav">Mon Compte</string>
     <string name="pointSmopayeBottomNav">Point Smopaye</string>
     <string name="notificationBottomNav">Notifications</string>
 
@@ -260,7 +260,7 @@
     <string name="Authentification">Authentification</string>
     <string name="typeAbonnement">Hebdomadaire</string>
     <string name="libelleAbonnementChoisi">Abonnement choisis</string>
-    <string name="libelleCarteAbonement">N° Carte</string>
+    <string name="libelleCarteAbonement">N° Compte</string>
     <string name="numCarteAbonement">12345678</string>
 
     <string name="VotreAbonnement">Votre Abonnement : </string>
@@ -319,5 +319,13 @@
     <string name="typeSolde">Type de Solde : </string>
 
     <string name="MsgConsulterHistorique">Consulter l\'Historique de vos transactions éffectuées.</string>
-    <string name="MsgDescTransfert">Insérez le numero de compte du beneficiaire et le montant à tranferer, puis, appuyez sur effectuer.</string>
+    <string name="MsgDescTransfert">Veuillez insérer le numéro de compte du bénéficiaire et le montant à transférer, puis, appuyer sur effectuer.</string>
+    <string name="MsgDescAbonnement">Veuillez insérez votre numéro de compte et sélectionner l\'abonnement souhaité, puis valider.</string>
+    <string name="MsgDescRecharge">Veuillez insérer votre numéro de compte et le montant de recharge, puis, valider.</string>
+    <string name="MsgDescPayerFacture">Veuillez insérer le numéro de compte du bénéficiaire et le montant à transférer, puis valider.</string>
+    <string name="MsgDescDebitCarte">Veuillez saisir le montant puis appuyer sur passer la carte.</string>
+    <string name="MsgDescConsulterSolde">Veuillez insérer un numéro de compte et sélectionner le type de solde, puis appuyer sur consulter.</string>
+    <string name="MsgDescRetraitChezSmopaye">Veuillez insérer le numéro de compte du bénéficiaire et le montant à retirer, puis valider.</string>
+    <string name="MsgDescRetraitChezOperateur">Veuillez insérer votre numéro de compte puis suivre les étapes.</string>
+    <string name="MsgDescVerifierNumCarte">Veuillez insérer votre numéro de carte, puis appuyer sur passer la carte.</string>
 </resources>
