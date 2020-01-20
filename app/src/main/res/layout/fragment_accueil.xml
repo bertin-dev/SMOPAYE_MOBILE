@@ -367,10 +367,10 @@ tools:showIn="@layout/app_bar_main"
 
                         <ImageView
                             android:background="@drawable/ripple_effect_click"
-                            android:layout_width="150dp"
+                            android:layout_width="130dp"
                             android:layout_height="120dp"
                             android:padding="5dp"
-                            android:src="@drawable/debit_carte_icon"/>
+                            android:src="@drawable/qrcode_icon"/>
 
                         <TextView
                             android:layout_width="wrap_content"
