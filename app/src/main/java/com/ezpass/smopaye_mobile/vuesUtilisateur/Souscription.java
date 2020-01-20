@@ -1220,7 +1220,6 @@ public class Souscription extends AppCompatActivity {
                                     cni.setText("");
                                     adresse.setText("");
                                     numCarte.setText("");
-
                                 }
                             });
                         }
