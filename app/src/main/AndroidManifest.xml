@@ -21,7 +21,8 @@
     <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-feature android:name="com.android.hardware.Camera.focus" />
+    <!--Impossible d'utiliser cette permission car elle empeche google playstore d'afficher les appreiles compatibles-->
+    <!--<uses-feature android:name="com.android.hardware.Camera.focus" />-->
 
     <application
         android:name=".NotifApp"

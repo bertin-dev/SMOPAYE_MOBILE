@@ -58,7 +58,7 @@
     <string name="rechargeMaCarte">Recharge mon Compte</string>
     <string name="recharge">Recharge</string>
     <string name="historique">Historique</string>
-    <string name="rechargeUneAutreCarte">Recharge d\'une autre Carte</string>
+    <string name="rechargeUneAutreCarte">Recharge d\'un autre Compte</string>
     <string name="rechargeCommerciaux">Recharge pour Commerciaux</string>
 
     <string name="numCarte">N° Compte</string>
@@ -68,8 +68,8 @@
     <string name="numdelaCarte">Numéro de Compte</string>
     <string name="consulter">Consulter</string>
 
-    <string name="consultSoldeDeLaCarte">Consulter le solde de la carte</string>
-    <string name="utiliserAutreCarte">Utiliser une autre carte</string>
+    <string name="consultSoldeDeLaCarte">Consulter le solde du Compte</string>
+    <string name="utiliserAutreCarte">Utiliser une autre Compte</string>
 
 
     <string name="next">Passer</string>
@@ -119,7 +119,7 @@
     <string name="gesUserAgent">Gestion Utilisateurs et Agents</string>
     <string name="userGoogle">Utilisateurs Google</string>
     <string name="effectuer">éffectuer</string>
-    <string name="numdeCarte">Numéro du Compte</string>
+    <string name="numdeCarte">Numéro de Compte</string>
     <string name="numdeCarteDonataire">N° de Compte donataire</string>
     <string name="numdeCarteBeneficiaire">N° de Compte bénéficiaire</string>
 
@@ -132,10 +132,10 @@
     <string name="typeEtatStatut">Chauffeur</string>
 
     <string name="agents">Agents</string>
-    <string name="typeAgents">Détenteur de carte</string>
+    <string name="typeAgents">Détenteur de Compte</string>
 
     <string name="user">Utilisateur</string>
-    <string name="typeUser">Détenteur de carte</string>
+    <string name="typeUser">Détenteur de Compte</string>
 
 
     <string name="subTitle">Recharge</string>
