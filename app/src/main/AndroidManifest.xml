@@ -21,9 +21,6 @@
     <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <!--Impossible d'utiliser cette permission car elle empeche google playstore d'afficher les appreiles compatibles-->
-    <!--<uses-feature android:name="com.android.hardware.Camera.focus" />-->
-
     <application
         android:name=".NotifApp"
         android:allowBackup="true"
@@ -32,7 +29,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RetraitChezSmopaye"></activity>
+        <activity android:name=".vuesUtilisateur.SouscriptionUploadIMGidCard"></activity>
+        <activity android:name=".RetraitChezSmopaye" />
         <activity android:name=".MenuRetraitOperateur" />
         <activity android:name=".AffichageQRCode" />
         <activity android:name=".MenuQRCode" />

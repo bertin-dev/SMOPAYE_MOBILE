@@ -209,6 +209,7 @@
     <string name="verouCarte">Verouiller la carte</string>
     <string name="balancerCarte">Balancer ce bouton pour empêcher toute transaction venant d\'elle</string>
     <string name="DateExpLongFormat">Lundi, le 25 decembre 2020</string>
+    <string name="impossibleUsingCamera">Impossible d\'utiliser la caméra .. Veuillez nous autoriser à utiliser la caméra</string>
 
     <string name="verouillerCarte">Êtes-vous sure de vouloir vérouiller votre carte?</string>
     <string name="deverouillerCarte">Êtes-vous sure de vouloir Devérouiller votre carte?</string>
@@ -328,4 +329,20 @@
     <string name="MsgDescRetraitChezSmopaye">Veuillez insérer le numéro de compte du bénéficiaire et le montant à retirer, puis valider.</string>
     <string name="MsgDescRetraitChezOperateur">Veuillez insérer votre numéro de compte puis suivre les étapes.</string>
     <string name="MsgDescVerifierNumCarte">Veuillez insérer votre numéro de carte, puis appuyer sur passer la carte.</string>
+
+
+    <string name="suivant">Suivant</string>
+
+    <string name="infoName">Bertin</string>
+    <string name="infoLastName">Mounok</string>
+    <string name="infoIdCard">Cameroun, Carte d\'identité</string>
+    <string name="recto">Recto</string>
+    <string name="verso">Verso</string>
+    <string name="selectionner">Selectionner</string>
+    <string name="pays">Cameroun</string>
+    <string name="tofGallery">Galerie de photos</string>
+    <string name="camera">Camera</string>
+    <string name="selectAction">Selectionner une Action</string>
+
+
 </resources>

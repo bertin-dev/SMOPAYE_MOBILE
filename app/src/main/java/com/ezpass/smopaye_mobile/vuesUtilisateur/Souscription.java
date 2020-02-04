@@ -103,7 +103,7 @@ public class Souscription extends AppCompatActivity {
 
     private EditText nom,prenom,telephone,cni,numCarte, adresse;
     private Spinner sexe, statut, typeChauffeur, typePjustificative;
-    private Button btnEnregistrer, btnAnnuler, btnOpenNFC;
+    private Button btnSuivant, btnAnnuler, btnOpenNFC;
     private ProgressDialog progressDialog;
     /////////////////////////////////////////////////////////////////////////////////
     Handler handler;
@@ -223,7 +223,7 @@ public class Souscription extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_souscription);
 
-        getSupportActionBar().setTitle("Souscription");
+        getSupportActionBar().setTitle("Souscription Etape 1");
         //getSupportParentActivityIntent().putExtra("resultatBD", "Administrateur");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -240,7 +240,7 @@ public class Souscription extends AppCompatActivity {
         cni = (EditText) findViewById(R.id.cni);
         statut = (Spinner) findViewById(R.id.statut);
         numCarte = (EditText) findViewById(R.id.numCarte);
-        btnEnregistrer = (Button) findViewById(R.id.btnInscription);
+        btnSuivant = (Button) findViewById(R.id.btnSuivant);
         //btnAnnuler = (Button) findViewById(R.id.btnAnnuler);
         btnOpenNFC = (Button) findViewById(R.id.btnOpenNFC);
         // operateur = (Spinner) findViewById(R.id.operateurs);
@@ -320,7 +320,7 @@ public class Souscription extends AppCompatActivity {
         // Initializing a String Array
         String[] pieceJ = new String[]{
                 "CNI",
-                "passport",
+                "passeport",
                 "recipissé",
                 "carte de séjour",
                 "carte d'étudiant"
@@ -454,14 +454,28 @@ public class Souscription extends AppCompatActivity {
 
 
 
-        btnEnregistrer.setOnClickListener(new View.OnClickListener() {
+        btnSuivant.setOnClickListener(new View.OnClickListener() {
 
 
 
             @Override
             public void onClick(View v) {
 
-                if(nom.getText().toString().trim().equals("") || prenom.getText().toString().trim().equals("") || telephone.getText().toString().trim().equals("")
+                Intent intent = new Intent(getApplicationContext(), SouscriptionUploadIMGidCard.class);
+                intent.putExtra("NOM", nom.getText().toString().trim().toLowerCase());
+                intent.putExtra("PRENOM", prenom.getText().toString().trim().toLowerCase());
+                intent.putExtra("GENRE", sexe.getSelectedItem().toString().trim().toUpperCase());
+                intent.putExtra("TELEPHONE", telephone.getText().toString().trim());
+                intent.putExtra("CNI", typePjustificative.getSelectedItem().toString().trim()+"-"+cni.getText().toString().trim());
+                intent.putExtra("sessioncompte", num_statut);
+                intent.putExtra("Adresse", adresse.getText().toString().trim());
+                intent.putExtra("IDCARTE", numCarte.getText().toString().trim());
+                intent.putExtra("IDCathegorie", num_categorie);
+                intent.putExtra("typeAbon", abonnement);
+                intent.putExtra("uniquser", temp_number);
+                startActivity(intent);
+
+                /*if(nom.getText().toString().trim().equals("") || prenom.getText().toString().trim().equals("") || telephone.getText().toString().trim().equals("")
                         || cni.getText().toString().trim().equals("") || adresse.getText().toString().trim().equals("") || numCarte.getText().toString().trim().equals("")) {
                     Toast.makeText(Souscription.this, getString(R.string.champsVide), Toast.LENGTH_SHORT).show();
 
@@ -681,7 +695,7 @@ public class Souscription extends AppCompatActivity {
                         build_error.setView(view);
                         build_error.show();
                     }
-                }
+                }*/
             }
 
         });
@@ -1077,7 +1091,8 @@ public class Souscription extends AppCompatActivity {
 
         if(id == R.id.modifierCompte){
             Intent intent = new Intent(getApplicationContext(), ModifierCompte.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("telephone", temp_number);
             startActivity(intent);
             finish();
             return true;
