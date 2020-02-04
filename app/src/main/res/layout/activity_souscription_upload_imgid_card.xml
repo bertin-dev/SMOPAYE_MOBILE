@@ -145,14 +145,14 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="right">
+                android:orientation="horizontal">
 
                 <Button
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:text="@string/terminer"
                     android:textColor="#FFF"
+                    android:gravity="center"
                     android:background="@color/colorPrimary"
                     android:id="@+id/buttonUpload"
                     android:visibility="gone"/>

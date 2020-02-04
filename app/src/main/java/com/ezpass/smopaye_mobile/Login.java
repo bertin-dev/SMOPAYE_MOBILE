@@ -26,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ezpass.smopaye_mobile.vuesUtilisateur.Souscription;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
@@ -64,7 +65,7 @@ public class Login extends AppCompatActivity {
     private AlertDialog.Builder build, build_error;
     private ProgressDialog progressDialog;
     private LinearLayout internetIndisponible, authWindows;
-    private Button btnReessayer;
+    private Button btnReessayer, btnSouscription, loginBtn;
 
 
     /*service google firebase*/
@@ -89,7 +90,8 @@ public class Login extends AppCompatActivity {
 
         /* Verification si l'utilisateur a cliqué pour voir le mot de passe ou pas. */
 
-        Button loginBtn = (Button) findViewById(R.id.btnlogin);
+        loginBtn = (Button) findViewById(R.id.btnlogin);
+        btnSouscription = (Button) findViewById(R.id.btnSouscription);
         //loginPass = (ShowHidePasswordEditText) findViewById(R.id.loginPass);
 
         mNumeroTel = findViewById(R.id.telephone);
@@ -105,12 +107,18 @@ public class Login extends AppCompatActivity {
 
 
         loginBtn.setOnClickListener(this::submitData);
+        btnSouscription.setOnClickListener(this::openActivityRegister);
 
         mNumeroTel.setErrorTextColor(ColorStateList.valueOf(Color.BLUE));
         mPassword.setErrorTextColor(ColorStateList.valueOf(Color.BLUE));
 
         btnReessayer.setOnClickListener(this::checkNetworkConnectionStatus);
 
+    }
+
+    private void openActivityRegister(View view) {
+        Intent intent = new Intent(getApplicationContext(), Souscription.class);
+        startActivity(intent);
     }
 
     public void checkNetworkConnectionStatus(View view) {

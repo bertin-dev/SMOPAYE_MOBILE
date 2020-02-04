@@ -81,7 +81,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
         setContentView(R.layout.activity_souscription_upload_imgid_card);
 
 
-        getSupportActionBar().setTitle("Souscription Etape 2");
+        getSupportActionBar().setTitle("Souscription Etape Finale");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
