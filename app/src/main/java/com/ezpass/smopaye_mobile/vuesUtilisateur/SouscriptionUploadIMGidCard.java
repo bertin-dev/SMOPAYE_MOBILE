@@ -52,13 +52,14 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
     ImageView ShowSelectedImageRecto, ShowSelectedImageVerso;
     EditText imageName;
     Bitmap FixBitmap, FixBitmap2;
-    String ImageTag = "image_tag" ;
-    String ImageName = "image_data" ;
+    String ImageTagRecto = "image_tag" ;
+    String ImageNameRecto = "image_data" ;
+    String ImageTagVerso = "image_tag" ;
+    String ImageNameVerso = "image_data" ;
     ProgressDialog progressDialog ;
     ByteArrayOutputStream byteArrayOutputStream ;
     byte[] byteArray ;
     String ConvertImage ;
-    String GetImageNameFromEditText;
     HttpURLConnection httpURLConnection ;
     URL url;
     OutputStream outputStream;
@@ -69,10 +70,11 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
     boolean check = true;
     private int GALLERY = 1, CAMERA = 2;
 
-    String nom, prenom, genre, tel, cni, sessioncompte, adresse, idcarte, idcategorie, typeabon, uniquser;
+    String nom, prenom, genre, tel, cni, sessioncompte, adresse, idcarte, idcategorie, typeabon, uniquser, GetImageNameFromRectoIdCard, GetImageNameFromVersoIdCard;
     LinearLayout imgCardVerso;
     RelativeLayout dividerBarUpload;
     TextView infoNom, infoPrenom, infoCni;
+
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -139,7 +141,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                GetImageNameFromEditText = imageName.getText().toString();
+                GetImageNameFromRectoIdCard = "Recto_" + parts[0] +"_" + prenom + "_" + nom;
+                GetImageNameFromVersoIdCard = "Verso_" + parts[0] +"_" + prenom + "_" + nom;
 
                 //UploadImageToServer();
 
@@ -292,9 +295,11 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
                 HashMap<String,String> HashMapParams = new HashMap<String,String>();
 
-                HashMapParams.put(ImageTag, GetImageNameFromEditText);
+                HashMapParams.put(ImageTagRecto, GetImageNameFromRectoIdCard);
+                HashMapParams.put(ImageNameVerso, ConvertImage);
 
-                HashMapParams.put(ImageName, ConvertImage);
+                HashMapParams.put(ImageTagVerso, GetImageNameFromVersoIdCard);
+                HashMapParams.put(ImageNameVerso, ConvertImage);
 
                 String FinalData = imageProcessClass.ImageHttpRequest("http://192.168.43.86/projects/AndroidUpload/upload-image-to-server.php", HashMapParams);
 
