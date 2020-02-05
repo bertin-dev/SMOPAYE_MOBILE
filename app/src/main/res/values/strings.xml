@@ -343,6 +343,9 @@
     <string name="tofGallery">Galerie de photos</string>
     <string name="camera">Camera</string>
     <string name="selectAction">Selectionner une Action</string>
+    <string name="veuillezInserer">S\'il vous plait veuillez inserer votre</string>
+    <string name="votre">Votre</string>
+    <string name="invalidCararatere">contient un ou plusieurs caractères invalides</string>
 
 
 </resources>

@@ -1,6 +1,8 @@
 package com.ezpass.smopaye_mobile.vuesUtilisateur;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,25 +12,54 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
+import com.ezpass.smopaye_mobile.ChaineConnexion;
+import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
+import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbUser;
+import com.ezpass.smopaye_mobile.NotifReceiver;
+import com.ezpass.smopaye_mobile.QRCodeShow;
 import com.ezpass.smopaye_mobile.R;
+import com.ezpass.smopaye_mobile.RemoteFragments.APIService;
+import com.ezpass.smopaye_mobile.RemoteModel.User;
+import com.ezpass.smopaye_mobile.RemoteNotifications.Client;
+import com.ezpass.smopaye_mobile.RemoteNotifications.Data;
+import com.ezpass.smopaye_mobile.RemoteNotifications.MyResponse;
+import com.ezpass.smopaye_mobile.RemoteNotifications.Sender;
+import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -41,16 +72,25 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.ezpass.smopaye_mobile.ChaineConnexion.getsecurity_keys;
+import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
 public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
     Button GetImageFromGalleryButton, UploadImageOnServerButton;
     ImageView ShowSelectedImageRecto, ShowSelectedImageVerso;
-    EditText imageName;
     Bitmap FixBitmap, FixBitmap2;
     String ImageTagRecto = "nom_piece_recto" ;
     String ImageNameRecto = "piece_recto" ;
@@ -70,10 +110,26 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
     boolean check = true;
     private int GALLERY = 1, CAMERA = 2;
 
-    String nom, prenom, genre, tel, cni, sessioncompte, adresse, idcarte, idcategorie, typeabon, uniquser, GetImageNameFromRectoIdCard, GetImageNameFromVersoIdCard;
+    String nom, prenom, genre, tel, cni, sessioncompte, adresse, idcarte, idcategorie, typeabon, uniquser, GetImageNameFromRectoIdCard, GetImageNameFromVersoIdCard, sessioncompteValue, idcategorieValue;
     LinearLayout imgCardVerso;
     RelativeLayout dividerBarUpload;
     TextView infoNom, infoPrenom, infoCni;
+    AlertDialog.Builder build_error;
+
+
+    //BD LOCALE
+    private DbHandler dbHandler;
+    private DbUser dbUser;
+    private Date aujourdhui;
+    private DateFormat shortDateFormat;
+
+
+
+    //SERVICES GOOGLE FIREBASE
+    FirebaseAuth auth;
+    DatabaseReference reference;
+    APIService apiService;
+    FirebaseUser fuser;
 
 
     @SuppressLint("SetTextI18n")
@@ -83,7 +139,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
         setContentView(R.layout.activity_souscription_upload_imgid_card);
 
 
-        getSupportActionBar().setTitle("Souscription Etape Finale");
+        getSupportActionBar().setTitle("Souscription - Etape Finale");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -100,6 +156,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
         idcategorie = intent.getStringExtra("IDCathegorie");
         typeabon = intent.getStringExtra("typeAbon");
         uniquser = intent.getStringExtra("uniquser");
+        sessioncompteValue = intent.getStringExtra("sessioncompteValue");
+        idcategorieValue = intent.getStringExtra("IDCathegorieValue");
 
 
 
@@ -113,7 +171,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
         infoPrenom = (TextView) findViewById(R.id.infoPrenom);
         infoCni = (TextView) findViewById(R.id.infoCni);
         dividerBarUpload = (RelativeLayout) findViewById(R.id.dividerBarUpload);
-        //imageName=(EditText)findViewById(R.id.imageName);
+
+
 
 
         String[] parts = cni.split("-");
@@ -278,6 +337,12 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                 super.onPreExecute();
 
                 progressDialog = ProgressDialog.show(SouscriptionUploadIMGidCard.this,"Chargement Encours...","Patientez s'il vous plait",false,false);
+                build_error = new AlertDialog.Builder(SouscriptionUploadIMGidCard.this);
+
+                //SERVICE GOOGLE FIREBASE
+                auth = FirebaseAuth.getInstance();
+                apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
+                fuser = FirebaseAuth.getInstance().getCurrentUser();
             }
 
             @Override
@@ -285,9 +350,44 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
                 super.onPostExecute(string1);
 
+                String f = string1.toLowerCase().trim();
+
                 progressDialog.dismiss();
 
-                Toast.makeText(SouscriptionUploadIMGidCard.this,string1,Toast.LENGTH_LONG).show();
+                int pos = f.indexOf("success");
+                if (pos >= 0) {
+
+                    registerGoogleFirebase(nom, prenom, genre,
+                            tel,  cni, sessioncompteValue,
+                            adresse, idcarte, idcategorieValue,
+                            "sm" + tel + "@smopaye.cm", tel, "default", "offline", typeabon, f);
+                } else{
+
+                    ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
+                    dbHandler = new DbHandler(getApplicationContext());
+                    aujourdhui = new Date();
+                    shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+
+                    //////////////////////////////////NOTIFICATIONS////////////////////////////////
+                    LocalNotification("Souscription", f);
+                    dbHandler.insertUserDetails("Souscription","carte non enregistré", "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+
+                    build_error = new AlertDialog.Builder(SouscriptionUploadIMGidCard.this);
+                    View view = LayoutInflater.from(SouscriptionUploadIMGidCard.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                    statutOperation.setText(f);
+                    build_error.setPositiveButton("OK", null);
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
+
+                    Toast.makeText(getApplicationContext(), f, Toast.LENGTH_LONG).show();
+
+                }
 
             }
 
@@ -298,13 +398,30 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
                 HashMap<String,String> HashMapParams = new HashMap<String,String>();
 
+
+                HashMapParams.put("enregUser","users");
+                HashMapParams.put("enregReg", "register");
+
+                HashMapParams.put("NOM", nom);
+                HashMapParams.put("PRENOM", prenom);
+                HashMapParams.put("GENRE", genre.toUpperCase());
+                HashMapParams.put("TELEPHONE", tel);
+                HashMapParams.put("CNI", cni);
+                HashMapParams.put("sessioncompte", sessioncompte);
+                HashMapParams.put("Adresse", adresse);
+                HashMapParams.put("IDCARTE", idcarte);
+                HashMapParams.put("IDCathegorie", idcategorie);
+                HashMapParams.put("typeAbon", typeabon);
+                HashMapParams.put("uniquser", uniquser);
                 HashMapParams.put(ImageTagRecto, GetImageNameFromRectoIdCard);
                 HashMapParams.put(ImageNameRecto, ConvertImageRecto);
-
                 HashMapParams.put(ImageTagVerso, GetImageNameFromVersoIdCard);
                 HashMapParams.put(ImageNameVerso, ConvertImageVerso);
 
-                String FinalData = imageProcessClass.ImageHttpRequest("http://192.168.43.86/projects/AndroidUpload/upload-image-to-server.php", HashMapParams);
+                HashMapParams.put("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
+                HashMapParams.put("uhtdgG18",ChaineConnexion.getSalt());
+
+                String FinalData = imageProcessClass.ImageHttpRequest(ChaineConnexion.getAdresseURLsmopayeServer(), HashMapParams);
 
                 return FinalData;
             }
@@ -452,4 +569,238 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    private void registerGoogleFirebase(final String nom1, final String prenom1, final String sexe1,
+                                        final String tel1, final String cni1, final String session1,
+                                        final String adresse1, final String id_carte1, final String typeUser1,
+                                        String email1, String password1, final String imageURL1, final String status1, final String abonnement1, final String f1)
+    {
+
+        auth.createUserWithEmailAndPassword(email1, password1)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            FirebaseUser firebaseUser = auth.getCurrentUser();
+                            assert firebaseUser != null;
+                            String userid = firebaseUser.getUid();
+                            reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
+                            HashMap<String, String> hashMap = new HashMap<>();
+                            hashMap.put("id", userid);
+                            hashMap.put("nom", nom1);
+                            hashMap.put("prenom", prenom1);
+                            hashMap.put("sexe", sexe1);
+                            hashMap.put("tel", tel1);
+                            hashMap.put("cni", cni1);
+                            hashMap.put("session", session1);
+                            hashMap.put("adresse", adresse1);
+                            hashMap.put("id_carte", id_carte1);
+                            hashMap.put("typeUser", typeUser1);
+                            hashMap.put("imageURL", imageURL1);
+                            hashMap.put("status", status1);
+                            hashMap.put("search", nom1.toLowerCase());
+                            hashMap.put("abonnement", abonnement1);
+
+                            reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Toast.makeText(SouscriptionUploadIMGidCard.this, "Opération Réussie", Toast.LENGTH_SHORT).show();
+
+                                    /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
+
+                                    //SERVICE GOOGLE FIREBASE
+
+                                    Query query = FirebaseDatabase.getInstance().getReference("Users")
+                                            .orderByChild("id_carte")
+                                            .equalTo(id_carte1);
+
+                                    query.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                            if(dataSnapshot.exists()){
+                                                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                                                    User user = userSnapshot.getValue(User.class);
+                                                    if (user.getId_carte().equals(id_carte1)) {
+                                                        RemoteNotification(user.getId(), user.getPrenom(), "Souscription", f1, "success");
+                                                        //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(SouscriptionUploadIMGidCard.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            }
+                                            else{
+                                                Toast.makeText(SouscriptionUploadIMGidCard.this, "Impossible d'envoyer votre Notification", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+
+
+                                    ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
+                                    dbHandler = new DbHandler(getApplicationContext());
+                                    dbUser = new DbUser(getApplicationContext());
+                                    aujourdhui = new Date();
+                                    shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+
+                                    //////////////////////////////////NOTIFICATIONS////////////////////////////////
+                                    LocalNotification("Souscription", f1);
+                                    dbHandler.insertUserDetails("Souscription",f1, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+
+
+                                    ////////////////////INSERTION DES DONNEES UTILISATEURS DANS LA BD LOCALE/////////////////////////
+                                    dbUser.insertInfoUser(nom1, prenom1, sexe1,
+                                            tel1, cni1, session1,
+                                            adresse1, id_carte1, typeUser1,
+                                            "default", "offline" , abonnement1, shortDateFormat.format(aujourdhui));
+
+
+                                    String num_carte = id_carte1;
+
+                                    View view = LayoutInflater.from(SouscriptionUploadIMGidCard.this).inflate(R.layout.alert_dialog_success, null);
+                                    TextView title = (TextView) view.findViewById(R.id.title);
+                                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                                    title.setText(getString(R.string.information));
+                                    imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
+                                    statutOperation.setText(f1);
+                                    build_error.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                             /*if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("accepteur")){
+                                                Intent intent = new Intent(Souscription.this, QRCodeShow.class);
+                                                intent.putExtra("id_carte", num_carte);
+                                                intent.putExtra("nom_prenom", nom1 + " " + prenom1);
+                                                startActivity(intent);
+                                            } else {
+                                                return;
+                                            }*/
+
+                                            Intent intent = new Intent(SouscriptionUploadIMGidCard.this, QRCodeShow.class);
+                                            intent.putExtra("id_carte", "E-ZPASS" +num_carte + getsecurity_keys());
+                                            intent.putExtra("nom_prenom", nom1 + " " + prenom1);
+                                            startActivity(intent);
+                                        }
+                                    });
+                                    build_error.setCancelable(false);
+                                    build_error.setView(view);
+                                    build_error.show();
+
+                                    /*nom.setText("");
+                                    prenom.setText("");
+                                    telephone.setText("");
+                                    cni.setText("");
+                                    adresse.setText("");
+                                    numCarte.setText("");*/
+                                }
+                            });
+                        }
+                        else{
+
+                            ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
+                            dbHandler = new DbHandler(getApplicationContext());
+                            aujourdhui = new Date();
+                            shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+
+                            //////////////////////////////////NOTIFICATIONS////////////////////////////////
+                            LocalNotification("Souscription", getString(R.string.impossibleRegister));
+                            dbHandler.insertUserDetails("Souscription",getString(R.string.impossibleRegister), "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+
+                            Toast.makeText(SouscriptionUploadIMGidCard.this, getString(R.string.impossibleRegister), Toast.LENGTH_SHORT).show();
+                            View view = LayoutInflater.from(SouscriptionUploadIMGidCard.this).inflate(R.layout.alert_dialog_success, null);
+                            TextView title = (TextView) view.findViewById(R.id.title);
+                            TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                            ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                            title.setText(getString(R.string.information));
+                            imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                            statutOperation.setText(getString(R.string.impossibleRegister));
+                            build_error.setPositiveButton("OK", null);
+                            build_error.setCancelable(false);
+                            build_error.setView(view);
+                            build_error.show();
+                        }
+                    }
+                });
+    }
+
+    private void RemoteNotification(final String receiver, final String username, final String title, final String message, final String statut_notif){
+
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = tokens.orderByKey().equalTo(receiver);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Token token = snapshot.getValue(Token.class);
+
+                    Data data = new Data(fuser.getUid(), R.drawable.logo2, username + ": " + message, title, receiver, statut_notif);
+                    Sender sender = new Sender(data, token.getToken());
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    if(response.code() == 200){
+                                        if(response.body().success != 1){
+                                            Toast.makeText(SouscriptionUploadIMGidCard.this, "Failed", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    public void LocalNotification(String titles, String subtitles){
+
+        ///////////////DEBUT NOTIFICATIONS///////////////////////////////
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+
+        RemoteViews collapsedView = new RemoteViews(getPackageName(),
+                R.layout.notif_collapsed);
+        RemoteViews expandedView = new RemoteViews(getPackageName(),
+                R.layout.notif_expanded);
+
+        Intent clickIntent = new Intent(getApplicationContext(), NotifReceiver.class);
+        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
+                0, clickIntent, 0);
+
+        collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
+        collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
+
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo2);
+        expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
+
+        Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                .setSmallIcon(R.drawable.logo2)
+                .setCustomContentView(collapsedView)
+                .setCustomBigContentView(expandedView)
+                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                .build();
+
+        notificationManager.notify(new Random().nextInt(), notification);
+        ////////////////////////////////////FIN NOTIFICATIONS/////////////////////
+    }
+
+
+
 }

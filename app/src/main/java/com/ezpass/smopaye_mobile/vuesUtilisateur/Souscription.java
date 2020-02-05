@@ -1,5 +1,6 @@
 package com.ezpass.smopaye_mobile.vuesUtilisateur;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -128,20 +129,6 @@ public class Souscription extends AppCompatActivity {
     private CheckBox AbonnementService;
 
 
-    //BD LOCALE
-    private DbHandler dbHandler;
-    private DbUser dbUser;
-    private Date aujourdhui;
-    private DateFormat shortDateFormat;
-
-
-
-    //SERVICES GOOGLE FIREBASE
-    FirebaseAuth auth;
-    DatabaseReference reference;
-    APIService apiService;
-    FirebaseUser fuser;
-
 
     private String abonnement = "service";
 
@@ -192,6 +179,30 @@ public class Souscription extends AppCompatActivity {
     List<String> typeAutreUser = new ArrayList<String>();
 
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Toast.makeText(Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        //Check si la connexion existe
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
+        if(!(activeInfo != null && activeInfo.isConnected())){
+            progressDialog.dismiss();
+            authWindows.setVisibility(View.GONE);
+            internetIndisponible.setVisibility(View.VISIBLE);
+            Toast.makeText(Souscription.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
+        } else if ((activeInfo == null && !activeInfo.isConnected())){
+            progressDialog.dismiss();
+            authWindows.setVisibility(View.GONE);
+            internetIndisponible.setVisibility(View.VISIBLE);
+            conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
+            titleNetworkLimited.setText(getString(R.string.connexionLimite));
+            //msgNetworkLimited.setText();
+            Toast.makeText(Souscription.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
+        }
+
+    }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -223,7 +234,7 @@ public class Souscription extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_souscription);
 
-        getSupportActionBar().setTitle("Souscription Etape 1");
+        getSupportActionBar().setTitle("Souscription - Etape 1");
         //getSupportParentActivityIntent().putExtra("resultatBD", "Administrateur");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -260,10 +271,7 @@ public class Souscription extends AppCompatActivity {
         titleNetworkLimited = (TextView) findViewById(R.id.titleNetworkLimited);
         msgNetworkLimited = (TextView) findViewById(R.id.msgNetworkLimited);
 
-        //SERVICE GOOGLE FIREBASE
-        auth = FirebaseAuth.getInstance();
-        apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
-        fuser = FirebaseAuth.getInstance().getCurrentUser();
+
 
 
 
@@ -458,24 +466,181 @@ public class Souscription extends AppCompatActivity {
 
 
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getApplicationContext(), SouscriptionUploadIMGidCard.class);
-                intent.putExtra("NOM", nom.getText().toString().trim().toLowerCase());
-                intent.putExtra("PRENOM", prenom.getText().toString().trim().toLowerCase());
-                intent.putExtra("GENRE", sexe.getSelectedItem().toString().trim().toUpperCase());
-                intent.putExtra("TELEPHONE", telephone.getText().toString().trim());
-                intent.putExtra("CNI", typePjustificative.getSelectedItem().toString().trim()+"-"+cni.getText().toString().trim());
-                intent.putExtra("sessioncompte", num_statut);
-                intent.putExtra("Adresse", adresse.getText().toString().trim());
-                intent.putExtra("IDCARTE", numCarte.getText().toString().trim());
-                intent.putExtra("IDCathegorie", num_categorie);
-                intent.putExtra("typeAbon", abonnement);
-                intent.putExtra("uniquser", temp_number);
-                startActivity(intent);
+                if(nom.getText().toString().trim().equals("")){
+                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " Nom.", Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                    statutOperation.setText(getString(R.string.veuillezInserer) + " Nom.");
+                    build_error.setPositiveButton("OK", null);
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
+                    return;
+                }
 
-                /*if(nom.getText().toString().trim().equals("") || prenom.getText().toString().trim().equals("") || telephone.getText().toString().trim().equals("")
+                if(prenom.getText().toString().trim().equals("")){
+                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " Prénom.", Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                    statutOperation.setText(getString(R.string.veuillezInserer) + " Prénom.");
+                    build_error.setPositiveButton("OK", null);
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
+                    return;
+                }
+
+                if(telephone.getText().toString().trim().equals("")){
+                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " numéro de téléphone.", Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                    statutOperation.setText(getString(R.string.veuillezInserer) + " numéro de téléphone.");
+                    build_error.setPositiveButton("OK", null);
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
+                    return;
+                }
+
+                if(cni.getText().toString().trim().equals("")){
+                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " numéro de pièce justificative.", Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                    statutOperation.setText(getString(R.string.veuillezInserer) + " numéro de pièce justificative.");
+                    build_error.setPositiveButton("OK", null);
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
+                    return;
+                }
+
+                if(adresse.getText().toString().trim().equals("")){
+                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " Adresse.", Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                    statutOperation.setText(getString(R.string.veuillezInserer) + " Adresse.");
+                    build_error.setPositiveButton("OK", null);
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
+                    return;
+                }
+
+                if(numCarte.getText().toString().isEmpty()){
+                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " numéro de compte.", Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                    statutOperation.setText(getString(R.string.veuillezInserer) + " numéro de compte.");
+                    build_error.setPositiveButton("OK", null);
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
+                    return;
+                }
+
+                /*if(statut.getSelectedItem().toString().isEmpty()){
+                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " session dans liste déroulante en vérifiant votre connexion internet.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(typeChauffeur.getSelectedItem().toString().trim().equals("")){
+                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " catégorie dans liste déroulante en vérifiant votre connexion internet.", Toast.LENGTH_SHORT).show();
+                    return;
+                }*/
+
+                    if(!isValid(nom.getText().toString().trim())){
+                        Toast.makeText(Souscription.this, getString(R.string.votre) + " nom " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
+                        View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                        TextView title = (TextView) view.findViewById(R.id.title);
+                        TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                        ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                        title.setText(getString(R.string.information));
+                        imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                        statutOperation.setText(getString(R.string.votre) + " nom " + getString(R.string.invalidCararatere));
+                        build_error.setPositiveButton("OK", null);
+                        build_error.setCancelable(false);
+                        build_error.setView(view);
+                        build_error.show();
+                        return;
+                    }
+
+                if(!isValid(prenom.getText().toString().trim())){
+                    Toast.makeText(Souscription.this, getString(R.string.votre) + " prénom " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                    statutOperation.setText(getString(R.string.votre) + " prénom " + getString(R.string.invalidCararatere));
+                    build_error.setPositiveButton("OK", null);
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
+                    return;
+                }
+
+                if(!isValid(cni.getText().toString().trim())){
+                    Toast.makeText(Souscription.this, getString(R.string.votre) + typePjustificative.getSelectedItem().toString() + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                    statutOperation.setText(getString(R.string.votre) + typePjustificative.getSelectedItem().toString() + getString(R.string.invalidCararatere));
+                    build_error.setPositiveButton("OK", null);
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
+                    return;
+                }
+
+                if(!isValid(adresse.getText().toString().trim())){
+                    Toast.makeText(Souscription.this, getString(R.string.votre) + "adresse" + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                    statutOperation.setText(getString(R.string.votre) + " adresse " + getString(R.string.invalidCararatere));
+                    build_error.setPositiveButton("OK", null);
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
+                    return;
+                }
+
+                    if(nom.getText().toString().trim().equals("") || prenom.getText().toString().trim().equals("") || telephone.getText().toString().trim().equals("")
                         || cni.getText().toString().trim().equals("") || adresse.getText().toString().trim().equals("") || numCarte.getText().toString().trim().equals("")) {
                     Toast.makeText(Souscription.this, getString(R.string.champsVide), Toast.LENGTH_SHORT).show();
 
@@ -493,13 +658,29 @@ public class Souscription extends AppCompatActivity {
 
 
                 }else{
-                    if (isValid(nom.getText().toString().trim()) && isValid(prenom.getText().toString().trim()) && isValid(cni.getText().toString().trim())
-                            && isValid(adresse.getText().toString().trim())) {
+
                         if(telephone.length()==9){
+
+
+                            Intent intent = new Intent(getApplicationContext(), SouscriptionUploadIMGidCard.class);
+                            intent.putExtra("NOM", nom.getText().toString().trim().toLowerCase());
+                            intent.putExtra("PRENOM", prenom.getText().toString().trim().toLowerCase());
+                            intent.putExtra("GENRE", sexe.getSelectedItem().toString().trim().toUpperCase());
+                            intent.putExtra("TELEPHONE", telephone.getText().toString().trim());
+                            intent.putExtra("CNI", typePjustificative.getSelectedItem().toString().trim()+"-"+cni.getText().toString().trim());
+                            intent.putExtra("sessioncompte", num_statut);
+                            intent.putExtra("Adresse", adresse.getText().toString().trim());
+                            intent.putExtra("IDCARTE", numCarte.getText().toString().trim());
+                            intent.putExtra("IDCathegorie", num_categorie);
+                            intent.putExtra("typeAbon", abonnement);
+                            intent.putExtra("uniquser", temp_number);
+                            intent.putExtra("sessioncompteValue", statut.getSelectedItem().toString().trim());
+                            intent.putExtra("IDCathegorieValue", typeChauffeur.getSelectedItem().toString().trim());
+                            startActivity(intent);
 
                             //---------------DEBUT---------------------------------
                             //Toast.makeText(Souscription.this, nom.getText().toString() + " im here " + prenom.getText().toString().trim(), Toast.LENGTH_SHORT).show();
-                            new Thread(new Runnable() {
+                            /*new Thread(new Runnable() {
                                 @Override
                                 public void run() {
                                     try {
@@ -671,7 +852,7 @@ public class Souscription extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
                                 }
-                            }).start();
+                            }).start();*/
 
 
                             //----------------FIN-------------------------------------
@@ -680,22 +861,7 @@ public class Souscription extends AppCompatActivity {
                         else{
                             Toast.makeText(Souscription.this, "Votre Téléphone contient moin de 9 chiffres", Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Un ou plusieurs champs sont Invalid", Toast.LENGTH_SHORT).show();
-
-                        View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
-                        TextView title = (TextView) view.findViewById(R.id.title);
-                        TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                        ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                        title.setText(getString(R.string.information));
-                        imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                        statutOperation.setText(getString(R.string.champsInvlid));
-                        build_error.setPositiveButton("OK", null);
-                        build_error.setCancelable(false);
-                        build_error.setView(view);
-                        build_error.show();
-                    }
-                }*/
+                }
             }
 
         });
@@ -1106,293 +1272,7 @@ public class Souscription extends AppCompatActivity {
     }
 
 
-    private void registerGoogleFirebase(final String nom1, final String prenom1, final String sexe1,
-                                        final String tel1, final String typePJ1, final String cni1, final String session1,
-                                        final String adresse1, final String id_carte1, final String typeUser1,
-                                        String email1, String password1, final String imageURL1, final String status1, final String f1)
-    {
 
-        auth.createUserWithEmailAndPassword(email1, password1)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            FirebaseUser firebaseUser = auth.getCurrentUser();
-                            assert firebaseUser != null;
-                            String userid = firebaseUser.getUid();
-                            reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
-                            HashMap<String, String> hashMap = new HashMap<>();
-                            hashMap.put("id", userid);
-                            hashMap.put("nom", nom1);
-                            hashMap.put("prenom", prenom1);
-                            hashMap.put("sexe", sexe1);
-                            hashMap.put("tel", tel1);
-                            hashMap.put("cni", typePJ1 +"-"+ cni1);
-                            hashMap.put("session", session1);
-                            hashMap.put("adresse", adresse1);
-                            hashMap.put("id_carte", id_carte1);
-                            hashMap.put("typeUser", typeUser1);
-                            hashMap.put("imageURL", imageURL1);
-                            hashMap.put("status", status1);
-                            hashMap.put("search", nom1.toLowerCase());
-                            hashMap.put("abonnement", abonnement);
-
-                            reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    Toast.makeText(Souscription.this, "Opération Réussie", Toast.LENGTH_SHORT).show();
-
-                                    /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
-
-                                    //SERVICE GOOGLE FIREBASE
-
-                                    Query query = FirebaseDatabase.getInstance().getReference("Users")
-                                            .orderByChild("id_carte")
-                                            .equalTo(id_carte1);
-
-                                    query.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                            if(dataSnapshot.exists()){
-                                                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                                                    User user = userSnapshot.getValue(User.class);
-                                                    if (user.getId_carte().equals(id_carte1)) {
-                                                        RemoteNotification(user.getId(), user.getPrenom(), "Souscription", f1, "success");
-                                                        //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
-                                                    } else {
-                                                        Toast.makeText(Souscription.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-                                            }
-                                            else{
-                                                Toast.makeText(Souscription.this, "Impossible d'envoyer votre Notification", Toast.LENGTH_SHORT).show();
-                                            }
-
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
-
-
-
-                                    ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
-                                    dbHandler = new DbHandler(getApplicationContext());
-                                    dbUser = new DbUser(getApplicationContext());
-                                    aujourdhui = new Date();
-                                    shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-
-                                    //////////////////////////////////NOTIFICATIONS////////////////////////////////
-                                    LocalNotification("Souscription", f1);
-                                    dbHandler.insertUserDetails("Souscription",f1, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
-
-
-                                    ////////////////////INSERTION DES DONNEES UTILISATEURS DANS LA BD LOCALE/////////////////////////
-                                    dbUser.insertInfoUser(nom.getText().toString().trim(), prenom.getText().toString().trim(),sexe.getSelectedItem().toString().trim(),
-                                            telephone.getText().toString().trim(), cni.getText().toString().trim(), statut.getSelectedItem().toString().trim(),
-                                            adresse.getText().toString().trim(), numCarte.getText().toString().trim(), typeChauffeur.getSelectedItem().toString().trim(),
-                                            "default", "offline" , abonnement, shortDateFormat.format(aujourdhui));
-
-
-                                    String num_carte = numCarte.getText().toString().trim();
-
-                                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
-                                    TextView title = (TextView) view.findViewById(R.id.title);
-                                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                                    title.setText(getString(R.string.information));
-                                    imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
-                                    statutOperation.setText(f1);
-                                    build_error.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                             /*if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("accepteur")){
-                                                Intent intent = new Intent(Souscription.this, QRCodeShow.class);
-                                                intent.putExtra("id_carte", num_carte);
-                                                intent.putExtra("nom_prenom", nom1 + " " + prenom1);
-                                                startActivity(intent);
-                                            } else {
-                                                return;
-                                            }*/
-
-                                            Intent intent = new Intent(Souscription.this, QRCodeShow.class);
-                                            intent.putExtra("id_carte", "E-ZPASS" +num_carte + getsecurity_keys());
-                                            intent.putExtra("nom_prenom", nom1 + " " + prenom1);
-                                            startActivity(intent);
-                                        }
-                                    });
-                                    build_error.setCancelable(false);
-                                    build_error.setView(view);
-                                    build_error.show();
-
-                                    nom.setText("");
-                                    prenom.setText("");
-                                    telephone.setText("");
-                                    cni.setText("");
-                                    adresse.setText("");
-                                    numCarte.setText("");
-                                }
-                            });
-                        }
-                        else{
-
-                            ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
-                            dbHandler = new DbHandler(getApplicationContext());
-                            aujourdhui = new Date();
-                            shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-
-                            //////////////////////////////////NOTIFICATIONS////////////////////////////////
-                            LocalNotification("Souscription", getString(R.string.impossibleRegister));
-                            dbHandler.insertUserDetails("Souscription",getString(R.string.impossibleRegister), "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
-
-                            Toast.makeText(Souscription.this, getString(R.string.impossibleRegister), Toast.LENGTH_SHORT).show();
-                            View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
-                            TextView title = (TextView) view.findViewById(R.id.title);
-                            TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                            ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                            title.setText(getString(R.string.information));
-                            imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                            statutOperation.setText(getString(R.string.impossibleRegister));
-                            build_error.setPositiveButton("OK", null);
-                            build_error.setCancelable(false);
-                            build_error.setView(view);
-                            build_error.show();
-                        }
-                    }
-                });
-    }
-
-    private void RemoteNotification(final String receiver, final String username, final String title, final String message, final String statut_notif){
-
-        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
-        Query query = tokens.orderByKey().equalTo(receiver);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    Token token = snapshot.getValue(Token.class);
-
-                    Data data = new Data(fuser.getUid(), R.drawable.logo2, username + ": " + message, title, receiver, statut_notif);
-                    Sender sender = new Sender(data, token.getToken());
-                    apiService.sendNotification(sender)
-                            .enqueue(new Callback<MyResponse>() {
-                                @Override
-                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                                    if(response.code() == 200){
-                                        if(response.body().success != 1){
-                                            Toast.makeText(Souscription.this, "Failed", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<MyResponse> call, Throwable t) {
-
-                                }
-                            });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-
-    public void LocalNotification(String titles, String subtitles){
-
-        ///////////////DEBUT NOTIFICATIONS///////////////////////////////
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
-
-        RemoteViews collapsedView = new RemoteViews(getPackageName(),
-                R.layout.notif_collapsed);
-        RemoteViews expandedView = new RemoteViews(getPackageName(),
-                R.layout.notif_expanded);
-
-        Intent clickIntent = new Intent(getApplicationContext(), NotifReceiver.class);
-        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
-                0, clickIntent, 0);
-
-        collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
-        collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
-
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo2);
-        expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
-
-        Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.logo2)
-                .setCustomContentView(collapsedView)
-                .setCustomBigContentView(expandedView)
-                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-                .build();
-
-        notificationManager.notify(new Random().nextInt(), notification);
-        ////////////////////////////////////FIN NOTIFICATIONS/////////////////////
-    }
-
-
-    //gestion des abonnements
-    public void onCheckboxClicked(View view) {
-        // Is the view now checked?
-        boolean checked = ((CheckBox) view).isChecked();
-
-        // Check which checkbox was clicked
-        switch(view.getId()) {
-            case R.id.AbonnementMensuel:
-                if (checked)
-                {
-                    Toast.makeText(this, AbonnementMensuel.getText().toString(), Toast.LENGTH_SHORT).show();
-                    AbonnementHebdomadaire.setChecked(false);
-                    AbonnementService.setChecked(false);
-                    //AbonnementMensuel.setBackgroundColor(Color.parseColor("#039BE5"));
-                    abonnement = "mensuel";
-                }
-                else{
-                    AbonnementMensuel.setChecked(true);
-                    AbonnementHebdomadaire.setChecked(false);
-                    AbonnementService.setChecked(false);
-                    abonnement = "mensuel";
-                }
-                break;
-            case R.id.AbonnementHebdomadaire:
-                if (checked)
-                {
-                    Toast.makeText(this, AbonnementHebdomadaire.getText().toString(), Toast.LENGTH_SHORT).show();
-                    AbonnementMensuel.setChecked(false);
-                    AbonnementService.setChecked(false);
-                    abonnement = "hebdomadaire";
-                }
-                else{
-                    AbonnementHebdomadaire.setChecked(true);
-                    AbonnementMensuel.setChecked(false);
-                    AbonnementService.setChecked(false);
-                    abonnement = "hebdomadaire";
-                }
-                break;
-
-            case R.id.AbonnementService:
-                if (checked)
-                {
-                    Toast.makeText(this, AbonnementService.getText().toString(), Toast.LENGTH_SHORT).show();
-                    AbonnementMensuel.setChecked(false);
-                    AbonnementHebdomadaire.setChecked(false);
-                    abonnement = "service";
-                }
-                else{
-                    AbonnementService.setChecked(true);
-                    AbonnementMensuel.setChecked(false);
-                    AbonnementHebdomadaire.setChecked(false);
-                    abonnement = "service";
-                }
-                break;
-        }
-    }
 
 
 
