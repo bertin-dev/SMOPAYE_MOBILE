@@ -52,14 +52,14 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
     ImageView ShowSelectedImageRecto, ShowSelectedImageVerso;
     EditText imageName;
     Bitmap FixBitmap, FixBitmap2;
-    String ImageTagRecto = "image_tag" ;
-    String ImageNameRecto = "image_data" ;
-    String ImageTagVerso = "image_tag" ;
-    String ImageNameVerso = "image_data" ;
+    String ImageTagRecto = "nom_piece_recto" ;
+    String ImageNameRecto = "piece_recto" ;
+    String ImageTagVerso = "nom_piece_verso" ;
+    String ImageNameVerso = "piece_verso" ;
     ProgressDialog progressDialog ;
     ByteArrayOutputStream byteArrayOutputStream ;
-    byte[] byteArray ;
-    String ConvertImage ;
+    byte[] byteArray1, byteArray2;
+    String ConvertImageRecto, ConvertImageVerso ;
     HttpURLConnection httpURLConnection ;
     URL url;
     OutputStream outputStream;
@@ -144,7 +144,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                 GetImageNameFromRectoIdCard = "Recto_" + parts[0] +"_" + prenom + "_" + nom;
                 GetImageNameFromVersoIdCard = "Verso_" + parts[0] +"_" + prenom + "_" + nom;
 
-                //UploadImageToServer();
+                UploadImageToServer();
 
             }
         });
@@ -262,10 +262,13 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
     public void UploadImageToServer(){
 
         FixBitmap.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
+        FixBitmap2.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
 
-        byteArray = byteArrayOutputStream.toByteArray();
+        byteArray1 = byteArrayOutputStream.toByteArray();
+        byteArray2 = byteArrayOutputStream.toByteArray();
 
-        ConvertImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
+        ConvertImageRecto = Base64.encodeToString(byteArray1, Base64.DEFAULT);
+        ConvertImageVerso = Base64.encodeToString(byteArray2, Base64.DEFAULT);
 
         class AsyncTaskUploadClass extends AsyncTask<Void,Void,String> {
 
@@ -274,7 +277,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
                 super.onPreExecute();
 
-                progressDialog = ProgressDialog.show(SouscriptionUploadIMGidCard.this,"Image is Uploading","Please Wait",false,false);
+                progressDialog = ProgressDialog.show(SouscriptionUploadIMGidCard.this,"Chargement Encours...","Patientez s'il vous plait",false,false);
             }
 
             @Override
@@ -296,10 +299,10 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                 HashMap<String,String> HashMapParams = new HashMap<String,String>();
 
                 HashMapParams.put(ImageTagRecto, GetImageNameFromRectoIdCard);
-                HashMapParams.put(ImageNameVerso, ConvertImage);
+                HashMapParams.put(ImageNameRecto, ConvertImageRecto);
 
                 HashMapParams.put(ImageTagVerso, GetImageNameFromVersoIdCard);
-                HashMapParams.put(ImageNameVerso, ConvertImage);
+                HashMapParams.put(ImageNameVerso, ConvertImageVerso);
 
                 String FinalData = imageProcessClass.ImageHttpRequest("http://192.168.43.86/projects/AndroidUpload/upload-image-to-server.php", HashMapParams);
 
