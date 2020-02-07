@@ -2,8 +2,6 @@ package com.ezpass.smopaye_mobile.vuesUtilisateur;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,10 +13,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,73 +29,37 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RemoteViews;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
-import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
-import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbUser;
-import com.ezpass.smopaye_mobile.NotifReceiver;
-import com.ezpass.smopaye_mobile.QRCodeShow;
 import com.ezpass.smopaye_mobile.R;
-import com.ezpass.smopaye_mobile.RemoteFragments.APIService;
-import com.ezpass.smopaye_mobile.RemoteModel.User;
-import com.ezpass.smopaye_mobile.RemoteNotifications.Client;
-import com.ezpass.smopaye_mobile.RemoteNotifications.Data;
-import com.ezpass.smopaye_mobile.RemoteNotifications.MyResponse;
-import com.ezpass.smopaye_mobile.RemoteNotifications.Sender;
-import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.telpo.tps550.api.TelpoException;
 import com.telpo.tps550.api.nfc.Nfc;
 import com.telpo.tps550.api.util.StringUtil;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.Timer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 import static android.content.ContentValues.TAG;
-import static com.ezpass.smopaye_mobile.ChaineConnexion.getsecurity_keys;
-import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
-public class Souscription extends AppCompatActivity {
+public class Souscription_User_AutoEnreg extends AppCompatActivity {
 
     private EditText nom,prenom,telephone,cni,numCarte, adresse;
     private Spinner sexe, statut, typeChauffeur, typePjustificative;
@@ -165,8 +124,8 @@ public class Souscription extends AppCompatActivity {
     List<String> idChauffeur = new ArrayList<String>();
     List<String> typeUserChauffeur = new ArrayList<String>();
 
-     String num_statut = "";
-     String num_categorie = "";
+    String num_statut = "";
+    String num_categorie = "";
 
 
     ArrayList<String> listUser = new ArrayList<>();
@@ -191,7 +150,7 @@ public class Souscription extends AppCompatActivity {
             progressDialog.dismiss();
             authWindows.setVisibility(View.GONE);
             internetIndisponible.setVisibility(View.VISIBLE);
-            Toast.makeText(Souscription.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
+            Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
         } else if ((activeInfo == null && !activeInfo.isConnected())){
             progressDialog.dismiss();
             authWindows.setVisibility(View.GONE);
@@ -199,7 +158,7 @@ public class Souscription extends AppCompatActivity {
             conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
             titleNetworkLimited.setText(getString(R.string.connexionLimite));
             //msgNetworkLimited.setText();
-            Toast.makeText(Souscription.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
+            Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -208,7 +167,7 @@ public class Souscription extends AppCompatActivity {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-       // new loadDataSpinner().execute();
+        // new loadDataSpinner().execute();
 
 
         StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
@@ -232,16 +191,16 @@ public class Souscription extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_souscription);
+        setContentView(R.layout.activity_souscription_users_autoenreg);
 
-        getSupportActionBar().setTitle("Souscription - Etape 1");
+        getSupportActionBar().setTitle("Souscription_User_AutoEnreg - Etape 1");
         //getSupportParentActivityIntent().putExtra("resultatBD", "Administrateur");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
-        progressDialog = new ProgressDialog(Souscription.this);
-        build_error = new AlertDialog.Builder(Souscription.this);
+        progressDialog = new ProgressDialog(Souscription_User_AutoEnreg.this);
+        build_error = new AlertDialog.Builder(Souscription_User_AutoEnreg.this);
 
 
         nom = (EditText) findViewById(R.id.nom);
@@ -381,26 +340,26 @@ public class Souscription extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                //Accepteur id = 2
-              if(idStatut.get(position).equalsIgnoreCase("2")){
-                  addItemsOnSpinner2();
-                  num_statut = idStatut.get(position);
-              }
-              //Utilisateur id = 1
-                else if(idStatut.get(position).equalsIgnoreCase("1")){
+               /* //Accepteur id = 2
+                if(idStatut.get(position).equalsIgnoreCase("2")){
+                    addItemsOnSpinner2();
+                    num_statut = idStatut.get(position);
+                }*/
+                //Utilisateur id = 1
+                 if(idStatut.get(position).equalsIgnoreCase("1")){
                     addItemsOnSpinner3();
-                  num_statut = idStatut.get(position);
+                    num_statut = idStatut.get(position);
                 }
-              //Adminitrateur id = 3
+                /*//Adminitrateur id = 3
                 else if(idStatut.get(position).equalsIgnoreCase("3")){
-                  addItemsOnSpinner1();
-                  num_statut = idStatut.get(position);
-              }
-              //Agent id = 4 et autre
+                    addItemsOnSpinner1();
+                    num_statut = idStatut.get(position);
+                }
+                //Agent id = 4 et autre
                 else {
                     addItemsOnSpinner1();
-                  num_statut = idStatut.get(position);
-                }
+                    num_statut = idStatut.get(position);
+                }*/
 
             }
 
@@ -423,31 +382,31 @@ public class Souscription extends AppCompatActivity {
 
                 if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("particulier")){
                     num_categorie = "41";
-                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Souscription_User_AutoEnreg.this, num_categorie, Toast.LENGTH_SHORT).show();
                 } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("étudiant")){
                     num_categorie = "42";
-                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Souscription_User_AutoEnreg.this, num_categorie, Toast.LENGTH_SHORT).show();
                 } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("élève")){
                     num_categorie = "43";
-                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Souscription_User_AutoEnreg.this, num_categorie, Toast.LENGTH_SHORT).show();
                 } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("moto_taxis")){
                     num_categorie = "7";
-                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Souscription_User_AutoEnreg.this, num_categorie, Toast.LENGTH_SHORT).show();
                 } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("chauffeur")){
                     num_categorie = "8";
-                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Souscription_User_AutoEnreg.this, num_categorie, Toast.LENGTH_SHORT).show();
                 } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("mini-bus")){
                     num_categorie = "9";
-                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Souscription_User_AutoEnreg.this, num_categorie, Toast.LENGTH_SHORT).show();
                 } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("bus inter urbain")){
                     num_categorie = "10";
-                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Souscription_User_AutoEnreg.this, num_categorie, Toast.LENGTH_SHORT).show();
                 } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("restaurant étudiant")){
                     num_categorie = "12";
-                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Souscription_User_AutoEnreg.this, num_categorie, Toast.LENGTH_SHORT).show();
                 } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("smopaye")){
                     num_categorie = "33";
-                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Souscription_User_AutoEnreg.this, num_categorie, Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -471,8 +430,8 @@ public class Souscription extends AppCompatActivity {
             public void onClick(View v) {
 
                 if(nom.getText().toString().trim().equals("")){
-                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " Nom.", Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " Nom.", Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
@@ -487,8 +446,8 @@ public class Souscription extends AppCompatActivity {
                 }
 
                 if(prenom.getText().toString().trim().equals("")){
-                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " Prénom.", Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " Prénom.", Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
@@ -503,8 +462,8 @@ public class Souscription extends AppCompatActivity {
                 }
 
                 if(telephone.getText().toString().trim().equals("")){
-                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " numéro de téléphone.", Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " numéro de téléphone.", Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
@@ -520,8 +479,8 @@ public class Souscription extends AppCompatActivity {
 
 
                 if(telephone.length()< 9){
-                    Toast.makeText(Souscription.this, getString(R.string.verifierNumero), Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.verifierNumero), Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
@@ -536,8 +495,8 @@ public class Souscription extends AppCompatActivity {
                 }
 
                 if(cni.getText().toString().trim().equals("")){
-                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " numéro de " + typePjustificative.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " numéro de " + typePjustificative.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
@@ -552,8 +511,8 @@ public class Souscription extends AppCompatActivity {
                 }
 
                 if(adresse.getText().toString().trim().equals("")){
-                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " Adresse.", Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " Adresse.", Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
@@ -568,8 +527,8 @@ public class Souscription extends AppCompatActivity {
                 }
 
                 if(numCarte.getText().toString().isEmpty()){
-                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " numéro de compte.", Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " numéro de compte.", Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
@@ -584,34 +543,34 @@ public class Souscription extends AppCompatActivity {
                 }
 
                 /*if(statut.getSelectedItem().toString().isEmpty()){
-                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " session dans liste déroulante en vérifiant votre connexion internet.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " session dans liste déroulante en vérifiant votre connexion internet.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if(typeChauffeur.getSelectedItem().toString().trim().equals("")){
-                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " catégorie dans liste déroulante en vérifiant votre connexion internet.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " catégorie dans liste déroulante en vérifiant votre connexion internet.", Toast.LENGTH_SHORT).show();
                     return;
                 }*/
 
-                    if(!isValid(nom.getText().toString().trim())){
-                        Toast.makeText(Souscription.this, getString(R.string.votre) + " nom " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
-                        View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
-                        TextView title = (TextView) view.findViewById(R.id.title);
-                        TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                        ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                        title.setText(getString(R.string.information));
-                        imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                        statutOperation.setText(getString(R.string.votre) + " nom " + getString(R.string.invalidCararatere));
-                        build_error.setPositiveButton("OK", null);
-                        build_error.setCancelable(false);
-                        build_error.setView(view);
-                        build_error.show();
-                        return;
-                    }
+                if(!isValid(nom.getText().toString().trim())){
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.votre) + " nom " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                    statutOperation.setText(getString(R.string.votre) + " nom " + getString(R.string.invalidCararatere));
+                    build_error.setPositiveButton("OK", null);
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
+                    return;
+                }
 
                 if(!isValid(prenom.getText().toString().trim())){
-                    Toast.makeText(Souscription.this, getString(R.string.votre) + " prénom " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.votre) + " prénom " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
@@ -626,8 +585,8 @@ public class Souscription extends AppCompatActivity {
                 }
 
                 if(!isValid(cni.getText().toString().trim())){
-                    Toast.makeText(Souscription.this, getString(R.string.votre) + " " + typePjustificative.getSelectedItem().toString() + " " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.votre) + " " + typePjustificative.getSelectedItem().toString() + " " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
@@ -642,8 +601,8 @@ public class Souscription extends AppCompatActivity {
                 }
 
                 if(!isValid(adresse.getText().toString().trim())){
-                    Toast.makeText(Souscription.this, getString(R.string.votre) + "adresse" + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.votre) + "adresse" + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
@@ -673,7 +632,7 @@ public class Souscription extends AppCompatActivity {
                 intent.putExtra("uniquser", temp_number);
                 intent.putExtra("sessioncompteValue", statut.getSelectedItem().toString().trim());
                 intent.putExtra("IDCathegorieValue", typeChauffeur.getSelectedItem().toString().trim());
-                intent.putExtra("register", "EnregStandard");
+                intent.putExtra("register", "autoEnreg");
                 startActivity(intent);
 
             }
@@ -708,7 +667,7 @@ public class Souscription extends AppCompatActivity {
                 } catch (TelpoException e) {
                     e.printStackTrace();
                 }
-                readThread = new ReadThread();
+                readThread = new Souscription_User_AutoEnreg.ReadThread();
                 readThread.start();
             }
         });
@@ -745,7 +704,7 @@ public class Souscription extends AppCompatActivity {
                                 type = "unknow";
                             }
 
-                            new AlertDialog.Builder(Souscription.this)
+                            new AlertDialog.Builder(Souscription_User_AutoEnreg.this)
                                     .setMessage(getString(R.string.card_type) + getString(R.string.type_b) + " " + type +
                                             "\r\n" + getString(R.string.atqb_data) + StringUtil.toHexString(atqb) +
                                             "\r\n" + getString(R.string.pupi_data) + StringUtil.toHexString(pupi))
@@ -836,7 +795,7 @@ public class Souscription extends AppCompatActivity {
             progressDialog.dismiss();
             authWindows.setVisibility(View.GONE);
             internetIndisponible.setVisibility(View.VISIBLE);
-            Toast.makeText(Souscription.this, getString(R.string.connexionIntrouvable), Toast.LENGTH_SHORT).show();
+            Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.connexionIntrouvable), Toast.LENGTH_SHORT).show();
         }
     }
 

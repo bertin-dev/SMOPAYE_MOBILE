@@ -110,7 +110,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
     boolean check = true;
     private int GALLERY = 1, CAMERA = 2;
 
-    String nom, prenom, genre, tel, cni, sessioncompte, adresse, idcarte, idcategorie, typeabon, uniquser, GetImageNameFromRectoIdCard, GetImageNameFromVersoIdCard, sessioncompteValue, idcategorieValue;
+    String nom, prenom, genre, tel, cni, sessioncompte, adresse, idcarte, idcategorie, typeabon, uniquser, GetImageNameFromRectoIdCard, GetImageNameFromVersoIdCard, sessioncompteValue, idcategorieValue, register;
     LinearLayout imgCardVerso;
     RelativeLayout dividerBarUpload;
     TextView infoNom, infoPrenom, infoCni;
@@ -158,6 +158,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
         uniquser = intent.getStringExtra("uniquser");
         sessioncompteValue = intent.getStringExtra("sessioncompteValue");
         idcategorieValue = intent.getStringExtra("IDCathegorieValue");
+        register = intent.getStringExtra("register");
 
 
 
@@ -200,8 +201,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                GetImageNameFromRectoIdCard = "Recto_" + parts[0] +"_" + prenom + "_" + nom;
-                GetImageNameFromVersoIdCard = "Verso_" + parts[0] +"_" + prenom + "_" + nom;
+                //GetImageNameFromRectoIdCard = nom + "_" + prenom + "_Recto_" + parts[0];
+                //GetImageNameFromVersoIdCard = nom + "_" + prenom + "_Recto_" + parts[0];
 
                 UploadImageToServer();
 
@@ -352,15 +353,14 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
                 String f = string1.toLowerCase().trim();
 
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
 
                 int pos = f.indexOf("success");
                 if (pos >= 0) {
 
-                    registerGoogleFirebase(nom, prenom, genre,
-                            tel,  cni, sessioncompteValue,
-                            adresse, idcarte, idcategorieValue,
-                            "sm" + tel + "@smopaye.cm", tel, "default", "offline", typeabon, f);
+                    // Calling Method to Parese JSON data into listView.
+                    new AsyncTaskGoogleFirebase().execute();
+
                 } else{
 
                     ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
@@ -371,6 +371,9 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                     //////////////////////////////////NOTIFICATIONS////////////////////////////////
                     LocalNotification("Souscription", f);
                     dbHandler.insertUserDetails("Souscription","carte non enregistré", "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+
+                    progressDialog.dismiss();
+
 
                     build_error = new AlertDialog.Builder(SouscriptionUploadIMGidCard.this);
                     View view = LayoutInflater.from(SouscriptionUploadIMGidCard.this).inflate(R.layout.alert_dialog_success, null);
@@ -387,6 +390,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
                     Toast.makeText(getApplicationContext(), f, Toast.LENGTH_LONG).show();
 
+
+
                 }
 
             }
@@ -396,7 +401,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
                 ImageProcessClass imageProcessClass = new ImageProcessClass();
 
-                HashMap<String,String> HashMapParams = new HashMap<String,String>();
+                /*HashMap<String,String> HashMapParams = new HashMap<String,String>();
 
 
                 HashMapParams.put("enregUser","users");
@@ -419,9 +424,56 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                 HashMapParams.put(ImageNameVerso, ConvertImageVerso);
 
                 HashMapParams.put("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
-                HashMapParams.put("uhtdgG18",ChaineConnexion.getSalt());
+                HashMapParams.put("uhtdgG18",ChaineConnexion.getSalt());*/
 
-                String FinalData = imageProcessClass.ImageHttpRequest(ChaineConnexion.getAdresseURLsmopayeServer(), HashMapParams);
+                Uri.Builder builder = new Uri.Builder();
+
+                if(register.equalsIgnoreCase("autoEnreg")){
+                    builder.appendQueryParameter("auth","Users");
+                    builder.appendQueryParameter("login", "autoregister");
+                    builder.appendQueryParameter("nom", nom);
+                    builder.appendQueryParameter("prenom", prenom);
+                    builder.appendQueryParameter("genre", genre.toUpperCase());
+                    builder.appendQueryParameter("telephone", tel);
+                    builder.appendQueryParameter("cni", cni);
+                    //builder.appendQueryParameter("sessioncompte", sessioncompte);
+                    builder.appendQueryParameter("adresse", adresse);
+                    //builder.appendQueryParameter("IDCARTE", idcarte);
+                    builder.appendQueryParameter("cathegorie", idcategorie);
+                    builder.appendQueryParameter("cryptverso", ConvertImageVerso);
+                    builder.appendQueryParameter("cryptrecto", ConvertImageRecto);
+                    //builder.appendQueryParameter("typeAbon", typeabon);
+                    //builder.appendQueryParameter("uniquser", uniquser);
+                    //builder.appendQueryParameter(ImageTagRecto, GetImageNameFromRectoIdCard);
+                    //builder.appendQueryParameter(ImageNameRecto, ConvertImageRecto);
+                    //builder.appendQueryParameter(ImageTagVerso, GetImageNameFromVersoIdCard);
+                    //builder.appendQueryParameter(ImageNameVerso, ConvertImageVerso);
+                } else {
+
+                    builder.appendQueryParameter("enregUser", "users");
+                    builder.appendQueryParameter("enregReg", "register");
+                    builder.appendQueryParameter("NOM", nom);
+                    builder.appendQueryParameter("PRENOM", prenom);
+                    builder.appendQueryParameter("GENRE", genre.toUpperCase());
+                    builder.appendQueryParameter("TELEPHONE", tel);
+                    builder.appendQueryParameter("CNI", cni);
+                    builder.appendQueryParameter("sessioncompte", sessioncompte);
+                    builder.appendQueryParameter("Adresse", adresse);
+                    builder.appendQueryParameter("IDCARTE", idcarte);
+                    builder.appendQueryParameter("IDCathegorie", idcategorie);
+                    builder.appendQueryParameter("typeAbon", typeabon);
+                    builder.appendQueryParameter("uniquser", uniquser);
+                    builder.appendQueryParameter(ImageTagRecto, GetImageNameFromRectoIdCard);
+                    builder.appendQueryParameter(ImageNameRecto, ConvertImageRecto);
+                    builder.appendQueryParameter(ImageTagVerso, GetImageNameFromVersoIdCard);
+                    builder.appendQueryParameter(ImageNameVerso, ConvertImageVerso);
+                }
+
+                builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
+                builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
+
+                //URL url = new URL("http://192.168.20.6:1234/index.php"+builder.build().toString());
+                String FinalData = imageProcessClass.ImageHttpRequest(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
 
                 return FinalData;
             }
@@ -432,7 +484,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
     public class ImageProcessClass{
 
-        public String ImageHttpRequest(String requestURL,HashMap<String, String> PData) {
+        public String ImageHttpRequest(String requestURL) {
 
             StringBuilder stringBuilder = new StringBuilder();
 
@@ -457,7 +509,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
                         new OutputStreamWriter(outputStream, "UTF-8"));
 
-                bufferedWriter.write(bufferedWriterDataFN(PData));
+                //bufferedWriter.write(bufferedWriterDataFN(PData));
 
                 bufferedWriter.flush();
 
@@ -487,7 +539,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
             return stringBuilder.toString();
         }
 
-        private String bufferedWriterDataFN(HashMap<String, String> HashMapParams) throws UnsupportedEncodingException {
+        /*private String bufferedWriterDataFN(HashMap<String, String> HashMapParams) throws UnsupportedEncodingException {
 
             stringBuilder = new StringBuilder();
 
@@ -505,7 +557,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
             }
 
             return stringBuilder.toString();
-        }
+        }*/
 
     }
 
@@ -675,15 +727,6 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
 
-                                             /*if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("accepteur")){
-                                                Intent intent = new Intent(Souscription.this, QRCodeShow.class);
-                                                intent.putExtra("id_carte", num_carte);
-                                                intent.putExtra("nom_prenom", nom1 + " " + prenom1);
-                                                startActivity(intent);
-                                            } else {
-                                                return;
-                                            }*/
-
                                             Intent intent = new Intent(SouscriptionUploadIMGidCard.this, QRCodeShow.class);
                                             intent.putExtra("id_carte", "E-ZPASS" +num_carte + getsecurity_keys());
                                             intent.putExtra("nom_prenom", nom1 + " " + prenom1);
@@ -802,5 +845,45 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
     }
 
 
+
+
+    private class AsyncTaskGoogleFirebase extends  AsyncTask<Void,Void,String>{
+
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(SouscriptionUploadIMGidCard.this,"Connexion Serveur Google","Patientez s'il vous plait",false,false);
+
+            //SERVICE GOOGLE FIREBASE
+            auth = FirebaseAuth.getInstance();
+            apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
+            fuser = FirebaseAuth.getInstance().getCurrentUser();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+            progressDialog = ProgressDialog.show(SouscriptionUploadIMGidCard.this,"Connexion Réussie","Envoi des données",false,false);
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            registerGoogleFirebase(nom, prenom, genre,
+                    tel,  cni, sessioncompteValue,
+                    adresse, idcarte, idcategorieValue,
+                    "sm" + tel + "@smopaye.cm", tel, "default", "offline", typeabon, "");
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            progressDialog.dismiss();
+        }
+    }
 
 }

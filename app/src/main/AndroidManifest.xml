@@ -29,7 +29,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".vuesUtilisateur.SouscriptionUploadIMGidCard"></activity>
+        <activity android:name=".vuesUtilisateur.Souscription_User_AutoEnreg"></activity>
+        <activity
+            android:name=".vuesUtilisateur.SouscriptionUploadIMGidCard"
+            android:screenOrientation="portrait" />
         <activity android:name=".RetraitChezSmopaye" />
         <activity android:name=".MenuRetraitOperateur" />
         <activity android:name=".AffichageQRCode" />
