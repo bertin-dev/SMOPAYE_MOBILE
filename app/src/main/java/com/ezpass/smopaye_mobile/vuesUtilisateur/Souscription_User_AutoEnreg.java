@@ -151,7 +151,7 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
             authWindows.setVisibility(View.GONE);
             internetIndisponible.setVisibility(View.VISIBLE);
             Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
-        } else if ((activeInfo == null && !activeInfo.isConnected())){
+        } /*else if ((activeInfo == null && !activeInfo.isConnected())){
             progressDialog.dismiss();
             authWindows.setVisibility(View.GONE);
             internetIndisponible.setVisibility(View.VISIBLE);
@@ -159,7 +159,7 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
             titleNetworkLimited.setText(getString(R.string.connexionLimite));
             //msgNetworkLimited.setText();
             Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
     }
 
@@ -526,7 +526,7 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                     return;
                 }
 
-                if(numCarte.getText().toString().isEmpty()){
+                /*if(numCarte.getText().toString().isEmpty()){
                     Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " numéro de compte.", Toast.LENGTH_SHORT).show();
                     View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
@@ -540,17 +540,39 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                     build_error.setView(view);
                     build_error.show();
                     return;
-                }
-
-                /*if(statut.getSelectedItem().toString().isEmpty()){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " session dans liste déroulante en vérifiant votre connexion internet.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if(typeChauffeur.getSelectedItem().toString().trim().equals("")){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " catégorie dans liste déroulante en vérifiant votre connexion internet.", Toast.LENGTH_SHORT).show();
-                    return;
                 }*/
+
+                if(statut.getCount() == 0){
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " statut dans liste déroulante en actualisant la page de souscription.", Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                    statutOperation.setText(getString(R.string.veuillezInserer) + " statut dans liste déroulante en actualisant la page de souscription.");
+                    build_error.setPositiveButton("OK", null);
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
+                    return;
+                }
+
+                if(typeChauffeur.getCount() == 0){
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " catégorie dans liste déroulante en actualisant la page de souscription", Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                    statutOperation.setText(getString(R.string.veuillezInserer) + " catégorie dans liste déroulante en actualisant la page de souscription");
+                    build_error.setPositiveButton("OK", null);
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
+                    return;
+                }
 
                 if(!isValid(nom.getText().toString().trim())){
                     Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.votre) + " nom " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
@@ -1049,9 +1071,6 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
 
 
 
-
-
-
     public class loadDataSpinner extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -1126,8 +1145,11 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                 jo = ja.getJSONObject(i);
                 id_session[i] = jo.getString("id_session");
                 nom_session[i] = jo.getString("nom_session");
-                listStatut.add(nom_session[i]);
-                idStatut.add(id_session[i]);
+
+                if(nom_session[i].toLowerCase().trim().equalsIgnoreCase("utilisateur")) {
+                    listStatut.add(nom_session[i]);
+                    idStatut.add(id_session[i]);
+                }
             }
         }
         catch (Exception ex){

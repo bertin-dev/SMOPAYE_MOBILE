@@ -842,6 +842,8 @@ public class Souscription extends AppCompatActivity {
 
 
 
+
+
     public class ReadThread extends Thread {
         byte[] nfcData = null;
 
@@ -1088,6 +1090,42 @@ public class Souscription extends AppCompatActivity {
 
 
 
+    //gestion des abonnements
+    public void onCheckboxClicked1(View view) {
+        // Is the view now checked?
+        final boolean checked = ((CheckBox) view).isChecked();
+
+        // Check which checkbox was clicked
+        switch(view.getId()) {
+            case R.id.AbonnementMensuel:
+                if (checked)
+                {
+                    Toast.makeText(this, AbonnementMensuel.getText().toString(), Toast.LENGTH_SHORT).show();
+                    AbonnementHebdomadaire.setChecked(false);
+                    //AbonnementMensuel.setBackgroundColor(Color.parseColor("#039BE5"));
+                    abonnement = "mensuel";
+                }
+                else{
+                    AbonnementMensuel.setChecked(true);
+                    AbonnementHebdomadaire.setChecked(false);
+                    abonnement = "mensuel";
+                }
+                break;
+            case R.id.AbonnementHebdomadaire:
+                if (checked)
+                {
+                    Toast.makeText(this, AbonnementHebdomadaire.getText().toString(), Toast.LENGTH_SHORT).show();
+                    AbonnementMensuel.setChecked(false);
+                    abonnement = "hebdomadaire";
+                }
+                else{
+                    AbonnementHebdomadaire.setChecked(true);
+                    AbonnementMensuel.setChecked(false);
+                    abonnement = "hebdomadaire";
+                }
+                break;
+        }
+    }
 
 
 

@@ -329,6 +329,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
                 android:inputType="text"
+                android:visibility="gone"
                 android:textStyle="bold|italic"
                 android:background="@drawable/edittextborder"
                 android:layout_width="match_parent"

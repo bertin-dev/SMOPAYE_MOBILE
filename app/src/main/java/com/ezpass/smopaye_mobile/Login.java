@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.vuesUtilisateur.Souscription;
+import com.ezpass.smopaye_mobile.vuesUtilisateur.Souscription_User_AutoEnreg;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
@@ -117,7 +118,7 @@ public class Login extends AppCompatActivity {
     }
 
     private void openActivityRegister(View view) {
-        Intent intent = new Intent(getApplicationContext(), Souscription.class);
+        Intent intent = new Intent(getApplicationContext(), Souscription_User_AutoEnreg.class);
         startActivity(intent);
     }
 

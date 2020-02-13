@@ -347,6 +347,7 @@
     <string name="votre">Votre</string>
     <string name="invalidCararatere">contient un ou plusieurs caractères invalides</string>
     <string name="verifierNumero">Votre numéro contient moin de 9 chiffres.</string>
+    <string name="erreurSurvenue">Une erreur est survenue lors de l\'upload de l'image</string>
 
 
 </resources>

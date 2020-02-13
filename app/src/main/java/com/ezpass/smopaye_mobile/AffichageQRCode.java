@@ -2,9 +2,12 @@ package com.ezpass.smopaye_mobile;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +41,8 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.WHITE;
 import static com.ezpass.smopaye_mobile.ChaineConnexion.encryptBytes;
 import static com.ezpass.smopaye_mobile.ChaineConnexion.getsecurity_keys;
 
@@ -86,9 +91,10 @@ public class AffichageQRCode extends AppCompatActivity {
             try {
                 MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
                 BitMatrix bitMatrix = multiFormatWriter.encode(carteCrypte, BarcodeFormat.QR_CODE, 500, 500);
-                BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                bitmap = barcodeEncoder.createBitmap(bitMatrix);
-                qrcode.setImageBitmap(bitmap);
+                /*BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                bitmap = barcodeEncoder.createBitmap(bitMatrix);*/
+                bitmap = createBitmapCustomized(bitMatrix);
+                //qrcode.setImageBitmap(bitmap);
             } catch (WriterException e){
                 e.printStackTrace();
             }
@@ -119,6 +125,49 @@ public class AffichageQRCode extends AppCompatActivity {
         // Display saved image uri to TextView
         card_number.setText(String.valueOf(carteCrypte));*/
 
+    }
+
+    public Bitmap createBitmapCustomized(BitMatrix matrix) {
+        int width = matrix.getWidth();
+        int height = matrix.getHeight();
+        int[] pixels = new int[width * height];
+        for (int y = 0; y < height; y++) {
+            int offset = y * width;
+            for (int x = 0; x < width; x++) {
+                pixels[offset + x] = matrix.get(x, y) ? BLACK : WHITE;
+                //pixels[offset + x] = matrix.get(x, y) ?
+                        //ResourcesCompat.getColor(getResources(),R.color.bgColorStandard,null) :WHITE;
+
+            }
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+
+        Bitmap overlay = BitmapFactory.decodeResource(getResources(), R.drawable.ezpass_codeqr);
+        qrcode.setImageBitmap(mergeBitmaps(overlay,bitmap));
+
+        return bitmap;
+    }
+
+
+    public Bitmap mergeBitmaps(Bitmap overlay, Bitmap bitmap) {
+
+        int height = bitmap.getHeight();
+        int width = bitmap.getWidth();
+
+        Bitmap combined = Bitmap.createBitmap(width, height, bitmap.getConfig());
+        Canvas canvas = new Canvas(combined);
+        int canvasWidth = canvas.getWidth();
+        int canvasHeight = canvas.getHeight();
+
+        canvas.drawBitmap(bitmap, new Matrix(), null);
+
+        int centreX = (canvasWidth  - overlay.getWidth()) /2;
+        int centreY = (canvasHeight - overlay.getHeight()) /2 ;
+        canvas.drawBitmap(overlay, centreX, centreY, null);
+
+        return combined;
     }
 
     /*                    GESTION DU MENU DROIT                  */

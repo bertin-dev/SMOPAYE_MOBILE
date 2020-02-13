@@ -96,8 +96,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
     String ImageNameRecto = "piece_recto" ;
     String ImageTagVerso = "nom_piece_verso" ;
     String ImageNameVerso = "piece_verso" ;
-    ProgressDialog progressDialog ;
-    ByteArrayOutputStream byteArrayOutputStream ;
+    ProgressDialog progressDialog, progressDialog1, progressDialog2;
+    ByteArrayOutputStream byteArrayOutputStream1, byteArrayOutputStream2;
     byte[] byteArray1, byteArray2;
     String ConvertImageRecto, ConvertImageVerso ;
     HttpURLConnection httpURLConnection ;
@@ -130,6 +130,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
     DatabaseReference reference;
     APIService apiService;
     FirebaseUser fuser;
+
+    String resultFromBD = "";
 
 
     @SuppressLint("SetTextI18n")
@@ -185,7 +187,9 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
         infoNom.setText(nom);
         infoPrenom.setText(prenom);
 
-        byteArrayOutputStream = new ByteArrayOutputStream();
+        byteArrayOutputStream1 = new ByteArrayOutputStream();
+        byteArrayOutputStream2 = new ByteArrayOutputStream();
+
         GetImageFromGalleryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -201,10 +205,11 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                //GetImageNameFromRectoIdCard = nom + "_" + prenom + "_Recto_" + parts[0];
-                //GetImageNameFromVersoIdCard = nom + "_" + prenom + "_Recto_" + parts[0];
+                GetImageNameFromRectoIdCard = nom + "_" + prenom + "_Recto_" + parts[0];
+                GetImageNameFromVersoIdCard = nom + "_" + prenom + "_Verso_" + parts[0];
 
-                UploadImageToServer();
+                new AsyncTaskUploadImg().execute();
+                //UploadImageToServer();
 
             }
         });
@@ -270,6 +275,9 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
                     if(ShowSelectedImageRecto.getDrawable() == null) {
                         FixBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+                        //debut compression
+                        //FixBitmap = Bitmap.createScaledBitmap(FixBitmap, 60, 60, true);
+                        //fin compression
                         ShowSelectedImageRecto.setImageBitmap(FixBitmap);
                         imgCardVerso.setVisibility(View.VISIBLE);
                         dividerBarUpload.setVisibility(View.VISIBLE);
@@ -299,6 +307,9 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
             if(ShowSelectedImageRecto.getDrawable() == null) {
                 FixBitmap = (Bitmap) data.getExtras().get("data");
+                //debut compression
+                //FixBitmap = Bitmap.createScaledBitmap(FixBitmap, 60, 60, true);
+                //fin compression
                 ShowSelectedImageRecto.setImageBitmap(FixBitmap);
                 imgCardVerso.setVisibility(View.VISIBLE);
                 dividerBarUpload.setVisibility(View.VISIBLE);
@@ -308,6 +319,9 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
             if(ShowSelectedImageRecto.getDrawable() != null){
                 FixBitmap2 = (Bitmap) data.getExtras().get("data");
+                //debut compression
+                //FixBitmap2 = Bitmap.createScaledBitmap(FixBitmap2, 60, 60, true);
+                //fin compression
                 ShowSelectedImageVerso.setImageBitmap(FixBitmap2);
                 UploadImageOnServerButton.setVisibility(View.VISIBLE);
                 imgCardVerso.setVisibility(View.VISIBLE);
@@ -318,168 +332,10 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
         }
     }
 
-
-    public void UploadImageToServer(){
-
-        FixBitmap.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
-        FixBitmap2.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
-
-        byteArray1 = byteArrayOutputStream.toByteArray();
-        byteArray2 = byteArrayOutputStream.toByteArray();
-
-        ConvertImageRecto = Base64.encodeToString(byteArray1, Base64.DEFAULT);
-        ConvertImageVerso = Base64.encodeToString(byteArray2, Base64.DEFAULT);
-
-        class AsyncTaskUploadClass extends AsyncTask<Void,Void,String> {
-
-            @Override
-            protected void onPreExecute() {
-
-                super.onPreExecute();
-
-                progressDialog = ProgressDialog.show(SouscriptionUploadIMGidCard.this,"Chargement Encours...","Patientez s'il vous plait",false,false);
-                build_error = new AlertDialog.Builder(SouscriptionUploadIMGidCard.this);
-
-                //SERVICE GOOGLE FIREBASE
-                auth = FirebaseAuth.getInstance();
-                apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
-                fuser = FirebaseAuth.getInstance().getCurrentUser();
-            }
-
-            @Override
-            protected void onPostExecute(String string1) {
-
-                super.onPostExecute(string1);
-
-                String f = string1.toLowerCase().trim();
-
-                //progressDialog.dismiss();
-
-                int pos = f.indexOf("success");
-                if (pos >= 0) {
-
-                    // Calling Method to Parese JSON data into listView.
-                    new AsyncTaskGoogleFirebase().execute();
-
-                } else{
-
-                    ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
-                    dbHandler = new DbHandler(getApplicationContext());
-                    aujourdhui = new Date();
-                    shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-
-                    //////////////////////////////////NOTIFICATIONS////////////////////////////////
-                    LocalNotification("Souscription", f);
-                    dbHandler.insertUserDetails("Souscription","carte non enregistré", "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
-
-                    progressDialog.dismiss();
-
-
-                    build_error = new AlertDialog.Builder(SouscriptionUploadIMGidCard.this);
-                    View view = LayoutInflater.from(SouscriptionUploadIMGidCard.this).inflate(R.layout.alert_dialog_success, null);
-                    TextView title = (TextView) view.findViewById(R.id.title);
-                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                    title.setText(getString(R.string.information));
-                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(f);
-                    build_error.setPositiveButton("OK", null);
-                    build_error.setCancelable(false);
-                    build_error.setView(view);
-                    build_error.show();
-
-                    Toast.makeText(getApplicationContext(), f, Toast.LENGTH_LONG).show();
-
-
-
-                }
-
-            }
-
-            @Override
-            protected String doInBackground(Void... params) {
-
-                ImageProcessClass imageProcessClass = new ImageProcessClass();
-
-                /*HashMap<String,String> HashMapParams = new HashMap<String,String>();
-
-
-                HashMapParams.put("enregUser","users");
-                HashMapParams.put("enregReg", "register");
-
-                HashMapParams.put("NOM", nom);
-                HashMapParams.put("PRENOM", prenom);
-                HashMapParams.put("GENRE", genre.toUpperCase());
-                HashMapParams.put("TELEPHONE", tel);
-                HashMapParams.put("CNI", cni);
-                HashMapParams.put("sessioncompte", sessioncompte);
-                HashMapParams.put("Adresse", adresse);
-                HashMapParams.put("IDCARTE", idcarte);
-                HashMapParams.put("IDCathegorie", idcategorie);
-                HashMapParams.put("typeAbon", typeabon);
-                HashMapParams.put("uniquser", uniquser);
-                HashMapParams.put(ImageTagRecto, GetImageNameFromRectoIdCard);
-                HashMapParams.put(ImageNameRecto, ConvertImageRecto);
-                HashMapParams.put(ImageTagVerso, GetImageNameFromVersoIdCard);
-                HashMapParams.put(ImageNameVerso, ConvertImageVerso);
-
-                HashMapParams.put("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
-                HashMapParams.put("uhtdgG18",ChaineConnexion.getSalt());*/
-
-                Uri.Builder builder = new Uri.Builder();
-
-                if(register.equalsIgnoreCase("autoEnreg")){
-                    builder.appendQueryParameter("auth","Users");
-                    builder.appendQueryParameter("login", "autoregister");
-                    builder.appendQueryParameter("nom", nom);
-                    builder.appendQueryParameter("prenom", prenom);
-                    builder.appendQueryParameter("genre", genre.toUpperCase());
-                    builder.appendQueryParameter("telephone", tel);
-                    builder.appendQueryParameter("cni", cni);
-                    //builder.appendQueryParameter("sessioncompte", sessioncompte);
-                    builder.appendQueryParameter("adresse", adresse);
-                    //builder.appendQueryParameter("IDCARTE", idcarte);
-                    builder.appendQueryParameter("cathegorie", idcategorie);
-                    builder.appendQueryParameter("cryptverso", ConvertImageVerso);
-                    builder.appendQueryParameter("cryptrecto", ConvertImageRecto);
-                    //builder.appendQueryParameter("typeAbon", typeabon);
-                    //builder.appendQueryParameter("uniquser", uniquser);
-                    //builder.appendQueryParameter(ImageTagRecto, GetImageNameFromRectoIdCard);
-                    //builder.appendQueryParameter(ImageNameRecto, ConvertImageRecto);
-                    //builder.appendQueryParameter(ImageTagVerso, GetImageNameFromVersoIdCard);
-                    //builder.appendQueryParameter(ImageNameVerso, ConvertImageVerso);
-                } else {
-
-                    builder.appendQueryParameter("enregUser", "users");
-                    builder.appendQueryParameter("enregReg", "register");
-                    builder.appendQueryParameter("NOM", nom);
-                    builder.appendQueryParameter("PRENOM", prenom);
-                    builder.appendQueryParameter("GENRE", genre.toUpperCase());
-                    builder.appendQueryParameter("TELEPHONE", tel);
-                    builder.appendQueryParameter("CNI", cni);
-                    builder.appendQueryParameter("sessioncompte", sessioncompte);
-                    builder.appendQueryParameter("Adresse", adresse);
-                    builder.appendQueryParameter("IDCARTE", idcarte);
-                    builder.appendQueryParameter("IDCathegorie", idcategorie);
-                    builder.appendQueryParameter("typeAbon", typeabon);
-                    builder.appendQueryParameter("uniquser", uniquser);
-                    builder.appendQueryParameter(ImageTagRecto, GetImageNameFromRectoIdCard);
-                    builder.appendQueryParameter(ImageNameRecto, ConvertImageRecto);
-                    builder.appendQueryParameter(ImageTagVerso, GetImageNameFromVersoIdCard);
-                    builder.appendQueryParameter(ImageNameVerso, ConvertImageVerso);
-                }
-
-                builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
-                builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
-
-                //URL url = new URL("http://192.168.20.6:1234/index.php"+builder.build().toString());
-                String FinalData = imageProcessClass.ImageHttpRequest(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
-
-                return FinalData;
-            }
-        }
-        AsyncTaskUploadClass AsyncTaskUploadClassOBJ = new AsyncTaskUploadClass();
-        AsyncTaskUploadClassOBJ.execute();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //progressDialog.dismiss();
     }
 
     public class ImageProcessClass{
@@ -493,9 +349,9 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
                 httpURLConnection = (HttpURLConnection) url.openConnection();
 
-                httpURLConnection.setReadTimeout(20000);
+                httpURLConnection.setReadTimeout(5000);
 
-                httpURLConnection.setConnectTimeout(20000);
+                httpURLConnection.setConnectTimeout(5000);
 
                 httpURLConnection.setRequestMethod("POST");
 
@@ -576,6 +432,381 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
             }
         }
     }
+
+
+    //initialisation du FixBitmap avec les images chargés de la camera ou gallerie
+    private void InitImage(){
+        FixBitmap.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream1);
+        FixBitmap2.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream2);
+
+        byteArray1 = byteArrayOutputStream1.toByteArray();
+        byteArray2 = byteArrayOutputStream2.toByteArray();
+
+        ConvertImageRecto = Base64.encodeToString(byteArray1, Base64.DEFAULT);
+        ConvertImageVerso = Base64.encodeToString(byteArray2, Base64.DEFAULT);
+    }
+
+
+    //ETAPE 1: Envoi unique des Images vers le serveur
+    private class AsyncTaskUploadImg extends AsyncTask<Void,String,String>{
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+
+            InitImage();
+
+            progressDialog2 = new ProgressDialog(SouscriptionUploadIMGidCard.this);
+            progressDialog2.setMessage("Chargement Encours...");
+            progressDialog2.setTitle("Etape 1: Envoi des Images");
+            progressDialog2.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog2.show();
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+            progressDialog2.setMessage(values[0] + "Opération Encours...");
+            //progressDialog2.setMessage("Encore un petit instant");
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            progressDialog2.dismiss();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            ImageProcess1 imageProcessClass = new ImageProcess1();
+            HashMap<String,String> HashMapParams = new HashMap<String,String>();
+
+            HashMapParams.put(ImageTagRecto, GetImageNameFromRectoIdCard);
+            HashMapParams.put(ImageNameRecto, ConvertImageRecto);
+            HashMapParams.put(ImageTagVerso, GetImageNameFromVersoIdCard);
+            HashMapParams.put(ImageNameVerso, ConvertImageVerso);
+
+            //String FinalData = imageProcessClass.ImageHttpRequest1("http://bertin-mounok.com/upload-image-to-server.php", HashMapParams);
+            String FinalData = imageProcessClass.ImageHttpRequest1("https://management.device.domaineteste.space.smopaye.fr/upload.php", HashMapParams);
+            return FinalData;
+        }
+
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            String f = s.toLowerCase().trim();
+
+            progressDialog2.dismiss();
+
+            int pos = f.indexOf("success");
+            if (pos >= 0) {
+                // Envoi des données du formulaire vers le serveur
+                UploadImageToServer();
+            } else{
+                Toast.makeText(getApplicationContext(), "Une erreur est survenue lors de l'upload de l'image", Toast.LENGTH_LONG).show();
+                View view = LayoutInflater.from(SouscriptionUploadIMGidCard.this).inflate(R.layout.alert_dialog_success, null);
+                TextView title = (TextView) view.findViewById(R.id.title);
+                TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                title.setText(getString(R.string.information));
+                imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                statutOperation.setText(getString(R.string.erreurSurvenue));
+                build_error.setPositiveButton("OK", null);
+                build_error.setCancelable(false);
+                build_error.setView(view);
+                build_error.show();
+            }
+        }
+    }
+
+    //Traitement des images uploadées
+    public class ImageProcess1{
+
+        public String ImageHttpRequest1(String requestURL,HashMap<String, String> PData) {
+
+            StringBuilder stringBuilder = new StringBuilder();
+
+            try {
+                url = new URL(requestURL);
+
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                httpURLConnection.setReadTimeout(20000);
+
+                httpURLConnection.setConnectTimeout(20000);
+
+                httpURLConnection.setRequestMethod("POST");
+
+                httpURLConnection.setDoInput(true);
+
+                httpURLConnection.setDoOutput(true);
+
+                outputStream = httpURLConnection.getOutputStream();
+
+                bufferedWriter = new BufferedWriter(
+
+                        new OutputStreamWriter(outputStream, "UTF-8"));
+
+                bufferedWriter.write(bufferedWriterDataFN(PData));
+
+                bufferedWriter.flush();
+
+                bufferedWriter.close();
+
+                outputStream.close();
+
+                RC = httpURLConnection.getResponseCode();
+
+                if (RC == HttpsURLConnection.HTTP_OK) {
+
+                    bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+
+                    stringBuilder = new StringBuilder();
+
+                    String RC2;
+
+                    while ((RC2 = bufferedReader.readLine()) != null){
+
+                        stringBuilder.append(RC2);
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return stringBuilder.toString();
+        }
+
+        private String bufferedWriterDataFN(HashMap<String, String> HashMapParams) throws UnsupportedEncodingException {
+
+            stringBuilder = new StringBuilder();
+
+            for (Map.Entry<String, String> KEY : HashMapParams.entrySet()) {
+                if (check)
+                    check = false;
+                else
+                    stringBuilder.append("&");
+
+                stringBuilder.append(URLEncoder.encode(KEY.getKey(), "UTF-8"));
+
+                stringBuilder.append("=");
+
+                stringBuilder.append(URLEncoder.encode(KEY.getValue(), "UTF-8"));
+            }
+
+            return stringBuilder.toString();
+        }
+
+    }
+
+
+    //ETAPE 2: Upload des données vers le serveur
+    public void UploadImageToServer(){
+
+        class AsyncTaskUploadClass extends AsyncTask<Void,Void,String> {
+
+            @Override
+            protected void onPreExecute() {
+
+                super.onPreExecute();
+
+                progressDialog = ProgressDialog.show(SouscriptionUploadIMGidCard.this,"Etape 2: Envoi des Données","Connexion au serveur Smopaye",true,true);
+                build_error = new AlertDialog.Builder(SouscriptionUploadIMGidCard.this);
+            }
+
+            @Override
+            protected void onCancelled() {
+                super.onCancelled();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            protected void onPostExecute(String string1) {
+
+                super.onPostExecute(string1);
+
+                String f = string1.toLowerCase().trim();
+
+                progressDialog.dismiss();
+
+                int pos = f.indexOf("success");
+                if (pos >= 0) {
+
+                    // Calling Method to Parese JSON data into listView.
+                    new AsyncTaskGoogleFirebase(f).execute();
+
+                } else{
+
+                    ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
+                    dbHandler = new DbHandler(getApplicationContext());
+                    aujourdhui = new Date();
+                    shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+
+                    //////////////////////////////////NOTIFICATIONS////////////////////////////////
+                    LocalNotification("Souscription", f);
+                    dbHandler.insertUserDetails("Souscription","carte non enregistré", "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+
+                    //progressDialog.dismiss();
+
+
+                    build_error = new AlertDialog.Builder(SouscriptionUploadIMGidCard.this);
+                    View view = LayoutInflater.from(SouscriptionUploadIMGidCard.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                    statutOperation.setText(f);
+                    build_error.setPositiveButton("OK", null);
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
+
+                    Toast.makeText(getApplicationContext(), f, Toast.LENGTH_LONG).show();
+
+
+
+                }
+
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+
+                ImageProcessClass imageProcessClass = new ImageProcessClass();
+
+                /*HashMap<String,String> HashMapParams = new HashMap<String,String>();
+
+
+                HashMapParams.put("enregUser","users");
+                HashMapParams.put("enregReg", "register");
+
+                HashMapParams.put("NOM", nom);
+                HashMapParams.put("PRENOM", prenom);
+                HashMapParams.put("GENRE", genre.toUpperCase());
+                HashMapParams.put("TELEPHONE", tel);
+                HashMapParams.put("CNI", cni);
+                HashMapParams.put("sessioncompte", sessioncompte);
+                HashMapParams.put("Adresse", adresse);
+                HashMapParams.put("IDCARTE", idcarte);
+                HashMapParams.put("IDCathegorie", idcategorie);
+                HashMapParams.put("typeAbon", typeabon);
+                HashMapParams.put("uniquser", uniquser);
+                HashMapParams.put(ImageTagRecto, GetImageNameFromRectoIdCard);
+                HashMapParams.put(ImageNameRecto, ConvertImageRecto);
+                HashMapParams.put(ImageTagVerso, GetImageNameFromVersoIdCard);
+                HashMapParams.put(ImageNameVerso, ConvertImageVerso);
+
+                HashMapParams.put("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
+                HashMapParams.put("uhtdgG18",ChaineConnexion.getSalt());*/
+
+                Uri.Builder builder = new Uri.Builder();
+
+                if(register.equalsIgnoreCase("autoEnreg")){
+                    builder.appendQueryParameter("auth","Users");
+                    builder.appendQueryParameter("login", "autoregister");
+                    builder.appendQueryParameter("nom", nom);
+                    builder.appendQueryParameter("prenom", prenom);
+                    builder.appendQueryParameter("genre", genre.toUpperCase());
+                    builder.appendQueryParameter("telephone", tel);
+                    builder.appendQueryParameter("cni", cni);
+                    //builder.appendQueryParameter("sessioncompte", sessioncompte);
+                    builder.appendQueryParameter("adresse", adresse);
+                    //builder.appendQueryParameter("IDCARTE", idcarte);
+                    builder.appendQueryParameter("cathegorie", idcategorie);
+                    builder.appendQueryParameter("cryptverso", GetImageNameFromVersoIdCard);
+                    builder.appendQueryParameter("cryptrecto", GetImageNameFromRectoIdCard);
+                    builder.appendQueryParameter("typeAbon", typeabon);
+                    builder.appendQueryParameter("uniquser", uniquser);
+                } else {
+                    builder.appendQueryParameter("enregUser", "users");
+                    builder.appendQueryParameter("enregReg", "register");
+                    builder.appendQueryParameter("NOM", nom);
+                    builder.appendQueryParameter("PRENOM", prenom);
+                    builder.appendQueryParameter("GENRE", genre.toUpperCase());
+                    builder.appendQueryParameter("TELEPHONE", tel);
+                    builder.appendQueryParameter("CNI", cni);
+                    builder.appendQueryParameter("sessioncompte", sessioncompte);
+                    builder.appendQueryParameter("Adresse", adresse);
+                    builder.appendQueryParameter("IDCARTE", idcarte);
+                    builder.appendQueryParameter("IDCathegorie", idcategorie);
+                    /*builder.appendQueryParameter("cryptverso", GetImageNameFromVersoIdCard);
+                    builder.appendQueryParameter("cryptrecto", GetImageNameFromRectoIdCard);*/
+                    builder.appendQueryParameter("typeAbon", typeabon);
+                    builder.appendQueryParameter("uniquser", uniquser);
+                }
+
+                builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
+                builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
+
+                //URL url = new URL("http://192.168.20.6:1234/index.php"+builder.build().toString());
+                //String FinalData = imageProcessClass.ImageHttpRequest(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
+
+                String FinalData = imageProcessClass.ImageHttpRequest(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
+
+                return FinalData;
+            }
+        }
+        AsyncTaskUploadClass AsyncTaskUploadClassOBJ = new AsyncTaskUploadClass();
+        AsyncTaskUploadClassOBJ.execute();
+    }
+
+
+
+    //ETAPE 3: Envoi des données vers le serveur Google
+    private class AsyncTaskGoogleFirebase extends  AsyncTask<Void,Void,String>{
+
+        private String result;
+
+        public AsyncTaskGoogleFirebase(String result) {
+            this.result = result;
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+
+            progressDialog1 = new ProgressDialog(SouscriptionUploadIMGidCard.this);
+            progressDialog1.setMessage("Connexion au Serveur Google");
+            progressDialog1.setTitle("Etape 3 - Finale");
+            progressDialog1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog1.show();
+
+            //SERVICE GOOGLE FIREBASE
+            auth = FirebaseAuth.getInstance();
+            apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
+            fuser = FirebaseAuth.getInstance().getCurrentUser();
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            progressDialog1.dismiss();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            registerGoogleFirebase(nom, prenom, genre,
+                    tel,  cni, sessioncompteValue,
+                    adresse, idcarte, idcategorieValue,
+                    "sm" + tel + "@smopaye.cm", tel, "default", "offline", typeabon, result);
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            progressDialog1.dismiss();
+        }
+    }
+
+
 
 
     /*                    GESTION DU MENU DROIT                  */
@@ -846,44 +1077,5 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
 
 
-
-    private class AsyncTaskGoogleFirebase extends  AsyncTask<Void,Void,String>{
-
-
-        @Override
-        protected void onPreExecute() {
-
-            super.onPreExecute();
-
-            progressDialog = ProgressDialog.show(SouscriptionUploadIMGidCard.this,"Connexion Serveur Google","Patientez s'il vous plait",false,false);
-
-            //SERVICE GOOGLE FIREBASE
-            auth = FirebaseAuth.getInstance();
-            apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
-            fuser = FirebaseAuth.getInstance().getCurrentUser();
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-            progressDialog = ProgressDialog.show(SouscriptionUploadIMGidCard.this,"Connexion Réussie","Envoi des données",false,false);
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            registerGoogleFirebase(nom, prenom, genre,
-                    tel,  cni, sessioncompteValue,
-                    adresse, idcarte, idcategorieValue,
-                    "sm" + tel + "@smopaye.cm", tel, "default", "offline", typeabon, "");
-            return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            progressDialog.dismiss();
-        }
-    }
 
 }
