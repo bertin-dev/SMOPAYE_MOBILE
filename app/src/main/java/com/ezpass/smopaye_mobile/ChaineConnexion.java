@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.security.SecureRandom;
 import java.util.HashMap;
+import java.util.Random;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
@@ -20,7 +21,9 @@ public class ChaineConnexion {
     private static final String urlSiteWeb = "https://smopaye.cm/";
     private static final String encrypted_password = "Iyz4BVU2Hlt0cIeIPBlB7Wq15kMDI4NGRmOTNi";
     private static final String salt = "d0284df93b";
-    private static final String security_keys = "56ZS5PQ1RF-eyJsaWNlbnNlSWQiOiI1NlpGVkIjpmYWxzZX0+-==";
+
+    private static double rand = Math.random();
+    private static final String security_keys = "56ZS5PQ1RF-eyJsaWNlbnNlSWQiOiI1NlpGVkIjpmYWxzZX0+-==" + rand;
 
     public static String getAdresseURLsmopayeServer() {
         return adresseURLsmopayeServer;
@@ -45,9 +48,6 @@ public class ChaineConnexion {
     public static String getsecurity_keys() {
         return security_keys;
     }
-
-
-
 
 
 
