@@ -131,7 +131,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
     APIService apiService;
     FirebaseUser fuser;
 
-    String resultFromBD = "";
+    String typePieceJusti = "";
 
 
     @SuppressLint("SetTextI18n")
@@ -179,7 +179,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
 
         String[] parts = cni.split("-");
-        if(parts[0].toLowerCase().equalsIgnoreCase("cni"))
+        typePieceJusti = parts[0].toLowerCase();
+        if(typePieceJusti.equalsIgnoreCase("cni"))
             infoCni.setText(getString(R.string.infoIdCard));
         else
             infoCni.setText(getString(R.string.pays) +", " + parts[0]);
@@ -273,26 +274,37 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                 Uri contentURI = data.getData();
                 try {
 
-                    if(ShowSelectedImageRecto.getDrawable() == null) {
+                    if(typePieceJusti.equalsIgnoreCase("passeport")){
+
                         FixBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-                        //debut compression
-                        //FixBitmap = Bitmap.createScaledBitmap(FixBitmap, 60, 60, true);
-                        //fin compression
                         ShowSelectedImageRecto.setImageBitmap(FixBitmap);
-                        imgCardVerso.setVisibility(View.VISIBLE);
-                        dividerBarUpload.setVisibility(View.VISIBLE);
-                        return;
-                    }
 
-
-                    if(ShowSelectedImageRecto.getDrawable() != null){
-                        FixBitmap2 = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-                        ShowSelectedImageVerso.setImageBitmap(FixBitmap2);
                         UploadImageOnServerButton.setVisibility(View.VISIBLE);
-                        imgCardVerso.setVisibility(View.VISIBLE);
-                        dividerBarUpload.setVisibility(View.VISIBLE);
                         GetImageFromGalleryButton.setVisibility(View.GONE);
+
+                    } else{
+                        if(ShowSelectedImageRecto.getDrawable() == null) {
+                            FixBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+                            //debut compression
+                            //FixBitmap = Bitmap.createScaledBitmap(FixBitmap, 60, 60, true);
+                            //fin compression
+                            ShowSelectedImageRecto.setImageBitmap(FixBitmap);
+                            imgCardVerso.setVisibility(View.VISIBLE);
+                            dividerBarUpload.setVisibility(View.VISIBLE);
+                            return;
+                        }
+
+
+                        if(ShowSelectedImageRecto.getDrawable() != null){
+                            FixBitmap2 = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+                            ShowSelectedImageVerso.setImageBitmap(FixBitmap2);
+                            UploadImageOnServerButton.setVisibility(View.VISIBLE);
+                            imgCardVerso.setVisibility(View.VISIBLE);
+                            dividerBarUpload.setVisibility(View.VISIBLE);
+                            GetImageFromGalleryButton.setVisibility(View.GONE);
+                        }
                     }
+
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -305,28 +317,38 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
             ShowSelectedImageRecto.setImageBitmap(FixBitmap);
             UploadImageOnServerButton.setVisibility(View.VISIBLE);*/
 
-            if(ShowSelectedImageRecto.getDrawable() == null) {
+            if(typePieceJusti.equalsIgnoreCase("passeport")){
+
                 FixBitmap = (Bitmap) data.getExtras().get("data");
-                //debut compression
-                //FixBitmap = Bitmap.createScaledBitmap(FixBitmap, 60, 60, true);
-                //fin compression
                 ShowSelectedImageRecto.setImageBitmap(FixBitmap);
-                imgCardVerso.setVisibility(View.VISIBLE);
-                dividerBarUpload.setVisibility(View.VISIBLE);
-                return;
-            }
 
-
-            if(ShowSelectedImageRecto.getDrawable() != null){
-                FixBitmap2 = (Bitmap) data.getExtras().get("data");
-                //debut compression
-                //FixBitmap2 = Bitmap.createScaledBitmap(FixBitmap2, 60, 60, true);
-                //fin compression
-                ShowSelectedImageVerso.setImageBitmap(FixBitmap2);
                 UploadImageOnServerButton.setVisibility(View.VISIBLE);
-                imgCardVerso.setVisibility(View.VISIBLE);
-                dividerBarUpload.setVisibility(View.VISIBLE);
                 GetImageFromGalleryButton.setVisibility(View.GONE);
+            } else {
+
+                if (ShowSelectedImageRecto.getDrawable() == null) {
+                    FixBitmap = (Bitmap) data.getExtras().get("data");
+                    //debut compression
+                    //FixBitmap = Bitmap.createScaledBitmap(FixBitmap, 60, 60, true);
+                    //fin compression
+                    ShowSelectedImageRecto.setImageBitmap(FixBitmap);
+                    imgCardVerso.setVisibility(View.VISIBLE);
+                    dividerBarUpload.setVisibility(View.VISIBLE);
+                    return;
+                }
+
+
+                if (ShowSelectedImageRecto.getDrawable() != null) {
+                    FixBitmap2 = (Bitmap) data.getExtras().get("data");
+                    //debut compression
+                    //FixBitmap2 = Bitmap.createScaledBitmap(FixBitmap2, 60, 60, true);
+                    //fin compression
+                    ShowSelectedImageVerso.setImageBitmap(FixBitmap2);
+                    UploadImageOnServerButton.setVisibility(View.VISIBLE);
+                    imgCardVerso.setVisibility(View.VISIBLE);
+                    dividerBarUpload.setVisibility(View.VISIBLE);
+                    GetImageFromGalleryButton.setVisibility(View.GONE);
+                }
             }
 
         }
@@ -489,7 +511,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
             HashMapParams.put(ImageNameVerso, ConvertImageVerso);
 
             //String FinalData = imageProcessClass.ImageHttpRequest1("http://bertin-mounok.com/upload-image-to-server.php", HashMapParams);
-            String FinalData = imageProcessClass.ImageHttpRequest1("https://management.device.domaineteste.space.smopaye.fr/upload.php", HashMapParams);
+            //String FinalData = imageProcessClass.ImageHttpRequest1("https://management.device.domaineteste.space.smopaye.fr/upload.php", HashMapParams);
+            String FinalData = imageProcessClass.ImageHttpRequest1("https://ms.smp.net.smopaye.fr/upload.php", HashMapParams);
             return FinalData;
         }
 
@@ -659,7 +682,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
                     title.setText(getString(R.string.information));
-                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                    imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
                     statutOperation.setText(f);
                     build_error.setPositiveButton("OK", null);
                     build_error.setCancelable(false);
@@ -718,8 +741,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                     builder.appendQueryParameter("adresse", adresse);
                     //builder.appendQueryParameter("IDCARTE", idcarte);
                     builder.appendQueryParameter("cathegorie", idcategorie);
-                    builder.appendQueryParameter("cryptverso", GetImageNameFromVersoIdCard);
-                    builder.appendQueryParameter("cryptrecto", GetImageNameFromRectoIdCard);
+                    builder.appendQueryParameter("cryptverso", GetImageNameFromVersoIdCard + ".jpg");
+                    builder.appendQueryParameter("cryptrecto", GetImageNameFromRectoIdCard + ".jpg");
                     builder.appendQueryParameter("typeAbon", typeabon);
                     builder.appendQueryParameter("uniquser", uniquser);
                 } else {
@@ -734,8 +757,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                     builder.appendQueryParameter("Adresse", adresse);
                     builder.appendQueryParameter("IDCARTE", idcarte);
                     builder.appendQueryParameter("IDCathegorie", idcategorie);
-                    /*builder.appendQueryParameter("cryptverso", GetImageNameFromVersoIdCard);
-                    builder.appendQueryParameter("cryptrecto", GetImageNameFromRectoIdCard);*/
+                    builder.appendQueryParameter("cryptverso", GetImageNameFromVersoIdCard + ".jpg");
+                    builder.appendQueryParameter("cryptrecto", GetImageNameFromRectoIdCard + ".jpg");
                     builder.appendQueryParameter("typeAbon", typeabon);
                     builder.appendQueryParameter("uniquser", uniquser);
                 }

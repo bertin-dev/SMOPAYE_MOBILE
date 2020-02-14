@@ -87,6 +87,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.regex.Matcher;
@@ -108,8 +109,6 @@ public class Souscription extends AppCompatActivity {
     private ProgressDialog progressDialog;
     /////////////////////////////////////////////////////////////////////////////////
     Handler handler;
-    Runnable runnable;
-    Timer timer;
     Thread readThread;
     private byte blockNum_1 = 1;
     private byte blockNum_2 = 2;
@@ -120,19 +119,13 @@ public class Souscription extends AppCompatActivity {
     private final byte A_CPU = 1;
     private final byte A_M1 = 2;
     Nfc nfc = new Nfc(this);
-    DialogInterface dialog;
     AlertDialog.Builder build_error;
 
 
     private CheckBox AbonnementMensuel;
     private CheckBox AbonnementHebdomadaire;
     private CheckBox AbonnementService;
-
-
-
     private String abonnement = "service";
-
-
     private LinearLayout internetIndisponible, authWindows;
     private Button btnReessayer;
     ImageView conStatusIv;
@@ -148,7 +141,6 @@ public class Souscription extends AppCompatActivity {
     String line = null;
     String result = null;
 
-
     String[] id_session;
     String[] nom_session;
 
@@ -156,34 +148,35 @@ public class Souscription extends AppCompatActivity {
     String[] NOMCath;
     String[] typeuser;
 
-    String adressUrl = "http://bertin-mounok.com/listing1.php";
 
     ArrayList<String> listStatut = new ArrayList<>();
     List<String> idStatut = new ArrayList<String>();
 
-    ArrayList<String> listChauffeur = new ArrayList<>();
-    List<String> idChauffeur = new ArrayList<String>();
-    List<String> typeUserChauffeur = new ArrayList<String>();
-
      String num_statut = "";
      String num_categorie = "";
 
+    ArrayList<String> maListeIDCat = new ArrayList<>();
+    ArrayList<String> ListIDTypeUser = new ArrayList<>();
+    ArrayList<String> maListe = new ArrayList<>();
 
-    ArrayList<String> listUser = new ArrayList<>();
-    List<String> idUser = new ArrayList<String>();
-    List<String> typeUser = new ArrayList<String>();
+    HashMap<Integer, String> listAllSession = new HashMap<>();
+    HashMap<Integer, String> listAllCategorie = new HashMap<>();
+    HashMap<Integer, String> listFILTRECategorie = new HashMap<>();
 
 
-    ArrayList<String> autreUser = new ArrayList<>();
-    List<String> idAutreUser = new ArrayList<String>();
-    List<String> typeAutreUser = new ArrayList<String>();
+    ArrayList<String> maListeIDCat1 = new ArrayList<>();
+    ArrayList<String> ListIDTypeUser1 = new ArrayList<>();
+    ArrayList<String> maListe1 = new ArrayList<>();
+    String[] IDCathegorie1;
+    String[] NOMCath1;
+    String[] typeuser1;
+
 
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        // Toast.makeText(Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
         //Check si la connexion existe
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
@@ -192,14 +185,6 @@ public class Souscription extends AppCompatActivity {
             authWindows.setVisibility(View.GONE);
             internetIndisponible.setVisibility(View.VISIBLE);
             Toast.makeText(Souscription.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
-        } else if ((activeInfo == null && !activeInfo.isConnected())){
-            progressDialog.dismiss();
-            authWindows.setVisibility(View.GONE);
-            internetIndisponible.setVisibility(View.VISIBLE);
-            conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
-            titleNetworkLimited.setText(getString(R.string.connexionLimite));
-            //msgNetworkLimited.setText();
-            Toast.makeText(Souscription.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -208,26 +193,8 @@ public class Souscription extends AppCompatActivity {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-       // new loadDataSpinner().execute();
-
-
-        StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
-
-        //chargement et affichage des données
-        LoadDBStatutInSpinner();
-        //statut de la session
-        ArrayAdapter<String> spinnerArrayAdapter1 = new ArrayAdapter<String>(
-                this,R.layout.spinner_item, listStatut);
-        spinnerArrayAdapter1.setDropDownViewResource(R.layout.spinner_item);
-        statut.setAdapter(spinnerArrayAdapter1);
-
-        //chargement sans affichage des données
-        LoadDBCategorieInpinner();
+        new loadDataSpinner(getApplication(), statut).execute();
     }
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -271,47 +238,7 @@ public class Souscription extends AppCompatActivity {
         titleNetworkLimited = (TextView) findViewById(R.id.titleNetworkLimited);
         msgNetworkLimited = (TextView) findViewById(R.id.msgNetworkLimited);
 
-
-
-
-
-
-
-
-
-
-
         // Initializing a String Array
-        /*String[] statut1 = new String[]{
-                "Utilisateur",
-                "Agent",
-                "Administrateur",
-                "Accepteur"
-        };
-        // Initializing an ArrayAdapter
-        ArrayAdapter<String> spinnerArrayAdapter1 = new ArrayAdapter<String>(
-                this,R.layout.spinner_item,statut1);
-        spinnerArrayAdapter1.setDropDownViewResource(R.layout.spinner_item);
-        statut.setAdapter(spinnerArrayAdapter1);*/
-
-
-        // Initializing a String Array
-        /*String[] typeChauffeur1 = new String[]{
-                "moto_taxi",
-                "Chauffeur",
-                "cargo",
-                "bus inter urbain",
-                "Commerçant",
-                "restaurant etudiant",
-                "Chauffeur",
-                "autre"
-        };
-        // Initializing an ArrayAdapter
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
-                this,R.layout.spinner_item,typeChauffeur1);
-        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
-        typeChauffeur.setAdapter(spinnerArrayAdapter);*/
-
 
         // Initializing a String Array
         String[] sexe1 = new String[]{
@@ -351,59 +278,19 @@ public class Souscription extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
-        //VERIFICATION DE L'ETAT DU CHANGEMENT DE STATUT
-        /*statut.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("accepteur")){
-                    //typeChauffeur.setVisibility(View.VISIBLE);
-                    addItemsOnSpinner2();
-                }
-                else if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("utilisateur")){
-                    //typeChauffeur.setVisibility(View.VISIBLE);
-                    addItemsOnSpinner3();
-                }
-                else {
-                    addItemsOnSpinner1();
-                    // typeChauffeur.setVisibility(View.GONE);
-                    //typeChauffeur.setAd
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                return;
-            }
-        });*/
-
         statut.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                //Accepteur id = 2
-              if(idStatut.get(position).equalsIgnoreCase("2")){
-                  addItemsOnSpinner2();
-                  num_statut = idStatut.get(position);
-              }
-              //Utilisateur id = 1
-                else if(idStatut.get(position).equalsIgnoreCase("1")){
-                    addItemsOnSpinner3();
-                  num_statut = idStatut.get(position);
-                }
-              //Adminitrateur id = 3
-                else if(idStatut.get(position).equalsIgnoreCase("3")){
-                  addItemsOnSpinner1();
-                  num_statut = idStatut.get(position);
-              }
-              //Agent id = 4 et autre
-                else {
-                    addItemsOnSpinner1();
-                  num_statut = idStatut.get(position);
-                }
+                StringWithTag swt = (StringWithTag) parent.getItemAtPosition(position);
+                Integer key = (Integer) swt.tag;
+                //Toast.makeText(Souscription.this, listAllSession.get(key), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Souscription.this, String.valueOf(key), Toast.LENGTH_SHORT).show();
 
+                if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase(listAllSession.get(key))){
+                    new AsyncTaskFiltreCategorie(String.valueOf(key), Souscription.this).execute();
+                }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -415,42 +302,15 @@ public class Souscription extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                /*for(String idd : idChauffeur){
-                    if(idd.equalsIgnoreCase(idChauffeur.get(position))){
-                        num_categorie = idd;
-                    }
-                }*/
+                StringWithTag swt = (StringWithTag) parent.getItemAtPosition(position);
+                Integer key = (Integer) swt.tag;
+                //Toast.makeText(Souscription.this, listAllCategorie.get(key), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Souscription.this, String.valueOf(key), Toast.LENGTH_SHORT).show();
 
-                if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("particulier")){
-                    num_categorie = "41";
-                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
-                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("étudiant")){
-                    num_categorie = "42";
-                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
-                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("élève")){
-                    num_categorie = "43";
-                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
-                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("moto_taxis")){
-                    num_categorie = "7";
-                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
-                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("chauffeur")){
-                    num_categorie = "8";
-                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
-                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("mini-bus")){
-                    num_categorie = "9";
-                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
-                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("bus inter urbain")){
-                    num_categorie = "10";
-                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
-                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("restaurant étudiant")){
-                    num_categorie = "12";
-                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
-                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("smopaye")){
-                    num_categorie = "33";
+                if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase(listAllCategorie.get(key))){
+                    num_categorie = String.valueOf(key);
                     //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
                 }
-
-
             }
 
             @Override
@@ -463,8 +323,6 @@ public class Souscription extends AppCompatActivity {
 
 
         btnSuivant.setOnClickListener(new View.OnClickListener() {
-
-
 
             @SuppressLint("SetTextI18n")
             @Override
@@ -583,31 +441,54 @@ public class Souscription extends AppCompatActivity {
                     return;
                 }
 
-                /*if(statut.getSelectedItem().toString().isEmpty()){
-                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " session dans liste déroulante en vérifiant votre connexion internet.", Toast.LENGTH_SHORT).show();
+
+                if(statut.getCount() == 0){
+                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " statut dans liste déroulante en actualisant la page de souscription.", Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                    statutOperation.setText(getString(R.string.veuillezInserer) + " statut dans liste déroulante en actualisant la page de souscription.");
+                    build_error.setPositiveButton("OK", null);
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
                     return;
                 }
 
-                if(typeChauffeur.getSelectedItem().toString().trim().equals("")){
-                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " catégorie dans liste déroulante en vérifiant votre connexion internet.", Toast.LENGTH_SHORT).show();
+                if(typeChauffeur.getCount() == 0){
+                    Toast.makeText(Souscription.this, getString(R.string.veuillezInserer) + " catégorie dans liste déroulante en actualisant la page de souscription", Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                    statutOperation.setText(getString(R.string.veuillezInserer) + " catégorie dans liste déroulante en actualisant la page de souscription");
+                    build_error.setPositiveButton("OK", null);
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
                     return;
-                }*/
+                }
 
-                    if(!isValid(nom.getText().toString().trim())){
-                        Toast.makeText(Souscription.this, getString(R.string.votre) + " nom " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
-                        View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
-                        TextView title = (TextView) view.findViewById(R.id.title);
-                        TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                        ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                        title.setText(getString(R.string.information));
-                        imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                        statutOperation.setText(getString(R.string.votre) + " nom " + getString(R.string.invalidCararatere));
-                        build_error.setPositiveButton("OK", null);
-                        build_error.setCancelable(false);
-                        build_error.setView(view);
-                        build_error.show();
-                        return;
-                    }
+                if(!isValid(nom.getText().toString().trim())){
+                    Toast.makeText(Souscription.this, getString(R.string.votre) + " nom " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
+                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                    statutOperation.setText(getString(R.string.votre) + " nom " + getString(R.string.invalidCararatere));
+                    build_error.setPositiveButton("OK", null);
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
+                    return;
+                }
 
                 if(!isValid(prenom.getText().toString().trim())){
                     Toast.makeText(Souscription.this, getString(R.string.votre) + " prénom " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
@@ -870,8 +751,7 @@ public class Souscription extends AppCompatActivity {
 
 
 
-    public static boolean isValid(String str)
-    {
+    public static boolean isValid(String str) {
         boolean isValid = false;
         String expression = "^[a-z_A-Z0-9éèê'çà ]*$";
         CharSequence inputStr = str;
@@ -883,110 +763,6 @@ public class Souscription extends AppCompatActivity {
         }
         return isValid;
     }
-
-
-    public void addItemsOnSpinner3() {
-
-        //statique
-        //spinner2 = (Spinner) findViewById(R.id.spinner2);
-        /*List<String> list = new ArrayList<String>();
-        list.add("étudiant");
-        list.add("élève");
-        list.add("particulier");
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                R.layout.spinner_item, list);
-        dataAdapter.setDropDownViewResource(R.layout.spinner_item);
-        typeChauffeur.setAdapter(dataAdapter);*/
-
-        //dynamique
-        listUser.clear();
-        idUser.clear();
-        typeUser.clear();
-        for(int i=0; i<NOMCath.length; i++){
-
-            if(i>=6 && i<(NOMCath.length-1)){
-                listUser.add(NOMCath[i]);
-                idUser.add(IDCathegorie[i]);
-                typeUser.add(typeuser[i]);
-            }
-        }
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                R.layout.spinner_item, listUser);
-        dataAdapter.setDropDownViewResource(R.layout.spinner_item);
-        typeChauffeur.setAdapter(dataAdapter);
-
-    }
-
-
-    public void addItemsOnSpinner2() {
-
-        //statique
-        /*List<String> list = new ArrayList<String>();
-        list.add("moto_taxis");
-        list.add("Chauffeur");
-        list.add("mini-bus");
-        list.add("bus inter urbain");
-        list.add("restaurant étudiant");
-        list.add("monetbil");
-        list.add("moreals");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                R.layout.spinner_item, list);
-        dataAdapter.setDropDownViewResource(R.layout.spinner_item);
-        typeChauffeur.setAdapter(dataAdapter);*/
-
-
-        //LoadDBCategorieInpinner();
-        //type de chauffeur
-
-        //ejection de quelques éléments de le liste
-
-
-
-        //dynamique
-        listChauffeur.clear();
-        idChauffeur.clear();
-        typeUserChauffeur.clear();
-        for(int i=0; i<NOMCath.length; i++){
-            if(i<5){
-                listChauffeur.add(NOMCath[i]);
-                idChauffeur.add(IDCathegorie[i]);
-                typeUserChauffeur.add(typeuser[i]);
-            }
-        }
-
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
-                this,R.layout.spinner_item, listChauffeur);
-        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
-        typeChauffeur.setAdapter(spinnerArrayAdapter);
-    }
-
-    public void addItemsOnSpinner1() {
-
-        //statique
-        /*List<String> list = new ArrayList<String>();
-        list.add("smopaye");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                R.layout.spinner_item, list);
-        dataAdapter.setDropDownViewResource(R.layout.spinner_item);
-        typeChauffeur.setAdapter(dataAdapter);*/
-
-        //dynamique
-        autreUser.clear();
-        idAutreUser.clear();
-        typeAutreUser.clear();
-        autreUser.add(NOMCath[NOMCath.length-1]);
-        idAutreUser.add(IDCathegorie[NOMCath.length-1]);
-        typeAutreUser.add(typeuser[NOMCath.length-1]);
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                R.layout.spinner_item, autreUser);
-        dataAdapter.setDropDownViewResource(R.layout.spinner_item);
-        typeChauffeur.setAdapter(dataAdapter);
-
-
-    }
-
-
 
 
     public void m1CardAuthenticate() {
@@ -1133,6 +909,14 @@ public class Souscription extends AppCompatActivity {
 
     public class loadDataSpinner extends AsyncTask<Void, Void, Void> {
 
+        Context c;
+        Spinner sp;
+
+        public loadDataSpinner(Context c, Spinner sp) {
+            this.c = c;
+            this.sp = sp;
+        }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -1141,20 +925,40 @@ public class Souscription extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            LoadDBStatutInSpinner();
-            LoadDBCategorieInpinner();
+            //chargement et affichage des données du statut EX: Administrateur, Accepteur, Agent, Utilisateur
+            LoadDbAllSessionInSpinner();
+
+            //chargement sans affichage des données des Categories EX: mini-bus, restaurant smopaye
+            LoadDbALLCategorieInpinner();
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+
+
+            List<StringWithTag> itemList = new ArrayList<>();
+
+            /* Iterate through your original collection, in this case defined with an Integer key and String value. */
+            for (Map.Entry<Integer, String> entry : listAllSession.entrySet()) {
+                Integer key = entry.getKey();
+                String value = entry.getValue();
+
+                /* Build the StringWithTag List using these keys and values. */
+                itemList.add(new StringWithTag(value, key));
+            }
+
+            /* Set your ArrayAdapter with the StringWithTag, and when each entry is shown in the Spinner, .toString() is called. */
+            ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(c, R.layout.spinner_item, itemList);
+            spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
+            sp.setAdapter(spinnerAdapter);
         }
     }
 
 
 
-    private void LoadDBStatutInSpinner(){
+    private void LoadDbAllSessionInSpinner(){
 //connection
         try{
             final Uri.Builder builder = new Uri.Builder();
@@ -1198,6 +1002,9 @@ public class Souscription extends AppCompatActivity {
             listStatut.clear();
             idStatut.clear();
 
+            listAllSession.clear();
+
+
             id_session = new String[ja.length()];
             nom_session = new String[ja.length()];
 
@@ -1207,15 +1014,20 @@ public class Souscription extends AppCompatActivity {
                 nom_session[i] = jo.getString("nom_session");
                 listStatut.add(nom_session[i]);
                 idStatut.add(id_session[i]);
+
+                listAllSession.put(Integer.parseInt(id_session[i]),  nom_session[i]);
             }
+
         }
         catch (Exception ex){
             ex.printStackTrace();
         }
+
+
     }
 
 
-    private void LoadDBCategorieInpinner(){
+    private void LoadDbALLCategorieInpinner(){
 //connection
 
         try{
@@ -1257,6 +1069,10 @@ public class Souscription extends AppCompatActivity {
             JSONArray ja = new JSONArray(result);
             JSONObject jo = null;
 
+            maListe.clear();
+            maListeIDCat.clear();
+            ListIDTypeUser.clear();
+
             IDCathegorie = new String[ja.length()];
             NOMCath = new String[ja.length()];
             typeuser = new String[ja.length()];
@@ -1267,6 +1083,13 @@ public class Souscription extends AppCompatActivity {
                 IDCathegorie[i] = jo.getString("IDCathegorie");
                 NOMCath[i] = jo.getString("NOMCath");
                 typeuser[i] = jo.getString("typeuser");
+
+                ListIDTypeUser.add(typeuser[i]);
+                maListe.add(NOMCath[i]);
+                maListeIDCat.add(IDCathegorie[i]);
+
+                listAllCategorie.put(Integer.parseInt(IDCathegorie[i]),  NOMCath[i]);
+
             }
 
         }
@@ -1276,5 +1099,152 @@ public class Souscription extends AppCompatActivity {
     }
 
 
+
+    //FILTRE DES CATEGORIES
+    private class AsyncTaskFiltreCategorie extends AsyncTask<Void, Void, Void>{
+
+        private String id;
+        private Context context;
+
+        public AsyncTaskFiltreCategorie(String id, Context context) {
+            this.id = id;
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            LoadDbFILTRECategorieInpinner(id);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            /*ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(context, R.layout.spinner_item, maListe1);
+            spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
+            typeChauffeur.setAdapter(spinnerArrayAdapter);*/
+
+
+
+            //------------------------------
+
+            List<StringWithTag> itemList1 = new ArrayList<>();
+
+            /* Iterate through your original collection, in this case defined with an Integer key and String value. */
+            for (Map.Entry<Integer, String> entry : listFILTRECategorie.entrySet()) {
+                Integer key = entry.getKey();
+                String value = entry.getValue();
+                /* Build the StringWithTag List using these keys and values. */
+
+                itemList1.add(new StringWithTag(value, key));
+            }
+
+            /* Set your ArrayAdapter with the StringWithTag, and when each entry is shown in the Spinner, .toString() is called. */
+            ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(context, R.layout.spinner_item, itemList1);
+            spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
+            typeChauffeur.setAdapter(spinnerAdapter);
+            //------------------------------
+
+        }
+    }
+
+    private void LoadDbFILTRECategorieInpinner(String id){
+//connection
+
+        try{
+            final Uri.Builder builder = new Uri.Builder();
+            builder.appendQueryParameter("auth","Users");
+            builder.appendQueryParameter("login", "register");
+            builder.appendQueryParameter("infoname", "cath");
+            builder.appendQueryParameter("uniquser", temp_number);
+            builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
+            builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
+
+            URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
+
+            //URL url = new URL(adressUrl);
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("GET");
+            is = new BufferedInputStream(con.getInputStream());
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+//content
+        try{
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb = new StringBuilder();
+            while ((line = br.readLine()) != null){
+                sb.append(line + "\n");
+            }
+            is.close();
+            result=sb.toString();
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+//JSON
+        try{
+            JSONArray ja = new JSONArray(result);
+            JSONObject jo = null;
+
+            maListe1.clear();
+            maListeIDCat1.clear();
+            ListIDTypeUser1.clear();
+
+            listFILTRECategorie.clear();
+
+            IDCathegorie1 = new String[ja.length()];
+            NOMCath1 = new String[ja.length()];
+            typeuser1 = new String[ja.length()];
+
+            for(int i=0; i<=ja.length();i++){
+                jo = ja.getJSONObject(i);
+
+                IDCathegorie1[i] = jo.getString("IDCathegorie");
+                NOMCath1[i] = jo.getString("NOMCath");
+                typeuser1[i] = jo.getString("typeuser");
+
+
+                if(typeuser1[i].equals(id)){
+                    ListIDTypeUser1.add(typeuser1[i]);
+                    maListe1.add(NOMCath1[i]);
+                    maListeIDCat1.add(IDCathegorie1[i]);
+                    listFILTRECategorie.put(Integer.parseInt(IDCathegorie1[i]),  NOMCath1[i]);
+                }
+
+
+            }
+
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+
+    private static class StringWithTag {
+        public String string;
+        public Object tag;
+
+        public StringWithTag(String string, Object tag) {
+            this.string = string;
+            this.tag = tag;
+        }
+
+        @Override
+        public String toString() {
+            return string;
+        }
+    }
 
 }

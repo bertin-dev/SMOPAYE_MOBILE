@@ -142,7 +142,6 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        // Toast.makeText(Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
         //Check si la connexion existe
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
@@ -151,15 +150,7 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
             authWindows.setVisibility(View.GONE);
             internetIndisponible.setVisibility(View.VISIBLE);
             Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
-        } /*else if ((activeInfo == null && !activeInfo.isConnected())){
-            progressDialog.dismiss();
-            authWindows.setVisibility(View.GONE);
-            internetIndisponible.setVisibility(View.VISIBLE);
-            conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
-            titleNetworkLimited.setText(getString(R.string.connexionLimite));
-            //msgNetworkLimited.setText();
-            Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
-        }*/
+        }
 
     }
 
@@ -1071,7 +1062,7 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
 
 
 
-    public class loadDataSpinner extends AsyncTask<Void, Void, Void> {
+    /*public class loadDataSpinner extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -1090,7 +1081,7 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
         }
-    }
+    }*/
 
 
 
