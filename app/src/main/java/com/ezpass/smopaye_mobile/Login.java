@@ -218,7 +218,7 @@ public class Login extends AppCompatActivity {
         /*Connxion connexion = new Connxion();*/
 
 
-        //LoginGoogleFirebase("sm" + tel + "@smopaye.cm", tel, "bertin-dev-Administrateur-Actif-partenaire-2022-10-07-actif-A M1");
+        // LoginGoogleFirebase("sm" + tel + "@smopaye.cm", tel, "bertin-dev-Administrateur-Actif-partenaire-2022-10-07-actif-A M1-7ABD6953-Mensuel");
 
         AuthLogin(tel, pass);
     }

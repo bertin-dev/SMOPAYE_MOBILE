@@ -52,7 +52,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,7 +65,7 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
 
     private EditText nom,prenom,telephone,cni,numCarte, adresse;
     private Spinner sexe, statut, typeChauffeur, typePjustificative;
-    private Button btnSuivant, btnAnnuler, btnOpenNFC;
+    private Button btnSuivant, btnOpenNFC;
     private ProgressDialog progressDialog;
     /////////////////////////////////////////////////////////////////////////////////
     Handler handler;
@@ -107,7 +109,6 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
     String line = null;
     String result = null;
 
-
     String[] id_session;
     String[] nom_session;
 
@@ -115,27 +116,29 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
     String[] NOMCath;
     String[] typeuser;
 
-    String adressUrl = "http://bertin-mounok.com/listing1.php";
 
     ArrayList<String> listStatut = new ArrayList<>();
     List<String> idStatut = new ArrayList<String>();
 
-    ArrayList<String> listChauffeur = new ArrayList<>();
-    List<String> idChauffeur = new ArrayList<String>();
-    List<String> typeUserChauffeur = new ArrayList<String>();
-
     String num_statut = "";
     String num_categorie = "";
 
+    ArrayList<String> maListeIDCat = new ArrayList<>();
+    ArrayList<String> ListIDTypeUser = new ArrayList<>();
+    ArrayList<String> maListe = new ArrayList<>();
 
-    ArrayList<String> listUser = new ArrayList<>();
-    List<String> idUser = new ArrayList<String>();
-    List<String> typeUser = new ArrayList<String>();
+    HashMap<Integer, String> listAllSession = new HashMap<>();
+    HashMap<Integer, String> listAllCategorie = new HashMap<>();
+    HashMap<Integer, String> listFILTRECategorie = new HashMap<>();
 
 
-    ArrayList<String> autreUser = new ArrayList<>();
-    List<String> idAutreUser = new ArrayList<String>();
-    List<String> typeAutreUser = new ArrayList<String>();
+    ArrayList<String> maListeIDCat1 = new ArrayList<>();
+    ArrayList<String> ListIDTypeUser1 = new ArrayList<>();
+    ArrayList<String> maListe1 = new ArrayList<>();
+    String[] IDCathegorie1;
+    String[] NOMCath1;
+    String[] typeuser1;
+
 
 
     @Override
@@ -158,21 +161,7 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        // new loadDataSpinner().execute();
-
-
-        StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
-
-        //chargement et affichage des données
-        LoadDBStatutInSpinner();
-        //statut de la session
-        ArrayAdapter<String> spinnerArrayAdapter1 = new ArrayAdapter<String>(
-                this,R.layout.spinner_item, listStatut);
-        spinnerArrayAdapter1.setDropDownViewResource(R.layout.spinner_item);
-        statut.setAdapter(spinnerArrayAdapter1);
-
-        //chargement sans affichage des données
-        LoadDBCategorieInpinner();
+        new loadDataSpinner(getApplication(), statut).execute();
     }
 
 
@@ -222,47 +211,6 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
         msgNetworkLimited = (TextView) findViewById(R.id.msgNetworkLimited);
 
 
-
-
-
-
-
-
-
-
-
-        // Initializing a String Array
-        /*String[] statut1 = new String[]{
-                "Utilisateur",
-                "Agent",
-                "Administrateur",
-                "Accepteur"
-        };
-        // Initializing an ArrayAdapter
-        ArrayAdapter<String> spinnerArrayAdapter1 = new ArrayAdapter<String>(
-                this,R.layout.spinner_item,statut1);
-        spinnerArrayAdapter1.setDropDownViewResource(R.layout.spinner_item);
-        statut.setAdapter(spinnerArrayAdapter1);*/
-
-
-        // Initializing a String Array
-        /*String[] typeChauffeur1 = new String[]{
-                "moto_taxi",
-                "Chauffeur",
-                "cargo",
-                "bus inter urbain",
-                "Commerçant",
-                "restaurant etudiant",
-                "Chauffeur",
-                "autre"
-        };
-        // Initializing an ArrayAdapter
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
-                this,R.layout.spinner_item,typeChauffeur1);
-        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
-        typeChauffeur.setAdapter(spinnerArrayAdapter);*/
-
-
         // Initializing a String Array
         String[] sexe1 = new String[]{
                 "Masculin",
@@ -301,56 +249,18 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
-        //VERIFICATION DE L'ETAT DU CHANGEMENT DE STATUT
-        /*statut.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("accepteur")){
-                    //typeChauffeur.setVisibility(View.VISIBLE);
-                    addItemsOnSpinner2();
-                }
-                else if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("utilisateur")){
-                    //typeChauffeur.setVisibility(View.VISIBLE);
-                    addItemsOnSpinner3();
-                }
-                else {
-                    addItemsOnSpinner1();
-                    // typeChauffeur.setVisibility(View.GONE);
-                    //typeChauffeur.setAd
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                return;
-            }
-        });*/
-
         statut.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-               /* //Accepteur id = 2
-                if(idStatut.get(position).equalsIgnoreCase("2")){
-                    addItemsOnSpinner2();
-                    num_statut = idStatut.get(position);
-                }*/
-                //Utilisateur id = 1
-                 if(idStatut.get(position).equalsIgnoreCase("1")){
-                    addItemsOnSpinner3();
-                    num_statut = idStatut.get(position);
+                StringWithTag swt = (StringWithTag) parent.getItemAtPosition(position);
+                Integer key = (Integer) swt.tag;
+                //Toast.makeText(Souscription.this, listAllSession.get(key), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Souscription.this, String.valueOf(key), Toast.LENGTH_SHORT).show();
+
+                if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase(listAllSession.get(key))){
+                    new AsyncTaskFiltreCategorie(String.valueOf(key), Souscription_User_AutoEnreg.this).execute();
                 }
-                /*//Adminitrateur id = 3
-                else if(idStatut.get(position).equalsIgnoreCase("3")){
-                    addItemsOnSpinner1();
-                    num_statut = idStatut.get(position);
-                }
-                //Agent id = 4 et autre
-                else {
-                    addItemsOnSpinner1();
-                    num_statut = idStatut.get(position);
-                }*/
 
             }
 
@@ -365,42 +275,15 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                /*for(String idd : idChauffeur){
-                    if(idd.equalsIgnoreCase(idChauffeur.get(position))){
-                        num_categorie = idd;
-                    }
-                }*/
+                StringWithTag swt = (StringWithTag) parent.getItemAtPosition(position);
+                Integer key = (Integer) swt.tag;
+                //Toast.makeText(Souscription.this, listAllCategorie.get(key), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Souscription.this, String.valueOf(key), Toast.LENGTH_SHORT).show();
 
-                if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("particulier")){
-                    num_categorie = "41";
-                    //Toast.makeText(Souscription_User_AutoEnreg.this, num_categorie, Toast.LENGTH_SHORT).show();
-                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("étudiant")){
-                    num_categorie = "42";
-                    //Toast.makeText(Souscription_User_AutoEnreg.this, num_categorie, Toast.LENGTH_SHORT).show();
-                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("élève")){
-                    num_categorie = "43";
-                    //Toast.makeText(Souscription_User_AutoEnreg.this, num_categorie, Toast.LENGTH_SHORT).show();
-                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("moto_taxis")){
-                    num_categorie = "7";
-                    //Toast.makeText(Souscription_User_AutoEnreg.this, num_categorie, Toast.LENGTH_SHORT).show();
-                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("chauffeur")){
-                    num_categorie = "8";
-                    //Toast.makeText(Souscription_User_AutoEnreg.this, num_categorie, Toast.LENGTH_SHORT).show();
-                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("mini-bus")){
-                    num_categorie = "9";
-                    //Toast.makeText(Souscription_User_AutoEnreg.this, num_categorie, Toast.LENGTH_SHORT).show();
-                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("bus inter urbain")){
-                    num_categorie = "10";
-                    //Toast.makeText(Souscription_User_AutoEnreg.this, num_categorie, Toast.LENGTH_SHORT).show();
-                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("restaurant étudiant")){
-                    num_categorie = "12";
-                    //Toast.makeText(Souscription_User_AutoEnreg.this, num_categorie, Toast.LENGTH_SHORT).show();
-                } else if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase("smopaye")){
-                    num_categorie = "33";
-                    //Toast.makeText(Souscription_User_AutoEnreg.this, num_categorie, Toast.LENGTH_SHORT).show();
+                if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase(listAllCategorie.get(key))){
+                    num_categorie = String.valueOf(key);
+                    //Toast.makeText(Souscription.this, num_categorie, Toast.LENGTH_SHORT).show();
                 }
-
-
             }
 
             @Override
@@ -413,8 +296,6 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
 
 
         btnSuivant.setOnClickListener(new View.OnClickListener() {
-
-
 
             @SuppressLint("SetTextI18n")
             @Override
@@ -855,107 +736,6 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
     }
 
 
-    public void addItemsOnSpinner3() {
-
-        //statique
-        //spinner2 = (Spinner) findViewById(R.id.spinner2);
-        /*List<String> list = new ArrayList<String>();
-        list.add("étudiant");
-        list.add("élève");
-        list.add("particulier");
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                R.layout.spinner_item, list);
-        dataAdapter.setDropDownViewResource(R.layout.spinner_item);
-        typeChauffeur.setAdapter(dataAdapter);*/
-
-        //dynamique
-        listUser.clear();
-        idUser.clear();
-        typeUser.clear();
-        for(int i=0; i<NOMCath.length; i++){
-
-            if(i>=6 && i<(NOMCath.length-1)){
-                listUser.add(NOMCath[i]);
-                idUser.add(IDCathegorie[i]);
-                typeUser.add(typeuser[i]);
-            }
-        }
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                R.layout.spinner_item, listUser);
-        dataAdapter.setDropDownViewResource(R.layout.spinner_item);
-        typeChauffeur.setAdapter(dataAdapter);
-
-    }
-
-
-    public void addItemsOnSpinner2() {
-
-        //statique
-        /*List<String> list = new ArrayList<String>();
-        list.add("moto_taxis");
-        list.add("Chauffeur");
-        list.add("mini-bus");
-        list.add("bus inter urbain");
-        list.add("restaurant étudiant");
-        list.add("monetbil");
-        list.add("moreals");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                R.layout.spinner_item, list);
-        dataAdapter.setDropDownViewResource(R.layout.spinner_item);
-        typeChauffeur.setAdapter(dataAdapter);*/
-
-
-        //LoadDBCategorieInpinner();
-        //type de chauffeur
-
-        //ejection de quelques éléments de le liste
-
-
-
-        //dynamique
-        listChauffeur.clear();
-        idChauffeur.clear();
-        typeUserChauffeur.clear();
-        for(int i=0; i<NOMCath.length; i++){
-            if(i<5){
-                listChauffeur.add(NOMCath[i]);
-                idChauffeur.add(IDCathegorie[i]);
-                typeUserChauffeur.add(typeuser[i]);
-            }
-        }
-
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
-                this,R.layout.spinner_item, listChauffeur);
-        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
-        typeChauffeur.setAdapter(spinnerArrayAdapter);
-    }
-
-    public void addItemsOnSpinner1() {
-
-        //statique
-        /*List<String> list = new ArrayList<String>();
-        list.add("smopaye");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                R.layout.spinner_item, list);
-        dataAdapter.setDropDownViewResource(R.layout.spinner_item);
-        typeChauffeur.setAdapter(dataAdapter);*/
-
-        //dynamique
-        autreUser.clear();
-        idAutreUser.clear();
-        typeAutreUser.clear();
-        autreUser.add(NOMCath[NOMCath.length-1]);
-        idAutreUser.add(IDCathegorie[NOMCath.length-1]);
-        typeAutreUser.add(typeuser[NOMCath.length-1]);
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                R.layout.spinner_item, autreUser);
-        dataAdapter.setDropDownViewResource(R.layout.spinner_item);
-        typeChauffeur.setAdapter(dataAdapter);
-
-
-    }
-
 
 
 
@@ -1060,9 +840,15 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
 
 
 
+    public class loadDataSpinner extends AsyncTask<Void, Void, Void> {
 
+        Context c;
+        Spinner sp;
 
-    /*public class loadDataSpinner extends AsyncTask<Void, Void, Void> {
+        public loadDataSpinner(Context c, Spinner sp) {
+            this.c = c;
+            this.sp = sp;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -1072,20 +858,40 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            LoadDBStatutInSpinner();
-            LoadDBCategorieInpinner();
+            //chargement et affichage des données du statut EX: Administrateur, Accepteur, Agent, Utilisateur
+            LoadDbAllSessionInSpinner();
+
+            //chargement sans affichage des données des Categories EX: mini-bus, restaurant smopaye
+            LoadDbALLCategorieInpinner();
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+
+
+            List<StringWithTag> itemList = new ArrayList<>();
+
+            /* Iterate through your original collection, in this case defined with an Integer key and String value. */
+            for (Map.Entry<Integer, String> entry : listAllSession.entrySet()) {
+                Integer key = entry.getKey();
+                String value = entry.getValue();
+
+                /* Build the StringWithTag List using these keys and values. */
+                itemList.add(new StringWithTag(value, key));
+            }
+
+            /* Set your ArrayAdapter with the StringWithTag, and when each entry is shown in the Spinner, .toString() is called. */
+            ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(c, R.layout.spinner_item, itemList);
+            spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
+            sp.setAdapter(spinnerAdapter);
         }
-    }*/
+    }
 
 
 
-    private void LoadDBStatutInSpinner(){
+    private void LoadDbAllSessionInSpinner(){
 //connection
         try{
             final Uri.Builder builder = new Uri.Builder();
@@ -1129,6 +935,9 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
             listStatut.clear();
             idStatut.clear();
 
+            listAllSession.clear();
+
+
             id_session = new String[ja.length()];
             nom_session = new String[ja.length()];
 
@@ -1137,19 +946,26 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                 id_session[i] = jo.getString("id_session");
                 nom_session[i] = jo.getString("nom_session");
 
+
                 if(nom_session[i].toLowerCase().trim().equalsIgnoreCase("utilisateur")) {
                     listStatut.add(nom_session[i]);
                     idStatut.add(id_session[i]);
+                    listAllSession.put(Integer.parseInt(id_session[i]),  nom_session[i]);
                 }
+
+
             }
+
         }
         catch (Exception ex){
             ex.printStackTrace();
         }
+
+
     }
 
 
-    private void LoadDBCategorieInpinner(){
+    private void LoadDbALLCategorieInpinner(){
 //connection
 
         try{
@@ -1191,6 +1007,10 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
             JSONArray ja = new JSONArray(result);
             JSONObject jo = null;
 
+            maListe.clear();
+            maListeIDCat.clear();
+            ListIDTypeUser.clear();
+
             IDCathegorie = new String[ja.length()];
             NOMCath = new String[ja.length()];
             typeuser = new String[ja.length()];
@@ -1201,11 +1021,167 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                 IDCathegorie[i] = jo.getString("IDCathegorie");
                 NOMCath[i] = jo.getString("NOMCath");
                 typeuser[i] = jo.getString("typeuser");
+
+                ListIDTypeUser.add(typeuser[i]);
+                maListe.add(NOMCath[i]);
+                maListeIDCat.add(IDCathegorie[i]);
+
+                listAllCategorie.put(Integer.parseInt(IDCathegorie[i]),  NOMCath[i]);
+
             }
 
         }
         catch (Exception ex){
             ex.printStackTrace();
+        }
+    }
+
+
+
+    //FILTRE DES CATEGORIES
+    private class AsyncTaskFiltreCategorie extends AsyncTask<Void, Void, Void>{
+
+        private String id;
+        private Context context;
+
+        public AsyncTaskFiltreCategorie(String id, Context context) {
+            this.id = id;
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            LoadDbFILTRECategorieInpinner(id);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            /*ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(context, R.layout.spinner_item, maListe1);
+            spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
+            typeChauffeur.setAdapter(spinnerArrayAdapter);*/
+
+
+
+            //------------------------------
+
+            List<StringWithTag> itemList1 = new ArrayList<>();
+
+            /* Iterate through your original collection, in this case defined with an Integer key and String value. */
+            for (Map.Entry<Integer, String> entry : listFILTRECategorie.entrySet()) {
+                Integer key = entry.getKey();
+                String value = entry.getValue();
+                /* Build the StringWithTag List using these keys and values. */
+
+                itemList1.add(new StringWithTag(value, key));
+            }
+
+            /* Set your ArrayAdapter with the StringWithTag, and when each entry is shown in the Spinner, .toString() is called. */
+            ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(context, R.layout.spinner_item, itemList1);
+            spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
+            typeChauffeur.setAdapter(spinnerAdapter);
+            //------------------------------
+
+        }
+    }
+
+    private void LoadDbFILTRECategorieInpinner(String id){
+//connection
+
+        try{
+            final Uri.Builder builder = new Uri.Builder();
+            builder.appendQueryParameter("auth","Users");
+            builder.appendQueryParameter("login", "register");
+            builder.appendQueryParameter("infoname", "cath");
+            builder.appendQueryParameter("uniquser", temp_number);
+            builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
+            builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
+
+            URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
+
+            //URL url = new URL(adressUrl);
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("GET");
+            is = new BufferedInputStream(con.getInputStream());
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+//content
+        try{
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb = new StringBuilder();
+            while ((line = br.readLine()) != null){
+                sb.append(line + "\n");
+            }
+            is.close();
+            result=sb.toString();
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+//JSON
+        try{
+            JSONArray ja = new JSONArray(result);
+            JSONObject jo = null;
+
+            maListe1.clear();
+            maListeIDCat1.clear();
+            ListIDTypeUser1.clear();
+
+            listFILTRECategorie.clear();
+
+            IDCathegorie1 = new String[ja.length()];
+            NOMCath1 = new String[ja.length()];
+            typeuser1 = new String[ja.length()];
+
+            for(int i=0; i<=ja.length();i++){
+                jo = ja.getJSONObject(i);
+
+                IDCathegorie1[i] = jo.getString("IDCathegorie");
+                NOMCath1[i] = jo.getString("NOMCath");
+                typeuser1[i] = jo.getString("typeuser");
+
+
+                if(typeuser1[i].equals(id)){
+                    ListIDTypeUser1.add(typeuser1[i]);
+                    maListe1.add(NOMCath1[i]);
+                    maListeIDCat1.add(IDCathegorie1[i]);
+                    listFILTRECategorie.put(Integer.parseInt(IDCathegorie1[i]),  NOMCath1[i]);
+                }
+
+
+            }
+
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+
+    private static class StringWithTag {
+        public String string;
+        public Object tag;
+
+        public StringWithTag(String string, Object tag) {
+            this.string = string;
+            this.tag = tag;
+        }
+
+        @Override
+        public String toString() {
+            return string;
         }
     }
 
