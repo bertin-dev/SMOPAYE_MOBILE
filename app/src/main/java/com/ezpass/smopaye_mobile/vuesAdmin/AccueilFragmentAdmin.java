@@ -32,6 +32,7 @@ import com.google.zxing.integration.android.IntentResult;
 import java.io.FileInputStream;
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
 
@@ -71,22 +72,24 @@ public class AccueilFragmentAdmin  extends Fragment {
         }
 
 
-        //GESTION DES DATE DU MENU
-        Calendar calendar = Calendar.getInstance();
-        // String currentDate = DateFormat.getDateInstance().format(calendar.getTime());// 31.07.2019
-        String currentDate2 = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
-        String[] part =currentDate2.split(" ");
-        if(part[0].equalsIgnoreCase(currentDate2)){
-            Toast.makeText(getActivity(), "la date est en Anglais", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            jourSemaine.setText(part[0]);
-            String Day = "0" + part[1];
-            if(Integer.parseInt(part[1]) < 10)
-                jour.setText(Day);
-            else
-                jour.setText(part[1]);
-            moisAnnee.setText(String.format("%s %s", part[2], part[3]));
+        //Vérification si la langue du telephone est en Francais
+        if(Locale.getDefault().getLanguage().contentEquals("fr")) {
+            //GESTION DES DATE DU MENU
+            Calendar calendar = Calendar.getInstance();
+            // String currentDate = DateFormat.getDateInstance().format(calendar.getTime());// 31.07.2019
+            String currentDate2 = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
+            String[] part = currentDate2.split(" ");
+            if (part[0].equalsIgnoreCase(currentDate2)) {
+                Toast.makeText(getActivity(), "La date de votre système pose problème.", Toast.LENGTH_SHORT).show();
+            } else {
+                jourSemaine.setText(part[0]);
+                String Day = "0" + part[1];
+                if (Integer.parseInt(part[1]) < 10)
+                    jour.setText(Day);
+                else
+                    jour.setText(part[1]);
+                moisAnnee.setText(String.format("%s %s", part[2], part[3]));
+            }
         }
 
 

@@ -1012,10 +1012,19 @@ public class Souscription extends AppCompatActivity {
                 jo = ja.getJSONObject(i);
                 id_session[i] = jo.getString("id_session");
                 nom_session[i] = jo.getString("nom_session");
+
                 listStatut.add(nom_session[i]);
                 idStatut.add(id_session[i]);
 
                 listAllSession.put(Integer.parseInt(id_session[i]),  nom_session[i]);
+
+                //Enlever Agent et Administrateur dans la liste
+                if(nom_session[i].toLowerCase().equalsIgnoreCase("agent")){
+                    listAllSession.remove(3);
+                }
+
+
+
             }
 
         }

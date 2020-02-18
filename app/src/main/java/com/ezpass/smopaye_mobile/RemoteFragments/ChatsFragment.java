@@ -123,7 +123,10 @@ public class ChatsFragment extends Fragment {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     User user = snapshot.getValue(User.class);
                     for(Chatlist chatlist : usersList){
-                        if(user.getId().equals(chatlist.getId())){
+                        /*if(user.getId().equals(chatlist.getId())){
+                            mUsers.add(user);
+                        }*/
+                        if(chatlist.getId().equals(user.getId())){
                             mUsers.add(user);
                         }
                     }

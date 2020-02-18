@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -162,10 +163,15 @@ public class UsersFragment extends Fragment {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             User user = snapshot.getValue(User.class);
 
+
                             assert user != null;
                             assert firebaseUser != null;
-                            if (!user.getId().equals(firebaseUser.getUid())) {
+                            /*if (!user.getId().equals(firebaseUser.getUid())) {
                                     mUsers.add(user);
+                            }*/
+
+                            if(!firebaseUser.getUid().equals(user.getId())){
+                                mUsers.add(user);
                             }
                         }
 

@@ -20,6 +20,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +39,7 @@ import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbUser;
+import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.NotifReceiver;
 import com.ezpass.smopaye_mobile.QRCodeShow;
 import com.ezpass.smopaye_mobile.R;
@@ -360,85 +362,6 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
         //progressDialog.dismiss();
     }
 
-    public class ImageProcessClass{
-
-        public String ImageHttpRequest(String requestURL) {
-
-            StringBuilder stringBuilder = new StringBuilder();
-
-            try {
-                url = new URL(requestURL);
-
-                httpURLConnection = (HttpURLConnection) url.openConnection();
-
-                httpURLConnection.setReadTimeout(5000);
-
-                httpURLConnection.setConnectTimeout(5000);
-
-                httpURLConnection.setRequestMethod("POST");
-
-                httpURLConnection.setDoInput(true);
-
-                httpURLConnection.setDoOutput(true);
-
-                outputStream = httpURLConnection.getOutputStream();
-
-                bufferedWriter = new BufferedWriter(
-
-                        new OutputStreamWriter(outputStream, "UTF-8"));
-
-                //bufferedWriter.write(bufferedWriterDataFN(PData));
-
-                bufferedWriter.flush();
-
-                bufferedWriter.close();
-
-                outputStream.close();
-
-                RC = httpURLConnection.getResponseCode();
-
-                if (RC == HttpsURLConnection.HTTP_OK) {
-
-                    bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-
-                    stringBuilder = new StringBuilder();
-
-                    String RC2;
-
-                    while ((RC2 = bufferedReader.readLine()) != null){
-
-                        stringBuilder.append(RC2);
-                    }
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return stringBuilder.toString();
-        }
-
-        /*private String bufferedWriterDataFN(HashMap<String, String> HashMapParams) throws UnsupportedEncodingException {
-
-            stringBuilder = new StringBuilder();
-
-            for (Map.Entry<String, String> KEY : HashMapParams.entrySet()) {
-                if (check)
-                    check = false;
-                else
-                    stringBuilder.append("&");
-
-                stringBuilder.append(URLEncoder.encode(KEY.getKey(), "UTF-8"));
-
-                stringBuilder.append("=");
-
-                stringBuilder.append(URLEncoder.encode(KEY.getValue(), "UTF-8"));
-            }
-
-            return stringBuilder.toString();
-        }*/
-
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -530,6 +453,35 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                 // Envoi des données du formulaire vers le serveur
                 UploadImageToServer();
             } else{
+
+                /*
+                     build_error = new AlertDialog.Builder(SouscriptionUploadIMGidCard.this);
+                    View view = LayoutInflater.from(SouscriptionUploadIMGidCard.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
+                    statutOperation.setText(f);
+                    build_error.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                if(!sessioncompteValue.equalsIgnoreCase("")){
+                    Intent intent = new Intent(SouscriptionUploadIMGidCard.this, Login.class);
+                    startActivity(intent);
+                } else{
+                    Intent intent = new Intent(SouscriptionUploadIMGidCard.this, QRCodeShow.class);
+                    intent.putExtra("id_carte", "E-ZPASS" +num_carte + getsecurity_keys());
+                    intent.putExtra("nom_prenom", nom_prenom);
+                    startActivity(intent);
+                }
+            }
+        });
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
+                 */
                 Toast.makeText(getApplicationContext(), "Une erreur est survenue lors de l'upload de l'image", Toast.LENGTH_LONG).show();
                 View view = LayoutInflater.from(SouscriptionUploadIMGidCard.this).inflate(R.layout.alert_dialog_success, null);
                 TextView title = (TextView) view.findViewById(R.id.title);
@@ -547,7 +499,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
     }
 
     //Traitement des images uploadées
-    public class ImageProcess1{
+    private class ImageProcess1{
 
         public String ImageHttpRequest1(String requestURL,HashMap<String, String> PData) {
 
@@ -627,6 +579,86 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
     }
 
 
+    private class ImageProcessClass{
+
+        public String ImageHttpRequest(String requestURL) {
+
+            StringBuilder stringBuilder = new StringBuilder();
+
+            try {
+                url = new URL(requestURL);
+
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                httpURLConnection.setReadTimeout(5000);
+
+                httpURLConnection.setConnectTimeout(5000);
+
+                httpURLConnection.setRequestMethod("POST");
+
+                httpURLConnection.setDoInput(true);
+
+                httpURLConnection.setDoOutput(true);
+
+                outputStream = httpURLConnection.getOutputStream();
+
+                bufferedWriter = new BufferedWriter(
+
+                        new OutputStreamWriter(outputStream, "UTF-8"));
+
+                //bufferedWriter.write(bufferedWriterDataFN(PData));
+
+                bufferedWriter.flush();
+
+                bufferedWriter.close();
+
+                outputStream.close();
+
+                RC = httpURLConnection.getResponseCode();
+
+                if (RC == HttpsURLConnection.HTTP_OK) {
+
+                    bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+
+                    stringBuilder = new StringBuilder();
+
+                    String RC2;
+
+                    while ((RC2 = bufferedReader.readLine()) != null){
+
+                        stringBuilder.append(RC2);
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return stringBuilder.toString();
+        }
+
+        /*private String bufferedWriterDataFN(HashMap<String, String> HashMapParams) throws UnsupportedEncodingException {
+
+            stringBuilder = new StringBuilder();
+
+            for (Map.Entry<String, String> KEY : HashMapParams.entrySet()) {
+                if (check)
+                    check = false;
+                else
+                    stringBuilder.append("&");
+
+                stringBuilder.append(URLEncoder.encode(KEY.getKey(), "UTF-8"));
+
+                stringBuilder.append("=");
+
+                stringBuilder.append(URLEncoder.encode(KEY.getValue(), "UTF-8"));
+            }
+
+            return stringBuilder.toString();
+        }*/
+
+    }
+
+
     //ETAPE 2: Upload des données vers le serveur
     public void UploadImageToServer(){
 
@@ -656,44 +688,138 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
                 progressDialog.dismiss();
 
+                /*A ce niveau le web service ne retournera pas success mais autre chose car un changement a
+                /* été opéré après insertion des images.
+                la nouvelle façon de faire ne permet plus l'insertion du service google firebase à partir de l'application
+                 */
+
                 int pos = f.indexOf("success");
-                if (pos >= 0) {
 
-                    // Calling Method to Parese JSON data into listView.
-                    new AsyncTaskGoogleFirebase(f).execute();
+                if(register.equalsIgnoreCase("autoEnreg")){
+                    if (pos >= 0) {
 
-                } else{
+                        // donc cette étape a été annulé afin le web service s'occupe de l'envoi des données vers google
+                        new AsyncTaskGoogleFirebase(f).execute();
 
-                    ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
-                    dbHandler = new DbHandler(getApplicationContext());
-                    aujourdhui = new Date();
-                    shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+                    }
+                    else{
 
-                    //////////////////////////////////NOTIFICATIONS////////////////////////////////
-                    LocalNotification("Souscription", f);
-                    dbHandler.insertUserDetails("Souscription","carte non enregistré", "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+                        ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
+                        dbHandler = new DbHandler(getApplicationContext());
+                        dbUser = new DbUser(getApplicationContext());
+                        aujourdhui = new Date();
+                        shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
-                    //progressDialog.dismiss();
+                        //////////////////////////////////NOTIFICATIONS////////////////////////////////
+                        LocalNotification("Souscription", f);
+                        dbHandler.insertUserDetails("Souscription", f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
+                        ////////////////////INSERTION DES DONNEES UTILISATEURS DANS LA BD LOCALE/////////////////////////
+                        String typeChauf = (idcategorieValue.equals("")) ? idcategorie : idcategorieValue;
+                        dbUser.insertInfoUser(nom, prenom, genre,
+                                tel, cni, genre, adresse, idcarte, typeChauf,
+                                "default", "offline" , typeabon, shortDateFormat.format(aujourdhui));
 
-                    build_error = new AlertDialog.Builder(SouscriptionUploadIMGidCard.this);
-                    View view = LayoutInflater.from(SouscriptionUploadIMGidCard.this).inflate(R.layout.alert_dialog_success, null);
-                    TextView title = (TextView) view.findViewById(R.id.title);
-                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                    title.setText(getString(R.string.information));
-                    imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
-                    statutOperation.setText(f);
-                    build_error.setPositiveButton("OK", null);
-                    build_error.setCancelable(false);
-                    build_error.setView(view);
-                    build_error.show();
-
-                    Toast.makeText(getApplicationContext(), f, Toast.LENGTH_LONG).show();
+                        String num_carte = idcarte;
+                        String nom_prenom = nom + " " + prenom;
 
 
+                        build_error = new AlertDialog.Builder(SouscriptionUploadIMGidCard.this);
+                        View view = LayoutInflater.from(SouscriptionUploadIMGidCard.this).inflate(R.layout.alert_dialog_success, null);
+                        TextView title = (TextView) view.findViewById(R.id.title);
+                        TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                        ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                        title.setText(getString(R.string.information));
+                        imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
+                        statutOperation.setText(f);
+                        build_error.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(SouscriptionUploadIMGidCard.this, Login.class);
+                                    startActivity(intent);
+                            }
+                        });
+                        build_error.setCancelable(false);
+                        build_error.setView(view);
+                        build_error.show();
 
+                        Toast.makeText(getApplicationContext(), f, Toast.LENGTH_LONG).show();
+                    }
                 }
+                else{
+                    if (pos >= 0) {
+                        ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
+                        dbHandler = new DbHandler(getApplicationContext());
+                        dbUser = new DbUser(getApplicationContext());
+                        aujourdhui = new Date();
+                        shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+
+                        //////////////////////////////////NOTIFICATIONS////////////////////////////////
+                        LocalNotification("Souscription", f);
+                        dbHandler.insertUserDetails("Souscription", f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+
+                        ////////////////////INSERTION DES DONNEES UTILISATEURS DANS LA BD LOCALE/////////////////////////
+                        String typeChauf = (idcategorieValue.equals("")) ? idcategorie : idcategorieValue;
+                        dbUser.insertInfoUser(nom, prenom, genre,
+                                tel, cni, genre, adresse, idcarte, typeChauf,
+                                "default", "offline" , typeabon, shortDateFormat.format(aujourdhui));
+
+                        String num_carte = idcarte;
+                        String nom_prenom = nom + " " + prenom;
+
+
+                        build_error = new AlertDialog.Builder(SouscriptionUploadIMGidCard.this);
+                        View view = LayoutInflater.from(SouscriptionUploadIMGidCard.this).inflate(R.layout.alert_dialog_success, null);
+                        TextView title = (TextView) view.findViewById(R.id.title);
+                        TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                        ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                        title.setText(getString(R.string.information));
+                        imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
+                        statutOperation.setText(f);
+                        build_error.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                    Intent intent = new Intent(SouscriptionUploadIMGidCard.this, QRCodeShow.class);
+                                    intent.putExtra("id_carte", "E-ZPASS" +num_carte + getsecurity_keys());
+                                    intent.putExtra("nom_prenom", nom_prenom);
+                                    startActivity(intent);
+
+                            }
+                        });
+                        build_error.setCancelable(false);
+                        build_error.setView(view);
+                        build_error.show();
+
+                        Toast.makeText(getApplicationContext(), f, Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        dbHandler = new DbHandler(getApplicationContext());
+                        aujourdhui = new Date();
+                        shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+
+                        //////////////////////////////////NOTIFICATIONS////////////////////////////////
+                        LocalNotification("Souscription", f);
+                        dbHandler.insertUserDetails("Souscription", f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+
+                        build_error = new AlertDialog.Builder(SouscriptionUploadIMGidCard.this);
+                        View view = LayoutInflater.from(SouscriptionUploadIMGidCard.this).inflate(R.layout.alert_dialog_success, null);
+                        TextView title = (TextView) view.findViewById(R.id.title);
+                        TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                        ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                        title.setText(getString(R.string.information));
+                        imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                        statutOperation.setText(f);
+                        build_error.setPositiveButton("OK", null);
+                        build_error.setCancelable(false);
+                        build_error.setView(view);
+                        build_error.show();
+
+
+                        Toast.makeText(SouscriptionUploadIMGidCard.this, f, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
 
             }
 
