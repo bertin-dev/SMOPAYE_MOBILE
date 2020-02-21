@@ -39,7 +39,7 @@ public class AccueilUserGoogle extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accueil_user_google);
 
-        getSupportActionBar().setTitle("Gestion Utilisateurs Google");
+        getSupportActionBar().setTitle(getString(R.string.gesUserGoogle));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 

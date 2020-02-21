@@ -25,7 +25,7 @@ public class MenuRechargeCompteAgent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_recharge_compte_agent);
 
-        getSupportActionBar().setTitle("Opération de Recharge");
+        getSupportActionBar().setTitle(getString(R.string.operationRecharge));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 

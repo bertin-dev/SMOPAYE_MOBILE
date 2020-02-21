@@ -59,8 +59,8 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
         edit_num_carte.setText(cardNumber);
 
         builder.setView(view)
-                .setTitle("Inserez le Montant")
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                .setTitle(getString(R.string.insererMontant))
+                .setNegativeButton(getString(R.string.sortir), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -74,12 +74,12 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
                         String montant = editTextMontant.getText().toString().trim();
 
                         if(numCarteUser.equalsIgnoreCase("")){
-                            Toast.makeText(getContext(), "Veuillez inserer votre N° Carte", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.veuillezInsererCompte), Toast.LENGTH_SHORT).show();
                             return;
                         }
 
                         if(montant.equalsIgnoreCase("")) {
-                            Toast.makeText(getContext(), "Veuillez inserer votre montant", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.veuillezInsererMontant), Toast.LENGTH_SHORT).show();
                             return;
                         }
 

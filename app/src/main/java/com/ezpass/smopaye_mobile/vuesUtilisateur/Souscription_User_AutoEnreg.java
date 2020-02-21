@@ -173,7 +173,7 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_souscription_users_autoenreg);
 
-        getSupportActionBar().setTitle("Souscription_User_AutoEnreg - Etape 1");
+        getSupportActionBar().setTitle(getString(R.string.Souscription_User_AutoEnregEtape1));
         //getSupportParentActivityIntent().putExtra("resultatBD", "Administrateur");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -302,14 +302,14 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
             public void onClick(View v) {
 
                 if(nom.getText().toString().trim().equals("")){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " Nom.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " " + getString(R.string.nom), Toast.LENGTH_SHORT).show();
                     View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
                     title.setText(getString(R.string.information));
                     imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.veuillezInserer) + " Nom.");
+                    statutOperation.setText(getString(R.string.veuillezInserer) + " " + getString(R.string.nom));
                     build_error.setPositiveButton("OK", null);
                     build_error.setCancelable(false);
                     build_error.setView(view);
@@ -318,14 +318,14 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                 }
 
                 if(prenom.getText().toString().trim().equals("")){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " Prénom.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " " + getString(R.string.prenom), Toast.LENGTH_SHORT).show();
                     View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
                     title.setText(getString(R.string.information));
                     imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.veuillezInserer) + " Prénom.");
+                    statutOperation.setText(getString(R.string.veuillezInserer) + " " + getString(R.string.prenom));
                     build_error.setPositiveButton("OK", null);
                     build_error.setCancelable(false);
                     build_error.setView(view);
@@ -334,14 +334,14 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                 }
 
                 if(telephone.getText().toString().trim().equals("")){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " numéro de téléphone.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " " + getString(R.string.numeroTel), Toast.LENGTH_SHORT).show();
                     View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
                     title.setText(getString(R.string.information));
                     imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.veuillezInserer) + " numéro de téléphone.");
+                    statutOperation.setText(getString(R.string.veuillezInserer) + " " + getString(R.string.numeroTel));
                     build_error.setPositiveButton("OK", null);
                     build_error.setCancelable(false);
                     build_error.setView(view);
@@ -367,14 +367,14 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                 }
 
                 if(cni.getText().toString().trim().equals("")){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " numéro de " + typePjustificative.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " " + getString(R.string.numeroDe) + " " + typePjustificative.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
                     View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
                     title.setText(getString(R.string.information));
                     imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.veuillezInserer) + " numéro de " + typePjustificative.getSelectedItem().toString());
+                    statutOperation.setText(getString(R.string.veuillezInserer) + " " + getString(R.string.numeroDe) + " " + typePjustificative.getSelectedItem().toString());
                     build_error.setPositiveButton("OK", null);
                     build_error.setCancelable(false);
                     build_error.setView(view);
@@ -383,14 +383,14 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                 }
 
                 if(adresse.getText().toString().trim().equals("")){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " Adresse.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " " + getString(R.string.adresse), Toast.LENGTH_SHORT).show();
                     View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
                     title.setText(getString(R.string.information));
                     imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.veuillezInserer) + " Adresse.");
+                    statutOperation.setText(getString(R.string.veuillezInserer) + " " + getString(R.string.adresse));
                     build_error.setPositiveButton("OK", null);
                     build_error.setCancelable(false);
                     build_error.setView(view);
@@ -415,14 +415,14 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                 }*/
 
                 if(statut.getCount() == 0){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " statut dans liste déroulante en actualisant la page de souscription.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " " + getString(R.string.AlertStatutListDeroulante), Toast.LENGTH_SHORT).show();
                     View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
                     title.setText(getString(R.string.information));
                     imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.veuillezInserer) + " statut dans liste déroulante en actualisant la page de souscription.");
+                    statutOperation.setText(getString(R.string.veuillezInserer) + " " + getString(R.string.AlertStatutListDeroulante));
                     build_error.setPositiveButton("OK", null);
                     build_error.setCancelable(false);
                     build_error.setView(view);
@@ -431,14 +431,14 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                 }
 
                 if(typeChauffeur.getCount() == 0){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " catégorie dans liste déroulante en actualisant la page de souscription", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " " + getString(R.string.AlertCategorieListDeroulante), Toast.LENGTH_SHORT).show();
                     View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
                     title.setText(getString(R.string.information));
                     imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.veuillezInserer) + " catégorie dans liste déroulante en actualisant la page de souscription");
+                    statutOperation.setText(getString(R.string.veuillezInserer) + " " + getString(R.string.AlertCategorieListDeroulante));
                     build_error.setPositiveButton("OK", null);
                     build_error.setCancelable(false);
                     build_error.setView(view);
@@ -447,14 +447,14 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                 }
 
                 if(!isValid(nom.getText().toString().trim())){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.votre) + " nom " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.votre) + " " + getString(R.string.nom) + " " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
                     View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
                     title.setText(getString(R.string.information));
                     imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.votre) + " nom " + getString(R.string.invalidCararatere));
+                    statutOperation.setText(getString(R.string.votre) + " " + getString(R.string.nom) + " " + getString(R.string.invalidCararatere));
                     build_error.setPositiveButton("OK", null);
                     build_error.setCancelable(false);
                     build_error.setView(view);
@@ -463,14 +463,14 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                 }
 
                 if(!isValid(prenom.getText().toString().trim())){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.votre) + " prénom " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.votre) + " " + getString(R.string.prenom) + " " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
                     View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
                     title.setText(getString(R.string.information));
                     imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.votre) + " prénom " + getString(R.string.invalidCararatere));
+                    statutOperation.setText(getString(R.string.votre) + " " + getString(R.string.prenom) + " " + getString(R.string.invalidCararatere));
                     build_error.setPositiveButton("OK", null);
                     build_error.setCancelable(false);
                     build_error.setView(view);
@@ -495,14 +495,14 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                 }
 
                 if(!isValid(adresse.getText().toString().trim())){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.votre) + "adresse" + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.votre) + " " + getString(R.string.adresse) + " " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
                     View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
                     title.setText(getString(R.string.information));
                     imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.votre) + " adresse " + getString(R.string.invalidCararatere));
+                    statutOperation.setText(getString(R.string.votre) + " " + getString(R.string.adresse) + " " + getString(R.string.invalidCararatere));
                     build_error.setPositiveButton("OK", null);
                     build_error.setCancelable(false);
                     build_error.setView(view);
@@ -672,7 +672,7 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
 
         if(activeInfo != null && activeInfo.isConnected()){
 
-            ProgressDialog dialog = ProgressDialog.show(this, "Connexion", "Encours...", true);
+            ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
             dialog.show();
 
             Handler handler = new Handler();

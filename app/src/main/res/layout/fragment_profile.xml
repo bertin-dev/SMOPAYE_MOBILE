@@ -19,7 +19,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Profile"
+                android:text="@string/profile"
                 android:textColor="@color/colorPrimaryDark"
                 android:textStyle="bold"/>
 
@@ -34,7 +34,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Prénom &amp; Nom"
+                android:text="@string/PrenomETnom"
                 android:layout_below="@+id/profile_image"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="15dp"
@@ -46,7 +46,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Prenom &amp; Nom"
+                android:text="@string/PrenomETnom"
                 android:layout_below="@+id/nomPrenom"
                 android:layout_centerHorizontal="true"
                 android:textColor="@color/colorPrimaryDark"
@@ -59,7 +59,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Téléphone"
+                android:text="@string/telephone"
                 android:layout_below="@+id/username"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="15dp"
@@ -71,7 +71,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Telephone"
+                android:text="@string/telephone"
                 android:layout_below="@+id/telephone"
                 android:layout_centerHorizontal="true"
                 android:textColor="@color/colorPrimaryDark"
@@ -84,7 +84,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="N° Carte"
+                android:text="@string/numCarte"
                 android:layout_below="@+id/telValeur"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="15dp"
@@ -96,7 +96,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="N° Carte"
+                android:text="@string/numCarte"
                 android:layout_below="@+id/carteid"
                 android:layout_centerHorizontal="true"
                 android:textColor="@color/colorPrimaryDark"

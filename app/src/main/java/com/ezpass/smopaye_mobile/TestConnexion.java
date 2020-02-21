@@ -26,16 +26,16 @@ public class TestConnexion extends AppCompatActivity {
         setContentView(R.layout.activity_test_connexion);
 
 
-        getSupportActionBar().setTitle("Connexion Indisponible");
+        getSupportActionBar().setTitle(getString(R.string.connexionIndisponible));
         //getSupportParentActivityIntent().putExtra("resultatBD", "Administrateur");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
         if(checkNetworkConnectionStatus()){
-            Toast.makeText(this, "Connexion Existe", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.connexionExiste), Toast.LENGTH_LONG).show();
         } else{
-            Toast.makeText(this, "Connexion n'existe pas.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.connexionInexistante), Toast.LENGTH_LONG).show();
         }
 
     }

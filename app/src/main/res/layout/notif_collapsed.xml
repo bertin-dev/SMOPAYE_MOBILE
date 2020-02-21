@@ -9,7 +9,7 @@
         style="@style/TextAppearance.Compat.Notification.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Titre du Message"
+        android:text="@string/titreMsg"
         android:textColor="@color/bgColorStandard" />
 
     <TextView
@@ -17,6 +17,6 @@
         style="@style/TextAppearance.Compat.Notification.Info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sous Titre Message" />
+        android:text="@string/soustitreMsg" />
 
 </LinearLayout>

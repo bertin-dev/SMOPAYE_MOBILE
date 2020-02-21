@@ -26,7 +26,7 @@ public class ListUserGoogle extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_user_google);
 
-        getSupportActionBar().setTitle("Utilisateurs Inscrit à Google");
+        getSupportActionBar().setTitle(getString(R.string.userGoogle));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.list_utilisateurGoogle);

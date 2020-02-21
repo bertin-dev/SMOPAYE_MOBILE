@@ -25,7 +25,7 @@ public class GrandPublic extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grand_public);
 
-        getSupportActionBar().setTitle("Service client SMOPAYE");
+        getSupportActionBar().setTitle(getString(R.string.serviceClient));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       //  getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -37,7 +37,7 @@ public class GrandPublic extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //makePhoneCall();
-                Toast.makeText(GrandPublic.this, "Numéro indisponible pour le moment", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GrandPublic.this, getString(R.string.numeroIndisponible), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -65,7 +65,7 @@ public class GrandPublic extends AppCompatActivity {
             }
 
         } else {
-            Toast.makeText(GrandPublic.this, "Entrez votre Numéro", Toast.LENGTH_SHORT).show();
+            Toast.makeText(GrandPublic.this, getString(R.string.entrerNumero), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -76,7 +76,7 @@ public class GrandPublic extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 makePhoneCall();
             } else {
-                Toast.makeText(this, "Permission Refusé", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.permissionRefuse), Toast.LENGTH_SHORT).show();
             }
         }
     }

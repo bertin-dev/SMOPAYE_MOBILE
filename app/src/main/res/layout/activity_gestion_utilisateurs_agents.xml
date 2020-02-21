@@ -171,7 +171,7 @@
                     android:layout_gravity="center_vertical|center_horizontal"
                     android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
                     android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
-                    android:text="@string/listAccepteur"/>
+                    android:text="@string/listAccepteurs"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/lnModifUser"

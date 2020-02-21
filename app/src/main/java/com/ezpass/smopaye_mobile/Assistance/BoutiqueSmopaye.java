@@ -18,7 +18,7 @@ public class BoutiqueSmopaye extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_boutique_smopaye);
 
-        getSupportActionBar().setTitle("Boutiques SMOPAYE");
+        getSupportActionBar().setTitle(getString(R.string.boutiqueSmopaye));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
        // getSupportActionBar().setDisplayShowHomeEnabled(true);
 

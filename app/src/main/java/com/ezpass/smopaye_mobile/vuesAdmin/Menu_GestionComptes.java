@@ -23,7 +23,7 @@ public class Menu_GestionComptes extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu__gestion_comptes);
 
-        getSupportActionBar().setTitle("Gestion des Comptes");
+        getSupportActionBar().setTitle(getString(R.string.gesComptes));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         accepteur = (LinearLayout) findViewById(R.id.btnGesCommercants);

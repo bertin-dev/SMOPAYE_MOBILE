@@ -92,7 +92,7 @@ public class ConsulterSolde extends AppCompatActivity implements PasswordModalDi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consulter_solde);
 
-        getSupportActionBar().setTitle("Vérifier son solde");
+        getSupportActionBar().setTitle(getString(R.string.verificationSolde));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressDialog = new ProgressDialog(ConsulterSolde.this);
@@ -302,7 +302,7 @@ public class ConsulterSolde extends AppCompatActivity implements PasswordModalDi
 
         if(activeInfo != null && activeInfo.isConnected()){
 
-            ProgressDialog dialog = ProgressDialog.show(this, "Connexion", "Encours...", true);
+            ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
             dialog.show();
 
             Handler handler = new Handler();
@@ -502,7 +502,7 @@ public class ConsulterSolde extends AppCompatActivity implements PasswordModalDi
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(ConsulterSolde.this, "Encours de traitement...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ConsulterSolde.this, getString(R.string.encoursTraitement), Toast.LENGTH_SHORT).show();
                         }
                     });
 

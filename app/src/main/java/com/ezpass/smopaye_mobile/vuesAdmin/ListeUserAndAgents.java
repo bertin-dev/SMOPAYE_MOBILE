@@ -58,7 +58,7 @@ public class ListeUserAndAgents extends AppCompatActivity {
         setContentView(R.layout.activity_liste_user_and_agents);
 
 
-        getSupportActionBar().setTitle("Utilisateurs & Agents");
+        getSupportActionBar().setTitle(getString(R.string.userAgents));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         listView = (ListView) findViewById(R.id.listViewContent);

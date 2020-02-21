@@ -139,19 +139,19 @@ public class HomeAssistanceOnline extends AppCompatActivity {
                     }
                 }
                 if(unread == 0){
-                    viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
+                    viewPagerAdapter.addFragment(new ChatsFragment(), getString(R.string.chats));
                 }
                 else{
-                    viewPagerAdapter.addFragment(new ChatsFragment(), "(" + unread + ") Chats");
+                    viewPagerAdapter.addFragment(new ChatsFragment(), "(" + unread + ")" + getString(R.string.chats));
                 }
 
                 if(sessionUser.toLowerCase().trim().equalsIgnoreCase("administrateur") || sessionUser.toLowerCase().trim().equalsIgnoreCase("agent")) {
-                    viewPagerAdapter.addFragment(new UsersFragment().newInstance2(sessionUser), "Utilisateurs");
-                    viewPagerAdapter.addFragment(new ProfileFragment(), "Profile");
+                    viewPagerAdapter.addFragment(new UsersFragment().newInstance2(sessionUser), getString(R.string.utilisateur));
+                    viewPagerAdapter.addFragment(new ProfileFragment(), getString(R.string.profile));
                     viewPager.setAdapter(viewPagerAdapter);
                     tabLayout.setupWithViewPager(viewPager);
                 } else{
-                    viewPagerAdapter.addFragment(new UsersFragment().newInstance2(sessionUser), "Agent Commercial");
+                    viewPagerAdapter.addFragment(new UsersFragment().newInstance2(sessionUser), getString(R.string.AgentCommercial));
                     viewPager.setAdapter(viewPagerAdapter);
                     tabLayout.setupWithViewPager(viewPager);
                 }

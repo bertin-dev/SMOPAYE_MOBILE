@@ -20,7 +20,7 @@ public class Menu_Assistance extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_assistance);
 
-        getSupportActionBar().setTitle("Assistance");
+        getSupportActionBar().setTitle(getString(R.string.assistance));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 

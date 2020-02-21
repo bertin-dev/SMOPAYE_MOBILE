@@ -16,7 +16,7 @@ public class InformationLegales extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information_legales);
 
-        getSupportActionBar().setTitle("Informations légales");
+        getSupportActionBar().setTitle(getString(R.string.information_legales));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 

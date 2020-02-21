@@ -143,7 +143,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
         setContentView(R.layout.activity_souscription_upload_imgid_card);
 
 
-        getSupportActionBar().setTitle("Souscription - Etape Finale");
+        getSupportActionBar().setTitle(getString(R.string.SouscriptionEtapeFinale));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -403,8 +403,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
             InitImage();
 
             progressDialog2 = new ProgressDialog(SouscriptionUploadIMGidCard.this);
-            progressDialog2.setMessage("Chargement Encours...");
-            progressDialog2.setTitle("Etape 1: Envoi des Images");
+            progressDialog2.setMessage(getString(R.string.chargement));
+            progressDialog2.setTitle(getString(R.string.etape1EnvoiDimages));
             progressDialog2.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog2.show();
         }
@@ -412,7 +412,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
-            progressDialog2.setMessage(values[0] + "Opération Encours...");
+            progressDialog2.setMessage(values[0] + getString(R.string.operationEncours));
             //progressDialog2.setMessage("Encore un petit instant");
         }
 
@@ -482,7 +482,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                     build_error.setView(view);
                     build_error.show();
                  */
-                Toast.makeText(getApplicationContext(), "Une erreur est survenue lors de l'upload de l'image", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.ErreurSurvenuePendantLupload), Toast.LENGTH_LONG).show();
                 View view = LayoutInflater.from(SouscriptionUploadIMGidCard.this).inflate(R.layout.alert_dialog_success, null);
                 TextView title = (TextView) view.findViewById(R.id.title);
                 TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
@@ -669,7 +669,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
                 super.onPreExecute();
 
-                progressDialog = ProgressDialog.show(SouscriptionUploadIMGidCard.this,"Etape 2: Envoi des Données","Connexion au serveur Smopaye",true,true);
+                progressDialog = ProgressDialog.show(SouscriptionUploadIMGidCard.this, getString(R.string.etape2EnvoiDesDonnees), getString(R.string.connexionServeurSmopaye),true,true);
                 build_error = new AlertDialog.Builder(SouscriptionUploadIMGidCard.this);
             }
 
@@ -711,8 +711,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                         shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
                         //////////////////////////////////NOTIFICATIONS////////////////////////////////
-                        LocalNotification("Souscription", f);
-                        dbHandler.insertUserDetails("Souscription", f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+                        LocalNotification(getString(R.string.souscription), f);
+                        dbHandler.insertUserDetails(getString(R.string.souscription), f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
                         ////////////////////INSERTION DES DONNEES UTILISATEURS DANS LA BD LOCALE/////////////////////////
                         String typeChauf = (idcategorieValue.equals("")) ? idcategorie : idcategorieValue;
@@ -755,8 +755,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                         shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
                         //////////////////////////////////NOTIFICATIONS////////////////////////////////
-                        LocalNotification("Souscription", f);
-                        dbHandler.insertUserDetails("Souscription", f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+                        LocalNotification(getString(R.string.souscription), f);
+                        dbHandler.insertUserDetails(getString(R.string.souscription), f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
                         ////////////////////INSERTION DES DONNEES UTILISATEURS DANS LA BD LOCALE/////////////////////////
                         String typeChauf = (idcategorieValue.equals("")) ? idcategorie : idcategorieValue;
@@ -799,8 +799,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                         shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
                         //////////////////////////////////NOTIFICATIONS////////////////////////////////
-                        LocalNotification("Souscription", f);
-                        dbHandler.insertUserDetails("Souscription", f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+                        LocalNotification(getString(R.string.souscription), f);
+                        dbHandler.insertUserDetails(getString(R.string.souscription), f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
 
                         build_error = new AlertDialog.Builder(SouscriptionUploadIMGidCard.this);
                         View view = LayoutInflater.from(SouscriptionUploadIMGidCard.this).inflate(R.layout.alert_dialog_success, null);
@@ -921,8 +921,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
             super.onPreExecute();
 
             progressDialog1 = new ProgressDialog(SouscriptionUploadIMGidCard.this);
-            progressDialog1.setMessage("Connexion au Serveur Google");
-            progressDialog1.setTitle("Etape 3 - Finale");
+            progressDialog1.setMessage(getString(R.string.connexionServeurGoogle));
+            progressDialog1.setTitle(getString(R.string.etape3Finale));
             progressDialog1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog1.show();
 
@@ -1037,7 +1037,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                             reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    Toast.makeText(SouscriptionUploadIMGidCard.this, "Opération Réussie", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SouscriptionUploadIMGidCard.this, getString(R.string.operationReussie), Toast.LENGTH_SHORT).show();
 
                                     /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
 
@@ -1055,15 +1055,15 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                                                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                     User user = userSnapshot.getValue(User.class);
                                                     if (user.getId_carte().equals(id_carte1)) {
-                                                        RemoteNotification(user.getId(), user.getPrenom(), "Souscription", f1, "success");
+                                                        RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.souscription), f1, "success");
                                                         //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                     } else {
-                                                        Toast.makeText(SouscriptionUploadIMGidCard.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(SouscriptionUploadIMGidCard.this, getString(R.string.numCompteExistPas), Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
                                             }
                                             else{
-                                                Toast.makeText(SouscriptionUploadIMGidCard.this, "Impossible d'envoyer votre Notification", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(SouscriptionUploadIMGidCard.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                                             }
 
                                         }
@@ -1083,8 +1083,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                                     shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
                                     //////////////////////////////////NOTIFICATIONS////////////////////////////////
-                                    LocalNotification("Souscription", f1);
-                                    dbHandler.insertUserDetails("Souscription",f1, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+                                    LocalNotification(getString(R.string.souscription), f1);
+                                    dbHandler.insertUserDetails(getString(R.string.souscription), f1, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
 
                                     ////////////////////INSERTION DES DONNEES UTILISATEURS DANS LA BD LOCALE/////////////////////////
@@ -1134,8 +1134,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                             shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
                             //////////////////////////////////NOTIFICATIONS////////////////////////////////
-                            LocalNotification("Souscription", getString(R.string.impossibleRegister));
-                            dbHandler.insertUserDetails("Souscription",getString(R.string.impossibleRegister), "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+                            LocalNotification(getString(R.string.souscription), getString(R.string.impossibleRegister));
+                            dbHandler.insertUserDetails(getString(R.string.souscription),getString(R.string.impossibleRegister), "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
 
                             Toast.makeText(SouscriptionUploadIMGidCard.this, getString(R.string.impossibleRegister), Toast.LENGTH_SHORT).show();
                             View view = LayoutInflater.from(SouscriptionUploadIMGidCard.this).inflate(R.layout.alert_dialog_success, null);
@@ -1164,7 +1164,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
 
-                    Data data = new Data(fuser.getUid(), R.drawable.logo2, username + ": " + message, title, receiver, statut_notif);
+                    Data data = new Data(fuser.getUid(), R.mipmap.logo_official, username + ": " + message, title, receiver, statut_notif);
                     Sender sender = new Sender(data, token.getToken());
                     apiService.sendNotification(sender)
                             .enqueue(new Callback<MyResponse>() {
@@ -1172,7 +1172,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     if(response.code() == 200){
                                         if(response.body().success != 1){
-                                            Toast.makeText(SouscriptionUploadIMGidCard.this, "Failed", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(SouscriptionUploadIMGidCard.this, getString(R.string.echoue), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
@@ -1210,11 +1210,11 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
         collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
 
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo2);
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.logo2)
+                .setSmallIcon(R.mipmap.logo_official)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())

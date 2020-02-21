@@ -39,7 +39,7 @@ public class GestionAccepteur extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gestion_accepteur);
 
-        getSupportActionBar().setTitle("Gestion Accepteur");
+        getSupportActionBar().setTitle(getString(R.string.gesAccepteur));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         totalAccepteur = (Button) findViewById(R.id.totalAccepteur);

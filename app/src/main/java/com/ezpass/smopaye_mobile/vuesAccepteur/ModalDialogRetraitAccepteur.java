@@ -27,7 +27,7 @@ public class ModalDialogRetraitAccepteur extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.layout_dialog_retrait_accepteur, null);
 
         builder.setView(view)
-                .setTitle("Inserez le Montant")
+                .setTitle(getString(R.string.insererMontant))
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -41,7 +41,7 @@ public class ModalDialogRetraitAccepteur extends AppCompatDialogFragment {
                         if(montantRetrait.equalsIgnoreCase("")) {
                             /*Snackbar.make(, "Replace with your own action", Snackbar.LENGTH_LONG)
                                     .setAction("Action", null).show();*/
-                            Toast.makeText(getContext(), "Veuillez inserer votre montant", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.veuillezInsererMontant), Toast.LENGTH_SHORT).show();
                         }
                         else
                         listener.applyTexts(montantRetrait);

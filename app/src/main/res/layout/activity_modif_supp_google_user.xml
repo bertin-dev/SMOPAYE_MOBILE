@@ -415,7 +415,7 @@
                     android:textAllCaps="false"
                     android:shadowDx="@android:integer/config_longAnimTime"
                     android:background="@drawable/btn_rounded"
-                    android:text="@string/delete" />
+                    android:text="@string/supprimer" />
 
                 <Button
                     android:id="@+id/btnOpenNFC"

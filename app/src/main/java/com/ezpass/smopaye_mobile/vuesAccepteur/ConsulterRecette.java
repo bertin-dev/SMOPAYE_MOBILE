@@ -39,7 +39,7 @@ public class ConsulterRecette extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consulter_recette);
 
-        getSupportActionBar().setTitle("Recette");
+        getSupportActionBar().setTitle(getString(R.string.Recette));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
@@ -73,9 +73,9 @@ public class ConsulterRecette extends AppCompatActivity {
                         @Override
                         public void run() {
                             // On ajoute un message à notre progress dialog
-                            progressDialog.setMessage("Connexion");
+                            progressDialog.setMessage(getString(R.string.connexion));
                             // On donne un titre à notre progress dialog
-                            progressDialog.setTitle("Attente d'une réponse");
+                            progressDialog.setTitle(getString(R.string.attenteReponseServer));
                             // On spécifie le style
                             //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                             // On affiche notre message

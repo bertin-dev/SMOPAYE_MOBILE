@@ -56,7 +56,7 @@ public class ListUserAndAgentEdited extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_user_and_agent_edited);
 
-        getSupportActionBar().setTitle("Utilisateurs & Agents");
+        getSupportActionBar().setTitle(getString(R.string.userAgents));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 

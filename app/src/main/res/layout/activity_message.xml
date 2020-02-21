@@ -63,9 +63,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:hint="Taper Message..."
+            android:hint="@string/taperMsg"
             android:layout_toLeftOf="@+id/btn_send"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/btn_send" />
 
         <ImageButton
             android:layout_width="40dp"

@@ -90,7 +90,7 @@ public class RechargeAgent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recharge_agent);
 
-        getSupportActionBar().setTitle("Recharge Agent");
+        getSupportActionBar().setTitle(getString(R.string.rechargeAgent));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         build = new AlertDialog.Builder(this);
@@ -116,9 +116,9 @@ public class RechargeAgent extends AppCompatActivity {
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                    title.setText("Information");
+                    title.setText(getString(R.string.information));
                     imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText("Un ou plusieurs Champs sont vides");
+                    statutOperation.setText(getString(R.string.champsVide));
                     build_error.setPositiveButton("OK", null);
                     build_error.setCancelable(false);
                     build_error.setView(view);
@@ -139,9 +139,9 @@ public class RechargeAgent extends AppCompatActivity {
                         public void run() {
 
                             // On ajoute un message à notre progress dialog
-                            progressDialog.setMessage("Passer la carte");
+                            progressDialog.setMessage(getString(R.string.passerCarte));
                             // On donne un titre à notre progress dialog
-                            progressDialog.setTitle("En attente de carte");
+                            progressDialog.setTitle(getString(R.string.attenteCarte));
                             // On spécifie le style
                             //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                             // On affiche notre message
@@ -270,9 +270,9 @@ public class RechargeAgent extends AppCompatActivity {
                         @Override
                         public void run() {
                             // On ajoute un message à notre progress dialog
-                            progressDialog.setMessage("Connexion au serveur");
+                            progressDialog.setMessage(getString(R.string.connexionserver));
                             // On donne un titre à notre progress dialog
-                            progressDialog.setTitle("Attente d'une réponse");
+                            progressDialog.setTitle(getString(R.string.attenteReponseServer));
                             // On spécifie le style
                             //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                             // On affiche notre message
@@ -303,7 +303,7 @@ public class RechargeAgent extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(RechargeAgent.this, "Encours de traitement...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RechargeAgent.this, getString(R.string.encoursTraitement), Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -333,15 +333,15 @@ public class RechargeAgent extends AppCompatActivity {
                             //////////////////////////////////NOTIFICATIONS////////////////////////////////
                             notificationManager = NotificationManagerCompat.from(getApplicationContext());
 
-                            notifications("Recharge Agent", f);
-                            dbHandler.insertUserDetails("Recharge Agent",f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+                            notifications(getString(R.string.rechargeAgent), f);
+                            dbHandler.insertUserDetails(getString(R.string.rechargeAgent), f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
 
                             View view = LayoutInflater.from(RechargeAgent.this).inflate(R.layout.alert_dialog_success, null);
                             TextView title = (TextView) view.findViewById(R.id.title);
                             TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                             ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                            title.setText("Etat de votre Compte");
+                            title.setText(getString(R.string.etatCompte));
                             imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
                             statutOperation.setText(f);
                             build_error.setPositiveButton("OK", null);
@@ -464,7 +464,7 @@ public class RechargeAgent extends AppCompatActivity {
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
         collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
 
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo2);
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)

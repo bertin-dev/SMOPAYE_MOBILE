@@ -128,7 +128,7 @@ public class Transfert extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transfert);
 
-        getSupportActionBar().setTitle("Transfert");
+        getSupportActionBar().setTitle(getString(R.string.transfert));
         //getSupportParentActivityIntent().putExtra("resultatBD", "Administrateur");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -291,7 +291,7 @@ public class Transfert extends AppCompatActivity {
 
                 if(numTelDonataire.getText().length() <=0 || numCarteBeneficiaire.getText().length() <=0 || montantBeneficiaire.getText().length() <= 0)
                 {
-                    Toast.makeText(Transfert.this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Transfert.this, getString(R.string.champsVide), Toast.LENGTH_SHORT).show();
                 }
                 else{
                     TransfertData(ChaineConnexion.getAdresseURLsmopayeServer());
@@ -309,7 +309,7 @@ public class Transfert extends AppCompatActivity {
 
         if(activeInfo != null && activeInfo.isConnected()){
 
-            ProgressDialog dialog = ProgressDialog.show(this, "Connexion", "Encours...", true);
+            ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
             dialog.show();
 
             Handler handler = new Handler();
@@ -379,7 +379,7 @@ public class Transfert extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(Transfert.this, "Encours de traitement...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Transfert.this, getString(R.string.encoursTraitement), Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -418,15 +418,15 @@ public class Transfert extends AppCompatActivity {
                                             for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                 User user = userSnapshot.getValue(User.class);
                                                 if (user.getId_carte().equals(id_carte_sm)) {
-                                                    RemoteNotification(user.getId(), user.getPrenom(), "Transfert", f, "success");
+                                                    RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.transfert), f, "success");
                                                     //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    Toast.makeText(Transfert.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(Transfert.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         }
                                         else{
-                                            Toast.makeText(Transfert.this, "Impossible d'envoyer votre notification", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(Transfert.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
@@ -439,13 +439,13 @@ public class Transfert extends AppCompatActivity {
 
 
                                 //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                LocalNotification("Transfert", f);
+                                LocalNotification(getString(R.string.transfert), f);
 
                                 ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                                 dbHandler = new DbHandler(getApplicationContext());
                                 aujourdhui = new Date();
                                 shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                dbHandler.insertUserDetails("Transfert", f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+                                dbHandler.insertUserDetails(getString(R.string.transfert), f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
 
                                 build_error = new AlertDialog.Builder(Transfert.this);
@@ -479,15 +479,15 @@ public class Transfert extends AppCompatActivity {
                                             for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                 User user = userSnapshot.getValue(User.class);
                                                 if (user.getId_carte().equals(id_carte_sm)) {
-                                                    RemoteNotification(user.getId(), user.getPrenom(), "Transfert", f, "error");
+                                                    RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.transfert), f, "error");
                                                     //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    Toast.makeText(Transfert.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(Transfert.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         }
                                         else{
-                                            Toast.makeText(Transfert.this, "Impossible d'envoyer votre notification", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(Transfert.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
@@ -500,13 +500,13 @@ public class Transfert extends AppCompatActivity {
 
 
                                 //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                LocalNotification("Transfert", f);
+                                LocalNotification(getString(R.string.transfert), f);
 
                                 ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                                 dbHandler = new DbHandler(getApplicationContext());
                                 aujourdhui = new Date();
                                 shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                dbHandler.insertUserDetails("Transfert", f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+                                dbHandler.insertUserDetails(getString(R.string.transfert), f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
 
                                 build_error = new AlertDialog.Builder(Transfert.this);
                                 View view = LayoutInflater.from(Transfert.this).inflate(R.layout.alert_dialog_success, null);
@@ -710,7 +710,7 @@ public class Transfert extends AppCompatActivity {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
 
-                    Data data = new Data(fuser.getUid(), R.drawable.logo2, username + ": " + message, title, receiver, statut_notif);
+                    Data data = new Data(fuser.getUid(), R.mipmap.logo_official, username + ": " + message, title, receiver, statut_notif);
                     Sender sender = new Sender(data, token.getToken());
                     apiService.sendNotification(sender)
                             .enqueue(new Callback<MyResponse>() {
@@ -718,7 +718,7 @@ public class Transfert extends AppCompatActivity {
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     if(response.code() == 200){
                                         if(response.body().success != 1){
-                                            Toast.makeText(Transfert.this, "Failed", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(Transfert.this, getString(R.string.echoue), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
@@ -756,11 +756,11 @@ public class Transfert extends AppCompatActivity {
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
         collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
 
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo2);
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.logo2)
+                .setSmallIcon(R.mipmap.logo_official)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())

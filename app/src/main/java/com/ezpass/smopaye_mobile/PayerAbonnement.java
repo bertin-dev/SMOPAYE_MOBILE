@@ -131,7 +131,7 @@ public class PayerAbonnement extends AppCompatActivity implements PasswordModalD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payer_abonnement);
 
-        getSupportActionBar().setTitle("Renouveler Abonnement");
+        getSupportActionBar().setTitle(getString(R.string.RenouvelerAbonnement));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -206,12 +206,12 @@ public class PayerAbonnement extends AppCompatActivity implements PasswordModalD
             public void onClick(View v) {
 
                 if(numCarteBeneficiaire.getText().toString().trim().equalsIgnoreCase("")){
-                    Toast.makeText(PayerAbonnement.this, "Veuillez inserer un numéro de carte valide", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PayerAbonnement.this, getString(R.string.numeroCompteValid), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if(abonnement.equalsIgnoreCase("")){
-                    Toast.makeText(PayerAbonnement.this, "Veuillez cocher un Abonnement", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PayerAbonnement.this, getString(R.string.cocherAbonnement), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -324,7 +324,7 @@ public class PayerAbonnement extends AppCompatActivity implements PasswordModalD
 
         if(activeInfo != null && activeInfo.isConnected()){
 
-            ProgressDialog dialog = ProgressDialog.show(this, "Connexion", "Encours...", true);
+            ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
             dialog.show();
 
             Handler handler = new Handler();
@@ -548,7 +548,7 @@ public class PayerAbonnement extends AppCompatActivity implements PasswordModalD
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(PayerAbonnement.this, "Encours de traitement...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PayerAbonnement.this, getString(R.string.encoursTraitement), Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -586,15 +586,15 @@ public class PayerAbonnement extends AppCompatActivity implements PasswordModalD
                                             for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                 User user = userSnapshot.getValue(User.class);
                                                 if (user.getId_carte().equals(numCarte)) {
-                                                    RemoteNotification(user.getId(), user.getPrenom(), "Abonnement " + typeAbonnement, f, "success");
+                                                    RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.abonnement) +" " + typeAbonnement, f, "success");
                                                     //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    Toast.makeText(PayerAbonnement.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(PayerAbonnement.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         }
                                         else{
-                                            Toast.makeText(PayerAbonnement.this, "Impossible d'envoyer votre notification", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(PayerAbonnement.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
@@ -607,13 +607,13 @@ public class PayerAbonnement extends AppCompatActivity implements PasswordModalD
 
 
                                 //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                LocalNotification("Souscription Abonnement " + typeAbonnement, f);
+                                LocalNotification(getString(R.string.souscriptionAbonnement) + " " + typeAbonnement, f);
 
                                 ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                                 dbHandler = new DbHandler(getApplicationContext());
                                 aujourdhui = new Date();
                                 shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                dbHandler.insertUserDetails("Abonnement " + typeAbonnement, f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+                                dbHandler.insertUserDetails(getString(R.string.abonnement) +" " + typeAbonnement, f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
 
                                 Toast.makeText(getApplicationContext(), f, Toast.LENGTH_SHORT).show();
@@ -646,15 +646,15 @@ public class PayerAbonnement extends AppCompatActivity implements PasswordModalD
                                             for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                 User user = userSnapshot.getValue(User.class);
                                                 if (user.getId_carte().equals(numCarte)) {
-                                                    RemoteNotification(user.getId(), user.getPrenom(), "Abonnement " + typeAbonnement, f, "error");
+                                                    RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.abonnement) +" " + typeAbonnement, f, "error");
                                                     //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    Toast.makeText(PayerAbonnement.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(PayerAbonnement.this, getString(R.string.numCompteExistPas), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         }
                                         else{
-                                            Toast.makeText(PayerAbonnement.this, "Impossible d'envoyer votre notification", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(PayerAbonnement.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
@@ -667,13 +667,13 @@ public class PayerAbonnement extends AppCompatActivity implements PasswordModalD
 
 
                                 //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                LocalNotification("Abonnement " + typeAbonnement, f);
+                                LocalNotification(getString(R.string.abonnement) + " " + typeAbonnement, f);
 
                                 ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                                 dbHandler = new DbHandler(getApplicationContext());
                                 aujourdhui = new Date();
                                 shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                dbHandler.insertUserDetails("Abonnement " + typeAbonnement, f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+                                dbHandler.insertUserDetails(getString(R.string.abonnement)+" " + typeAbonnement, f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
 
 
                                 Toast.makeText(getApplicationContext(), f, Toast.LENGTH_SHORT).show();
@@ -770,7 +770,7 @@ public class PayerAbonnement extends AppCompatActivity implements PasswordModalD
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
 
-                    Data data = new Data(fuser.getUid(), R.drawable.logo2, username + ": " + message, title, receiver, statut_notif);
+                    Data data = new Data(fuser.getUid(), R.mipmap.logo_official, username + ": " + message, title, receiver, statut_notif);
                     Sender sender = new Sender(data, token.getToken());
                     apiService.sendNotification(sender)
                             .enqueue(new Callback<MyResponse>() {
@@ -778,7 +778,7 @@ public class PayerAbonnement extends AppCompatActivity implements PasswordModalD
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     if(response.code() == 200){
                                         if(response.body().success != 1){
-                                            Toast.makeText(PayerAbonnement.this, "Failed", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(PayerAbonnement.this, getString(R.string.echoue), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
@@ -816,11 +816,11 @@ public class PayerAbonnement extends AppCompatActivity implements PasswordModalD
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
         collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
 
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo2);
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.logo2)
+                .setSmallIcon(R.mipmap.logo_official)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())

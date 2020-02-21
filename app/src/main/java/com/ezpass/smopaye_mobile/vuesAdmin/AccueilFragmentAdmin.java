@@ -80,7 +80,7 @@ public class AccueilFragmentAdmin  extends Fragment {
             String currentDate2 = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
             String[] part = currentDate2.split(" ");
             if (part[0].equalsIgnoreCase(currentDate2)) {
-                Toast.makeText(getActivity(), "La date de votre système pose problème.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.dateSystemePosePB), Toast.LENGTH_SHORT).show();
             } else {
                 jourSemaine.setText(part[0]);
                 String Day = "0" + part[1];

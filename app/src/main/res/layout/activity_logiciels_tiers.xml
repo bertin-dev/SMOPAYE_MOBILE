@@ -26,7 +26,7 @@
                 android:textStyle="bold"
                 android:padding="20dp"
                 android:textSize="25sp"
-                android:text="SeekArc - version 1.0"
+                android:text="@string/SeekArc"
                 />
 
             <TextView
@@ -35,7 +35,7 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:textSize="15sp"
-                android:text="Copyright(C) 2011, Triggertrap Ltd. SeekArc est distribué sous licenceMIT Plus d'info: https://github.com"/>
+                android:text="@string/licenceDistribue"/>
         </LinearLayout>
 
 
@@ -50,7 +50,7 @@
                 android:textStyle="bold"
                 android:padding="20dp"
                 android:textSize="25sp"
-                android:text="Changelog - version 1.1.2"
+                android:text="@string/Changelog"
                 />
             <TextView
                 android:layout_width="match_parent"
@@ -58,9 +58,7 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:textSize="15sp"
-                android:text="Cette librairie a été partiellement modifiée pour satisfaire les besoins du projet.
-Changelog est distribuée sous licence Apache 2.0 Plus d'info: https://www.githug.com"
-                />
+                android:text="@string/librarieChangelog"/>
         </LinearLayout>
 
 
@@ -76,7 +74,7 @@ Changelog est distribuée sous licence Apache 2.0 Plus d'info: https://www.githu
                 android:textStyle="bold"
                 android:padding="20dp"
                 android:textSize="25sp"
-                android:text="Volley - version 1.1.1"
+                android:text="@string/volley"
                 />
 
             <TextView
@@ -85,7 +83,7 @@ Changelog est distribuée sous licence Apache 2.0 Plus d'info: https://www.githu
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:textSize="15sp"
-                android:text="Copyright (C) 2012 The Android Open Source Project Volley est distribué sous licence Apache, Version 2.0 Plus d'info: https://github.com/google/volley"
+                android:text="@string/openSourceProject"
                 />
         </LinearLayout>
 

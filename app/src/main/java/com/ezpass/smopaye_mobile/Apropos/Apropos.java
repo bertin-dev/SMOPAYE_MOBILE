@@ -33,7 +33,7 @@ public class Apropos extends AppCompatActivity {
         setContentView(R.layout.activity_apropos);
 
 
-        getSupportActionBar().setTitle("A propos de SMOPAYE");
+        getSupportActionBar().setTitle(getString(R.string.AproposSmopaye));
         //getSupportParentActivityIntent().putExtra("resultatBD", "Administrateur");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

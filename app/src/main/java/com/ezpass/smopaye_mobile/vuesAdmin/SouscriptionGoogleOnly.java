@@ -139,7 +139,7 @@ public class SouscriptionGoogleOnly extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_souscription_google_only);
 
-        getSupportActionBar().setTitle("Souscription Google");
+        getSupportActionBar().setTitle(getString(R.string.SouscriptionGoogle));
         //getSupportParentActivityIntent().putExtra("resultatBD", "Administrateur");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -232,7 +232,7 @@ public class SouscriptionGoogleOnly extends AppCompatActivity {
         // Initializing a String Array
         String[] pieceJ = new String[]{
                 "CNI",
-                "passport",
+                "passeport",
                 "recipissé",
                 "carte de séjour",
                 "carte d'étudiant"
@@ -344,10 +344,10 @@ public class SouscriptionGoogleOnly extends AppCompatActivity {
 
                         }
                         else{
-                            Toast.makeText(SouscriptionGoogleOnly.this, "Votre Téléphone contient moin de 9 chiffres", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SouscriptionGoogleOnly.this, getString(R.string.moinNeufChiffre), Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(getApplicationContext(), "Un ou plusieurs champs sont Invalid", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.champsInvlid), Toast.LENGTH_SHORT).show();
 
                         View view = LayoutInflater.from(SouscriptionGoogleOnly.this).inflate(R.layout.alert_dialog_success, null);
                         TextView title = (TextView) view.findViewById(R.id.title);
@@ -505,7 +505,7 @@ public class SouscriptionGoogleOnly extends AppCompatActivity {
 
         if(activeInfo != null && activeInfo.isConnected()){
 
-            ProgressDialog dialog = ProgressDialog.show(this, "Connexion", "Encours...", true);
+            ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
             dialog.show();
 
             Handler handler = new Handler();
@@ -762,7 +762,7 @@ public class SouscriptionGoogleOnly extends AppCompatActivity {
                             reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    Toast.makeText(SouscriptionGoogleOnly.this, "Opération Réussie", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SouscriptionGoogleOnly.this, getString(R.string.operationReussie), Toast.LENGTH_SHORT).show();
 
 
 
@@ -773,8 +773,8 @@ public class SouscriptionGoogleOnly extends AppCompatActivity {
                                     shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
                                     //////////////////////////////////NOTIFICATIONS////////////////////////////////
-                                    LocalNotification("Souscription", f1);
-                                    dbHandler.insertUserDetails("Souscription",f1, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+                                    LocalNotification(getString(R.string.souscription), f1);
+                                    dbHandler.insertUserDetails(getString(R.string.souscription),f1, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
 
                                     ////////////////////INSERTION DES DONNEES UTILISATEURS DANS LA BD LOCALE/////////////////////////
@@ -824,8 +824,8 @@ public class SouscriptionGoogleOnly extends AppCompatActivity {
                             shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
                             //////////////////////////////////NOTIFICATIONS////////////////////////////////
-                            LocalNotification("Souscription", getString(R.string.impossibleRegister));
-                            dbHandler.insertUserDetails("Souscription",getString(R.string.impossibleRegister), "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+                            LocalNotification(getString(R.string.souscription), getString(R.string.impossibleRegister));
+                            dbHandler.insertUserDetails(getString(R.string.souscription),getString(R.string.impossibleRegister), "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
 
                             Toast.makeText(SouscriptionGoogleOnly.this, getString(R.string.impossibleRegister), Toast.LENGTH_SHORT).show();
                             View view = LayoutInflater.from(SouscriptionGoogleOnly.this).inflate(R.layout.alert_dialog_success, null);
@@ -863,11 +863,11 @@ public class SouscriptionGoogleOnly extends AppCompatActivity {
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
         collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
 
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo2);
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.logo2)
+                .setSmallIcon(R.mipmap.logo_official)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())

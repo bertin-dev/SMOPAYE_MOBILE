@@ -30,7 +30,7 @@ public class AgenceSmopaye extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agence_smopaye);
 
-        getSupportActionBar().setTitle("Points de Vente Smopaye");
+        getSupportActionBar().setTitle(getString(R.string.pointDeVenteSmopaye));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -42,9 +42,9 @@ public class AgenceSmopaye extends AppCompatActivity {
 
         ArrayList<Object> list = new ArrayList<>();
         list.add(new String("CENTRE"));
-        list.add(new AgenceSmopayeModel("YAOUNDE", "CAMAIR"));
-        list.add(new AgenceSmopayeModel("YAOUNDE", "OMNISPORT"));
-        list.add(new AgenceSmopayeModel("YAOUNDE", "SOA"));
+        list.add(new AgenceSmopayeModel(getString(R.string.yaounde), getString(R.string.camair)));
+        list.add(new AgenceSmopayeModel(getString(R.string.yaounde), getString(R.string.omnisport)));
+        list.add(new AgenceSmopayeModel(getString(R.string.yaounde), getString(R.string.soa)));
        // list.add(new AgenceSmopayeModel("YAOUNDE", "Bastos"));
 
         /*list.add(new String("LITTORAL"));

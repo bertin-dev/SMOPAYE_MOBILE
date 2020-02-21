@@ -149,7 +149,7 @@
 
             <TextView
                 android:id="@+id/description"
-                android:text="Votre carte a été débité d'un Montant de 500 FCFA"
+                android:text="@string/carteDebiteMontant"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/name"
@@ -169,7 +169,8 @@
                 android:textStyle="bold"
                 android:layout_below="@id/description"
                 android:text="02/08/2019"
-                android:textSize="12sp"/>
+                android:textSize="12sp"
+                android:layout_toEndOf="@+id/thumbnail" />
 
         </RelativeLayout>
 

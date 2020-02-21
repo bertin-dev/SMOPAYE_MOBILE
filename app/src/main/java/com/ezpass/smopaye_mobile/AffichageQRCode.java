@@ -62,7 +62,7 @@ public class AffichageQRCode extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_affichage_qrcode);
 
-        getSupportActionBar().setTitle("Lecteur QR Code");
+        getSupportActionBar().setTitle(getString(R.string.lecteurQRCode));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -99,7 +99,7 @@ public class AffichageQRCode extends AppCompatActivity {
                 e.printStackTrace();
             }
         } else{
-            Toast.makeText(this, "Une Erreur est survenue", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.erreurSurvenue1), Toast.LENGTH_SHORT).show();
         }
 
        /* //cryptage du numero de carte
@@ -127,7 +127,7 @@ public class AffichageQRCode extends AppCompatActivity {
 
     }
 
-    public Bitmap createBitmapCustomized(BitMatrix matrix) {
+    private Bitmap createBitmapCustomized(BitMatrix matrix) {
         int width = matrix.getWidth();
         int height = matrix.getHeight();
         int[] pixels = new int[width * height];
@@ -151,7 +151,7 @@ public class AffichageQRCode extends AppCompatActivity {
     }
 
 
-    public Bitmap mergeBitmaps(Bitmap overlay, Bitmap bitmap) {
+    private Bitmap mergeBitmaps(Bitmap overlay, Bitmap bitmap) {
 
         int height = bitmap.getHeight();
         int width = bitmap.getWidth();
@@ -238,7 +238,7 @@ public class AffichageQRCode extends AppCompatActivity {
             e.printStackTrace();
         }
         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///sdcard/ImageDemo.jpg"));
-        startActivity(Intent.createChooser(shareIntent, "Smopaye Partage QR Code"));
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.smopayePartarge)));
     }
 
     private static Bitmap viewToBitmap(View view, int width, int height){
@@ -271,7 +271,7 @@ public class AffichageQRCode extends AppCompatActivity {
             intent.putExtra(Intent.EXTRA_TEXT, shareText);
             intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
             intent.setType("image/png");
-            startActivity(Intent.createChooser(intent, "E-ZPASS Partage via"));
+            startActivity(Intent.createChooser(intent, getString(R.string.smopayePartargeEZPASS)));
 
         } catch (Exception e) {
             e.printStackTrace();

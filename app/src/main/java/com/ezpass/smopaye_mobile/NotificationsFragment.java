@@ -86,7 +86,7 @@ public class NotificationsFragment extends Fragment implements RecyclerItemTouch
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         View view =  inflater.inflate(R.layout.fragment_notifications, container, false);
 
-        getActivity().setTitle("Notifications");
+        getActivity().setTitle(getString(R.string.notifications));
 
 
         btnSuppNotif = (FloatingActionButton) view.findViewById(R.id.btnSuppNotif);
@@ -184,7 +184,7 @@ public class NotificationsFragment extends Fragment implements RecyclerItemTouch
                     recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
                     recyclerView.setAdapter(adapter);
 
-                    Toast.makeText(getContext(), "vos notifications ont été vidé.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.notifVide), Toast.LENGTH_SHORT).show();
                     notificationsVides.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.GONE);
                 }
@@ -226,8 +226,8 @@ public class NotificationsFragment extends Fragment implements RecyclerItemTouch
 
             adapter.removeItem(deteteIndex, Integer.parseInt(id_bd), getActivity());
 
-            Snackbar snackbar = Snackbar.make(rootLayout, name + " Encours de Suppression... ", Snackbar.LENGTH_LONG);
-            snackbar.setAction("Supprimer", new View.OnClickListener() {
+            Snackbar snackbar = Snackbar.make(rootLayout, name + " " + getString(R.string.encoursSuppression), Snackbar.LENGTH_LONG);
+            snackbar.setAction(getString(R.string.supprimer), new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     adapter.restoreItem(deletedItem, deteteIndex);

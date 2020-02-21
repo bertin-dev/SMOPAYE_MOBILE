@@ -33,7 +33,7 @@
                 android:id="@+id/idUsers"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center"
-                android:hint="Nom"
+                android:hint="@string/nom"
                 android:imeOptions="actionNext"
                 android:padding="10dp"
                 android:inputType="text"

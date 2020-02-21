@@ -101,7 +101,7 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_qrcode);
 
-        getSupportActionBar().setTitle("Accueil QR Code");
+        getSupportActionBar().setTitle(getString(R.string.AccueilQRCode));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -125,7 +125,7 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
                 intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
                 intentIntegrator.setCameraId(0);
                 intentIntegrator.setOrientationLocked(false);
-                intentIntegrator.setPrompt("E-ZPASS SCAN...");
+                intentIntegrator.setPrompt(getString(R.string.ezpassScan));
                 intentIntegrator.setBeepEnabled(true);
                 intentIntegrator.setBarcodeImageEnabled(true);
                 intentIntegrator.initiateScan();
@@ -151,7 +151,7 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
 
         if(activeInfo != null && activeInfo.isConnected()){
 
-            ProgressDialog dialog = ProgressDialog.show(this, "Connexion", "Encours...", true);
+            ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
             dialog.show();
 
             Handler handler = new Handler();
@@ -395,7 +395,7 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(MenuQRCode.this, "Encours de traitement...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MenuQRCode.this, getString(R.string.encoursTraitement), Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -434,15 +434,15 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
                                             for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                 User user = userSnapshot.getValue(User.class);
                                                 if (user.getId_carte().equals(id_carte_sm)) {
-                                                    RemoteNotification(user.getId(), user.getPrenom(), "Paiement Par QR Code", f, "success");
+                                                    RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.paiementQRCode), f, "success");
                                                     //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    Toast.makeText(MenuQRCode.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(MenuQRCode.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         }
                                         else{
-                                            Toast.makeText(MenuQRCode.this, "Impossible d'envoyer votre notification\n utilisateur non reconnu.", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(MenuQRCode.this, getString(R.string.userNonReconnu), Toast.LENGTH_LONG).show();
                                         }
 
                                     }
@@ -455,13 +455,13 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
 
 
                                 //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                LocalNotification("Paiement Par QR Code", f);
+                                LocalNotification(getString(R.string.paiementQRCode), f);
 
                                 ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                                 dbHandler = new DbHandler(getApplicationContext());
                                 aujourdhui = new Date();
                                 shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                dbHandler.insertUserDetails("Paiement Par QR Code", f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+                                dbHandler.insertUserDetails(getString(R.string.paiementQRCode), f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
 
                                 build_error = new AlertDialog.Builder(MenuQRCode.this);
@@ -495,15 +495,15 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
                                             for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                 User user = userSnapshot.getValue(User.class);
                                                 if (user.getId_carte().equals(id_carte_sm)) {
-                                                    RemoteNotification(user.getId(), user.getPrenom(), "Paiement Par QR Code", f, "error");
+                                                    RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.paiementQRCode), f, "error");
                                                     //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    Toast.makeText(MenuQRCode.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(MenuQRCode.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         }
                                         else{
-                                            Toast.makeText(MenuQRCode.this, "Impossible d'envoyer votre notification", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MenuQRCode.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
@@ -516,13 +516,13 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
 
 
                                 //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                LocalNotification("Paiement Par QR Code", f);
+                                LocalNotification(getString(R.string.paiementQRCode), f);
 
                                 ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                                 dbHandler = new DbHandler(getApplicationContext());
                                 aujourdhui = new Date();
                                 shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                dbHandler.insertUserDetails("Paiement Par QR Code", f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+                                dbHandler.insertUserDetails(getString(R.string.paiementQRCode), f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
 
                                 build_error = new AlertDialog.Builder(MenuQRCode.this);
                                 View view = LayoutInflater.from(MenuQRCode.this).inflate(R.layout.alert_dialog_success, null);
@@ -614,7 +614,7 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
 
-                    Data data = new Data(fuser.getUid(), R.drawable.logo2, username + ": " + message, title, receiver, statut_notif);
+                    Data data = new Data(fuser.getUid(), R.mipmap.logo_official, username + ": " + message, title, receiver, statut_notif);
                     Sender sender = new Sender(data, token.getToken());
                     apiService.sendNotification(sender)
                             .enqueue(new Callback<MyResponse>() {
@@ -622,7 +622,7 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     if(response.code() == 200){
                                         if(response.body().success != 1){
-                                            Toast.makeText(MenuQRCode.this, "Failed", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MenuQRCode.this, getString(R.string.echoue), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
@@ -660,11 +660,11 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
         collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
 
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo2);
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.logo2)
+                .setSmallIcon(R.mipmap.logo_official)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())

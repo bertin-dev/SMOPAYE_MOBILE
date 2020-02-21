@@ -99,7 +99,7 @@
                     android:layout_marginLeft="20dp"
                     app:errorEnabled="true"
                     app:counterEnabled="true"
-                    app:counterMaxLength="5"
+                    app:counterMaxLength="9"
                     app:passwordToggleEnabled="true">
 
                     <android.support.design.widget.TextInputEditText
@@ -114,7 +114,7 @@
                         android:background="@drawable/edittextborder"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:maxLength="5"
+                        android:maxLength="9"
                         app:drawable_hide="@drawable/ic_visibility_off_black_24dp"
                         app:drawable_show="@drawable/ic_visibility_black_24dp"
                         app:tint_color="#039BE5"/>

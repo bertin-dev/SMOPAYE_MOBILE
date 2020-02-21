@@ -44,7 +44,7 @@
                         android:paddingLeft="15dp"
                         android:layout_marginTop="60dp"
                         android:textStyle="bold"
-                        />
+                        android:paddingStart="15dp" />
                     <TextView
                         android:id="@+id/categorieAgent"
                         android:layout_width="wrap_content"
@@ -55,7 +55,7 @@
                         android:textColor="#fff"
                         android:paddingLeft="15dp"
                         android:textStyle="bold"
-                        />
+                        android:paddingStart="15dp" />
 
 
                     <LinearLayout
@@ -177,7 +177,7 @@
                             android:id="@+id/consulterHistoriqueAgent"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Consulter"
+                            android:text="@string/consulter"
                             android:textSize="12sp"
                             android:gravity="center"
                             android:textAlignment="center"
@@ -268,7 +268,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="50"
                     android:paddingStart="15dp"
@@ -287,7 +287,8 @@
                         android:layout_width="0dp"
                         android:layout_margin="5dp"
                         android:layout_weight="50"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        tools:ignore="NestedWeights">
 
                         <ImageView
                             android:layout_width="150dp"

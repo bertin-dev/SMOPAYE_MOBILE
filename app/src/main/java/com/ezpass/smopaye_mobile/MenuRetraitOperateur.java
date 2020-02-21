@@ -51,7 +51,7 @@ public class MenuRetraitOperateur extends AppCompatActivity {
         setContentView(R.layout.activity_menu_retrait_operateur);
 
 
-        getSupportActionBar().setTitle("Menu Retrait");
+        getSupportActionBar().setTitle(getString(R.string.menuRetrait));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         lnRetraitSmopaye = (LinearLayout) findViewById(R.id.lnRetraitSmopaye);

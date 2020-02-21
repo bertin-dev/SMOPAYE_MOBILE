@@ -211,7 +211,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         PendingIntent actionIntent = PendingIntent.getBroadcast(this,
                 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);*/
 
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.logo2);
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.logo_official);
 
 
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

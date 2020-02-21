@@ -72,7 +72,7 @@ public class VerifierNumCarte extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verifier_num_carte);
 
-        getSupportActionBar().setTitle("Numéro de Carte");
+        getSupportActionBar().setTitle(getString(R.string.numeroCarte));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         id_carte = (Button) findViewById(R.id.Btn_id_carte);
@@ -133,9 +133,9 @@ public class VerifierNumCarte extends AppCompatActivity {
                         public void run() {
 
                             // On ajoute un message à notre progress dialog
-                            progressDialog.setMessage("Passer la carte");
+                            progressDialog.setMessage(getString(R.string.passerCarte));
                             // On donne un titre à notre progress dialog
-                            progressDialog.setTitle("En attente de carte");
+                            progressDialog.setTitle(getString(R.string.attenteCarte));
                             // On spécifie le style
                             //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                             // On affiche notre message

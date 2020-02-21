@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment1).commit();
 
-        getSupportActionBar().setTitle("Accueil");
+        getSupportActionBar().setTitle(getString(R.string.accueil));
 
 
 
@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity
 
                 switch (tabId){
                     case R.id.nav_Accueil:
-                        getSupportActionBar().setTitle("Accueil");
+                        getSupportActionBar().setTitle(getString(R.string.accueil));
                         //selectedFragment = new AccueilFragment();
                         if(session1.toLowerCase().equalsIgnoreCase("administrateur"))
                         {
@@ -261,18 +261,18 @@ public class MainActivity extends AppCompatActivity
                         break;
 
                     case R.id.nav_maCarte:
-                        getSupportActionBar().setTitle("Ma Carte Smopaye");
+                        getSupportActionBar().setTitle(getString(R.string.maCarteSmopaye));
                         bundle.putString("result_BD", resultat_bd);
                         bundle.putString("telephone", telephone);
                         selectedFragment = new CarteFragment();
                         selectedFragment.setArguments(bundle);
                         break;
                     case R.id.nav_pointSmopaye:
-                        getSupportActionBar().setTitle("Point de Vente Smopaye");
+                        getSupportActionBar().setTitle(getString(R.string.pointDeVenteSmopaye));
                         selectedFragment = new PointSmopayeFragment();
                         break;
                     case R.id.nav_notifications:
-                        getSupportActionBar().setTitle("Notifications");
+                        getSupportActionBar().setTitle(getString(R.string.notifications));
 
                         nearby.setBadgeCount(Integer.parseInt(db.GetNumNotifications()));
 
@@ -399,7 +399,7 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_deconnexion) {
 
-            ProgressDialog dialog = ProgressDialog.show(this, "Déconnexion", "Encours...", true);
+            ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.deconnexion), getString(R.string.encours), true);
             dialog.show();
 
             Handler handler = new Handler();
@@ -414,9 +414,9 @@ public class MainActivity extends AppCompatActivity
         }
 
         else if (id == R.id.nav_QuestionFrequentes) {
-            Toast.makeText(this, "Questions Fréquentes", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.questionFrequentes), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_parametres) {
-            Toast.makeText(this, "Paramètres", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.parametreDrawer), Toast.LENGTH_SHORT).show();
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

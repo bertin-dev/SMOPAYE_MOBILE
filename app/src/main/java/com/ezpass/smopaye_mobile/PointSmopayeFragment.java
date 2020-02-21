@@ -25,7 +25,7 @@ public class PointSmopayeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_point_smopaye, container, false);
 
-        getActivity().setTitle("Points de Vente Smopaye");
+        getActivity().setTitle(getString(R.string.pointDeVenteSmopaye));
 
 
         listView = view.findViewById(R.id.exp_list_view);

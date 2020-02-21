@@ -88,7 +88,7 @@ public class RechargeAutreCompte extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recharge_autre_compte);
 
-        getSupportActionBar().setTitle("Recharger une Carte");
+        getSupportActionBar().setTitle(getString(R.string.rechargeCompte));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -119,9 +119,9 @@ public class RechargeAutreCompte extends AppCompatActivity {
                         public void run() {
 
                             // On ajoute un message à notre progress dialog
-                            progressDialog.setMessage("Passer la carte");
+                            progressDialog.setMessage(getString(R.string.passerCarte));
                             // On donne un titre à notre progress dialog
-                            progressDialog.setTitle("En attente de carte");
+                            progressDialog.setTitle(getString(R.string.attenteCarte));
                             // On spécifie le style
                             //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                             // On affiche notre message
@@ -450,11 +450,11 @@ public class RechargeAutreCompte extends AppCompatActivity {
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
         collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
 
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo2);
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.logo2)
+                .setSmallIcon(R.mipmap.logo_official)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())

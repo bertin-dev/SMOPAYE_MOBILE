@@ -54,7 +54,7 @@ public class WebViewMonetbil extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view_monetbil);
 
-        getSupportActionBar().setTitle("SMOPAYE SARL");
+        getSupportActionBar().setTitle(getString(R.string.ezpassBySmopaye));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -86,7 +86,7 @@ public class WebViewMonetbil extends AppCompatActivity {
                 public void onPageStarted(WebView view, String url, Bitmap favicon) {
                     super.onPageStarted(view, url, favicon);
                     mProgressBar.setVisibility(View.VISIBLE);
-                    setTitle("Encours de Chargement...");
+                    setTitle(getString(R.string.encoursTraitement));
                 }
 
                 @Override
@@ -117,7 +117,7 @@ public class WebViewMonetbil extends AppCompatActivity {
 
         }
         else {
-            Toast.makeText(this, "Une erreur est survenue", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.erreurSurvenue1), Toast.LENGTH_SHORT).show();
         }
 
 

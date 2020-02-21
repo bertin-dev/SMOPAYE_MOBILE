@@ -132,7 +132,7 @@ public class RechargePropreCompte extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recharge_propre_compte);
 
-        getSupportActionBar().setTitle("Recharger sa Carte");
+        getSupportActionBar().setTitle(getString(R.string.rechargeCompte));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         numCarte = (EditText) findViewById(R.id.rnumCartePropreCompte);
@@ -201,9 +201,9 @@ public class RechargePropreCompte extends AppCompatActivity {
                         public void run() {
 
                             // On ajoute un message à notre progress dialog
-                            progressDialog.setMessage("Passer la carte");
+                            progressDialog.setMessage(getString(R.string.passerCarte));
                             // On donne un titre à notre progress dialog
-                            progressDialog.setTitle("En attente de carte");
+                            progressDialog.setTitle(getString(R.string.attenteCarte));
                             // On spécifie le style
                             //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                             // On affiche notre message
@@ -352,7 +352,7 @@ public class RechargePropreCompte extends AppCompatActivity {
 
         if(activeInfo != null && activeInfo.isConnected()){
 
-            ProgressDialog dialog = ProgressDialog.show(this, "Connexion", "Encours...", true);
+            ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
             dialog.show();
 
             Handler handler = new Handler();
@@ -387,9 +387,9 @@ public class RechargePropreCompte extends AppCompatActivity {
                         @Override
                         public void run() {
                             // On ajoute un message à notre progress dialog
-                            progressDialog.setMessage("Connexion au serveur");
+                            progressDialog.setMessage(getString(R.string.connexionserver));
                             // On donne un titre à notre progress dialog
-                            progressDialog.setTitle("Attente d'une réponse");
+                            progressDialog.setTitle(getString(R.string.attenteReponseServer));
                             // On spécifie le style
                             //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                             // On affiche notre message
@@ -424,7 +424,7 @@ public class RechargePropreCompte extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(RechargePropreCompte.this, "Encours de traitement...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RechargePropreCompte.this, getString(R.string.encoursTraitement), Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -468,15 +468,15 @@ public class RechargePropreCompte extends AppCompatActivity {
                                            for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                User user = userSnapshot.getValue(User.class);
                                                if (user.getId_carte().equals(id_carte_sm)) {
-                                                   RemoteNotification(user.getId(), user.getPrenom(), "Recharge", f, "error");
+                                                   RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.recharge), f, "error");
                                                    //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                } else {
-                                                   Toast.makeText(RechargePropreCompte.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
+                                                   Toast.makeText(RechargePropreCompte.this, getString(R.string.numCompteExistPas), Toast.LENGTH_SHORT).show();
                                                }
                                            }
                                        }
                                        else{
-                                           Toast.makeText(RechargePropreCompte.this, "Impossible d'envoyer votre notification", Toast.LENGTH_SHORT).show();
+                                           Toast.makeText(RechargePropreCompte.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                                        }
 
                                    }
@@ -489,13 +489,13 @@ public class RechargePropreCompte extends AppCompatActivity {
 
 
                                //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                               LocalNotification("Recharge", f);
+                               LocalNotification(getString(R.string.recharge), f);
 
                                ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                                dbHandler = new DbHandler(getApplicationContext());
                                aujourdhui = new Date();
                                shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                               dbHandler.insertUserDetails("Recharge", f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+                               dbHandler.insertUserDetails(getString(R.string.recharge), f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
 
                                View view = LayoutInflater.from(RechargePropreCompte.this).inflate(R.layout.alert_dialog_success, null);
                                TextView title = (TextView) view.findViewById(R.id.title);
@@ -607,11 +607,11 @@ public class RechargePropreCompte extends AppCompatActivity {
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
         collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
 
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo2);
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.logo2)
+                .setSmallIcon(R.mipmap.logo_official)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
@@ -755,7 +755,7 @@ public class RechargePropreCompte extends AppCompatActivity {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
 
-                    Data data = new Data(fuser.getUid(), R.drawable.logo2, username + ": " + message, title, receiver, statut_notif);
+                    Data data = new Data(fuser.getUid(), R.mipmap.logo_official, username + ": " + message, title, receiver, statut_notif);
                     Sender sender = new Sender(data, token.getToken());
                     apiService.sendNotification(sender)
                             .enqueue(new Callback<MyResponse>() {
@@ -801,11 +801,11 @@ public class RechargePropreCompte extends AppCompatActivity {
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
         collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
 
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo2);
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.logo2)
+                .setSmallIcon(R.mipmap.logo_official)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())

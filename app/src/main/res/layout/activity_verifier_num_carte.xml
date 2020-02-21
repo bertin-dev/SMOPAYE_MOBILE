@@ -149,7 +149,7 @@
                         android:id="@+id/valeurAbonnement"
                         android:textColor="@color/bgColorStandard"
                         android:layout_gravity="center"
-                        android:hint="service"
+                        android:hint="@string/services"
                         android:imeOptions="actionNext"
                         android:padding="15dp"
                         android:layout_marginRight="50dp"

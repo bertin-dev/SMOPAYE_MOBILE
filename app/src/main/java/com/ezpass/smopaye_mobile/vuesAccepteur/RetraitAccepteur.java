@@ -136,7 +136,7 @@ public class RetraitAccepteur extends AppCompatActivity implements ModalDialogRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_retrait_accepteur);
 
-        getSupportActionBar().setTitle("Faire un Retrait");
+        getSupportActionBar().setTitle(getString(R.string.faireRetrait));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         collectecarte = (EditText) findViewById(R.id.numCarteAccepteur);
@@ -179,7 +179,7 @@ public class RetraitAccepteur extends AppCompatActivity implements ModalDialogRe
 
                 if(collectecarte.getText().toString().equalsIgnoreCase(""))
                 {
-                    Toast.makeText(RetraitAccepteur.this, "SVP Veuillez Inserer votre numéro de carte", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RetraitAccepteur.this, getString(R.string.veuillezInsererCompte), Toast.LENGTH_SHORT).show();
                 }
                 else{
                    /* new Thread(new Runnable() {
@@ -483,7 +483,7 @@ public class RetraitAccepteur extends AppCompatActivity implements ModalDialogRe
 
         if(activeInfo != null && activeInfo.isConnected()){
 
-            ProgressDialog dialog = ProgressDialog.show(this, "Connexion", "Encours...", true);
+            ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
             dialog.show();
 
             Handler handler = new Handler();
@@ -564,7 +564,7 @@ public class RetraitAccepteur extends AppCompatActivity implements ModalDialogRe
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(RetraitAccepteur.this, "Encours de traitement...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RetraitAccepteur.this, getString(R.string.encoursTraitement), Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -600,14 +600,14 @@ public class RetraitAccepteur extends AppCompatActivity implements ModalDialogRe
                                             for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                 User user = userSnapshot.getValue(User.class);
                                                 if (user.getId_carte().equals(id_carte_sm)) {
-                                                    RemoteNotification(user.getId(), user.getPrenom(), "Retrait", f, "success");
+                                                    RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.retrait), f, "success");
                                                     //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    Toast.makeText(RetraitAccepteur.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(RetraitAccepteur.this, getString(R.string.numCompteExistPas), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         } else {
-                                            Toast.makeText(RetraitAccepteur.this, "Impossible d'envoyer votre notification", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(RetraitAccepteur.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
@@ -620,13 +620,13 @@ public class RetraitAccepteur extends AppCompatActivity implements ModalDialogRe
 
 
                                 //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                LocalNotification("Retrait", f);
+                                LocalNotification(getString(R.string.retrait), f);
 
                                 ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                                 dbHandler = new DbHandler(getApplicationContext());
                                 aujourdhui = new Date();
                                 shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                dbHandler.insertUserDetails("Retrait", f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+                                dbHandler.insertUserDetails(getString(R.string.retrait), f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
 
                                 build_error = new AlertDialog.Builder(RetraitAccepteur.this);
@@ -663,14 +663,14 @@ public class RetraitAccepteur extends AppCompatActivity implements ModalDialogRe
                                             for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                 User user = userSnapshot.getValue(User.class);
                                                 if (user.getId_carte().equals(id_carte_sm)) {
-                                                    RemoteNotification(user.getId(), user.getPrenom(), "Retrait", f, "error");
+                                                    RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.retrait), f, "error");
                                                     //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    Toast.makeText(RetraitAccepteur.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(RetraitAccepteur.this, getString(R.string.numCompteExistPas), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         } else {
-                                            Toast.makeText(RetraitAccepteur.this, "Impossible d'envoyer votre notification", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(RetraitAccepteur.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
@@ -683,13 +683,13 @@ public class RetraitAccepteur extends AppCompatActivity implements ModalDialogRe
 
 
                                 //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                LocalNotification("Retrait", f);
+                                LocalNotification(getString(R.string.retrait), f);
 
                                 ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                                 dbHandler = new DbHandler(getApplicationContext());
                                 aujourdhui = new Date();
                                 shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                dbHandler.insertUserDetails("Retrait", f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+                                dbHandler.insertUserDetails(getString(R.string.retrait), f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
 
 
                                 build_error = new AlertDialog.Builder(RetraitAccepteur.this);
@@ -895,7 +895,7 @@ public class RetraitAccepteur extends AppCompatActivity implements ModalDialogRe
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
 
-                    Data data = new Data(fuser.getUid(), R.drawable.logo2, username + ": " + message, title, receiver, etat_notif);
+                    Data data = new Data(fuser.getUid(), R.mipmap.logo_official, username + ": " + message, title, receiver, etat_notif);
                     Sender sender = new Sender(data, token.getToken());
                     apiService.sendNotification(sender)
                             .enqueue(new Callback<MyResponse>() {
@@ -903,7 +903,7 @@ public class RetraitAccepteur extends AppCompatActivity implements ModalDialogRe
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     if(response.code() == 200){
                                         if(response.body().success != 1){
-                                            Toast.makeText(RetraitAccepteur.this, "Failed", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(RetraitAccepteur.this, getString(R.string.echoue), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
@@ -941,11 +941,11 @@ public class RetraitAccepteur extends AppCompatActivity implements ModalDialogRe
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
         collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
 
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo2);
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.logo2)
+                .setSmallIcon(R.mipmap.logo_official)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())

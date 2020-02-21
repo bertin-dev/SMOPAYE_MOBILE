@@ -79,7 +79,7 @@ public class HistoriqueTransactions extends AppCompatActivity {
         String currentDate2 = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
         String[] part =currentDate2.split(" ");
         if(part[0].equalsIgnoreCase(currentDate2)){
-            Toast.makeText(this, "la date est en Anglais", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.dateSystemePosePB), Toast.LENGTH_SHORT).show();
         }
         else {
             mois.setText(part[2]);

@@ -65,7 +65,7 @@ public class ModifierCompte extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modifier_compte);
 
-        getSupportActionBar().setTitle("Modifier Compte");
+        getSupportActionBar().setTitle(getString(R.string.ModifierCompte));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -195,7 +195,7 @@ public class ModifierCompte extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(getApplicationContext(), "Encours de traitement...", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(), getString(R.string.encoursTraitement), Toast.LENGTH_SHORT).show();
                                     }
                                 });
 
@@ -227,7 +227,7 @@ public class ModifierCompte extends AppCompatActivity {
 
                                         //////////////////////////////////NOTIFICATIONS////////////////////////////////
                                         notificationManager = NotificationManagerCompat.from(getApplicationContext());
-                                        notifications("Modification du Mot de Passe", f);
+                                        notifications(getString(R.string.ModifMotDePasse), f);
                                         //dbHandler.insertUserDetails("Modification du Mot de Passe",f, "0", shortDateFormat.format(aujourdhui));
 
                                         int pos = f.toLowerCase().indexOf("succes");
@@ -385,7 +385,7 @@ public class ModifierCompte extends AppCompatActivity {
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
         collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
 
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo2);
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)

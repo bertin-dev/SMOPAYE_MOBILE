@@ -29,7 +29,7 @@
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:layout_weight="40"
-                android:src="@drawable/logo2"/>
+                android:src="@drawable/logo_point_vente"/>
 
 
             <LinearLayout

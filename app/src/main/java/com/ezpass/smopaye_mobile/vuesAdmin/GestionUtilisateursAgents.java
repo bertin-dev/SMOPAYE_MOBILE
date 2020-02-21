@@ -39,7 +39,7 @@ public class GestionUtilisateursAgents extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gestion_utilisateurs_agents);
 
-        getSupportActionBar().setTitle("Gestion utilisateur et Agent");
+        getSupportActionBar().setTitle(getString(R.string.gesUserAgent));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 

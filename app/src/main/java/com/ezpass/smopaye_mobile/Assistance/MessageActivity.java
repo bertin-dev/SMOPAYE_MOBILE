@@ -122,7 +122,7 @@ public class MessageActivity extends AppCompatActivity {
                     sendMessage(fuser.getUid(), userid, msg);
                 }else
                 {
-                    Toast.makeText(MessageActivity.this, "Vous ne pouvez pas envoyer un message vide", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MessageActivity.this, getString(R.string.AlertMsgVide), Toast.LENGTH_SHORT).show();
                 }
                 text_send.setText("");
             }
@@ -221,7 +221,7 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 if(notify) {
-                    RemoteNotification(receiver, user.getNom(), "Nouveau Message", msg, "success");
+                    RemoteNotification(receiver, user.getNom(), getString(R.string.AlertNouveauMsg), msg, "success");
                 }
                 notify = false;
             }
@@ -250,7 +250,7 @@ public class MessageActivity extends AppCompatActivity {
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     if(response.code() == 200){
                                         if(response.body().success != 1){
-                                            Toast.makeText(MessageActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MessageActivity.this, getString(R.string.echoue), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }

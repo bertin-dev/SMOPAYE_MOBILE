@@ -122,7 +122,7 @@ public class Modification extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modification);
 
-        getSupportActionBar().setTitle("Modification");
+        getSupportActionBar().setTitle(getString(R.string.modification));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressDialog = new ProgressDialog(Modification.this);
@@ -290,21 +290,21 @@ public class Modification extends AppCompatActivity {
 
                 }
                 else {
-                    Toast.makeText(this, "Une erreur est survenue lors de la tentative de modification", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.erreurModif), Toast.LENGTH_SHORT).show();
                 }
 
             }else {
 
                 /***************************************/
                 AlertDialog.Builder alert = new AlertDialog.Builder(Modification.this);
-                alert.setTitle("INFORMATION");
-                alert.setMessage("SUPPRESSION");
+                alert.setTitle(getString(R.string.information));
+                alert.setMessage(getString(R.string.suppression));
                 // Set an EditText view to get user input
                 final EditText input = new EditText(Modification.this);
                 alert.setView(input);
-                input.setText("Voulez-vous vraiment supprimer l'accepteur " + id_users[1].toString() + " ???");
+                input.setText(getString(R.string.suppQuestion) + " " + id_users[1].toString() + " ???");
                 input.setEnabled(false);
-                alert.setPositiveButton("Supprimer", new DialogInterface.OnClickListener() {
+                alert.setPositiveButton(getString(R.string.supprimer), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
 
                         if (intent.hasExtra("ID_USER")) {
@@ -364,7 +364,7 @@ public class Modification extends AppCompatActivity {
                                                 //////////////////////////////////NOTIFICATIONS////////////////////////////////
                                                 notificationManager = NotificationManagerCompat.from(getApplicationContext());
 
-                                                notifications("Supression du compte", f);
+                                                notifications(getString(R.string.suppCompte), f);
                                                 //dbHandler.insertUserDetails("Suppression du compte",f, "0", shortDateFormat.format(aujourdhui));
 
                                                 new AlertDialog.Builder(Modification.this)
@@ -426,16 +426,16 @@ public class Modification extends AppCompatActivity {
                             }).start();
 
                         }else {
-                            Toast.makeText(Modification.this, "Une erreur est survenue lors de la suppression", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Modification.this, getString(R.string.erreurSurvenue2), Toast.LENGTH_SHORT).show();
                         }
 
 
                     }
                 });
 
-                alert.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                alert.setNegativeButton(getString(R.string.annuler), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        Toast.makeText(Modification.this, "La supression a été annulé", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Modification.this, getString(R.string.suppAnnule), Toast.LENGTH_SHORT).show();
 
                         ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                         dbHandler = new DbHandler(getApplicationContext());
@@ -444,7 +444,7 @@ public class Modification extends AppCompatActivity {
 
                         //////////////////////////////////NOTIFICATIONS////////////////////////////////
                         notificationManager = NotificationManagerCompat.from(getApplicationContext());
-                        notifications("Suppression du compte", "Annulation de la suppression du compte");
+                        notifications(getString(R.string.suppressionCompte), getString(R.string.annulationSuppCompte));
                         //dbHandler.insertUserDetails("Supression du compte","Annulation de la suppression du compte", "0", shortDateFormat.format(aujourdhui));
                     }
                 });
@@ -459,10 +459,10 @@ public class Modification extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Toast.makeText(Modification.this, nom.getText().toString()+" im here "+prenom.getText().toString().trim(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Modification.this, nom.getText().toString()+" im here "+prenom.getText().toString().trim(), Toast.LENGTH_SHORT).show();
                 if(nom.getText().toString().trim().equals("") || prenom.getText().toString().trim().equals("") || telephone.getText().toString().trim().equals("")
                         || cni.getText().toString().trim().equals("") || numCarte.getText().toString().trim().equals("")) {
-                    Toast.makeText(Modification.this, "Veuillez remplir tous les champs vides", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Modification.this, getString(R.string.champsVide), Toast.LENGTH_SHORT).show();
                 }else{
 
                     if(isValid(nom.getText().toString().trim()) && isValid(prenom.getText().toString().trim()) && isValid(cni.getText().toString().trim())) {
@@ -552,7 +552,7 @@ public class Modification extends AppCompatActivity {
                                             //////////////////////////////////NOTIFICATIONS////////////////////////////////
                                             notificationManager = NotificationManagerCompat.from(getApplicationContext());
 
-                                            notifications("Modification du compte", f);
+                                            notifications(getString(R.string.modificationCompte), f);
                                             //dbHandler.insertUserDetails("Modification du compte",f,"0", shortDateFormat.format(aujourdhui));
 
 
@@ -562,7 +562,7 @@ public class Modification extends AppCompatActivity {
                                             TextView title = (TextView) view.findViewById(R.id.title);
                                             TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                                             ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                                            title.setText("Information");
+                                            title.setText(getString(R.string.information));
                                             imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
                                             statutOperation.setText(f);
                                             build_error.setPositiveButton("OK", null);
@@ -624,15 +624,15 @@ public class Modification extends AppCompatActivity {
 
                     }
                     else{
-                        Toast.makeText(getApplicationContext(), "Un ou plusieurs champs sont Invalid", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.champsinValide), Toast.LENGTH_SHORT).show();
 
                         View view = LayoutInflater.from(Modification.this).inflate(R.layout.alert_dialog_success, null);
                         TextView title = (TextView) view.findViewById(R.id.title);
                         TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                         ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                        title.setText("Information");
+                        title.setText(getString(R.string.information));
                         imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                        statutOperation.setText("Un ou plusieurs champs sont Invalid");
+                        statutOperation.setText(getString(R.string.champsinValide));
                         build_error.setPositiveButton("OK", null);
                         build_error.setCancelable(false);
                         build_error.setView(view);
@@ -815,7 +815,7 @@ public class Modification extends AppCompatActivity {
         // Initializing a String Array
         String[] pieceJ = new String[]{
                 "CNI",
-                "passport",
+                "passeport",
                 "recipissé",
                 "carte de séjour",
                 "carte d'étudiant"
@@ -962,7 +962,7 @@ public class Modification extends AppCompatActivity {
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
         collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
 
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo2);
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)

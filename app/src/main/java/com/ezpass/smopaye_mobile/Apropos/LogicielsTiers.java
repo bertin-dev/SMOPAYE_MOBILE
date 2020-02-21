@@ -16,7 +16,7 @@ public class LogicielsTiers extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logiciels_tiers);
 
-        getSupportActionBar().setTitle("Logiciels tiers");
+        getSupportActionBar().setTitle(getString(R.string.logicielTiers));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 

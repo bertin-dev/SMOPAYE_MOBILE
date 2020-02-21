@@ -30,14 +30,14 @@ public class PasswordModalDialog extends AppCompatDialogFragment {
         //mPassword.setErrorTextColor(ColorStateList.valueOf(Color.BLUE));
 
         builder.setView(view)
-                .setTitle("Mot de Passe")
-                .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                .setTitle(getString(R.string.mdp))
+                .setNegativeButton(getString(R.string.annuler), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                     }
                 })
-                .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.confirmer), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -58,10 +58,10 @@ public class PasswordModalDialog extends AppCompatDialogFragment {
         String password = mPassword.getEditText().getText().toString().trim();
 
         if(password.isEmpty()){
-            mPassword.setError("Veuillez inserer le mot de passe.");
+            mPassword.setError(getString(R.string.insererPassword));
             return false;
         } else if(password.length() < 5){
-            mPassword.setError("Votre mot de passe est court");
+            mPassword.setError(getString(R.string.passwordCourt));
             return false;
         } else {
             mPassword.setError(null);

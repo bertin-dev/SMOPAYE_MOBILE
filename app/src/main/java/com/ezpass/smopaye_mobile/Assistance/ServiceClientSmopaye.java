@@ -18,7 +18,7 @@ public class ServiceClientSmopaye extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service_client_smopaye);
 
-        getSupportActionBar().setTitle("Assistance");
+        getSupportActionBar().setTitle(getString(R.string.assistance));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 

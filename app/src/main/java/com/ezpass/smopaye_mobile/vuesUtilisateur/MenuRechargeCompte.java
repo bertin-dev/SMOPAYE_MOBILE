@@ -22,7 +22,7 @@ public class MenuRechargeCompte extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_recharge_compte);
 
-        getSupportActionBar().setTitle("Opération de recharge");
+        getSupportActionBar().setTitle(getString(R.string.operationRecharge));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         rechargeCompte = (LinearLayout) findViewById(R.id.btnRechargeCompte);

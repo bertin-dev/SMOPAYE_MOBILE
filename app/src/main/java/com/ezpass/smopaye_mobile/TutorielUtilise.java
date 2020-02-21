@@ -20,7 +20,7 @@ public class TutorielUtilise extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutoriel_utilise);
 
-        getSupportActionBar().setTitle("Tutoriel");
+        getSupportActionBar().setTitle(getString(R.string.tutoriel));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 

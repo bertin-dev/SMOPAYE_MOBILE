@@ -159,7 +159,7 @@ public class DebitCarte extends AppCompatActivity {
         setContentView(R.layout.activity_debit_carte);
 
 
-        getSupportActionBar().setTitle("Numéro de Carte");
+        getSupportActionBar().setTitle(getString(R.string.numeroCarte));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -480,7 +480,7 @@ public class DebitCarte extends AppCompatActivity {
                                                     runOnUiThread(new Runnable() {
                                                         @Override
                                                         public void run() {
-                                                            Toast.makeText(DebitCarte.this, "Encours de traitement...", Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(DebitCarte.this, getString(R.string.encoursTraitement), Toast.LENGTH_SHORT).show();
                                                         }
                                                     });
 
@@ -542,15 +542,15 @@ public class DebitCarte extends AppCompatActivity {
                                                                             for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                                                 User user = userSnapshot.getValue(User.class);
                                                                                 if (user.getId_carte().equals(id_carte_sm)) {
-                                                                                    RemoteNotification(user.getId(), user.getPrenom(), "Débit Carte", f, "error");
+                                                                                    RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.debitCarte), f, "error");
                                                                                     //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                                                 } else {
-                                                                                    Toast.makeText(DebitCarte.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
+                                                                                    Toast.makeText(DebitCarte.this, getString(R.string.numCompteExistPas), Toast.LENGTH_SHORT).show();
                                                                                 }
                                                                             }
                                                                         }
                                                                         else{
-                                                                            Toast.makeText(DebitCarte.this, "Impossible d'envoyer votre notification", Toast.LENGTH_SHORT).show();
+                                                                            Toast.makeText(DebitCarte.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                                                                         }
 
                                                                     }
@@ -566,11 +566,11 @@ public class DebitCarte extends AppCompatActivity {
                                                                 dbHandler = new DbHandler(getApplicationContext());
                                                                 aujourdhui = new Date();
                                                                 shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                                                dbHandler.insertUserDetails("Débit Carte",f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+                                                                dbHandler.insertUserDetails(getString(R.string.debitCarte), f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
 
 
                                                                 //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                                                LocalNotification("Débit Carte", f);
+                                                                LocalNotification(getString(R.string.debitCarte), f);
 
 
 
@@ -608,7 +608,7 @@ public class DebitCarte extends AppCompatActivity {
 
                                                                     build_error.setView(view);
                                                                     build_error.show();
-                                                                    Toast.makeText(DebitCarte.this, "Monsieur " + nom + " Votre Compte a été Débité de " + montant + " FCFA", Toast.LENGTH_SHORT).show();
+                                                                    Toast.makeText(DebitCarte.this,getString(R.string.monsieur) + " " + nom +" "+getString(R.string.votreCompteDebite) + montant + " FCFA", Toast.LENGTH_SHORT).show();
 
 
 
@@ -629,15 +629,15 @@ public class DebitCarte extends AppCompatActivity {
                                                                                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                                                     User user = userSnapshot.getValue(User.class);
                                                                                     if (user.getId_carte().equals(id_carte_sm)) {
-                                                                                        RemoteNotification(user.getId(), user.getPrenom(), "Débit Carte", "Le Compte de " + nom1 + " a été Débité de " + montant + " FCFA", "success");
+                                                                                        RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.votreCompteDebite), getString(R.string.compteDe) + " " + nom1 + " " + getString(R.string.aEteDebite) + montant + " FCFA", "success");
                                                                                         //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                                                     } else {
-                                                                                        Toast.makeText(DebitCarte.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
+                                                                                        Toast.makeText(DebitCarte.this, getString(R.string.numCompteExistPas), Toast.LENGTH_SHORT).show();
                                                                                     }
                                                                                 }
                                                                             }
                                                                             else{
-                                                                                Toast.makeText(DebitCarte.this, "Impossible d'envoyer votre notification", Toast.LENGTH_SHORT).show();
+                                                                                Toast.makeText(DebitCarte.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                                                                             }
 
                                                                         }
@@ -653,11 +653,11 @@ public class DebitCarte extends AppCompatActivity {
                                                                     dbHandler = new DbHandler(getApplicationContext());
                                                                     aujourdhui = new Date();
                                                                     shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                                                    dbHandler.insertUserDetails("Débit Carte","Le Compte de " + nom + " a été Débité de " + montant + " FCFA", "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+                                                                    dbHandler.insertUserDetails(getString(R.string.debitCarte),getString(R.string.compteDe)+ " " + nom +  getString(R.string.aEteDebite)+ " " + montant + " FCFA", "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
 
                                                                     //////////////////////////////////NOTIFICATIONS////////////////////////////////
-                                                                    LocalNotification("Débit Carte", "Le Compte de " + nom + " a été Débité de " + montant + " FCFA");
+                                                                    LocalNotification(getString(R.string.debitCarte), getString(R.string.compteDe)+ " " + nom + getString(R.string.aEteDebite)+ " " + montant + " FCFA");
 
 
                                                                     //vider le champs Montant
@@ -704,7 +704,7 @@ public class DebitCarte extends AppCompatActivity {
 
                                                                 }else{
                                                                     FAILplayer.start();
-                                                                    Toast.makeText(DebitCarte.this, "Impossible de convertir en entier", Toast.LENGTH_LONG).show();
+                                                                    Toast.makeText(DebitCarte.this, getString(R.string.impossibleConvertir), Toast.LENGTH_LONG).show();
                                                                     /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
                                                                     //SERVICE GOOGLE FIREBASE
                                                                     final String id_carte_sm = carte.getText().toString().trim();
@@ -721,15 +721,15 @@ public class DebitCarte extends AppCompatActivity {
                                                                                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                                                     User user = userSnapshot.getValue(User.class);
                                                                                     if (user.getId_carte().equals(id_carte_sm)) {
-                                                                                        RemoteNotification(user.getId(), user.getPrenom(), "Débit Carte", f, "error");
+                                                                                        RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.debitCarte), f, "error");
                                                                                         //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                                                     } else {
-                                                                                        Toast.makeText(DebitCarte.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
+                                                                                        Toast.makeText(DebitCarte.this,  getString(R.string.numCompteExistPas), Toast.LENGTH_SHORT).show();
                                                                                     }
                                                                                 }
                                                                             }
                                                                             else{
-                                                                                Toast.makeText(DebitCarte.this, "Impossible d'envoyer votre notification", Toast.LENGTH_SHORT).show();
+                                                                                Toast.makeText(DebitCarte.this,  getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                                                                             }
 
                                                                         }
@@ -745,11 +745,11 @@ public class DebitCarte extends AppCompatActivity {
                                                                     dbHandler = new DbHandler(getApplicationContext());
                                                                     aujourdhui = new Date();
                                                                     shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                                                    dbHandler.insertUserDetails("Débit Carte",f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+                                                                    dbHandler.insertUserDetails( getString(R.string.debitCarte),f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
 
 
                                                                     //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                                                    LocalNotification("Débit Carte", f);
+                                                                    LocalNotification( getString(R.string.debitCarte), f);
                                                                 }
                                                             }
 
@@ -887,7 +887,7 @@ public class DebitCarte extends AppCompatActivity {
 
         if(activeInfo != null && activeInfo.isConnected()){
 
-            ProgressDialog dialog = ProgressDialog.show(this, "Connexion", "Encours...", true);
+            ProgressDialog dialog = ProgressDialog.show(this,  getString(R.string.connexion),  getString(R.string.encours), true);
             dialog.show();
 
             Handler handler = new Handler();
@@ -1142,11 +1142,11 @@ public class DebitCarte extends AppCompatActivity {
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
         collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
 
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo2);
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.logo2)
+                .setSmallIcon(R.mipmap.logo_official)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
@@ -1166,7 +1166,7 @@ public class DebitCarte extends AppCompatActivity {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
 
-                    Data data = new Data(fuser.getUid(), R.drawable.logo2, username + ": " + message, title, receiver, statut_notif);
+                    Data data = new Data(fuser.getUid(), R.mipmap.logo_official, username + ": " + message, title, receiver, statut_notif);
                     Sender sender = new Sender(data, token.getToken());
                     apiService.sendNotification(sender)
                             .enqueue(new Callback<MyResponse>() {
@@ -1174,7 +1174,7 @@ public class DebitCarte extends AppCompatActivity {
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     if(response.code() == 200){
                                         if(response.body().success != 1){
-                                            Toast.makeText(DebitCarte.this, "Failed", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(DebitCarte.this,  getString(R.string.echoue), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }

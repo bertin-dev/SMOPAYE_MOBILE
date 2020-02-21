@@ -13,7 +13,7 @@ public class DetailsAgenceSmopaye extends AppCompatActivity {
         setContentView(R.layout.activity_details_agence_smopaye);
 
 
-        getSupportActionBar().setTitle("Détails");
+        getSupportActionBar().setTitle(getString(R.string.details));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 }

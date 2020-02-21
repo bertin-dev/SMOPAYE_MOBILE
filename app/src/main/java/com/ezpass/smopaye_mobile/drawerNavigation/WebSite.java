@@ -32,7 +32,7 @@ public class WebSite extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_site);
 
-        getSupportActionBar().setTitle("Site Web Smopaye");
+        getSupportActionBar().setTitle(getString(R.string.siteWebMobile));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mProgressBar = findViewById(R.id.progressBar2);
@@ -50,7 +50,7 @@ public class WebSite extends AppCompatActivity {
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
                 mProgressBar.setVisibility(View.VISIBLE);
-                setTitle("Encours de Chargement...");
+                setTitle(getString(R.string.encoursTelechargement));
             }
 
             @Override

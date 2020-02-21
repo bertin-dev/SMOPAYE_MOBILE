@@ -10,10 +10,12 @@ import android.content.ContextWrapper;
 import android.net.Uri;
 import android.os.Build;
 
+import com.ezpass.smopaye_mobile.BuildConfig;
+
 public class OreoNotification extends ContextWrapper {
 
-    private static final String CHANNEL_ID = "com.ezpass.smopaye_mobile";
-    private static final String CHANNEL_NAME= "smopaye_mobile";
+    private static final String CHANNEL_ID = BuildConfig.APPLICATION_ID; //"com.ezpass.smopaye_mobile"
+    private static final String CHANNEL_NAME= "smopaye_mobile"; //smopaye_mobile
     private NotificationManager notificationManager;
 
     public OreoNotification(Context base) {

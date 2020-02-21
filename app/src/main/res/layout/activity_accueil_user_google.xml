@@ -54,7 +54,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:textAlignment="center"
-                    android:text="Agents       "
+                    android:text="@string/agent"
                     android:textSize="20sp"
                     />
                 <Button
@@ -86,7 +86,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:textAlignment="center"
-                    android:text="Accepteurs"
+                    android:text="@string/accepteur"
                     android:textSize="20sp" />
                 <Button
                     android:id="@+id/totalAccepteur"
@@ -117,7 +117,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:textAlignment="center"
-                    android:text="Admin         "
+                    android:text="@string/admin"
                     android:textSize="20sp"
                     />
                 <Button
@@ -148,7 +148,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:textAlignment="center"
-                    android:text="Utilisateurs  "
+                    android:text="@string/utilisateur"
                     android:textSize="20sp"
                     />
                 <Button

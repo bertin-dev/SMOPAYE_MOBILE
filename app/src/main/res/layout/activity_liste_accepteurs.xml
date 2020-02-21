@@ -18,7 +18,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/edittext2"
-        android:hint="Recherche"
+        android:hint="@string/rechercher"
         android:gravity="center"/>
 
 

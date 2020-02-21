@@ -177,7 +177,7 @@ public class ModifSuppGoogleUser extends AppCompatActivity {
         setContentView(R.layout.activity_modif_supp_google_user);
 
 
-        getSupportActionBar().setTitle("Modif et Supp Google User");
+        getSupportActionBar().setTitle(getString(R.string.modifSuppGoogleUser));
         //getSupportParentActivityIntent().putExtra("resultatBD", "Administrateur");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -675,7 +675,7 @@ public class ModifSuppGoogleUser extends AppCompatActivity {
 
 
                                                                         } else{
-                                                                            Toast.makeText(ModifSuppGoogleUser.this, "Une Erreur est survenue lors de la suppression.", Toast.LENGTH_SHORT).show();
+                                                                            Toast.makeText(ModifSuppGoogleUser.this, getString(R.string.erreurSurvenue2), Toast.LENGTH_SHORT).show();
                                                                         }
                                                                     }
                                                                 });
@@ -725,7 +725,7 @@ public class ModifSuppGoogleUser extends AppCompatActivity {
 
         if(activeInfo != null && activeInfo.isConnected()){
 
-            ProgressDialog dialog = ProgressDialog.show(this, "Connexion", "Encours...", true);
+            ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
             dialog.show();
 
             Handler handler = new Handler();

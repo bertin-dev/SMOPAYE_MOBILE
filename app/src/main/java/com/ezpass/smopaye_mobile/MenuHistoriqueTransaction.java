@@ -25,7 +25,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
         setContentView(R.layout.activity_menu_historique_transaction);
 
 
-        getSupportActionBar().setTitle("Historique de transactions");
+        getSupportActionBar().setTitle(getString(R.string.historiqueTransaction));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 

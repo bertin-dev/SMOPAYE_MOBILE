@@ -31,7 +31,7 @@
            android:textColor="@color/bgColorStandard"
            android:textSize="20sp"
            android:layout_marginBottom="20dp"
-           android:text="Connexion internet introuvable" />
+           android:text="@string/connexionIntrouvable" />
 
 
        <TextView
@@ -44,7 +44,7 @@
            android:paddingLeft="10dp"
            android:textColor="@color/textColorStandard"
            android:textSize="15sp"
-           android:text="Bien vouloir vérifier votre wifi ou activer les données mobiles dans les paramètres de votre appareil." />
+           android:text="@string/checkWifi" />
 
        <Button
            android:id="@+id/conStatusBtn"
@@ -52,7 +52,7 @@
            android:layout_height="wrap_content"
            android:layout_marginTop="20dp"
            android:textColor="@color/bgColorStandard"
-           android:text="REESSAYER"
+           android:text="@string/reessayer"
            android:background="@drawable/edittextborder"
            style="@style/Base.Widget.AppCompat.Button.Colored"
            />

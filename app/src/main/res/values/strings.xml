@@ -15,7 +15,7 @@
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
 
-    <string name="chargement">Chargement En cours…</string>
+    <string name="chargement">Chargement Encours…</string>
 
     <string name="telephone">Téléphone</string>
     <string name="mdp">Mot de Passe</string>
@@ -85,9 +85,10 @@
     <string name="cmdCarteEZPASS">Commander votre Carte E-ZPASS</string>
 
 
-    <string name="listAccepteur">Liste Agents et Users</string>
+    <string name="listAgentsUsers">Liste Agents et Users</string>
     <string name="ModifAccepteur">Modification</string>
     <string name="SuppAccepteur">Suppression</string>
+    <string name="modification">Modification</string>
 
 
     <string name="NombreAgents"> Nombre Agents</string>
@@ -103,6 +104,8 @@
     <string name="numero">Téléphone</string>
     <string name="cni">N° Pièce Justificative</string>
     <string name="enregistrer">Enregistrer</string>
+    <string name="numeroTel">numéro de téléphone</string>
+    <string name="numeroDe">Numéro de</string>
 
     <string name="categorie">Catégorie</string>
     <string name="statut">STATUT</string>
@@ -110,7 +113,7 @@
 
     <string name="typePj">Type de Pièce</string>
 
-    <string name="admin">Administrateur</string>
+    <string name="admin">Admin &#160; &#160; &#160; &#160;</string>
     <string name="statutAdmin">Détenteur du Compte</string>
     <string name="souscription">Souscription</string>
     <string name="gesComptes">Gestion comptes</string>
@@ -122,6 +125,9 @@
     <string name="numdeCarte">Numéro de Compte</string>
     <string name="numdeCarteDonataire">N° de Compte donataire</string>
     <string name="numdeCarteBeneficiaire">N° de Compte bénéficiaire</string>
+    <string name="gesAccepteurActif">Accepteurs Actifs  &#160; &#160;</string>
+    <string name="gesAccepteurInActif">Accepteurs Inactif  &#160; &#160;</string>
+    <string name="listAccepteurs">Liste des Accepteurs</string>
 
     <string name="apropos">Apropos</string>
     <string name="tuto">Tutorial</string>
@@ -171,9 +177,9 @@
     <string name="Off">Off</string>
     <string name="On">On</string>
 
-    <string name="utilisateur">Utilisateur</string>
-    <string name="agent">Agent</string>
-    <string name="accepteur">Accepteur</string>
+    <string name="utilisateur">Utilisateur &#160;</string>
+    <string name="agent">Agent &#160; &#160; &#160; &#160;</string>
+    <string name="accepteur">Accepteur &#160;</string>
     <string name="administrateur">Administrateur</string>
     <string name="information">Information</string>
     <string name="champsVide">Un ou plusieurs Champs sont vides</string>
@@ -285,7 +291,6 @@
     <string name="pasDeConnexionInternet">Pas de connexion internet.</string>
 
 
-    <string name="delete">Supprimer</string>
     <string name="SouscriptionGoogle">Souscription Google</string>
     <string name="listUserGoogle">Liste Utilisateurs Google</string>
 
@@ -322,7 +327,7 @@
     <string name="MsgConsulterHistorique">Consulter l\'Historique de vos transactions éffectuées.</string>
     <string name="MsgDescTransfert">Veuillez insérer le numéro de compte du bénéficiaire et le montant à transférer, puis, appuyer sur effectuer.</string>
     <string name="MsgDescAbonnement">Veuillez insérez votre numéro de compte et sélectionner l\'abonnement souhaité, puis valider.</string>
-    <string name="MsgDescRecharge">Veuillez insérer votre numéro de compte et le montant de recharge, puis, valider.</string>
+    <string name="MsgDescRecharge">Veuillez insérer votre numéro de compte et le montant de recharge, puis valider.</string>
     <string name="MsgDescPayerFacture">Veuillez insérer le numéro de compte du bénéficiaire et le montant à transférer, puis valider.</string>
     <string name="MsgDescDebitCarte">Veuillez saisir le montant puis appuyer sur passer la carte.</string>
     <string name="MsgDescConsulterSolde">Veuillez insérer un numéro de compte et sélectionner le type de solde, puis appuyer sur consulter.</string>
@@ -348,6 +353,165 @@
     <string name="invalidCararatere">contient un ou plusieurs caractères invalides</string>
     <string name="verifierNumero">Votre numéro contient moin de 9 chiffres.</string>
     <string name="erreurSurvenue">Une erreur est survenue lors de l\'envoi des images.</string>
+    <string name="erreurSurvenue1">Une erreur est survenue.</string>
+    <string name="erreurSurvenue2">Une erreur est survenue lors de la suppression.</string>
+
+    <!--Derniers Ajout pour la traduction-->
+    <string name="information_legales">Informations légales</string>
+    <string name="AproposSmopaye">A propos de SMOPAYE</string>
+    <string name="smopaye_sarl">SMOPAYE SARL</string>
+    <string name="google">Google</string>
+    <string name="logicielTiers">Logiciels tiers</string>
+    <string name="SeekArc">SeekArc - version 1.0</string>
+    <string name="licenceDistribue">Copyright© 2011, Triggertrap Ltd. SeekArc est distribué sous licenceMIT Plus d\'info: https://github.com</string>
+    <string name="Changelog">Changelog - version 1.1.2</string>
+    <string name="librarieChangelog">Cette librairie a été partiellement modifiée pour satisfaire les besoins du projet. Changelog est distribuée sous licence Apache 2.0 Plus d\'info: https://www.githug.com"</string>
+    <string name="volley">Volley - version 1.1.1</string>
+    <string name="openSourceProject">Copyright © 2012 The Android Open Source Project Volley est distribué sous licence Apache, Version 2.0 Plus d\'info: https://github.com/google/volley</string>
+    <string name="pointDeVenteSmopaye">Points de Vente SMOPAYE</string>
+    <string name="yaounde">YAOUNDE</string>
+    <string name="soa">SOA</string>
+    <string name="camair">CAMAIR</string>
+    <string name="omnisport">OMNISPORT</string>
+    <string name="details">Details</string>
+    <string name="numeroIndisponible">Numéro indisponible pour le moment.</string>
+    <string name="entrerNumero">Entrez votre Numéro</string>
+    <string name="permissionRefuse">Permission Refusé</string>
+    <string name="chats">Chats</string>
+    <string name="profile">Profile</string>
+    <string name="AgentCommercial">Agent Commercial</string>
+    <string name="assistance">Assistance</string>
+    <string name="AlertMsgVide">Vous ne pouvez pas envoyer un message vide</string>
+    <string name="AlertNouveauMsg">Nouveau Message</string>
+    <string name="echoue">Echoué</string>
+    <string name="siteWebMobile">Site Web SMOPAYE</string>
+    <string name="encoursTelechargement">Encours de Chargement…</string>
+    <string name="pasMessage">Pas de Message</string>
+    <string name="uploadEncours">Upload Encours…</string>
+    <string name="AucuneImage">Aucune image n\'a été selectionnée</string>
+    <string name="uploadProgression">Progression de l\'Upload</string>
+    <string name="PrenomETnom">Prénom &amp; Nom</string>
+    <string name="Recette">Recette</string>
+    <string name="verificationSolde">Vérifier son solde</string>
+    <string name="encours">Encours…</string>
+    <string name="encoursTraitement">Encours de traitement…</string>
+    <string name="date">DATE</string>
+    <string name="montant1">MONTANT</string>
+    <string name="heure">HEURE</string>
+    <string name="numeroCarte">Numéro de Compte</string>
+    <string name="carteDebite">Compte Debitées:</string>
+    <string name="numCompteExistPas">Ce numéro de compte n\'existe pas.</string>
+    <string name="impossibleSendNotification">Impossible d\'envoyer votre notification.</string>
+    <string name="monsieur">Monsieur</string>
+    <string name="votreCompteDebite">Votre Compte a été Débité de</string>
+    <string name="compteDe">Le Compte de</string>
+    <string name="aEteDebite">a été Débité de</string>
+    <string name="impossibleConvertir">Impossible de convertir en Entier</string>
+    <string name="montantTelecollecte">Le Montant de la Télécollecte</string>
+    <string name="fraisService">Frais de services</string>
+    <string name="leSolde">le Solde</string>
+    <string name="compteCredite">Votre compte a bien été crédité d\'un montant de</string>
+    <string name="impossibleLireCarte">Impossible de lire la carte</string>
+    <string name="insererMontant">Inserer Montant</string>
+    <string name="veuillezInsererMontant">Veuillez inserer votre montant</string>
+    <string name="faireRetrait">Faire un Retrait</string>
+    <string name="veuillezInsererCompte">SVP Veuillez Inserer votre numéro de compte</string>
+    <string name="retrait">Retrait</string>
+    <string name="accueil">Accueil</string>
+    <string name="dateSystemePosePB">La date de votre système pose problème.</string>
+    <string name="operationRecharge">Opération de Recharge</string>
+    <string name="rechargeAgent">Recharge Agent</string>
+    <string name="etatCompte">Etat de votre Compte</string>
+    <string name="ModifierCompte">Modifier Compte</string>
+    <string name="ModifMotDePasse">Modification du Mot de Passe</string>
+    <string name="rechargeCompte">Recharger un Compte</string>
+    <string name="souscriptionEtape1">Souscription - Etape 1</string>
+    <string name="AlertStatutListDeroulante">statut dans la liste déroulante en actualisant la page de souscription.</string>
+    <string name="AlertCategorieListDeroulante">catégorie dans la liste déroulante en actualisant la page de souscription</string>
+    <string name="Souscription_User_AutoEnregEtape1">Souscription - Etape 1</string>
+    <string name="SouscriptionEtapeFinale">Souscription - Etape Finale</string>
+    <string name="etape1EnvoiDimages">Etape 1: Envoi des Images</string>
+    <string name="operationEncours">Opération Encours…</string>
+    <string name="ErreurSurvenuePendantLupload">Une erreur est survenue lors de l\'upload de l\'image</string>
+    <string name="etape2EnvoiDesDonnees">Etape 2: Envoi des Données</string>
+    <string name="connexionServeurSmopaye">Connexion au serveur Smopaye</string>
+    <string name="connexionServeurGoogle">Connexion au Serveur Google</string>
+    <string name="etape3Finale">Etape 3 - Finale</string>
+    <string name="operationReussie">Opération Reussie</string>
+    <string name="envoiNotification">Envoi des Notifications</string>
+    <string name="recevraPasNotification">ne recevra pas cette Notification</string>
+    <string name="gesUserGoogle">Gestion Utilisateurs Google</string>
+    <string name="userAgents">Utilisateurs &amp; Agents</string>
+    <string name="envoiAllUser">Envoi à Tous les Utilisateurs</string>
+    <string name="sortir">sortir</string>
+    <string name="insererTitre">Veuillez inserer un titre.</string>
+    <string name="insererMsg">Veuillez inserer un message</string>
+    <string name="envoiOneUser">Envoi à un Utilisateur</string>
+    <string name="erreurModif">Une erreur est survenue lors de la tentative de modification</string>
+    <string name="suppression">SUPPRESSION</string>
+    <string name="suppQuestion">Voulez-vous vraiment supprimer</string>
+    <string name="suppCompte">Supression du compte</string>
+    <string name="annuler">Annuler</string>
+    <string name="suppAnnule">La supression a été annulé</string>
+    <string name="suppressionCompte">Suppression du compte</string>
+    <string name="annulationSuppCompte">Annulation de la suppression du compte</string>
+    <string name="modificationCompte">"Modification du compte"</string>
+    <string name="champsinValide">Un ou plusieurs champs invalid</string>
+    <string name="modifSuppGoogleUser">Modif et Supp Google User</string>
+    <string name="lecteurQRCode">Lecteur QR Code</string>
+    <string name="smopayePartarge">Smopaye Partage QR Code</string>
+    <string name="smopayePartargeEZPASS">E-ZPASS Partage via</string>
+    <string name="maCarteSmopaye">Ma Carte Smopaye</string>
+    <string name="carteMag">Carte magnétique</string>
+    <string name="votreCarteVerouille">Votre Carte est verouillé.</string>
+    <string name="votreCarteDeverouille">Votre Carte a été Devérouillé</string>
+    <string name="balacerBouton">Balancer ce bouton pour empêcher toute transaction</string>
+    <string name="insererPassword">Veuillez inserer le mot de passe</string>
+    <string name="passwordCourt">Votre mot de passe est court</string>
+    <string name="insererTelephone">Veuillez inserer votre numéro de téléphone</string>
+    <string name="telephoneCourt">Votre mot de passe est court</string>
+    <string name="echecAuthenfication">Echec de l\'authentification</string>
+    <string name="ouvertureEncours">Ouverture Encours…</string>
+    <string name="notifications">Notifications</string>
+    <string name="questionFrequentes">Questions Fréquentes</string>
+    <string name="historiqueTransaction">Historique de transactions</string>
+    <string name="AccueilQRCode">Accueil QR Code</string>
+    <string name="ezpassScan">E-ZPASS SCAN…</string>
+    <string name="paiementQRCode">Paiement Par QR Code</string>
+    <string name="numeroInexistant">Ce numéro de compte n\'existe pas"</string>
+    <string name="userNonReconnu">Impossible d\'envoyer votre notification utilisateur non reconnu.</string>
+    <string name="menuRetrait">Menu Retrait</string>
+    <string name="notifVide">Vos notifications ont été vidé.</string>
+    <string name="encoursSuppression">Encours de Suppression…</string>
+    <string name="imgClique">Image cliqué</string>
+    <string name="confirmer">Confimer</string>
+    <string name="numeroCompteValid">Veuillez inserer un numéro de compte valide</string>
+    <string name="cocherAbonnement">Veuillez cocher un Abonnement</string>
+    <string name="souscriptionAbonnement">Souscription Abonnement</string>
+    <string name="paiementFacture">Paiement Facture</string>
+    <string name="indisponible">Indisponible</string>
+    <string name="impossibleCreerRepertoire">Impossible de créer un répertoire pour enregistrer l\'image</string>
+    <string name="imgEnreg">Image Enregistré avec succès.</string>
+    <string name="connexionIndisponible">Connexion Indisponible</string>
+    <string name="connexionExiste">Connexion existe</string>
+    <string name="connexionInexistante">Connexion n\' existe pas</string>
+    <string name="checkWifi">Bien vouloir vérifier votre wifi ou activer les données mobiles dans les paramètres de votre appareil.</string>
+    <string name="tutoriel">Tutoriel</string>
+    <string name="ezpassBySmopaye">E-ZPASS BY SMOPAYE</string>
+    <string name="cacheEditText">Hide and Show EditText Password</string>
+    <string name="taperMsg">Taper Message…</string>
+    <string name="hello">hello</string>
+    <string name="kennedy">Avenue Kennedy</string>
+    <string name="carteDebiteMontant">Votre carte a été débité d\'un Montant de 500 FCFA</string>
+    <string name="dev">Bertin Mounok</string>
+    <string name="devNumber">694048925</string>
+    <string name="devCardNumber">ABCDEFGH</string>
+    <string name="titreMsg">Titre du Message</string>
+    <string name="soustitreMsg">Sous Titre Message</string>
+    <string name="username">nom d\'utilisateur</string>
+
+
+
 
 
 </resources>

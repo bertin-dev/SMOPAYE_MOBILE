@@ -133,7 +133,7 @@ public class RetraitChezSmopaye extends AppCompatActivity {
         setContentView(R.layout.activity_retrait_chez_smopaye);
 
 
-        getSupportActionBar().setTitle("Retrait Chez Smopaye");
+        getSupportActionBar().setTitle(getString(R.string.retraitSmopaye));
         //getSupportParentActivityIntent().putExtra("resultatBD", "Administrateur");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -319,7 +319,7 @@ public class RetraitChezSmopaye extends AppCompatActivity {
 
                 if(numTelDonataire.getText().length() <=0 || numCartSmopaye.getText().length() <=0 || montantSmopaye.getText().length() <= 0)
                 {
-                    Toast.makeText(RetraitChezSmopaye.this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RetraitChezSmopaye.this, getString(R.string.champsVide), Toast.LENGTH_SHORT).show();
                 }
                 else{
                     RetraitChezSmopayeData(ChaineConnexion.getAdresseURLsmopayeServer());
@@ -339,7 +339,7 @@ public class RetraitChezSmopaye extends AppCompatActivity {
 
         if(activeInfo != null && activeInfo.isConnected()){
 
-            ProgressDialog dialog = ProgressDialog.show(this, "Connexion", "Encours...", true);
+            ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
             dialog.show();
 
             Handler handler = new Handler();
@@ -410,7 +410,7 @@ public class RetraitChezSmopaye extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(RetraitChezSmopaye.this, "Encours de traitement...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RetraitChezSmopaye.this, getString(R.string.encoursTraitement), Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -449,15 +449,15 @@ public class RetraitChezSmopaye extends AppCompatActivity {
                                             for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                 User user = userSnapshot.getValue(User.class);
                                                 if (user.getId_carte().equals(id_carte_sm)) {
-                                                    RemoteNotification(user.getId(), user.getPrenom(), "Retrait Chez Smopaye", f, "success");
+                                                    RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.retraitSmopaye), f, "success");
                                                     //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    Toast.makeText(RetraitChezSmopaye.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(RetraitChezSmopaye.this, getString(R.string.numCompteExistPas), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         }
                                         else{
-                                            Toast.makeText(RetraitChezSmopaye.this, "Impossible d'envoyer votre notification", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(RetraitChezSmopaye.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
@@ -470,13 +470,13 @@ public class RetraitChezSmopaye extends AppCompatActivity {
 
 
                                 //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                LocalNotification("Retrait Chez Smopaye", f);
+                                LocalNotification(getString(R.string.retraitSmopaye), f);
 
                                 ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                                 dbHandler = new DbHandler(getApplicationContext());
                                 aujourdhui = new Date();
                                 shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                dbHandler.insertUserDetails("Retrait Chez Smopaye", f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+                                dbHandler.insertUserDetails(getString(R.string.retraitSmopaye), f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
 
                                 build_error = new AlertDialog.Builder(RetraitChezSmopaye.this);
@@ -510,15 +510,15 @@ public class RetraitChezSmopaye extends AppCompatActivity {
                                             for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                 User user = userSnapshot.getValue(User.class);
                                                 if (user.getId_carte().equals(id_carte_sm)) {
-                                                    RemoteNotification(user.getId(), user.getPrenom(), "Retrait Chez Smopaye", f, "error");
+                                                    RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.retraitSmopaye), f, "error");
                                                     //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    Toast.makeText(RetraitChezSmopaye.this, "Ce numéro de carte n'existe pas", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(RetraitChezSmopaye.this, getString(R.string.numCompteExistPas), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         }
                                         else{
-                                            Toast.makeText(RetraitChezSmopaye.this, "Impossible d'envoyer votre notification", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(RetraitChezSmopaye.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
@@ -531,13 +531,13 @@ public class RetraitChezSmopaye extends AppCompatActivity {
 
 
                                 //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                LocalNotification("Retrait Chez Smopaye", f);
+                                LocalNotification(getString(R.string.retraitSmopaye), f);
 
                                 ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                                 dbHandler = new DbHandler(getApplicationContext());
                                 aujourdhui = new Date();
                                 shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                dbHandler.insertUserDetails("Retrait Chez Smopaye", f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+                                dbHandler.insertUserDetails(getString(R.string.retraitSmopaye), f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
 
                                 build_error = new AlertDialog.Builder(RetraitChezSmopaye.this);
                                 View view = LayoutInflater.from(RetraitChezSmopaye.this).inflate(R.layout.alert_dialog_success, null);
@@ -741,7 +741,7 @@ public class RetraitChezSmopaye extends AppCompatActivity {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
 
-                    Data data = new Data(fuser.getUid(), R.drawable.logo2, username + ": " + message, title, receiver, statut_notif);
+                    Data data = new Data(fuser.getUid(), R.mipmap.logo_official, username + ": " + message, title, receiver, statut_notif);
                     Sender sender = new Sender(data, token.getToken());
                     apiService.sendNotification(sender)
                             .enqueue(new Callback<MyResponse>() {
@@ -749,7 +749,7 @@ public class RetraitChezSmopaye extends AppCompatActivity {
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     if(response.code() == 200){
                                         if(response.body().success != 1){
-                                            Toast.makeText(RetraitChezSmopaye.this, "Failed", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(RetraitChezSmopaye.this, getString(R.string.echoue), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
@@ -787,11 +787,11 @@ public class RetraitChezSmopaye extends AppCompatActivity {
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
         collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
 
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo2);
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.logo2)
+                .setSmallIcon(R.mipmap.logo_official)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())

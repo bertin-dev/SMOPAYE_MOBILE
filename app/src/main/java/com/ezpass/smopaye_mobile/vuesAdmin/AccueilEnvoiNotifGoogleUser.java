@@ -90,7 +90,7 @@ public class AccueilEnvoiNotifGoogleUser extends AppCompatActivity implements Mo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accueil_envoi_notif_google_user);
 
-        getSupportActionBar().setTitle("Envoi des Notifications");
+        getSupportActionBar().setTitle(getString(R.string.envoiNotification));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -226,7 +226,7 @@ public class AccueilEnvoiNotifGoogleUser extends AppCompatActivity implements Mo
                                                     RemoteNotification(user.getId(), user.getPrenom(), titre, message, "success");
                                             }
                                         } else {
-                                            Toast.makeText(AccueilEnvoiNotifGoogleUser.this, "Une Erreur est survenue lors de l'envoi des notifications", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(AccueilEnvoiNotifGoogleUser.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
@@ -307,7 +307,7 @@ public class AccueilEnvoiNotifGoogleUser extends AppCompatActivity implements Mo
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
 
-                    Data data = new Data(fuser.getUid(), R.drawable.logo2, username + ": " + message, title, receiver, etat_notif);
+                    Data data = new Data(fuser.getUid(), R.mipmap.logo_official, username + ": " + message, title, receiver, etat_notif);
                     Sender sender = new Sender(data, token.getToken());
                     apiService.sendNotification(sender)
                             .enqueue(new Callback<MyResponse>() {
@@ -315,7 +315,7 @@ public class AccueilEnvoiNotifGoogleUser extends AppCompatActivity implements Mo
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     if(response.code() == 200){
                                         if(response.body().success != 1){
-                                            Toast.makeText(AccueilEnvoiNotifGoogleUser.this, "M." + username + " ne recevra pas cette Notification.", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(AccueilEnvoiNotifGoogleUser.this, "M." + username + " " + getString(R.string.recevraPasNotification), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
@@ -353,11 +353,11 @@ public class AccueilEnvoiNotifGoogleUser extends AppCompatActivity implements Mo
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
         collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
 
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo2);
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.logo2)
+                .setSmallIcon(R.mipmap.logo_official)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())

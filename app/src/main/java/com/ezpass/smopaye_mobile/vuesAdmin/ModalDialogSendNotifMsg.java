@@ -36,14 +36,14 @@ public class ModalDialogSendNotifMsg extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.layout_dialog_msg_for_notif, null);
 
         builder.setView(view)
-                .setTitle("Envoi à Tous les Utilisateurs")
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                .setTitle(getString(R.string.envoiAllUser))
+                .setNegativeButton(getString(R.string.sortir), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                     }
                 })
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String contentTitre = edit_titre_notif.getEditText().getText().toString();
@@ -79,8 +79,8 @@ public class ModalDialogSendNotifMsg extends AppCompatDialogFragment {
         String titre = edit_titre_notif.getEditText().getText().toString().trim();
 
         if(titre.isEmpty()){
-            edit_titre_notif.setError("Veuillez inserer un titre.");
-            Toast.makeText(getActivity(), "Veuillez inserer un message.", Toast.LENGTH_SHORT).show();
+            edit_titre_notif.setError(getString(R.string.insererTitre));
+            Toast.makeText(getActivity(), getString(R.string.insererTitre), Toast.LENGTH_SHORT).show();
             return false;
         }  else {
             edit_titre_notif.setError(null);
@@ -92,8 +92,8 @@ public class ModalDialogSendNotifMsg extends AppCompatDialogFragment {
     private Boolean validateMessage(){
         String numero = editTextmsgNotif.getEditText().getText().toString().trim();
         if(numero.isEmpty()){
-            editTextmsgNotif.setError("Veuillez inserer un message.");
-            Toast.makeText(getActivity(), "Veuillez inserer un message.", Toast.LENGTH_SHORT).show();
+            editTextmsgNotif.setError(getString(R.string.insererMsg));
+            Toast.makeText(getActivity(), getString(R.string.insererMsg), Toast.LENGTH_SHORT).show();
             return false;
         }  else {
             editTextmsgNotif.setError(null);

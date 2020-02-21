@@ -129,7 +129,7 @@ public class Login extends AppCompatActivity {
 
         if(activeInfo != null && activeInfo.isConnected()){
 
-            ProgressDialog dialog = ProgressDialog.show(this, "Connexion", "Encours...", true);
+            ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
             dialog.show();
 
             Handler handler = new Handler();
@@ -154,10 +154,10 @@ public class Login extends AppCompatActivity {
         String password = mPassword.getEditText().getText().toString().trim();
 
         if(password.isEmpty()){
-            mPassword.setError("Veuillez inserer le mot de passe.");
+            mPassword.setError(getString(R.string.insererPassword));
             return false;
-        } else if(password.length() < 5){
-          mPassword.setError("Votre mot de passe est court");
+        } else if(password.length() < 9){
+          mPassword.setError(getString(R.string.passwordCourt));
             return false;
         } else {
             mPassword.setError(null);
@@ -169,10 +169,10 @@ public class Login extends AppCompatActivity {
     private Boolean validateTelephone(){
         String numero = mNumeroTel.getEditText().getText().toString().trim();
         if(numero.isEmpty()){
-            mNumeroTel.setError("Veuillez inserer le numéro de téléphone.");
+            mNumeroTel.setError(getString(R.string.passwordCourt));
             return false;
         } else if(numero.length() < 9){
-            mNumeroTel.setError("Votre téléphone est court");
+            mNumeroTel.setError(getString(R.string.telephoneCourt));
             return false;
         } else {
             mNumeroTel.setError(null);
@@ -218,9 +218,9 @@ public class Login extends AppCompatActivity {
         /*Connxion connexion = new Connxion();*/
 
 
-        // LoginGoogleFirebase("sm" + tel + "@smopaye.cm", tel, "bertin-dev-Administrateur-Actif-partenaire-2022-10-07-actif-A M1-7ABD6953-Mensuel");
+         LoginGoogleFirebase("sm" + tel + "@smopaye.cm", tel, "bertin-dev-Administrateur-Actif-partenaire-2022-10-07-actif-A M1-7ABD6953-Mensuel");
 
-        AuthLogin(tel, pass);
+        //AuthLogin(tel, pass);
     }
 
 
@@ -252,7 +252,7 @@ public class Login extends AppCompatActivity {
                         }
                         else
                         {
-                            Toast.makeText(Login.this, "Echec de l'authentification", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Login.this, getString(R.string.echecAuthenfication), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -312,7 +312,7 @@ public class Login extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getApplicationContext(), "Ouverture Encours...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.ouvertureEncours), Toast.LENGTH_SHORT).show();
                         }
                     });
 

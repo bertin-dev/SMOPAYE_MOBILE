@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
@@ -39,6 +40,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.WHITE;
 import static com.ezpass.smopaye_mobile.ChaineConnexion.encryptBytes;
 import static com.ezpass.smopaye_mobile.ChaineConnexion.getsecurity_keys;
 
@@ -58,7 +61,7 @@ public class QRCodeShow extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrcode_show);
 
-        getSupportActionBar().setTitle("QR Code");
+        getSupportActionBar().setTitle(getString(R.string.qrcode));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -80,14 +83,15 @@ public class QRCodeShow extends AppCompatActivity {
             try {
                 MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
                 BitMatrix bitMatrix = multiFormatWriter.encode(carteCrypte, BarcodeFormat.QR_CODE, 500, 500);
-                BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                bitmap = barcodeEncoder.createBitmap(bitMatrix);
-                qr_code.setImageBitmap(bitmap);
+                /*BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                bitmap = barcodeEncoder.createBitmap(bitMatrix);*/
+                bitmap = createBitmapCustomized(bitMatrix);
+                //qrcode.setImageBitmap(bitmap);
             } catch (WriterException e){
                 e.printStackTrace();
             }
         } else{
-            Toast.makeText(this, "Une Erreur est survenue", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.erreurSurvenue1), Toast.LENGTH_SHORT).show();
         }
 
         card_number.setText(String.valueOf(carteCrypte));
@@ -239,17 +243,17 @@ public class QRCodeShow extends AppCompatActivity {
 
                     }
                 }).start();*/
-                Toast.makeText(QRCodeShow.this, "Indisponible", Toast.LENGTH_SHORT).show();
+                Toast.makeText(QRCodeShow.this, getString(R.string.indisponible), Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
-    public void startSave() {
+    private void startSave() {
         FileOutputStream fileOutputStream = null;
         File file = getDisc();
         if(!file.exists() && !file.mkdir()){
-            Toast.makeText(this, "Impossible de créer un répertoire pour enregistrer l'image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.impossibleCreerRepertoire), Toast.LENGTH_SHORT).show();
             return;
         }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_hhmmss");
@@ -261,7 +265,7 @@ public class QRCodeShow extends AppCompatActivity {
             fileOutputStream = new FileOutputStream(new_file);
             Bitmap bitmap = viewToBitmap(qr_code, qr_code.getWidth(), qr_code.getHeight());
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-            Toast.makeText(this, "Image Enregistré avec succès.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.imgEnreg), Toast.LENGTH_SHORT).show();
             fileOutputStream.flush();
             fileOutputStream.close();
         } catch (FileNotFoundException e) {
@@ -315,7 +319,7 @@ public class QRCodeShow extends AppCompatActivity {
         }
     }
 
-    public Bitmap CreateCode(String str, com.google.zxing.BarcodeFormat type, int bmpWidth, int bmpHeight) throws WriterException {
+    private Bitmap CreateCode(String str, com.google.zxing.BarcodeFormat type, int bmpWidth, int bmpHeight) throws WriterException {
         Hashtable<EncodeHintType,String> mHashtable = new Hashtable<EncodeHintType,String>();
         mHashtable.put(EncodeHintType.CHARACTER_SET, "UTF-8");
 
@@ -339,6 +343,47 @@ public class QRCodeShow extends AppCompatActivity {
         return bitmap;
     }
 
+    private Bitmap createBitmapCustomized(BitMatrix matrix) {
+        int width = matrix.getWidth();
+        int height = matrix.getHeight();
+        int[] pixels = new int[width * height];
+        for (int y = 0; y < height; y++) {
+            int offset = y * width;
+            for (int x = 0; x < width; x++) {
+                pixels[offset + x] = matrix.get(x, y) ? BLACK : WHITE;
+                //pixels[offset + x] = matrix.get(x, y) ?
+                //ResourcesCompat.getColor(getResources(),R.color.bgColorStandard,null) :WHITE;
+
+            }
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+
+        Bitmap overlay = BitmapFactory.decodeResource(getResources(), R.drawable.ezpass_codeqr);
+        qr_code.setImageBitmap(mergeBitmaps(overlay,bitmap));
+
+        return bitmap;
+    }
+
+    private Bitmap mergeBitmaps(Bitmap overlay, Bitmap bitmap) {
+
+        int height = bitmap.getHeight();
+        int width = bitmap.getWidth();
+
+        Bitmap combined = Bitmap.createBitmap(width, height, bitmap.getConfig());
+        Canvas canvas = new Canvas(combined);
+        int canvasWidth = canvas.getWidth();
+        int canvasHeight = canvas.getHeight();
+
+        canvas.drawBitmap(bitmap, new Matrix(), null);
+
+        int centreX = (canvasWidth  - overlay.getWidth()) /2;
+        int centreY = (canvasHeight - overlay.getHeight()) /2 ;
+        canvas.drawBitmap(overlay, centreX, centreY, null);
+
+        return combined;
+    }
 
     /*                    GESTION DU MENU DROIT                  */
     @Override
@@ -410,7 +455,7 @@ public class QRCodeShow extends AppCompatActivity {
             e.printStackTrace();
         }
         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///sdcard/ImageDemo.jpg"));
-        startActivity(Intent.createChooser(shareIntent, "Smopaye Partage QR Code"));
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.smopayePartarge)));
     }
 
 
@@ -443,7 +488,7 @@ public class QRCodeShow extends AppCompatActivity {
             intent.putExtra(Intent.EXTRA_TEXT, shareText);
             intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
             intent.setType("image/png");
-            startActivity(Intent.createChooser(intent, "E-ZPASS Partage via"));
+            startActivity(Intent.createChooser(intent, getString(R.string.smopayePartargeEZPASS)));
 
         } catch (Exception e) {
             e.printStackTrace();

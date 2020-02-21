@@ -125,7 +125,7 @@ public class ProfileFragment extends Fragment {
 
     private void uploadImage(){
         final ProgressDialog pd = new ProgressDialog(getContext());
-        pd.setMessage("Upload Encours...");
+        pd.setMessage(getString(R.string.uploadEncours));
         pd.show();
 
         if(imageUri != null){
@@ -155,7 +155,7 @@ public class ProfileFragment extends Fragment {
 
                         pd.dismiss();
                     }else{
-                        Toast.makeText(getContext(), "Une erreur est survenue !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.erreurSurvenue1), Toast.LENGTH_SHORT).show();
                         pd.dismiss();
                     }
                 }
@@ -167,7 +167,7 @@ public class ProfileFragment extends Fragment {
                 }
             });
         } else{
-            Toast.makeText(getContext(), "Aucune image n'a été selectionnée", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.AucuneImage), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -180,7 +180,7 @@ public class ProfileFragment extends Fragment {
         {
             imageUri = data.getData();
             if(uploadTask != null && uploadTask.isInProgress()){
-                Toast.makeText(getContext(), "Progression de l'Upload", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.uploadProgression), Toast.LENGTH_SHORT).show();
             }else{
                 uploadImage();
             }

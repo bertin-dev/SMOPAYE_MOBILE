@@ -57,7 +57,7 @@ public class ListeAccepteursSimple extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_liste_accepteurs_simple);
 
-        getSupportActionBar().setTitle("Liste des Accepteurs");
+        getSupportActionBar().setTitle(getString(R.string.listAccepteurs));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         listView = (ListView) findViewById(R.id.listViewContent);

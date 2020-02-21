@@ -68,7 +68,7 @@ public class CarteFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_carte, container, false);
-        getActivity().setTitle("Ma Carte Smopaye");
+        getActivity().setTitle(getString(R.string.maCarteSmopaye));
 
         dateExpirationCarte = (TextView) view.findViewById(R.id.tVdateExpirationCarte);
         typeCarte = (TextView) view.findViewById(R.id.tVtypeCarte);
@@ -105,7 +105,7 @@ public class CarteFragment extends Fragment {
         String typeAbonnement = parts[11]; // hebdomadaire, mensuel
 
 
-        typeCarte.setText("Carte magnétique " + typeCart);
+        typeCarte.setText( getString(R.string.carteMag)+ " " + typeCart);
         CarteNumber.setText(cardNumber);
         tAbonnement.setText(typeAbonnement);
 
@@ -128,7 +128,7 @@ public class CarteFragment extends Fragment {
         if(etatCart.equalsIgnoreCase("inactif") && temp_number.equalsIgnoreCase("")) {
             verouillerCarte.setChecked(true);
             //verouillerCarte.setEnabled(false);
-            etatCarteUser.setText("Votre Carte est verouillé.");
+            etatCarteUser.setText(getString(R.string.votreCarteVerouille));
         }
         else if (etatCart.equalsIgnoreCase("actif") && temp_number.equalsIgnoreCase("") ){
             verouillerCarte.setChecked(false);
@@ -136,7 +136,7 @@ public class CarteFragment extends Fragment {
         }
         else if (temp_number.equalsIgnoreCase("1")) {
             verouillerCarte.setChecked(true);
-            etatCarteUser.setText("Votre Carte est verouillé.");
+            etatCarteUser.setText(getString(R.string.votreCarteVerouille));
         }
         else if(temp_number.equalsIgnoreCase("2")){
             verouillerCarte.setChecked(false);
@@ -279,15 +279,15 @@ public class CarteFragment extends Fragment {
 
 
                 if(switchChecked){
-                    Toast.makeText(getActivity(), "Votre Carte a été Vérouillé", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.votreCarteVerouille), Toast.LENGTH_SHORT).show();
                     checkStateCarte(ChaineConnexion.getAdresseURLsmopayeServer(), number, "inactif");
                     i = "1";
-                    etatCarteUser.setText("Votre Carte est verouillé.");
+                    etatCarteUser.setText(getString(R.string.votreCarteVerouille));
                 } else{
-                    Toast.makeText(getActivity(), "Votre Carte a été Devérouillé", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.votreCarteDeverouille), Toast.LENGTH_SHORT).show();
                     checkStateCarte(ChaineConnexion.getAdresseURLsmopayeServer(), number, "actif");
                     i = "2";
-                    etatCarteUser.setText("Balancer ce bouton pour empêcher toute transaction.");
+                    etatCarteUser.setText(getString(R.string.balacerBouton));
                 }
 
                 /////////////////////////ECRIRE DANS LES FICHIERS/////////////////////////////////

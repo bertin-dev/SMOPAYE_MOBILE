@@ -148,7 +148,7 @@ public class MenuRetraitTelecollecte extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_retrait_telecollecte);
 
-        getSupportActionBar().setTitle("Retrait et Télécollecte");
+        getSupportActionBar().setTitle( getString(R.string.telecollecte_retrait));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Retrait = (LinearLayout) findViewById(R.id.lnRetrait);
@@ -402,7 +402,7 @@ public class MenuRetraitTelecollecte extends AppCompatActivity {
                                                     runOnUiThread(new Runnable() {
                                                         @Override
                                                         public void run() {
-                                                            Toast.makeText(MenuRetraitTelecollecte.this, "Encours de traitement...", Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(MenuRetraitTelecollecte.this,  getString(R.string.encoursTraitement), Toast.LENGTH_SHORT).show();
                                                         }
                                                     });
 
@@ -455,7 +455,7 @@ public class MenuRetraitTelecollecte extends AppCompatActivity {
                                                                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
                                                                     title.setText(getString(R.string.information));
                                                                     imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
-                                                                    statutOperation.setText("Le Montant de la Télécollecte " + montantTelecollecte + " Fcfa, Frais de services " + frais_service + " Fcfa, le Solde " + soldeCompte + " Fcfa.");
+                                                                    statutOperation.setText( getString(R.string.montantTelecollecte) + " " + montantTelecollecte + " FCFA, " + getString(R.string.fraisService) + frais_service + " FCFA, " + getString(R.string.leSolde) + soldeCompte + " FCFA.");
 
                                                                     //statutOperation.setText("Votre compte a bien été crédite d'un montant de  " + score.getMontant() + " FCFA");
 
@@ -477,15 +477,15 @@ public class MenuRetraitTelecollecte extends AppCompatActivity {
                                                                                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                                                     User user = userSnapshot.getValue(User.class);
                                                                                     if (user.getId_carte().equals(id_carte_sm)) {
-                                                                                        RemoteNotification(user.getId(), user.getPrenom(), "Télécollecte", "Votre compte a bien été crédité d'un montant de " + montantAct + " FCFA", "success");
+                                                                                        RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.telecollecte)+" ", getString(R.string.compteCredite)+ " " + montantAct + " FCFA", "success");
                                                                                         //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                                                     } else {
-                                                                                        Toast.makeText(MenuRetraitTelecollecte.this, "Ce numéro de Carte n'existe pas", Toast.LENGTH_SHORT).show();
+                                                                                        Toast.makeText(MenuRetraitTelecollecte.this, getString(R.string.numCompteExistPas), Toast.LENGTH_SHORT).show();
                                                                                     }
                                                                                 }
                                                                             }
                                                                             else{
-                                                                                Toast.makeText(MenuRetraitTelecollecte.this, "Impossible d'envoyer votre notification", Toast.LENGTH_SHORT).show();
+                                                                                Toast.makeText(MenuRetraitTelecollecte.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                                                                             }
 
                                                                         }
@@ -498,14 +498,14 @@ public class MenuRetraitTelecollecte extends AppCompatActivity {
 
 
                                                                     //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                                                    LocalNotification("Télécollecte", "Votre compte a bien été crédité d'un montant de  " + score.getMontant() + " FCFA");
+                                                                    LocalNotification(getString(R.string.telecollecte), getString(R.string.compteCredite) + " " + score.getMontant() + " FCFA");
 
 
                                                                     ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                                                                     dbHandler = new DbHandler(getApplicationContext());
                                                                     aujourdhui = new Date();
                                                                     shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                                                    dbHandler.insertUserDetails("Télécollecte","Votre compte a bien été crédité d'un montant de  " + score.getMontant() + " FCFA", "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+                                                                    dbHandler.insertUserDetails(getString(R.string.telecollecte),getString(R.string.compteCredite) + " " + score.getMontant() + " FCFA", "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
 
                                                                     build_error.setPositiveButton("OK", null);
@@ -622,15 +622,15 @@ public class MenuRetraitTelecollecte extends AppCompatActivity {
                                                                                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                                                     User user = userSnapshot.getValue(User.class);
                                                                                     if (user.getId_carte().equals(id_carte_sm)) {
-                                                                                        RemoteNotification(user.getId(), user.getPrenom(), "Télécollecte", f, "error");
+                                                                                        RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.telecollecte), f, "error");
                                                                                         //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                                                                                     } else {
-                                                                                        Toast.makeText(MenuRetraitTelecollecte.this, "Ce numéro de Carte n'existe pas", Toast.LENGTH_SHORT).show();
+                                                                                        Toast.makeText(MenuRetraitTelecollecte.this, getString(R.string.numCompteExistPas), Toast.LENGTH_SHORT).show();
                                                                                     }
                                                                                 }
                                                                             }
                                                                             else{
-                                                                                Toast.makeText(MenuRetraitTelecollecte.this, "Impossible d'envoyer votre notification", Toast.LENGTH_SHORT).show();
+                                                                                Toast.makeText(MenuRetraitTelecollecte.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                                                                             }
 
                                                                         }
@@ -642,14 +642,14 @@ public class MenuRetraitTelecollecte extends AppCompatActivity {
                                                                     });
 
                                                                     //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                                                    LocalNotification("Télécollecte", f);
+                                                                    LocalNotification(getString(R.string.telecollecte), f);
 
 
                                                                     ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                                                                     dbHandler = new DbHandler(getApplicationContext());
                                                                     aujourdhui = new Date();
                                                                     shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                                                    dbHandler.insertUserDetails("Télécollecte",f, "0", R.drawable.ic_notifications_red_48dp,shortDateFormat.format(aujourdhui));
+                                                                    dbHandler.insertUserDetails(getString(R.string.telecollecte), f, "0", R.drawable.ic_notifications_red_48dp,shortDateFormat.format(aujourdhui));
 
 
 
@@ -724,7 +724,7 @@ public class MenuRetraitTelecollecte extends AppCompatActivity {
 
                                     }
                                     else{
-                                        Toast.makeText(MenuRetraitTelecollecte.this, "Impossible de lire la carte", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MenuRetraitTelecollecte.this, getString(R.string.impossibleLireCarte), Toast.LENGTH_SHORT).show();
                                         progressDialog.dismiss();
                                         //final String idCard = StringUtil.toHexString(uid);
                                         try {
@@ -761,7 +761,7 @@ public class MenuRetraitTelecollecte extends AppCompatActivity {
 
         if(activeInfo != null && activeInfo.isConnected()){
 
-            ProgressDialog dialog = ProgressDialog.show(this, "Connexion", "Encours...", true);
+            ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
             dialog.show();
 
             Handler handler = new Handler();
@@ -953,11 +953,11 @@ public class MenuRetraitTelecollecte extends AppCompatActivity {
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
         collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
 
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.drawable.logo2);
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.logo2)
+                .setSmallIcon(R.mipmap.logo_official)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
@@ -977,7 +977,7 @@ public class MenuRetraitTelecollecte extends AppCompatActivity {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
 
-                    Data data = new Data(fuser.getUid(), R.drawable.logo2, username + ": " + message, title, receiver, etat_notif);
+                    Data data = new Data(fuser.getUid(), R.mipmap.logo_official, username + ": " + message, title, receiver, etat_notif);
                     Sender sender = new Sender(data, token.getToken());
                     apiService.sendNotification(sender)
                             .enqueue(new Callback<MyResponse>() {
@@ -985,7 +985,7 @@ public class MenuRetraitTelecollecte extends AppCompatActivity {
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     if(response.code() == 200){
                                         if(response.body().success != 1){
-                                            Toast.makeText(MenuRetraitTelecollecte.this, "Failed", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MenuRetraitTelecollecte.this, getString(R.string.echoue), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }

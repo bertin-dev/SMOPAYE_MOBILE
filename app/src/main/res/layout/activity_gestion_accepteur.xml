@@ -86,7 +86,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:textAlignment="center"
-                    android:text="Accepteurs Actifs   "
+                    android:text="@string/gesAccepteurActif"
                     android:textSize="20sp"
                     />
                 <Button
@@ -116,7 +116,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:textAlignment="center"
-                    android:text="Accepteurs Inactif  "
+                    android:text="@string/gesAccepteurInActif"
                     android:textSize="20sp"
                     />
                 <Button
@@ -171,7 +171,7 @@
                     android:layout_gravity="center_vertical|center_horizontal"
                     android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
                     android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
-                    android:text="@string/listAccepteur"/>
+                    android:text="@string/listAccepteurs"/>
             </LinearLayout>
 
             <LinearLayout

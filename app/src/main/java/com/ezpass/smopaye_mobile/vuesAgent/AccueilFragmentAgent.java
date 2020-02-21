@@ -56,7 +56,7 @@ public class AccueilFragmentAgent extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         View view =  inflater.inflate(R.layout.fragment_accueil_agent, container, false);
 
-        getActivity().setTitle("Accueil");
+        getActivity().setTitle(getString(R.string.accueil));
 
         InscriptionUserByAgent = view.findViewById(R.id.btnInscriptionUserByAgent);
         RechargeAvecCashAgent = (LinearLayout) view.findViewById(R.id.btnRechargeAvecCashAgent);
@@ -106,7 +106,7 @@ public class AccueilFragmentAgent extends Fragment {
             String currentDate2 = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
             String[] part = currentDate2.split(" ");
             if (part[0].equalsIgnoreCase(currentDate2)) {
-                Toast.makeText(getActivity(), "La date de votre système pose problème.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.dateSystemePosePB) + " ", Toast.LENGTH_SHORT).show();
             } else {
                 jourSemaine.setText(part[0]);
                 String Day = "0" + part[1];

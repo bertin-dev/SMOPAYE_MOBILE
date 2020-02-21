@@ -16,7 +16,7 @@ public class ServicesIndisponible extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_services_indisponible);
 
-        getSupportActionBar().setTitle("Service Indisponible");
+        getSupportActionBar().setTitle(getString(R.string.serviceIndisponible));
         //getSupportParentActivityIntent().putExtra("resultatBD", "Administrateur");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
