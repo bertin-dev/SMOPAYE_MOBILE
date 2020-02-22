@@ -526,7 +526,6 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                 intent.putExtra("uniquser", temp_number);
                 intent.putExtra("sessioncompteValue", statut.getSelectedItem().toString().trim());
                 intent.putExtra("IDCathegorieValue", typeChauffeur.getSelectedItem().toString().trim());
-                intent.putExtra("register", "autoEnreg");
                 startActivity(intent);
 
             }

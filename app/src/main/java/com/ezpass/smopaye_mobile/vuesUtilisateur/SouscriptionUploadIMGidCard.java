@@ -98,7 +98,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
     String ImageNameRecto = "piece_recto" ;
     String ImageTagVerso = "nom_piece_verso" ;
     String ImageNameVerso = "piece_verso" ;
-    ProgressDialog progressDialog, progressDialog1, progressDialog2;
+    private ProgressDialog progressDialog, progressDialog1, progressDialog2;
     ByteArrayOutputStream byteArrayOutputStream1, byteArrayOutputStream2;
     byte[] byteArray1, byteArray2;
     String ConvertImageRecto, ConvertImageVerso ;
@@ -112,7 +112,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
     boolean check = true;
     private int GALLERY = 1, CAMERA = 2;
 
-    String nom, prenom, genre, tel, cni, sessioncompte, adresse, idcarte, idcategorie, typeabon, uniquser, GetImageNameFromRectoIdCard, GetImageNameFromVersoIdCard, sessioncompteValue, idcategorieValue, register;
+    String nom, prenom, genre, tel, cni, sessioncompte, adresse, idcarte, idcategorie, typeabon, uniquser, GetImageNameFromRectoIdCard, GetImageNameFromVersoIdCard, sessioncompteValue, idcategorieValue;
     LinearLayout imgCardVerso;
     RelativeLayout dividerBarUpload;
     TextView infoNom, infoPrenom, infoCni;
@@ -162,7 +162,6 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
         uniquser = intent.getStringExtra("uniquser");
         sessioncompteValue = intent.getStringExtra("sessioncompteValue");
         idcategorieValue = intent.getStringExtra("IDCathegorieValue");
-        register = intent.getStringExtra("register");
 
 
 
@@ -694,13 +693,9 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                  */
 
                 int pos = f.indexOf("success");
-
-                if(register.equalsIgnoreCase("autoEnreg")){
                     if (pos >= 0) {
-
                         // donc cette étape a été annulé afin le web service s'occupe de l'envoi des données vers google
                         new AsyncTaskGoogleFirebase(f).execute();
-
                     }
                     else{
 
@@ -719,9 +714,6 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                         dbUser.insertInfoUser(nom, prenom, genre,
                                 tel, cni, genre, adresse, idcarte, typeChauf,
                                 "default", "offline" , typeabon, shortDateFormat.format(aujourdhui));
-
-                        String num_carte = idcarte;
-                        String nom_prenom = nom + " " + prenom;
 
 
                         build_error = new AlertDialog.Builder(SouscriptionUploadIMGidCard.this);
@@ -745,80 +737,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
 
                         Toast.makeText(getApplicationContext(), f, Toast.LENGTH_LONG).show();
                     }
-                }
-                else{
-                    if (pos >= 0) {
-                        ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
-                        dbHandler = new DbHandler(getApplicationContext());
-                        dbUser = new DbUser(getApplicationContext());
-                        aujourdhui = new Date();
-                        shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
-                        //////////////////////////////////NOTIFICATIONS////////////////////////////////
-                        LocalNotification(getString(R.string.souscription), f);
-                        dbHandler.insertUserDetails(getString(R.string.souscription), f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
-
-                        ////////////////////INSERTION DES DONNEES UTILISATEURS DANS LA BD LOCALE/////////////////////////
-                        String typeChauf = (idcategorieValue.equals("")) ? idcategorie : idcategorieValue;
-                        dbUser.insertInfoUser(nom, prenom, genre,
-                                tel, cni, genre, adresse, idcarte, typeChauf,
-                                "default", "offline" , typeabon, shortDateFormat.format(aujourdhui));
-
-                        String num_carte = idcarte;
-                        String nom_prenom = nom + " " + prenom;
-
-
-                        build_error = new AlertDialog.Builder(SouscriptionUploadIMGidCard.this);
-                        View view = LayoutInflater.from(SouscriptionUploadIMGidCard.this).inflate(R.layout.alert_dialog_success, null);
-                        TextView title = (TextView) view.findViewById(R.id.title);
-                        TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                        ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                        title.setText(getString(R.string.information));
-                        imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
-                        statutOperation.setText(f);
-                        build_error.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                    Intent intent = new Intent(SouscriptionUploadIMGidCard.this, QRCodeShow.class);
-                                    intent.putExtra("id_carte", "E-ZPASS" +num_carte + getsecurity_keys());
-                                    intent.putExtra("nom_prenom", nom_prenom);
-                                    startActivity(intent);
-
-                            }
-                        });
-                        build_error.setCancelable(false);
-                        build_error.setView(view);
-                        build_error.show();
-
-                        Toast.makeText(getApplicationContext(), f, Toast.LENGTH_LONG).show();
-                    }
-                    else{
-                        dbHandler = new DbHandler(getApplicationContext());
-                        aujourdhui = new Date();
-                        shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-
-                        //////////////////////////////////NOTIFICATIONS////////////////////////////////
-                        LocalNotification(getString(R.string.souscription), f);
-                        dbHandler.insertUserDetails(getString(R.string.souscription), f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
-
-                        build_error = new AlertDialog.Builder(SouscriptionUploadIMGidCard.this);
-                        View view = LayoutInflater.from(SouscriptionUploadIMGidCard.this).inflate(R.layout.alert_dialog_success, null);
-                        TextView title = (TextView) view.findViewById(R.id.title);
-                        TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                        ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                        title.setText(getString(R.string.information));
-                        imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                        statutOperation.setText(f);
-                        build_error.setPositiveButton("OK", null);
-                        build_error.setCancelable(false);
-                        build_error.setView(view);
-                        build_error.show();
-
-
-                        Toast.makeText(SouscriptionUploadIMGidCard.this, f, Toast.LENGTH_SHORT).show();
-                    }
-                }
 
 
             }
@@ -853,9 +772,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                 HashMapParams.put("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
                 HashMapParams.put("uhtdgG18",ChaineConnexion.getSalt());*/
 
-                Uri.Builder builder = new Uri.Builder();
-
-                if(register.equalsIgnoreCase("autoEnreg")){
+                    Uri.Builder builder = new Uri.Builder();
                     builder.appendQueryParameter("auth","Users");
                     builder.appendQueryParameter("login", "autoregister");
                     builder.appendQueryParameter("nom", nom);
@@ -871,26 +788,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity {
                     builder.appendQueryParameter("cryptrecto", GetImageNameFromRectoIdCard + ".jpg");
                     builder.appendQueryParameter("typeAbon", typeabon);
                     builder.appendQueryParameter("uniquser", uniquser);
-                } else {
-                    builder.appendQueryParameter("enregUser", "users");
-                    builder.appendQueryParameter("enregReg", "register");
-                    builder.appendQueryParameter("NOM", nom);
-                    builder.appendQueryParameter("PRENOM", prenom);
-                    builder.appendQueryParameter("GENRE", genre.toUpperCase());
-                    builder.appendQueryParameter("TELEPHONE", tel);
-                    builder.appendQueryParameter("CNI", cni);
-                    builder.appendQueryParameter("sessioncompte", sessioncompte);
-                    builder.appendQueryParameter("Adresse", adresse);
-                    builder.appendQueryParameter("IDCARTE", idcarte);
-                    builder.appendQueryParameter("IDCathegorie", idcategorie);
-                    builder.appendQueryParameter("cryptverso", GetImageNameFromVersoIdCard + ".jpg");
-                    builder.appendQueryParameter("cryptrecto", GetImageNameFromRectoIdCard + ".jpg");
-                    builder.appendQueryParameter("typeAbon", typeabon);
-                    builder.appendQueryParameter("uniquser", uniquser);
-                }
-
-                builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
-                builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
+                    builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
+                    builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
 
                 //URL url = new URL("http://192.168.20.6:1234/index.php"+builder.build().toString());
                 //String FinalData = imageProcessClass.ImageHttpRequest(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
