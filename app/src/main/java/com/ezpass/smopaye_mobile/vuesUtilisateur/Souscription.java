@@ -196,10 +196,9 @@ public class Souscription extends AppCompatActivity {
     HttpURLConnection httpURLConnection ;
     URL url;
     OutputStream outputStream;
-    BufferedWriter bufferedWriter ;
-    int RC ;
-    BufferedReader bufferedReader ;
-    StringBuilder stringBuilder;
+    BufferedWriter bufferedWriter;
+    int RC;
+    BufferedReader bufferedReader;
 
 
 
@@ -231,7 +230,7 @@ public class Souscription extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_souscription);
 
-        getSupportActionBar().setTitle(getString(R.string.souscriptionEtape1));
+        getSupportActionBar().setTitle(getString(R.string.souscription));
         //getSupportParentActivityIntent().putExtra("resultatBD", "Administrateur");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
