@@ -1,11 +1,14 @@
 package com.ezpass.smopaye_mobile;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -18,11 +21,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +60,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
@@ -67,6 +74,7 @@ public class Login extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private LinearLayout internetIndisponible, authWindows;
     private Button btnReessayer, btnSouscription, loginBtn;
+    private Spinner langue;
 
 
     /*service google firebase*/
@@ -84,6 +92,7 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadLocale();
         setContentView(R.layout.activity_login);
 
         getSupportActionBar().hide();
@@ -105,6 +114,8 @@ public class Login extends AppCompatActivity {
         msgNetworkLimited = (TextView) findViewById(R.id.msgNetworkLimited);
         build = new AlertDialog.Builder(this);
 
+        langue = (Spinner) findViewById(R.id.changLangue);
+
 
 
         loginBtn.setOnClickListener(this::submitData);
@@ -115,6 +126,79 @@ public class Login extends AppCompatActivity {
 
         btnReessayer.setOnClickListener(this::checkNetworkConnectionStatus);
 
+
+
+        //Vérification si la langue du telephone est en Francais
+        if(Locale.getDefault().getLanguage().contentEquals("fr")) {
+
+            // Initializing a String Array
+            String[] lang = new String[]{
+                    "Français",
+                    "Anglais"
+            };
+            // Initializing an ArrayAdapter
+            ArrayAdapter<String> spinnerArrayLangue = new ArrayAdapter<String>(
+                    this, R.layout.spinner_item, lang);
+            spinnerArrayLangue.setDropDownViewResource(R.layout.spinner_item);
+            langue.setAdapter(spinnerArrayLangue);
+        } else {
+            // Initializing a String Array
+            String[] lang = new String[]{
+                    "French",
+                    "English"
+            };
+            // Initializing an ArrayAdapter
+            ArrayAdapter<String> spinnerArrayLangue = new ArrayAdapter<String>(
+                    this, R.layout.spinner_item, lang);
+            spinnerArrayLangue.setDropDownViewResource(R.layout.spinner_item);
+            langue.setAdapter(spinnerArrayLangue);
+
+        }
+
+        langue.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                //Toast.makeText(Login.this, String.valueOf(langue.getItemAtPosition(position)), Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(Login.this, String.valueOf(position), Toast.LENGTH_SHORT).show();
+                //french
+                if(position == 0){
+                    setLocale("fr");
+                    //recreate();
+                }
+                //english
+                 if(position == 1) {
+                    setLocale("en");
+                    //recreate();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
+
+    private void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+        //save data to shared preferences
+        SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
+        editor.putString("My_Lang", lang);
+        editor.apply();
+    }
+
+    //load language saved in shared preferences
+    private void loadLocale(){
+        SharedPreferences prefs = getSharedPreferences("Settings", Activity.MODE_PRIVATE);
+        String language = prefs.getString("My_Lang", "");
+        setLocale(language);
     }
 
     private void openActivityRegister(View view) {

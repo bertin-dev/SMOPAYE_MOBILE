@@ -113,7 +113,7 @@ public class DbHandler extends SQLiteOpenHelper {
         return  count;
     }
 
-    // Update Sattut Notifications
+    // Update Statut Notifications
     public void UpdateNumNotification(String notification){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cVals = new ContentValues();

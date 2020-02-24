@@ -198,28 +198,30 @@
                         android:layout_height="wrap_content"
                         android:padding="10dp"
                         android:textStyle="bold|italic"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
                         android:layout_marginEnd="20dp"
                         android:orientation="vertical"
-                        android:layout_marginTop="30dp">
+                        android:layout_marginTop="20dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/choisirLangue"
                             android:textStyle="bold|italic"
-                            android:textSize="17sp"
+                            android:textSize="12sp"
                             android:textColorHint="@color/bgColorStandard"
                             android:textColor="@color/bgColorStandard" />
 
                         <Spinner
-                            android:id="@+id/langue"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/changLangue"
+                            android:layout_width="150dp"
                             android:layout_height="wrap_content"
                             android:textStyle="bold|italic"
                             android:textColorHint="@color/bgColorStandard"
                             android:textColor="@color/bgColorStandard"
-                            android:entries="@array/typePJ"/>
+                            android:entries="@array/choixLangue"/>
 
                     </LinearLayout>
                 </LinearLayout>

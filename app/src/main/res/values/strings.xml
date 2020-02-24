@@ -514,5 +514,7 @@
 
 
     <string name="choisirLangue">Choisir votre langue</string>
+    <string name="langueFrancaise">Francais</string>
+    <string name="langueAnglaise">Anglais</string>
 
 </resources>

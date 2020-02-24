@@ -374,7 +374,7 @@
     <string name="telecollecte">Telecollect</string>
     <string name="telecollecteChauffeur">Make a Telecollect</string>
     <string name="telecollecte_retrait">Telecollect and Withdrawal</string>
-    <string name="telephone">Phone</string>
+    <string name="telephone">Phone Number</string>
     <string name="telephoneCourt">Your password is short</string>
     <string name="terminer">finish</string>
     <string name="titreApp">SMOPAYE MOBILE</string>
@@ -429,4 +429,6 @@
 
 
     <string name="choisirLangue">Choice your language</string>
+    <string name="langueFrancaise">French</string>
+    <string name="langueAnglaise">English</string>
 </resources>
