@@ -425,4 +425,8 @@
     <string name="yaounde">YAOUNDE</string>
     <string name="yde">YAOUNDE</string>
     <string name="zone">By area</string>
+
+
+
+    <string name="choisirLangue">Choice your language</string>
 </resources>

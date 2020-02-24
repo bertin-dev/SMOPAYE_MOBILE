@@ -156,7 +156,7 @@ public class Login extends AppCompatActivity {
         if(password.isEmpty()){
             mPassword.setError(getString(R.string.insererPassword));
             return false;
-        } else if(password.length() < 9){
+        } else if(password.length() < 5){
           mPassword.setError(getString(R.string.passwordCourt));
             return false;
         } else {
@@ -218,9 +218,9 @@ public class Login extends AppCompatActivity {
         /*Connxion connexion = new Connxion();*/
 
 
-         LoginGoogleFirebase("sm" + tel + "@smopaye.cm", tel, "bertin-dev-Administrateur-Actif-partenaire-2022-10-07-actif-A M1-7ABD6953-Mensuel");
+        // LoginGoogleFirebase("sm" + tel + "@smopaye.cm", tel, "bertin-dev-Administrateur-Actif-partenaire-2022-10-07-actif-A M1-7ABD6953-Mensuel");
 
-        //AuthLogin(tel, pass);
+        AuthLogin(tel, pass);
     }
 
 
