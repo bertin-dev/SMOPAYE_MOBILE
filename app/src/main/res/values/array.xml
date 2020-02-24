@@ -4,41 +4,40 @@
 
 
     <string-array name="Type">
-        <item >Agent</item>
-        <item>Utilisateur</item>
-        <item>Administrateur</item>
-        <item>Accepteur</item>
+        <item >@string/agents</item>
+        <item>@string/utilisateur</item>
+        <item>@string/administrateur</item>
+        <item>@string/accepteur</item>
     </string-array>
 
 
     <string-array name="genre">
-        <item >MASCULIN</item>
-        <item>FEMININ</item>
+        <item >@string/masculin</item>
+        <item>@string/feminin</item>
     </string-array>
 
     <string-array name="operateurs">
-        <item >ORANGE</item>
-        <item >MTN</item>
-        <item >EU</item>
+        <item >@string/orange</item>
+        <item >@string/mtn</item>
+        <item >@string/eu</item>
     </string-array>
 
     <string-array name="typeChauffeur">
-        <item >moto_taxi</item>
-        <item>Chauffeur</item>
-        <item>cargo</item>
-        <item>bus inter urbain</item>
-        <item>Commerçant</item>
-        <item>restaurant etudiant</item>
-        <item>Chauffeur</item>
-        <item>autre</item>
+        <item >@string/motoTaxi</item>
+        <item>@string/chauffeur</item>
+        <item>@string/cargo</item>
+        <item>@string/busInterUrbain</item>
+        <item>@string/commercant</item>
+        <item>@string/restaurantEtudiant</item>
+        <item>@string/autre</item>
     </string-array>
 
     <string-array name="typePJ">
-        <item >CNI</item>
-        <item>passport</item>
-        <item>recipissé</item>
-        <item>carte de séjour</item>
-        <item>carte d\'étudiant</item>
+        <item >@string/cni1</item>
+        <item>@string/passport</item>
+        <item>@string/recipisse</item>
+        <item>@string/carteSejour</item>
+        <item>@string/carteEtudiant</item>
     </string-array>
 
 

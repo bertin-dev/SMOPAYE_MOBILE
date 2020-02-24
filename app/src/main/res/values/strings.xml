@@ -512,9 +512,31 @@
 
 
 
-
+    <!--array-->
     <string name="choisirLangue">Choisir votre langue</string>
     <string name="langueFrancaise">Francais</string>
     <string name="langueAnglaise">Anglais</string>
+
+    <string name="cni1">CNI</string>
+    <string name="passport">passeport</string>
+    <string name="recipisse">recipissé</string>
+    <string name="carteSejour">carte de séjour</string>
+    <string name="carteEtudiant">carte d\'étudiant</string>
+
+    <string name="motoTaxi">moto_taxi</string>
+    <string name="chauffeur">Chauffeur</string>
+    <string name="cargo">cargo</string>
+    <string name="busInterUrbain">bus inter urbain</string>
+    <string name="commercant">Commerçant</string>
+    <string name="restaurantEtudiant">restaurant etudiant</string>
+    <string name="autre">autre</string>
+
+    <string name="orange">ORANGE</string>
+    <string name="mtn">MTN</string>
+    <string name="eu">EU</string>
+
+
+    <string name="masculin">MASCULIN</string>
+    <string name="feminin">FEMININ</string>
 
 </resources>

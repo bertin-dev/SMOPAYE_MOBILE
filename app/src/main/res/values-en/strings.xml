@@ -428,7 +428,31 @@
 
 
 
-    <string name="choisirLangue">Choice your language</string>
+    <!--array-->
+    <string name="choisirLangue">Choose your language</string>
     <string name="langueFrancaise">French</string>
     <string name="langueAnglaise">English</string>
+
+    <string name="cni1">CNI</string>
+    <string name="passport">passport</string>
+    <string name="recipisse">receipt</string>
+    <string name="carteSejour">residence permit</string>
+    <string name="carteEtudiant">student card</string>
+
+    <string name="motoTaxi">motorcycle taxi</string>
+    <string name="chauffeur">Driver</string>
+    <string name="cargo">cargo</string>
+    <string name="busInterUrbain">interurban bus</string>
+    <string name="commercant">trader</string>
+    <string name="restaurantEtudiant">student restaurant</string>
+    <string name="autre">other</string>
+
+    <string name="orange">ORANGE</string>
+    <string name="mtn">MTN</string>
+    <string name="eu">EU</string>
+
+
+    <string name="masculin">MALE</string>
+    <string name="feminin">FEMININE</string>
+
 </resources>
