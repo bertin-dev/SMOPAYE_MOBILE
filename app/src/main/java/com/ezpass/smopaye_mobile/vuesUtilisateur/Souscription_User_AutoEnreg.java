@@ -54,6 +54,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
 import java.util.regex.Matcher;
@@ -140,6 +141,8 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
     String[] typeuser1;
 
 
+    private String[] sexe1;
+    private String[] pieceJ;
 
     @Override
     protected void onStart() {
@@ -210,30 +213,50 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
         titleNetworkLimited = (TextView) findViewById(R.id.titleNetworkLimited);
         msgNetworkLimited = (TextView) findViewById(R.id.msgNetworkLimited);
 
+        //Vérification si la langue du telephone est en Francais
+        if(Locale.getDefault().getLanguage().contentEquals("fr")){
 
-        // Initializing a String Array
-        String[] sexe1 = new String[]{
-                "Masculin",
-                "Feminin"
-        };
+            // Initializing a String Array
+             sexe1 = new String[]{
+                    "Masculin",
+                    "Feminin"
+            };
+
+            // Initializing a String Array
+               pieceJ = new String[]{
+                    "CNI",
+                    "passeport",
+                    "recipissé",
+                    "carte de séjour",
+                    "carte d'étudiant"
+            };
+
+        } else{
+            // Initializing a String Array
+            sexe1 = new String[]{
+                    "Male",
+                    "Feminine"
+            };
+
+            // Initializing a String Array
+              pieceJ = new String[]{
+                    "CNI",
+                    "passport",
+                    "receipt",
+                    "residence permit",
+                    "student card"
+            };
+        }
+
         // Initializing an ArrayAdapter
         ArrayAdapter<String> spinnerArrayAdapter3 = new ArrayAdapter<String>(
-                this,R.layout.spinner_item,sexe1);
+                this, R.layout.spinner_item, sexe1);
         spinnerArrayAdapter3.setDropDownViewResource(R.layout.spinner_item);
         sexe.setAdapter(spinnerArrayAdapter3);
 
-
-        // Initializing a String Array
-        String[] pieceJ = new String[]{
-                "CNI",
-                "passeport",
-                "recipissé",
-                "carte de séjour",
-                "carte d'étudiant"
-        };
         // Initializing an ArrayAdapter
         ArrayAdapter<String> spinnerArrayAdapter4 = new ArrayAdapter<String>(
-                this,R.layout.spinner_item,pieceJ);
+                this, R.layout.spinner_item, pieceJ);
         spinnerArrayAdapter4.setDropDownViewResource(R.layout.spinner_item);
         typePjustificative.setAdapter(spinnerArrayAdapter4);
 
@@ -515,7 +538,7 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), SouscriptionUploadIMGidCard.class);
                 intent.putExtra("NOM", nom.getText().toString().trim().toLowerCase());
                 intent.putExtra("PRENOM", prenom.getText().toString().trim().toLowerCase());
-                intent.putExtra("GENRE", sexe.getSelectedItem().toString().trim().toUpperCase());
+                intent.putExtra("GENRE", (sexe.getSelectedItem().toString().trim().toLowerCase().equalsIgnoreCase("masculin") || sexe.getSelectedItem().toString().trim().toLowerCase().equalsIgnoreCase("male") ? "MASCULIN" : "FEMININ" ));
                 intent.putExtra("TELEPHONE", telephone.getText().toString().trim());
                 intent.putExtra("CNI", typePjustificative.getSelectedItem().toString().trim()+"-"+cni.getText().toString().trim());
                 intent.putExtra("sessioncompte", num_statut);

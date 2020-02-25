@@ -15,6 +15,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbUser;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.Souscription;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.Souscription_User_AutoEnreg;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -53,6 +55,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,13 +72,13 @@ import static android.content.ContentValues.TAG;
 public class Login extends AppCompatActivity {
 
     private TextInputLayout mNumeroTel, mPassword;
+    private TextInputEditText telNumber;
    // private ShowHidePasswordEditText loginPass;
     private AlertDialog.Builder build, build_error;
     private ProgressDialog progressDialog;
     private LinearLayout internetIndisponible, authWindows;
     private Button btnReessayer, btnSouscription, loginBtn;
     private Spinner langue;
-
 
     /*service google firebase*/
     private FirebaseAuth auth;
@@ -85,6 +88,8 @@ public class Login extends AppCompatActivity {
     private String file = "tmp_number";
     private String file2 = "tmp_data_user";
     private String fileContents;
+    private int c;
+    private String temp_number = "";
 
     ImageView conStatusIv;
     TextView titleNetworkLimited, msgNetworkLimited;
@@ -92,7 +97,7 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loadLocale();
+        //loadLocale();
         setContentView(R.layout.activity_login);
 
         getSupportActionBar().hide();
@@ -115,6 +120,8 @@ public class Login extends AppCompatActivity {
         build = new AlertDialog.Builder(this);
 
         langue = (Spinner) findViewById(R.id.changLangue);
+        telNumber = findViewById(R.id.telNumber);
+
 
 
 
@@ -133,6 +140,7 @@ public class Login extends AppCompatActivity {
 
             // Initializing a String Array
             String[] lang = new String[]{
+                    "Par défaut",
                     "Français",
                     "Anglais"
             };
@@ -144,6 +152,7 @@ public class Login extends AppCompatActivity {
         } else {
             // Initializing a String Array
             String[] lang = new String[]{
+                    "Default",
                     "French",
                     "English"
             };
@@ -159,26 +168,48 @@ public class Login extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                //Toast.makeText(Login.this, String.valueOf(langue.getItemAtPosition(position)), Toast.LENGTH_SHORT).show();
+                if(position==0){
 
-                Toast.makeText(Login.this, String.valueOf(position), Toast.LENGTH_SHORT).show();
+                }
+
                 //french
-                if(position == 0){
+                if(position == 1){
                     setLocale("fr");
                     //recreate();
                 }
                 //english
-                 if(position == 1) {
+                if(position == 2) {
                     setLocale("en");
                     //recreate();
                 }
-            }
+
+                }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
+
+        //chargement des informations du dernier numéro inséré dans la BD locale pour le mettre dans l'EditText du télephone
+        //DbUser db = new DbUser(Login.this);
+        //telNumber.setText(db.GetLastNumberInsertBD());
+
+        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
+        try{
+            FileInputStream fIn = openFileInput(file);
+            while ((c = fIn.read()) != -1){
+                temp_number = temp_number + Character.toString((char)c);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        if(!temp_number.equalsIgnoreCase("")){
+            telNumber.setText(temp_number);
+        }
+
 
     }
 
@@ -189,9 +220,13 @@ public class Login extends AppCompatActivity {
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
         //save data to shared preferences
-        SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
+       /* SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
         editor.putString("My_Lang", lang);
-        editor.apply();
+        editor.apply();*/
+
+        Intent refresh = new Intent(this, Login.class);
+        finish();
+        startActivity(refresh);
     }
 
     //load language saved in shared preferences

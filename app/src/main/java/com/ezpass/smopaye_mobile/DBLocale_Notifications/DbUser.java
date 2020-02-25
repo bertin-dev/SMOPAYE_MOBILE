@@ -77,6 +77,17 @@ public class DbUser extends SQLiteOpenHelper {
     }
 
 
+    // Get Number Notifications
+    public String GetLastNumberInsertBD(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT MAX(id), tel FROM "+ TABLE_Users;
+        Cursor cursor = db.rawQuery(query,null);
+        cursor.moveToFirst();
+        String number= cursor.getString(1);
+        cursor.close();
+        return  number;
+    }
+
 /*
     // Get User Details
     public ArrayList<HashMap<String, String>> GetUsers(){

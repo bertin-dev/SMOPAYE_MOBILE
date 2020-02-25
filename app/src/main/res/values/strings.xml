@@ -539,4 +539,8 @@
     <string name="masculin">MASCULIN</string>
     <string name="feminin">FEMININ</string>
 
+    <string name="etape1EnvoiDesDonnees">Etape 1: Envoi des Données</string>
+    <string name="etape2Finale">Etape 2 - Finale</string>
+    <string name="souscrire">Souscription</string>
+
 </resources>

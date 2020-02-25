@@ -26,7 +26,7 @@
     <string name="ModifAccepteur">change</string>
     <string name="ModifMotDePasse">Change Password</string>
     <string name="ModifierCompte">Edit Account</string>
-    <string name="MsgConsulterHistorique">View the History of your transactions.</string>
+    <string name="MsgConsulterHistorique">View the transactions History of your account for more details.</string>
     <string name="MsgDescAbonnement">Please insert your account number and select the desired subscription, then validate.</string>
     <string name="MsgDescConsulterSolde">Please insert an account number and select the type of balance, then press consult.</string>
     <string name="MsgDescDebitCarte">Please enter the amount and press on swipe the card.</string>
@@ -42,7 +42,7 @@
     <string name="Off">Off</string>
     <string name="On">On</string>
     <string name="PrenomETnom">First name &amp; Last name</string>
-    <string name="Recette">Recipe</string>
+    <string name="Recette">Wallet</string>
     <string name="RechargePourAgent">Agent refill</string>
     <string name="RenouvelerAbonnement">Renew Subscription</string>
     <string name="SeekArc">SeekArc - version 1.0</string>
@@ -81,7 +81,7 @@
     <string name="balacerBouton">Swing this button to prevent any transaction</string>
     <string name="balancerCarte">Swing this button to prevent any transaction coming from it</string>
     <string name="beneficiaire">Beneficiary Telephone</string>
-    <string name="beneficier">Benefit</string>
+    <string name="beneficier">Receiver</string>
     <string name="bloque">your account is blocked</string>
     <string name="boutiqueSmopaye">SMOPAYE SHOPS</string>
     <string name="cacheEditText">Hide and Show EditText Password</string>
@@ -110,7 +110,7 @@
     <string name="config">CONFIGURATION</string>
     <string name="confirmPass">Confirm password</string>
     <string name="confirmer">confirm</string>
-    <string name="connexion">Log in</string>
+    <string name="connexion">Login</string>
     <string name="connexionExiste">Connection exists</string>
     <string name="connexionIndisponible">Connection Unavailable</string>
     <string name="connexionInexistante">Connection does not exist</string>
@@ -120,7 +120,7 @@
     <string name="connexionServeurSmopaye">Connection to the Smopaye server</string>
     <string name="connexionserver">Connection to the server</string>
     <string name="consultSoldeDeLaCarte">Check the account balance</string>
-    <string name="consulter">Consult</string>
+    <string name="consulter">View</string>
     <string name="consulterRecettes">Consult Recipes</string>
     <string name="consulterSolde">Consult Balance</string>
     <string name="consulterUnite">Consult the units</string>
@@ -137,7 +137,7 @@
     <string name="devCardNumber">ABCDEFGH</string>
     <string name="devNumber">694048925</string>
     <string name="deverouillerCarte">Are you sure you want to Unlock your card?</string>
-    <string name="donataire">recipient</string>
+    <string name="donataire">Sender</string>
     <string name="echecAuthenfication">Authentication failed</string>
     <string name="echoue">Failed</string>
     <string name="editeur">Editor</string>
@@ -161,7 +161,7 @@
     <string name="erreurSurvenue2">An error occurred while deleting.</string>
     <string name="etape1EnvoiDimages">Step 1: Sending Images</string>
     <string name="etape2EnvoiDesDonnees">Step 2: Sending the Data</string>
-    <string name="etape3Finale">Stage 3 - Final</string>
+    <string name="etape3Finale">Step 3 - Final</string>
     <string name="etatCompte">Account status</string>
     <string name="etatStatut">Acceptor</string>
     <string name="ezpassBySmopaye">E-ZPASS BY SMOPAYE</string>
@@ -169,7 +169,7 @@
     <string name="faireRetrait">Make a withdrawal</string>
     <string name="forget">You forgot your password ?</string>
     <string name="fraisService">Service Fees</string>
-    <string name="genre">Gend</string>
+    <string name="genre">Gender</string>
     <string name="gesAccepteur">Acceptor Management</string>
     <string name="gesAccepteurActif">Active Acceptors</string>
     <string name="gesAccepteurInActif">Acceptors Inactive</string>
@@ -243,7 +243,7 @@
     <string name="monsieur">Mr.</string>
     <string name="montant">Amount</string>
     <string name="montant1">AMOUNT</string>
-    <string name="montantAccumule">Amount accumulated</string>
+    <string name="montantAccumule">Collected Amount</string>
     <string name="montantApayer">Amount to be paid</string>
     <string name="montantBeneficiaire">Beneficiary Amount</string>
     <string name="montantTelecollecte">The Amount of the Telecollect</string>
@@ -257,7 +257,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="nbrChiffreInferieur">Number of Digit less than 9</string>
     <string name="next">Pass</string>
-    <string name="nom">Last name</string>
+    <string name="nom">Name</string>
     <string name="nomBeneficier">Modjo</string>
     <string name="nomDonataire">Modjo</string>
     <string name="notifVide">Your notifications have been emptied.</string>
@@ -281,7 +281,7 @@
     <string name="numeroInexistant">This account number does not exist</string>
     <string name="numeroTel">phone number</string>
     <string name="offreService">Find all the products, offers and services in your nearest store</string>
-    <string name="offreSmopayeDrawer">Smopaye offers</string>
+    <string name="offreSmopayeDrawer">Our Offers</string>
     <string name="omnisport">OMNISPORT</string>
     <string name="openSourceProject">Copyright © 2012 The Android Open Source Project Volley is distributed under the Apache license, Version 2.0 More info: https://github.com/google/volley</string>
     <string name="operateur">Operator</string>
@@ -290,7 +290,7 @@
     <string name="operationReussie">Successful operation</string>
     <string name="operation_fail">Operation Failed</string>
     <string name="operation_succss">Operation Success</string>
-    <string name="ouvertureEncours">Opening Outstandings…</string>
+    <string name="ouvertureEncours">Opening…</string>
     <string name="paiementFacture">Invoice payment</string>
     <string name="paiementQRCode">Payment By QR Code</string>
     <string name="parametreDrawer">Settings</string>
@@ -299,15 +299,15 @@
     <string name="pasMessage">No messages</string>
     <string name="passDeConfirmation">Password and confirmation password are different</string>
     <string name="passageCarte">Pass the Card</string>
-    <string name="passerCarte">Pass the Card</string>
+    <string name="passerCarte">Show the Card</string>
     <string name="passwordCourt">Your password is short</string>
     <string name="payerFacture">Pay your Invoices</string>
     <string name="pays">Cameroon</string>
     <string name="permissionRefuse">Permission Denied</string>
-    <string name="pointDeVenteSmopaye">SMOPAYE Points of Sale</string>
-    <string name="pointSmopayeBottomNav">Point Smopaye</string>
+    <string name="pointDeVenteSmopaye">smopaye selling points</string>
+    <string name="pointSmopayeBottomNav">Selling points</string>
     <string name="politiqueDeConfifentialite">By pressing Register, you accept our General Conditions of Use, our Privacy Policy. You may receive text messages (sms) from us.</string>
-    <string name="prenom">First name</string>
+    <string name="prenom">Surname</string>
     <string name="profile">Profile</string>
     <string name="propriete">SMOPAYE property. All rights reserved.</string>
     <string name="proximite">Near</string>
@@ -373,7 +373,7 @@
     <string name="taperMsg">Type Message…</string>
     <string name="telecollecte">Telecollect</string>
     <string name="telecollecteChauffeur">Make a Telecollect</string>
-    <string name="telecollecte_retrait">Telecollect and Withdrawal</string>
+    <string name="telecollecte_retrait">Collect and Withdrawal</string>
     <string name="telephone">Phone Number</string>
     <string name="telephoneCourt">Your password is short</string>
     <string name="terminer">finish</string>
@@ -407,7 +407,7 @@
     <string name="valeurCarte">MA1 magnetic card</string>
     <string name="valeurMontant">4 000 F</string>
     <string name="valider">Validate</string>
-    <string name="verification">Verification</string>
+    <string name="verification">verify your number</string>
     <string name="verificationSolde">Check your balance</string>
     <string name="verifierNumero">Your number contains less than 9 digits.</string>
     <string name="verouCarte">Lock card</string>
@@ -454,5 +454,9 @@
 
     <string name="masculin">MALE</string>
     <string name="feminin">FEMININE</string>
+
+    <string name="etape1EnvoiDesDonnees">Step 1: Sending the Data</string>
+    <string name="etape2Finale">Step 2 - Final</string>
+    <string name="souscrire">Suscribe</string>
 
 </resources>

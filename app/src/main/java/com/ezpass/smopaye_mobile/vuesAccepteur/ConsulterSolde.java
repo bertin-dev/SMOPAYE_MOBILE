@@ -49,6 +49,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Timer;
 
 import static android.content.ContentValues.TAG;
@@ -86,6 +87,7 @@ public class ConsulterSolde extends AppCompatActivity implements PasswordModalDi
     TextView titleNetworkLimited, msgNetworkLimited;
 
     private Spinner typeSolde;
+    private String[] statut1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,11 +128,15 @@ public class ConsulterSolde extends AppCompatActivity implements PasswordModalDi
 
 
 
-        // Initializing a String Array
-        String[] statut1 = new String[]{
-                "DEPOT",
-                "UNITE"
-        };
+        //Vérification si la langue du telephone est en Francais
+        if(Locale.getDefault().getLanguage().contentEquals("fr")) {
+            // Initializing a String Array
+           statut1 = new String[]{"DEPOT", "UNITE"
+            };
+        } else{
+            // Initializing a String Array
+             statut1 = new String[]{"DEPOSIT", "UNIT"};
+        }
         // Initializing an ArrayAdapter
         ArrayAdapter<String> spinnerArrayAdapter1 = new ArrayAdapter<String>(
                 this,R.layout.spinner_item,statut1);
@@ -478,7 +484,7 @@ public class ConsulterSolde extends AppCompatActivity implements PasswordModalDi
                     builder.appendQueryParameter("aze","Card");
                     builder.appendQueryParameter("qsd", "consulsolde");
                     builder.appendQueryParameter("CARDN", editText.getText().toString().trim());
-                    builder.appendQueryParameter("typesolde", typeSolde.getSelectedItem().toString().trim());
+                    builder.appendQueryParameter("typesolde", (typeSolde.getSelectedItem().toString().trim().toUpperCase().equalsIgnoreCase("UNITE") || typeSolde.getSelectedItem().toString().trim().toUpperCase().equalsIgnoreCase("UNIT") ? "UNITE" : "DEPOT"));
                     builder.appendQueryParameter("mojyt", pass);
                     //utilisation du numero de telephone annulée
                     //builder.appendQueryParameter("tel", tmp_number);

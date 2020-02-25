@@ -72,6 +72,7 @@
                     app:counterMaxLength="9">
 
                     <android.support.design.widget.TextInputEditText
+                        android:id="@+id/telNumber"
                         android:textColor="@color/bgColorStandard"
                         android:drawableEnd="@drawable/ic_phone_android_black_24dp"
                         android:drawableRight="@drawable/ic_phone_android_black_24dp"
@@ -202,26 +203,39 @@
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
                         android:layout_marginEnd="20dp"
-                        android:orientation="vertical"
+                        android:orientation="horizontal"
+                        android:weightSum="100"
                         android:layout_marginTop="20dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/choisirLangue"
-                            android:textStyle="bold|italic"
-                            android:textSize="12sp"
-                            android:textColorHint="@color/bgColorStandard"
-                            android:textColor="@color/bgColorStandard" />
+                      <LinearLayout
+                          android:layout_width="0dp"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:layout_weight="50">
 
-                        <Spinner
-                            android:id="@+id/changLangue"
-                            android:layout_width="150dp"
-                            android:layout_height="wrap_content"
-                            android:textStyle="bold|italic"
-                            android:textColorHint="@color/bgColorStandard"
-                            android:textColor="@color/bgColorStandard"
-                            android:entries="@array/choixLangue"/>
+                          <TextView
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:text="@string/choisirLangue"
+                              android:textStyle="bold|italic"
+                              android:textSize="12sp"
+                              android:textColorHint="@color/bgColorStandard"
+                              android:textColor="@color/bgColorStandard" />
+
+                          <Spinner
+                              android:id="@+id/changLangue"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:textStyle="bold|italic"
+                              android:textColorHint="@color/bgColorStandard"
+                              android:textColor="@color/bgColorStandard"
+                              android:entries="@array/choixLangue"/>
+
+
+                      </LinearLayout>
+
+
+
 
                     </LinearLayout>
                 </LinearLayout>

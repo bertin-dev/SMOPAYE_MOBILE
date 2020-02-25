@@ -68,7 +68,7 @@ public class HistoriqueTransactions extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
         } else{
-            getSupportActionBar().setTitle("Historique de Transactions");
+            getSupportActionBar().setTitle(getString(R.string.historiqueTransaction));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
         }

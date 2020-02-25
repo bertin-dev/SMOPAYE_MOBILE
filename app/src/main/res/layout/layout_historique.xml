@@ -136,7 +136,8 @@
                     android:layout_weight="30"
                     android:paddingRight="1dp"
                     android:background="@drawable/border_right_slim_gray"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingEnd="1dp">
 
                     <TextView
                         android:id="@+id/title_beneficiaire"

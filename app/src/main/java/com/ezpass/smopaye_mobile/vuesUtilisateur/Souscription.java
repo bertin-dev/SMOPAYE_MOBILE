@@ -91,6 +91,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
@@ -111,7 +112,7 @@ public class Souscription extends AppCompatActivity {
 
     private EditText nom,prenom,telephone,cni,numCarte, adresse;
     private Spinner sexe, statut, typeChauffeur, typePjustificative;
-    private Button btnSuivant, btnAnnuler, btnOpenNFC;
+    private Button btnSouscription, btnAnnuler, btnOpenNFC;
     private ProgressDialog progressDialog, progressDialog1, progressDialog2;
     /////////////////////////////////////////////////////////////////////////////////
     Handler handler;
@@ -200,6 +201,9 @@ public class Souscription extends AppCompatActivity {
     int RC;
     BufferedReader bufferedReader;
 
+    private String[] sexe1;
+    private String[] pieceJ;
+
 
 
     @Override
@@ -247,7 +251,7 @@ public class Souscription extends AppCompatActivity {
         cni = (EditText) findViewById(R.id.cni);
         statut = (Spinner) findViewById(R.id.statut);
         numCarte = (EditText) findViewById(R.id.numCarte);
-        btnSuivant = (Button) findViewById(R.id.btnSuivant);
+        btnSouscription = (Button) findViewById(R.id.btnSouscription);
         //btnAnnuler = (Button) findViewById(R.id.btnAnnuler);
         btnOpenNFC = (Button) findViewById(R.id.btnOpenNFC);
         // operateur = (Spinner) findViewById(R.id.operateurs);
@@ -269,32 +273,51 @@ public class Souscription extends AppCompatActivity {
 
         // Initializing a String Array
 
-        // Initializing a String Array
-        String[] sexe1 = new String[]{
-                "Masculin",
-                "Feminin"
-        };
-        // Initializing an ArrayAdapter
+        //Vérification si la langue du telephone est en Francais
+        if(Locale.getDefault().getLanguage().contentEquals("fr")) {
+
+            // Initializing a String Array
+              sexe1 = new String[]{
+                    "Masculin",
+                    "Feminin"
+            };
+            // Initializing a String Array
+             pieceJ = new String[]{
+                    "CNI",
+                    "passeport",
+                    "recipissé",
+                    "carte de séjour",
+                    "carte d'étudiant"
+            };
+        } else {
+
+            // Initializing a String Array
+            sexe1 = new String[]{
+                    "Male",
+                    "Feminine"
+            };
+            // Initializing a String Array
+            pieceJ = new String[]{
+                    "CNI",
+                    "passport",
+                    "receipt",
+                    "residence permit",
+                    "student card"
+            };
+        }
+
+        // Initializing an ArrayAdapter gender
         ArrayAdapter<String> spinnerArrayAdapter3 = new ArrayAdapter<String>(
-                this,R.layout.spinner_item,sexe1);
+                this, R.layout.spinner_item, sexe1);
         spinnerArrayAdapter3.setDropDownViewResource(R.layout.spinner_item);
         sexe.setAdapter(spinnerArrayAdapter3);
 
 
-        // Initializing a String Array
-        String[] pieceJ = new String[]{
-                "CNI",
-                "passeport",
-                "recipissé",
-                "carte de séjour",
-                "carte d'étudiant"
-        };
-        // Initializing an ArrayAdapter
+        // Initializing an ArrayAdapter justificatives
         ArrayAdapter<String> spinnerArrayAdapter4 = new ArrayAdapter<String>(
-                this,R.layout.spinner_item,pieceJ);
+                this, R.layout.spinner_item, pieceJ);
         spinnerArrayAdapter4.setDropDownViewResource(R.layout.spinner_item);
         typePjustificative.setAdapter(spinnerArrayAdapter4);
-
 
         /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
         try{
@@ -351,7 +374,7 @@ public class Souscription extends AppCompatActivity {
 
 
 
-        btnSuivant.setOnClickListener(new View.OnClickListener() {
+        btnSouscription.setOnClickListener(new View.OnClickListener() {
 
             @SuppressLint("SetTextI18n")
             @Override
@@ -585,6 +608,8 @@ public class Souscription extends AppCompatActivity {
                 intent.putExtra("IDCathegorieValue", typeChauffeur.getSelectedItem().toString().trim());
                 intent.putExtra("register", "EnregStandard");
                 startActivity(intent);*/
+
+                UploadDataToServer();
 
             }
 
@@ -893,12 +918,14 @@ public class Souscription extends AppCompatActivity {
                 {
                     Toast.makeText(this, AbonnementMensuel.getText().toString(), Toast.LENGTH_SHORT).show();
                     AbonnementHebdomadaire.setChecked(false);
+                    AbonnementService.setChecked(false);
                     //AbonnementMensuel.setBackgroundColor(Color.parseColor("#039BE5"));
                     abonnement = "mensuel";
                 }
                 else{
                     AbonnementMensuel.setChecked(true);
                     AbonnementHebdomadaire.setChecked(false);
+                    AbonnementService.setChecked(false);
                     abonnement = "mensuel";
                 }
                 break;
@@ -907,14 +934,28 @@ public class Souscription extends AppCompatActivity {
                 {
                     Toast.makeText(this, AbonnementHebdomadaire.getText().toString(), Toast.LENGTH_SHORT).show();
                     AbonnementMensuel.setChecked(false);
+                    AbonnementService.setChecked(false);
                     abonnement = "hebdomadaire";
                 }
                 else{
                     AbonnementHebdomadaire.setChecked(true);
                     AbonnementMensuel.setChecked(false);
+                    AbonnementService.setChecked(false);
                     abonnement = "hebdomadaire";
                 }
                 break;
+            case R.id.AbonnementService:
+                if(checked){
+                    Toast.makeText(this, AbonnementService.getText().toString(), Toast.LENGTH_SHORT).show();
+                    AbonnementMensuel.setChecked(false);
+                    AbonnementHebdomadaire.setChecked(false);
+                    abonnement = "service";
+                } else{
+                    AbonnementService.setChecked(true);
+                    AbonnementMensuel.setChecked(false);
+                    AbonnementService.setChecked(false);
+                    abonnement = "service";
+                }
         }
     }
 
@@ -1263,8 +1304,8 @@ public class Souscription extends AppCompatActivity {
         }
     }
 
-    //ETAPE 2: Upload des données vers le serveur
-    public void UploadImageToServer(){
+    //ETAPE 1: envoi des données vers le serveur smopaye
+    private void UploadDataToServer(){
 
         class AsyncTaskUploadClass extends AsyncTask<Void,Void,String> {
 
@@ -1273,7 +1314,7 @@ public class Souscription extends AppCompatActivity {
 
                 super.onPreExecute();
 
-                progressDialog = ProgressDialog.show(Souscription.this, getString(R.string.etape2EnvoiDesDonnees), getString(R.string.connexionServeurSmopaye),true,true);
+                progressDialog = ProgressDialog.show(Souscription.this, getString(R.string.etape1EnvoiDesDonnees), getString(R.string.connexionServeurSmopaye),true,true);
                 build_error = new AlertDialog.Builder(Souscription.this);
             }
 
@@ -1337,7 +1378,7 @@ public class Souscription extends AppCompatActivity {
                     builder.appendQueryParameter("enregReg", "register");
                     builder.appendQueryParameter("NOM", nom.getText().toString().trim().toLowerCase());
                     builder.appendQueryParameter("PRENOM", prenom.getText().toString().trim().toLowerCase());
-                    builder.appendQueryParameter("GENRE", sexe.getSelectedItem().toString().trim().toUpperCase());
+                    builder.appendQueryParameter("GENRE",  (sexe.getSelectedItem().toString().trim().toLowerCase().equalsIgnoreCase("masculin") || sexe.getSelectedItem().toString().trim().toLowerCase().equalsIgnoreCase("male") ? "MASCULIN" : "FEMININ" ));
                     builder.appendQueryParameter("TELEPHONE", telephone.getText().toString().trim().toLowerCase());
                     builder.appendQueryParameter("CNI", typePjustificative.getSelectedItem().toString().trim()+"-"+cni.getText().toString().trim());
                     builder.appendQueryParameter("sessioncompte", num_statut);
@@ -1360,7 +1401,7 @@ public class Souscription extends AppCompatActivity {
 
 
 
-    //ETAPE 3: Envoi des données vers le serveur Google
+    //ETAPE 2: Envoi des données vers le serveur Google
     private class AsyncTaskGoogleFirebase extends  AsyncTask<Void,Void,String>{
 
         private String result;
@@ -1376,7 +1417,7 @@ public class Souscription extends AppCompatActivity {
 
             progressDialog1 = new ProgressDialog(Souscription.this);
             progressDialog1.setMessage(getString(R.string.connexionServeurGoogle));
-            progressDialog1.setTitle(getString(R.string.etape3Finale));
+            progressDialog1.setTitle(getString(R.string.etape2Finale));
             progressDialog1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog1.show();
 

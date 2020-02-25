@@ -424,7 +424,7 @@
                 android:textAlignment="center"
                 android:layout_height="wrap_content">
                 <Button
-                    android:id="@+id/btnSuivant"
+                    android:id="@+id/btnSouscription"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:textColor="#ffffff"
@@ -439,7 +439,7 @@
                     android:textAllCaps="false"
                     android:shadowDx="@android:integer/config_longAnimTime"
                     android:background="@drawable/btn_rounded"
-                    android:text="@string/suivant" />
+                    android:text="@string/souscrire" />
                 <Button
                     android:id="@+id/btnOpenNFC"
                     android:visibility="gone"
