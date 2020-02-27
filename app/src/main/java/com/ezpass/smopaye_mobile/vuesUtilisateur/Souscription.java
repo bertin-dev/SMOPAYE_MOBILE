@@ -340,6 +340,7 @@ public class Souscription extends AppCompatActivity {
                 //Toast.makeText(Souscription.this, String.valueOf(key), Toast.LENGTH_SHORT).show();
 
                 if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase(listAllSession.get(key))){
+                    num_statut = String.valueOf(key);
                     new AsyncTaskFiltreCategorie(String.valueOf(key), Souscription.this).execute();
                 }
             }
@@ -1314,7 +1315,13 @@ public class Souscription extends AppCompatActivity {
 
                 super.onPreExecute();
 
-                progressDialog = ProgressDialog.show(Souscription.this, getString(R.string.etape1EnvoiDesDonnees), getString(R.string.connexionServeurSmopaye),true,true);
+                progressDialog = new ProgressDialog(Souscription.this);
+                progressDialog.setMessage(getString(R.string.connexionServeurSmopaye));
+                progressDialog.setTitle(getString(R.string.etape1EnvoiDesDonnees));
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.show();
+
+                //progressDialog = ProgressDialog.show(Souscription.this, getString(R.string.etape1EnvoiDesDonnees), getString(R.string.connexionServeurSmopaye),true,true);
                 build_error = new AlertDialog.Builder(Souscription.this);
             }
 
@@ -1383,7 +1390,7 @@ public class Souscription extends AppCompatActivity {
                     builder.appendQueryParameter("CNI", typePjustificative.getSelectedItem().toString().trim()+"-"+cni.getText().toString().trim());
                     builder.appendQueryParameter("sessioncompte", num_statut);
                     builder.appendQueryParameter("Adresse", adresse.getText().toString().trim().toLowerCase());
-                    builder.appendQueryParameter("IDCARTE", numCarte.getText().toString().trim().toLowerCase());
+                    builder.appendQueryParameter("IDCARTE", numCarte.getText().toString().trim().toUpperCase());
                     builder.appendQueryParameter("IDCathegorie", num_categorie);
                     builder.appendQueryParameter("typeAbon", abonnement);
                     builder.appendQueryParameter("uniquser", temp_number);
@@ -1415,11 +1422,13 @@ public class Souscription extends AppCompatActivity {
 
             super.onPreExecute();
 
-            progressDialog1 = new ProgressDialog(Souscription.this);
-            progressDialog1.setMessage(getString(R.string.connexionServeurGoogle));
-            progressDialog1.setTitle(getString(R.string.etape2Finale));
+            /*progressDialog1 = new ProgressDialog(Souscription.this);
+            progressDialog1.setMessage(getString(R.string.connexionServeurSmopaye));
+            progressDialog1.setTitle(getString(R.string.etape2EnvoiDesDonnees));
             progressDialog1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog1.show();
+            progressDialog1.show();*/
+            progressDialog1 = ProgressDialog.show(Souscription.this, getString(R.string.etape2EnvoiDesDonnees), getString(R.string.connexionServeurSmopaye),true,true);
+
 
             //SERVICE GOOGLE FIREBASE
             auth = FirebaseAuth.getInstance();

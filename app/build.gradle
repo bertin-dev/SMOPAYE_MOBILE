@@ -7,7 +7,7 @@ android {
         applicationId "com.ezpass.smopaye_mobile"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 60
+        versionCode 62
         versionName "1.2.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

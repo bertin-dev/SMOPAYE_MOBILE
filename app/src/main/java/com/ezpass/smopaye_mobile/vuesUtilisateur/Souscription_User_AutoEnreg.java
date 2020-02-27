@@ -282,6 +282,7 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                 //Toast.makeText(Souscription.this, String.valueOf(key), Toast.LENGTH_SHORT).show();
 
                 if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase(listAllSession.get(key))){
+                    num_statut = String.valueOf(key);
                     new AsyncTaskFiltreCategorie(String.valueOf(key), Souscription_User_AutoEnreg.this).execute();
                 }
 
@@ -543,7 +544,7 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                 intent.putExtra("CNI", typePjustificative.getSelectedItem().toString().trim()+"-"+cni.getText().toString().trim());
                 intent.putExtra("sessioncompte", num_statut);
                 intent.putExtra("Adresse", adresse.getText().toString().trim());
-                intent.putExtra("IDCARTE", numCarte.getText().toString().trim());
+                intent.putExtra("IDCARTE", numCarte.getText().toString().trim().toUpperCase());
                 intent.putExtra("IDCathegorie", num_categorie);
                 intent.putExtra("typeAbon", abonnement);
                 intent.putExtra("uniquser", temp_number);
@@ -807,10 +808,6 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
             numCarte.setText(StringUtil.toHexString(data));
         }
     }
-
-
-
-
 
     /*                    GESTION DU MENU DROIT                  */
     @Override
