@@ -117,8 +117,8 @@
     <string name="connexionIntrouvable">Internet connection not found.</string>
     <string name="connexionLimite">Limited internet connection.</string>
     <string name="connexionServeurGoogle">Connection to Google Server</string>
-    <string name="connexionServeurSmopaye">Connection to the Smopaye server</string>
-    <string name="connexionserver">Connection to the server</string>
+    <string name="connexionServeurSmopaye">Connection to Smopaye server</string>
+    <string name="connexionserver">Connection to server</string>
     <string name="consultSoldeDeLaCarte">Check the account balance</string>
     <string name="consulter">View</string>
     <string name="consulterRecettes">Consult Recipes</string>
