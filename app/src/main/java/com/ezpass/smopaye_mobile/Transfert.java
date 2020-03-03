@@ -359,6 +359,7 @@ public class Transfert extends AppCompatActivity {
                     builder.appendQueryParameter("telephone",numTelDonataire.getText().toString().trim());
                     builder.appendQueryParameter("MONTANT",montantBeneficiaire.getText().toString().trim());
                     builder.appendQueryParameter("CARDN",numCarteBeneficiaire.getText().toString().trim());
+                    //builder.appendQueryParameter("Transfert", "Transfert");
                     builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
                     builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
 

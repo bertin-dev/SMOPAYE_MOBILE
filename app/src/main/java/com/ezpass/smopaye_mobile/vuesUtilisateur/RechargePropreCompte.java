@@ -404,6 +404,7 @@ public class RechargePropreCompte extends AppCompatActivity {
                     builder.appendQueryParameter("montant",montant.getText().toString().trim());
                     builder.appendQueryParameter("numcarte",numCarte.getText().toString().trim());
                     builder.appendQueryParameter("uniquser", temp_number);
+                    //builder.appendQueryParameter("Recharge", "Recharge");
                     builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
                     builder.appendQueryParameter("uhtdgG18", ChaineConnexion.getSalt());
 

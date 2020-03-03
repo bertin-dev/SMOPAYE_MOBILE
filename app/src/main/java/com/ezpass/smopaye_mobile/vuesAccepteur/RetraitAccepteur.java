@@ -544,6 +544,7 @@ public class RetraitAccepteur extends AppCompatActivity implements ModalDialogRe
                     builder.appendQueryParameter("montant", montantCache.getText().toString());
                     builder.appendQueryParameter("numcard",collectecarte.getText().toString());
                     builder.appendQueryParameter("uniquser", temp_number);
+                    //builder.appendQueryParameter("RetraitSmopaye", "RetraitSmopaye");
                     builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
                     builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
                     //builder.appendQueryParameter("telephone","");

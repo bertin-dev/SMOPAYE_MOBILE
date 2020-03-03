@@ -380,6 +380,7 @@ public class MenuRetraitTelecollecte extends AppCompatActivity {
                                                         }
                                                     }
                                                     builder.appendQueryParameter("uniquser", temp_number);
+                                                    //builder.appendQueryParameter("Telecollecte", "Telecollecte");
                                                     builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
                                                     builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
 

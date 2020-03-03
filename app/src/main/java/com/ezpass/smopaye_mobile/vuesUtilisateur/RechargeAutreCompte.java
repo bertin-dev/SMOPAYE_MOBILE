@@ -289,9 +289,9 @@ public class RechargeAutreCompte extends AppCompatActivity {
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                    title.setText("Information");
+                    title.setText(getString(R.string.information));
                     imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText("Un ou plusieurs Champs sont vides");
+                    statutOperation.setText(getString(R.string.champsVide));
                     build_error.setPositiveButton("OK", null);
                     build_error.setCancelable(false);
                     build_error.setView(view);
@@ -317,9 +317,9 @@ public class RechargeAutreCompte extends AppCompatActivity {
                         @Override
                         public void run() {
                             // On ajoute un message à notre progress dialog
-                            progressDialog.setMessage("Connexion au serveur");
+                            progressDialog.setMessage(getString(R.string.connexionserver));
                             // On donne un titre à notre progress dialog
-                            progressDialog.setTitle("Attente d'une réponse");
+                            progressDialog.setTitle(getString(R.string.attenteReponseServer));
                             // On spécifie le style
                             //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                             // On affiche notre message
@@ -332,6 +332,7 @@ public class RechargeAutreCompte extends AppCompatActivity {
                     builder.appendQueryParameter("numdon",numCarteDonataire.getText().toString()); //numdon (celui qui offre )
                     builder.appendQueryParameter("numcarte", numCarte.getText().toString().trim());//celui qui reçoit ou beneficiaire
                     builder.appendQueryParameter("montant",montant.getText().toString());
+                    //builder.appendQueryParameter("Recharge", "Recharge");
 
 
                     URL url = new URL(adresse+builder.build().toString());//"http://192.168.20.11:1234/recharge.php"
@@ -350,7 +351,7 @@ public class RechargeAutreCompte extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(RechargeAutreCompte.this, "Encours de traitement...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RechargeAutreCompte.this, getString(R.string.encoursTraitement), Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -375,7 +376,7 @@ public class RechargeAutreCompte extends AppCompatActivity {
 
                             //////////////////////////////////NOTIFICATIONS////////////////////////////////
                             notificationManager = NotificationManagerCompat.from(getApplicationContext());
-                            notifications("Recharge Autre Compte", f);
+                            notifications(getString(R.string.rechargeUneAutreCarte), f);
                             //dbHandler.insertUserDetails("Recharge Autre Compte",f, "0", shortDateFormat.format(aujourdhui));
 
 
@@ -383,7 +384,7 @@ public class RechargeAutreCompte extends AppCompatActivity {
                             TextView title = (TextView) view.findViewById(R.id.title);
                             TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                             ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                            title.setText("Etat de votre Compte");
+                            title.setText(getString(R.string.etatCompte));
                             imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
                             statutOperation.setText(f);
                             build_error.setPositiveButton("OK", null);

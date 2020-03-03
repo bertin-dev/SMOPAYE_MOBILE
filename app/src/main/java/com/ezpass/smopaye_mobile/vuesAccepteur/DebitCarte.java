@@ -464,6 +464,7 @@ public class DebitCarte extends AppCompatActivity {
                                                     builder.appendQueryParameter("uniquser", temp_number);
                                                     builder.appendQueryParameter("CARDN",carte.getText().toString().trim());
                                                     builder.appendQueryParameter("MONTANT",inputAmt.getText().toString().trim());
+                                                    //builder.appendQueryParameter("DebitCarte", "DebitCarte");
                                                     builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
                                                     builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
 

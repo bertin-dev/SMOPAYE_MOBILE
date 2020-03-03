@@ -390,6 +390,7 @@ public class RetraitChezSmopaye extends AppCompatActivity {
                     builder.appendQueryParameter("CARDN",numCartSmopaye.getText().toString().trim());
                     builder.appendQueryParameter("infoplus", "retrait");
                     builder.appendQueryParameter("uniquser",numTelDonataire.getText().toString().trim());
+                    //builder.appendQueryParameter("RetraitSmopaye", "RetraitSmopaye");
                     builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
                     builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
 

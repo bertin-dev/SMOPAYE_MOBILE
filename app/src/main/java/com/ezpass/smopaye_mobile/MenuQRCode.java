@@ -375,6 +375,7 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
                     builder.appendQueryParameter("MONTANT", montantCliPayer);
                     builder.appendQueryParameter("CARDNDON", numCarteCli);
                     builder.appendQueryParameter("CARDN", numCarteAccepteur);
+                    //builder.appendQueryParameter("QRCode", "QRCode");
                     builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
                     builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
 
