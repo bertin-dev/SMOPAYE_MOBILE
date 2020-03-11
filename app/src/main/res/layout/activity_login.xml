@@ -235,6 +235,26 @@
                       </LinearLayout>
 
 
+                        <!-- register panel-->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_weight="50">
+
+                            <TextView
+                                android:id="@+id/txt_passwordForgot"
+                                android:text="Mot de Passe oublié  ?"
+                                android:textStyle="bold|italic"
+                                android:textSize="12sp"
+                                android:textColorHint="@color/bgColorStandard"
+                                android:textColor="@color/bgColorStandard"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+
+
 
 
                     </LinearLayout>

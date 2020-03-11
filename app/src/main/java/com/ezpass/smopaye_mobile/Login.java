@@ -9,16 +9,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbUser;
+import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.Souscription;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.Souscription_User_AutoEnreg;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -62,14 +67,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.ContentValues.TAG;
 
-public class Login extends AppCompatActivity {
+public class Login extends AppCompatActivity implements QRCodeModalDialog.ExampleDialogListener {
 
     private TextInputLayout mNumeroTel, mPassword;
     private TextInputEditText telNumber;
@@ -93,6 +100,11 @@ public class Login extends AppCompatActivity {
 
     ImageView conStatusIv;
     TextView titleNetworkLimited, msgNetworkLimited;
+
+    Locale myLocale;
+    String currentLanguage = (Locale.getDefault().getLanguage().contentEquals("fr")) ? "fr" : "en", currentLang;
+
+    private TextView txt_passwordForgot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,65 +143,10 @@ public class Login extends AppCompatActivity {
         mNumeroTel.setErrorTextColor(ColorStateList.valueOf(Color.BLUE));
         mPassword.setErrorTextColor(ColorStateList.valueOf(Color.BLUE));
 
+        txt_passwordForgot = (TextView) findViewById(R.id.txt_passwordForgot);
+        txt_passwordForgot.setOnClickListener(this::ForgotPassword);
+
         btnReessayer.setOnClickListener(this::checkNetworkConnectionStatus);
-
-
-
-        //Vérification si la langue du telephone est en Francais
-        if(Locale.getDefault().getLanguage().contentEquals("fr")) {
-
-            // Initializing a String Array
-            String[] lang = new String[]{
-                    "Par défaut",
-                    "Français",
-                    "Anglais"
-            };
-            // Initializing an ArrayAdapter
-            ArrayAdapter<String> spinnerArrayLangue = new ArrayAdapter<String>(
-                    this, R.layout.spinner_item, lang);
-            spinnerArrayLangue.setDropDownViewResource(R.layout.spinner_item);
-            langue.setAdapter(spinnerArrayLangue);
-        } else {
-            // Initializing a String Array
-            String[] lang = new String[]{
-                    "Default",
-                    "French",
-                    "English"
-            };
-            // Initializing an ArrayAdapter
-            ArrayAdapter<String> spinnerArrayLangue = new ArrayAdapter<String>(
-                    this, R.layout.spinner_item, lang);
-            spinnerArrayLangue.setDropDownViewResource(R.layout.spinner_item);
-            langue.setAdapter(spinnerArrayLangue);
-
-        }
-
-        langue.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                if(position==0){
-
-                }
-
-                //french
-                if(position == 1){
-                    setLocale("fr");
-                    //recreate();
-                }
-                //english
-                if(position == 2) {
-                    setLocale("en");
-                    //recreate();
-                }
-
-                }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
         //chargement des informations du dernier numéro inséré dans la BD locale pour le mettre dans l'EditText du télephone
         //DbUser db = new DbUser(Login.this);
@@ -211,30 +168,142 @@ public class Login extends AppCompatActivity {
         }
 
 
+        //TRANSLATE
+
+
+        currentLanguage = getIntent().getStringExtra(currentLang);
+
+        List<String> list = new ArrayList<String>();
+        list.add(getString(R.string.defautValue));
+        list.add(getString(R.string.langueAnglaise));
+        list.add(getString(R.string.langueFrancaise));
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item, list);
+        adapter.setDropDownViewResource(R.layout.spinner_item);
+        langue.setAdapter(adapter);
+
+        langue.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Context context;
+                Resources resources;
+                switch (i) {
+                    case 0:
+                        break;
+                    case 1:
+                        setLocale("en");
+                        break;
+                    case 2:
+                        setLocale("fr");
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
-    private void setLocale(String lang) {
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
-        //save data to shared preferences
-       /* SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
-        editor.putString("My_Lang", lang);
-        editor.apply();*/
+    private void ForgotPassword(View view) {
+        openDialog("carteNumber");
+    }
 
-        Intent refresh = new Intent(this, Login.class);
+
+
+    public void openDialog(String accepteurNumCarte) {
+        QRCodeModalDialog exampleDialog = new QRCodeModalDialog().newInstanceCode(accepteurNumCarte);
+        exampleDialog.show(getSupportFragmentManager(), "example dialog");
+    }
+
+    @Override
+    public void applyTexts(String numCarteAccepteur, String numCarteUtilisateur, String montantUtilisateur) {
+
+        //new MenuQRCode.GetHttpResponse(numCarteAccepteur, numCarteUtilisateur, montantUtilisateur).execute();
+        //LoadQRCode(numCarteAccepteur, numCarteUtilisateur, montantUtilisateur);
+    }
+
+    public void setLocale(String localeName) {
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("Locale.Helper.Selected.Language", localeName);
+        editor.apply();
+
+           if (!localeName.equals(currentLanguage)) {
+
+               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                   Locale locale = new Locale(localeName);
+                   Locale.setDefault(locale);
+
+                   Configuration configuration = this.getResources().getConfiguration();
+                   configuration.setLocale(locale);
+                   configuration.setLayoutDirection(locale);
+                   createConfigurationContext(configuration);
+               } else {
+
+                   Locale locale = new Locale(localeName);
+                   Locale.setDefault(locale);
+
+                   Resources resources = getResources();
+
+                   Configuration configuration = resources.getConfiguration();
+                   configuration.locale = locale;
+                   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                       configuration.setLayoutDirection(locale);
+                   }
+
+                   resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+               }
+
+               Intent refresh = new Intent(this, Login.class);
+               refresh.putExtra(currentLang, localeName);
+               startActivity(refresh);
+
+           } else{
+               Toast.makeText(Login.this, "Language already selected!", Toast.LENGTH_SHORT).show();
+           }
+
+
+
+        /*if (!localeName.equals(currentLanguage)) {
+            myLocale = new Locale(localeName);
+            Resources res = getResources();
+            DisplayMetrics dm = res.getDisplayMetrics();
+            Configuration conf = res.getConfiguration();
+            conf.locale = myLocale;
+            res.updateConfiguration(conf, dm);
+            Intent refresh = new Intent(this, Login.class);
+            refresh.putExtra(currentLang, localeName);
+            startActivity(refresh);
+        } else {
+            Toast.makeText(Login.this, "Language already selected!", Toast.LENGTH_SHORT).show();
+        }*/
+    }
+
+
+
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
+
+
+    /*public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
         finish();
-        startActivity(refresh);
-    }
+        System.exit(0);
+    }*/
 
-    //load language saved in shared preferences
-    private void loadLocale(){
-        SharedPreferences prefs = getSharedPreferences("Settings", Activity.MODE_PRIVATE);
-        String language = prefs.getString("My_Lang", "");
-        setLocale(language);
-    }
+
+
+
+
 
     private void openActivityRegister(View view) {
         Intent intent = new Intent(getApplicationContext(), Souscription_User_AutoEnreg.class);
