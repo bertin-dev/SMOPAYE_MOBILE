@@ -516,6 +516,7 @@
     <string name="choisirLangue">Choisir votre langue</string>
     <string name="langueFrancaise">Francais</string>
     <string name="langueAnglaise">Anglais</string>
+    <string name="defautValue">Par défaut</string>
 
     <string name="cni1">CNI</string>
     <string name="passport">passeport</string>

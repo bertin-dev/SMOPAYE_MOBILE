@@ -432,6 +432,7 @@
     <string name="choisirLangue">Choose your language</string>
     <string name="langueFrancaise">French</string>
     <string name="langueAnglaise">English</string>
+    <string name="defautValue">Default</string>
 
     <string name="cni1">CNI</string>
     <string name="passport">passport</string>

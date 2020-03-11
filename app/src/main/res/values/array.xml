@@ -42,6 +42,7 @@
 
 
     <string-array name="choixLangue">
+        <item>@string/defautValue</item>
         <item>@string/langueFrancaise</item>
         <item>@string/langueAnglaise</item>
     </string-array>
