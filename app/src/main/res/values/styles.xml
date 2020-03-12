@@ -27,4 +27,8 @@
         <item name="colorAccent">@color/bgColorStandard</item>
     </style>
 
+    <style name="blueTextInputLayout" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/bgColorStandard</item>
+    </style>
+
 </resources>

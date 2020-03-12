@@ -12,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
@@ -20,7 +21,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,7 +34,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RemoteViews;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -44,7 +43,6 @@ import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbUser;
-import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.NotifReceiver;
 import com.ezpass.smopaye_mobile.QRCodeShow;
 import com.ezpass.smopaye_mobile.R;
@@ -72,15 +70,12 @@ import com.telpo.tps550.api.nfc.Nfc;
 import com.telpo.tps550.api.util.StringUtil;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -94,7 +89,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
-import java.util.Timer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -329,6 +323,58 @@ public class Souscription extends AppCompatActivity {
         catch (Exception e){
             e.printStackTrace();
         }
+
+        typePjustificative.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                switch (position){
+                    case 0:
+                        if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
+                            cni.setHint("N° CNI");
+                        } else {
+                            cni.setHint("N° CNI");
+                        }
+                        break;
+                    case 1:
+                        if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
+                            cni.setHint("N° Passeport");
+                        } else {
+                            cni.setHint("N° Passport");
+                        }
+                        break;
+                    case 2:
+                        if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
+                            cni.setHint("N° Recipissé");
+                        } else {
+                            cni.setHint("N° Receipt");
+                        }
+                        break;
+                    case 3:
+                        if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
+                            cni.setHint("N° Carte de séjour");
+                        } else {
+                            cni.setHint("N° Residence permit");
+                        }
+                        break;
+                    case 4:
+                        if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
+                            cni.setHint("N° Carte d'étudiant");
+                        } else {
+                            cni.setHint("N° Student card");
+                        }
+                        break;
+                    default:
+                        cni.setHint("");
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         statut.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

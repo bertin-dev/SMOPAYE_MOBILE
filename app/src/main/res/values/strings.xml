@@ -469,7 +469,7 @@
     <string name="insererPassword">Veuillez inserer le mot de passe</string>
     <string name="passwordCourt">Votre mot de passe est court</string>
     <string name="insererTelephone">Veuillez inserer votre numéro de téléphone</string>
-    <string name="telephoneCourt">Votre mot de passe est court</string>
+    <string name="telephoneCourt">Votre numéro de téléphone est court</string>
     <string name="echecAuthenfication">Echec de l\'authentification</string>
     <string name="ouvertureEncours">Ouverture Encours…</string>
     <string name="notifications">Notifications</string>
@@ -543,5 +543,11 @@
     <string name="etape1EnvoiDesDonnees">Etape 1: Envoi des Données</string>
     <string name="etape2Finale">Etape 2 - Finale</string>
     <string name="souscrire">Souscription</string>
+    <string name="getPasswordForgot">Récupérer votre mot de passe</string>
+
+    <string name="numPJCourt">Votre numéro de Pièce est court</string>
+    <string name="insererNumPJ">Veuillez inserer votre numéro de Pièce</string>
+    <string name="forgotPassword">Mot de Passe oublié  ?</string>
+    <string name="selectedLanguage">Langue déjà sélectionnée!</string>
 
 </resources>

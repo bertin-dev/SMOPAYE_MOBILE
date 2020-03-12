@@ -1,10 +1,8 @@
 package com.ezpass.smopaye_mobile;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
@@ -15,14 +13,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,14 +29,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbUser;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
-import com.ezpass.smopaye_mobile.vuesUtilisateur.Souscription;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.Souscription_User_AutoEnreg;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -53,7 +47,7 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.telpo.tps550.api.nfc.Nfc;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,12 +65,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.ContentValues.TAG;
 
-public class Login extends AppCompatActivity implements QRCodeModalDialog.ExampleDialogListener {
+public class Login extends AppCompatActivity implements ModalDialog_PasswordForgot.ExampleDialogListener {
 
     private TextInputLayout mNumeroTel, mPassword;
     private TextInputEditText telNumber;
@@ -140,8 +133,8 @@ public class Login extends AppCompatActivity implements QRCodeModalDialog.Exampl
         loginBtn.setOnClickListener(this::submitData);
         btnSouscription.setOnClickListener(this::openActivityRegister);
 
-        mNumeroTel.setErrorTextColor(ColorStateList.valueOf(Color.BLUE));
-        mPassword.setErrorTextColor(ColorStateList.valueOf(Color.BLUE));
+        mNumeroTel.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+        mPassword.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
 
         txt_passwordForgot = (TextView) findViewById(R.id.txt_passwordForgot);
         txt_passwordForgot.setOnClickListener(this::ForgotPassword);
@@ -204,24 +197,201 @@ public class Login extends AppCompatActivity implements QRCodeModalDialog.Exampl
 
             }
         });
+
     }
 
     private void ForgotPassword(View view) {
-        openDialog("carteNumber");
+        openDialog();
     }
 
-
-
-    public void openDialog(String accepteurNumCarte) {
-        QRCodeModalDialog exampleDialog = new QRCodeModalDialog().newInstanceCode(accepteurNumCarte);
+    public void openDialog() {
+        ModalDialog_PasswordForgot exampleDialog = new ModalDialog_PasswordForgot();
         exampleDialog.show(getSupportFragmentManager(), "example dialog");
     }
 
     @Override
-    public void applyTexts(String numCarteAccepteur, String numCarteUtilisateur, String montantUtilisateur) {
+    public void applyTexts(String getTel, String getPJ) {
+        Toast.makeText(this, getTel + "---" + getPJ, Toast.LENGTH_SHORT).show();
+     //envoi de la requete
+        LoadForgotPassword(getTel, getPJ);
+    }
 
-        //new MenuQRCode.GetHttpResponse(numCarteAccepteur, numCarteUtilisateur, montantUtilisateur).execute();
-        //LoadQRCode(numCarteAccepteur, numCarteUtilisateur, montantUtilisateur);
+    private void LoadForgotPassword(String tel, String pj) {
+        //-----------DEBUT
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //********************DEBUT***********
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // On ajoute un message à notre progress dialog
+                            progressDialog.setMessage(getString(R.string.connexionserver));
+                            // On donne un titre à notre progress dialog
+                            progressDialog.setTitle(getString(R.string.attenteReponseServer));
+                            // On spécifie le style
+                            //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                            // On affiche notre message
+                            progressDialog.show();
+                            //build.setPositiveButton("ok", new View.OnClickListener()
+                        }
+                    });
+                    //*******************FIN*****
+                    final Uri.Builder builder = new Uri.Builder();
+
+                    builder.appendQueryParameter("getPsd","Card");
+                    builder.appendQueryParameter("getPsd", "passForgot");
+                    builder.appendQueryParameter("telephone", tel);
+                    builder.appendQueryParameter("pieceJ", pj);
+                    builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
+                    builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
+
+                    URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setConnectTimeout(5000);
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.connect();
+
+
+                    InputStream inputStream = httpURLConnection.getInputStream();
+                    final BufferedReader bufferedReader  =  new BufferedReader(new InputStreamReader(inputStream));
+
+                    String string="";
+                    String data="";
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(Login.this, getString(R.string.encoursTraitement), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    while (bufferedReader.ready() || data==""){
+                        data+=bufferedReader.readLine();
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+
+
+                    final String f = data.trim();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            int pos = f.toLowerCase().indexOf("solde");
+                            if (pos >= 0) {
+
+                                int pos2 = f.toLowerCase().indexOf("incorrecte");
+                                if (pos2 >= 0) {
+                                    View view = LayoutInflater.from(Login.this).inflate(R.layout.alert_dialog_success, null);
+                                    TextView title = (TextView) view.findViewById(R.id.title);
+                                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                                    title.setText(getString(R.string.information));
+                                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                                    statutOperation.setText(f);
+                                    build_error.setPositiveButton("OK", null);
+                                    build_error.setCancelable(false);
+                                    build_error.setView(view);
+                                    build_error.show();
+
+                                    progressDialog.dismiss();
+                                    Toast.makeText(Login.this, f, Toast.LENGTH_LONG).show();
+                                } else {
+                                    View view = LayoutInflater.from(Login.this).inflate(R.layout.alert_dialog_success, null);
+                                    TextView title = (TextView) view.findViewById(R.id.title);
+                                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                                    title.setText(getString(R.string.information));
+                                    imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
+                                    statutOperation.setText(f);
+                                    build_error.setPositiveButton("OK", null);
+                                    build_error.setCancelable(false);
+                                    build_error.setView(view);
+                                    build_error.show();
+
+                                    progressDialog.dismiss();
+                                    Toast.makeText(Login.this, f, Toast.LENGTH_LONG).show();
+                                    //editText.setText("");
+                                }
+                            }
+                            else{
+                                View view = LayoutInflater.from(Login.this).inflate(R.layout.alert_dialog_success, null);
+                                TextView title = (TextView) view.findViewById(R.id.title);
+                                TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                                ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                                title.setText(getString(R.string.information));
+                                imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+                                statutOperation.setText(f);
+                                build_error.setPositiveButton("OK", null);
+                                build_error.setCancelable(false);
+                                build_error.setView(view);
+                                build_error.show();
+
+                                progressDialog.dismiss();
+                                Toast.makeText(Login.this, f, Toast.LENGTH_LONG).show();
+                            }
+
+
+                        }
+                    });
+
+
+                    //    JSONObject jsonObject = new JSONObject(data);
+                    //  jsonObject.getString("status");
+                    JSONArray jsonArray = new JSONArray(data);
+                    for (int i=0;i<jsonArray.length();i++){
+                        final JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Toast.makeText(Login.this, jsonObject.getString("montant"), Toast.LENGTH_SHORT).show();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+
+                } catch (final IOException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Toast.makeText(Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            //Check si la connexion existe
+                            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
+                            if(!(activeInfo != null && activeInfo.isConnected())){
+                                progressDialog.dismiss();
+                                authWindows.setVisibility(View.GONE);
+                                internetIndisponible.setVisibility(View.VISIBLE);
+                                Toast.makeText(Login.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
+                            } else{
+                                progressDialog.dismiss();
+                                authWindows.setVisibility(View.GONE);
+                                internetIndisponible.setVisibility(View.VISIBLE);
+                                conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
+                                titleNetworkLimited.setText(getString(R.string.connexionLimite));
+                                //msgNetworkLimited.setText();
+                                Toast.makeText(Login.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    e.printStackTrace();
+                    try {
+                        Thread.sleep(2000);
+                        // Toast.makeText(Consulter_Solde.this, "Impossible de se connecter au serveur", Toast.LENGTH_SHORT).show();
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                    progressDialog.dismiss();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        //-----------FIN
     }
 
     public void setLocale(String localeName) {
@@ -262,7 +432,7 @@ public class Login extends AppCompatActivity implements QRCodeModalDialog.Exampl
                startActivity(refresh);
 
            } else{
-               Toast.makeText(Login.this, "Language already selected!", Toast.LENGTH_SHORT).show();
+               Toast.makeText(Login.this, getString(R.string.selectedLanguage), Toast.LENGTH_SHORT).show();
            }
 
 
@@ -299,10 +469,6 @@ public class Login extends AppCompatActivity implements QRCodeModalDialog.Exampl
         finish();
         System.exit(0);
     }*/
-
-
-
-
 
 
     private void openActivityRegister(View view) {
@@ -357,7 +523,7 @@ public class Login extends AppCompatActivity implements QRCodeModalDialog.Exampl
     private Boolean validateTelephone(){
         String numero = mNumeroTel.getEditText().getText().toString().trim();
         if(numero.isEmpty()){
-            mNumeroTel.setError(getString(R.string.passwordCourt));
+            mNumeroTel.setError(getString(R.string.insererTelephone));
             return false;
         } else if(numero.length() < 9){
             mNumeroTel.setError(getString(R.string.telephoneCourt));

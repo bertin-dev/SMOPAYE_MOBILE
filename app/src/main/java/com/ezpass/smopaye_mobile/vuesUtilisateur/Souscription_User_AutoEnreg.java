@@ -272,6 +272,58 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        typePjustificative.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                switch (position){
+                    case 0:
+                        if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
+                            cni.setHint("N° CNI");
+                        } else {
+                            cni.setHint("N° CNI");
+                        }
+                        break;
+                    case 1:
+                        if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
+                            cni.setHint("N° Passeport");
+                        } else {
+                            cni.setHint("N° Passport");
+                        }
+                        break;
+                    case 2:
+                        if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
+                            cni.setHint("N° Recipissé");
+                        } else {
+                            cni.setHint("N° Receipt");
+                        }
+                        break;
+                    case 3:
+                        if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
+                            cni.setHint("N° Carte de séjour");
+                        } else {
+                            cni.setHint("N° Residence permit");
+                        }
+                        break;
+                    case 4:
+                        if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
+                            cni.setHint("N° Carte d'étudiant");
+                        } else {
+                            cni.setHint("N° Student card");
+                        }
+                        break;
+                    default:
+                        cni.setHint("");
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         statut.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

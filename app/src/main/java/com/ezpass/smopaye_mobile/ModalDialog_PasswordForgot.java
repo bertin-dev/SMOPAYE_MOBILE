@@ -2,13 +2,15 @@ package com.ezpass.smopaye_mobile;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -67,15 +69,70 @@ public class ModalDialog_PasswordForgot extends AppCompatDialogFragment {
         spinnerArrayAdapter7.setDropDownViewResource(R.layout.spinner_item);
         typePjustificative.setAdapter(spinnerArrayAdapter7);
 
-        //mPassword.setErrorTextColor(ColorStateList.valueOf(Color.BLUE));
 
-        title.setText(R.string.information);
+        typePjustificative.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                switch (position){
+                    case 0:
+                        if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
+                            cniRetrieve.setHint("N° CNI");
+                        } else {
+                            cniRetrieve.setHint("N° CNI");
+                        }
+                        break;
+                    case 1:
+                        if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
+                            cniRetrieve.setHint("N° Passeport");
+                        } else {
+                            cniRetrieve.setHint("N° Passport");
+                        }
+                        break;
+                    case 2:
+                        if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
+                            cniRetrieve.setHint("N° Recipissé");
+                        } else {
+                            cniRetrieve.setHint("N° Receipt");
+                        }
+                        break;
+                    case 3:
+                        if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
+                            cniRetrieve.setHint("N° Carte de séjour");
+                        } else {
+                            cniRetrieve.setHint("N° Residence permit");
+                        }
+                        break;
+                    case 4:
+                        if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
+                            cniRetrieve.setHint("N° Carte d'étudiant");
+                        } else {
+                            cniRetrieve.setHint("N° Student card");
+                        }
+                        break;
+                    default:
+                        cniRetrieve.setHint("");
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+        telRetrieve.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+        cniRetrieve.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+
+        title.setText(R.string.getPasswordForgot);
         btnForgetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 String telephone = telRetrieve.getEditText().getText().toString().trim();
-                String pieceJustificative = cniRetrieve.getEditText().getText().toString().trim();
+                String pieceJustificative = typePjustificative.getSelectedItem().toString().trim() + "-" +cniRetrieve.getEditText().getText().toString().trim();
 
                 if(!validateTelephone()){
                     return;
@@ -123,7 +180,7 @@ public class ModalDialog_PasswordForgot extends AppCompatDialogFragment {
     private Boolean validateTelephone(){
         String numero = telRetrieve.getEditText().getText().toString().trim();
         if(numero.isEmpty()){
-            telRetrieve.setError(getString(R.string.passwordCourt));
+            telRetrieve.setError(getString(R.string.insererTelephone));
             return false;
         } else if(numero.length() < 9){
             telRetrieve.setError(getString(R.string.telephoneCourt));
@@ -139,10 +196,10 @@ public class ModalDialog_PasswordForgot extends AppCompatDialogFragment {
     private Boolean validatePJ(){
         String numero = cniRetrieve.getEditText().getText().toString().trim();
         if(numero.isEmpty()){
-            cniRetrieve.setError(getString(R.string.passwordCourt));
+            cniRetrieve.setError(getString(R.string.insererNumPJ));
             return false;
-        } else if(numero.length() < 9){
-            cniRetrieve.setError(getString(R.string.telephoneCourt));
+        } else if(numero.length() < 3){
+            cniRetrieve.setError(getString(R.string.numPJCourt));
             return false;
         } else {
             cniRetrieve.setError(null);

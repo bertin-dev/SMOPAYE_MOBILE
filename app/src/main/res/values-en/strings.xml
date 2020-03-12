@@ -375,7 +375,7 @@
     <string name="telecollecteChauffeur">Make a Telecollect</string>
     <string name="telecollecte_retrait">Collect and Withdrawal</string>
     <string name="telephone">Phone Number</string>
-    <string name="telephoneCourt">Your password is short</string>
+    <string name="telephoneCourt">Your phone number is short</string>
     <string name="terminer">finish</string>
     <string name="titreApp">SMOPAYE MOBILE</string>
     <string name="titreMsg">Message Title</string>
@@ -459,5 +459,11 @@
     <string name="etape1EnvoiDesDonnees">Step 1: Sending the Data</string>
     <string name="etape2Finale">Step 2 - Final</string>
     <string name="souscrire">Suscribe</string>
+    <string name="getPasswordForgot">Recover your password</string>
+
+    <string name="numPJCourt">Your Part number is short</string>
+    <string name="insererNumPJ">Please insert your Part number</string>
+    <string name="forgotPassword">Forgot your password  ?</string>
+    <string name="selectedLanguage">Language already selected!</string>
 
 </resources>
