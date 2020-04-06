@@ -7,12 +7,12 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,7 +30,6 @@ import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.NotifReceiver;
 import com.ezpass.smopaye_mobile.R;
-import com.ezpass.smopaye_mobile.Tutoriel;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.telpo.tps550.api.TelpoException;
 import com.telpo.tps550.api.nfc.Nfc;
@@ -332,7 +331,7 @@ public class RechargeAutreCompte extends AppCompatActivity {
                     builder.appendQueryParameter("numdon",numCarteDonataire.getText().toString()); //numdon (celui qui offre )
                     builder.appendQueryParameter("numcarte", numCarte.getText().toString().trim());//celui qui reçoit ou beneficiaire
                     builder.appendQueryParameter("montant",montant.getText().toString());
-                    //builder.appendQueryParameter("Recharge", "Recharge");
+                    builder.appendQueryParameter("typeTransfer", "Recharges");
 
 
                     URL url = new URL(adresse+builder.build().toString());//"http://192.168.20.11:1234/recharge.php"

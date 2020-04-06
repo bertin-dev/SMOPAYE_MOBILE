@@ -550,4 +550,7 @@
     <string name="forgotPassword">Mot de Passe oublié  ?</string>
     <string name="selectedLanguage">Langue déjà sélectionnée!</string>
 
+    <string name="communicate">Autres</string>
+    <string name="inviteFriend">Inviter des amis</string>
+    <string name="notation">Noter l\'application E-ZPASS</string>
 </resources>

@@ -466,4 +466,8 @@
     <string name="forgotPassword">Forgot your password  ?</string>
     <string name="selectedLanguage">Language already selected!</string>
 
+    <string name="communicate">Other</string>
+    <string name="inviteFriend">Invite friends</string>
+    <string name="notation">Rate the E-ZPASS application</string>
+
 </resources>

@@ -11,13 +11,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,7 +29,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,12 +45,10 @@ import com.ezpass.smopaye_mobile.RemoteNotifications.MyResponse;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Sender;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
 import com.ezpass.smopaye_mobile.RetraitChezSmopaye;
-import com.ezpass.smopaye_mobile.Tutoriel;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.telecollecte.DatabaseManager;
 import com.ezpass.smopaye_mobile.telecollecte.ScoreData;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
-import com.ezpass.smopaye_mobile.vuesUtilisateur.RechargePropreCompte;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -380,7 +377,7 @@ public class MenuRetraitTelecollecte extends AppCompatActivity {
                                                         }
                                                     }
                                                     builder.appendQueryParameter("uniquser", temp_number);
-                                                    //builder.appendQueryParameter("Telecollecte", "Telecollecte");
+                                                    builder.appendQueryParameter("typeTransfer", "Telecollecte");
                                                     builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
                                                     builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
 

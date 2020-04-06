@@ -10,13 +10,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -62,14 +61,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.ezpass.smopaye_mobile.ChaineConnexion.decryptData;
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
 public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.ExampleDialogListener{
@@ -375,7 +372,7 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
                     builder.appendQueryParameter("MONTANT", montantCliPayer);
                     builder.appendQueryParameter("CARDNDON", numCarteCli);
                     builder.appendQueryParameter("CARDN", numCarteAccepteur);
-                    //builder.appendQueryParameter("QRCode", "QRCode");
+                    builder.appendQueryParameter("typeTransfer", "QRCode");
                     builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
                     builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
 

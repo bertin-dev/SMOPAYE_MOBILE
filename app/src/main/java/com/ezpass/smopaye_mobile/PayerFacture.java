@@ -388,7 +388,7 @@ public class PayerFacture extends AppCompatActivity {
                     builder.appendQueryParameter("telephone", numTelDonataire.getText().toString().trim());
                     builder.appendQueryParameter("MONTANT", montantBeneficiaire.getText().toString().trim());
                     builder.appendQueryParameter("CARDN", numCarteBeneficiaire.getText().toString().trim());*/
-                    //builder.appendQueryParameter("Facture", "Facture");
+                    builder.appendQueryParameter("typeTransfer", "Facture");
                     builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
                     builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
 

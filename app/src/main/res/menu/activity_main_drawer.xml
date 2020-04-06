@@ -40,21 +40,34 @@
             android:icon="@drawable/ic_help_black_24dp"
             android:title="@string/questionsFrequentesDrawer" />
 
-
-        <item
-            android:id="@+id/nav_deconnexion"
-            android:icon="@drawable/ic_exit_to_app_black_24dp"
-            android:title="@string/deconnexion" />
-
     </group>
 
-        <item android:title="@string/config">
+        <item android:title="@string/communicate">
         <menu>
             <item
                 android:id="@+id/nav_parametres"
                 android:visible="false"
                 android:icon="@drawable/ic_menu_manage"
                 android:title="@string/parametreDrawer" />
+
+            <item
+                android:id="@+id/nav_share"
+                android:visible="true"
+                android:icon="@drawable/ic_share_black_24dp"
+                android:title="@string/inviteFriend" />
+
+
+            <item
+                android:id="@+id/nav_notation"
+                android:visible="true"
+                android:icon="@drawable/ic_star_border_black_24dp"
+                android:title="@string/notation" />
+
+
+            <item
+                android:id="@+id/nav_deconnexion"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
+                android:title="@string/deconnexion" />
         </menu>
     </item>
 

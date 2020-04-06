@@ -4,7 +4,6 @@ import android.util.Log;
 
 import java.security.SecureRandom;
 import java.util.HashMap;
-import java.util.Random;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;

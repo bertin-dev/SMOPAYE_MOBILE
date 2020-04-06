@@ -390,12 +390,16 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         }*/
 
-        else  if(id == R.id.nav_Assistance_EnLigne){
+        else if(id == R.id.nav_Assistance_EnLigne){
             Intent intent = new Intent(getApplicationContext(), HomeAssistanceOnline.class);
             //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("resultatBD", resultat_bd);
             intent.putExtra("telephone", telephone);
             startActivity(intent);
+        }else if(id == R.id.nav_share){
+            Toast.makeText(this, "Partager à vos amis", Toast.LENGTH_SHORT).show();
+        } else if(id == R.id.nav_notation){
+            Toast.makeText(this, "noter nous sur playstore", Toast.LENGTH_SHORT).show();
         }
         else if (id == R.id.nav_deconnexion) {
 
