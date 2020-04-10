@@ -4,19 +4,36 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import com.basgeekball.awesomevalidation.AwesomeValidation;
+import com.basgeekball.awesomevalidation.ValidationStyle;
+import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
+import com.ezpass.smopaye_mobile.web_service.ApiService;
+import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
+import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
+import com.ezpass.smopaye_mobile.web_service_access.ApiError;
+import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
+import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
+
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Souscription extends AppCompatActivity {
 
@@ -24,6 +41,10 @@ public class Souscription extends AppCompatActivity {
     private CheckBox AbonnementHebdomadaire;
     private CheckBox AbonnementService;
     private String abonnement = "service";
+
+    private static final String TAG = "Souscription";
+
+
 
     //recuperation des vues
     @BindView(R.id.til_nom)
@@ -39,6 +60,11 @@ public class Souscription extends AppCompatActivity {
     @BindView(R.id.til_numCarte)
     TextInputLayout til_numCarte;
 
+    ApiService service;
+    Call<AccessToken> call;
+    AwesomeValidation validator;
+    TokenManager tokenManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,8 +78,27 @@ public class Souscription extends AppCompatActivity {
         //récupération des vues en lien notre activity
 
         ButterKnife.bind(this);
-
+        service = RetrofitBuilder.createService(ApiService.class);
+        validator = new AwesomeValidation(ValidationStyle.TEXT_INPUT_LAYOUT);
+        tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        setupRulesValidatForm();
         init();
+
+    }
+
+
+    private void setupRulesValidatForm(){
+        validator.addValidation(this, R.id.til_nom, RegexTemplate.NOT_EMPTY, Integer.parseInt(R.string.veuillezInserer + " " + R.string.nom));
+        validator.addValidation(this, R.id.til_prenom, RegexTemplate.NOT_EMPTY, Integer.parseInt(R.string.veuillezInserer + " " + R.string.prenom));
+        validator.addValidation(this, R.id.til_numeroTel, RegexTemplate.NOT_EMPTY, Integer.parseInt(R.string.veuillezInserer + " " + R.string.numeroTel));
+        validator.addValidation(this, R.id.til_numeroTel, RegexTemplate.TELEPHONE, R.string.verifierNumero);
+        validator.addValidation(this, R.id.til_cni, RegexTemplate.NOT_EMPTY, Integer.parseInt(R.string.veuillezInserer + " " + R.string.numeroDe));
+        validator.addValidation(this, R.id.til_adresse, RegexTemplate.NOT_EMPTY, Integer.parseInt(R.string.veuillezInserer + " " + R.string.adresse));
+        validator.addValidation(this, R.id.til_numCarte, RegexTemplate.NOT_EMPTY, Integer.parseInt(R.string.veuillezInserer + " " + R.string.numeroCarte));
+
+        //validator.addValidation(this, R.id.til_numCarte, Patterns.PHONE, R.string.verifierNumero);
+        //validator.addValidation(this, R.id.til_numCarte, "[a-zA-Z0-9]{6,0}", R.string.verifierNumero);
+
 
     }
 
@@ -170,6 +215,99 @@ public class Souscription extends AppCompatActivity {
     @OnClick(R.id.btnSouscription)
     void register(){
 
+        String nom = til_nom.getEditText().getText().toString();
+        String prenom = til_prenom.getEditText().getText().toString();
+        String telephone = til_numeroTel.getEditText().getText().toString();
+        String cni = til_cni.getEditText().getText().toString();
+        String adresse = til_adresse.getEditText().getText().toString();
+        String num_carte = til_numCarte.getEditText().getText().toString();
+
+
+
+        til_nom.setError(null);
+        til_prenom.setError(null);
+        til_numeroTel.setError(null);
+        til_cni.setError(null);
+        til_adresse.setError(null);
+        til_numCarte.setError(null);
+
+       validator.clear();
+
+       if(validator.validate()){
+           call = service.register(nom, prenom, telephone, cni, adresse, num_carte);
+           call.enqueue(new Callback<AccessToken>() {
+               @Override
+               public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+
+                   if(response.isSuccessful()){
+
+                       /*sauvegarde du token retourné par l'api si la reponse est bonne
+                         nous utiliserons la classe TokenManager pour cela
+                        */
+                       tokenManager.saveToken(response.body());
+
+                       //retoure sur le formulaire d'enregistrement
+                       Intent intent = new Intent(getApplicationContext(), Souscription.class);
+                       startActivity(intent);
+                       finish();
+
+                   } else{
+                       handleErrors(response.errorBody());
+
+                   }
+
+               }
+
+               @Override
+               public void onFailure(Call<AccessToken> call, Throwable t) {
+
+                   //si on a une erreur de type 500 alors cela viendra ici
+                   Log.w(TAG, "onFailure: " + t.getMessage());
+               }
+           });
+       }
+
     }
 
+    private void handleErrors(ResponseBody responseBody){
+
+        ApiError apiError = Utils_manageError.convertErrors(responseBody);
+        /*
+        boucle sur toutes les erreurs trouvées
+         */
+
+        for(Map.Entry<String, List<String>> error: apiError.getErrors().entrySet()){
+
+            if(error.getKey().equals("nom")){
+                til_nom.setError(error.getValue().get(0));
+            }
+
+
+            if(error.getKey().equals("prenom")){
+                til_prenom.setError(error.getValue().get(0));
+            }
+
+
+            if(error.getKey().equals("tel")){
+                til_numeroTel.setError(error.getValue().get(0));
+            }
+
+
+            if(error.getKey().equals("numcarte")){
+                til_numCarte.setError(error.getValue().get(0));
+            }
+
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(call != null){
+            call.cancel();
+            call = null;
+        }
+    }
 }

@@ -5,6 +5,9 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 
+import com.facebook.stetho.Stetho;
+import com.squareup.leakcanary.LeakCanary;
+
 public class NotifApp extends Application {
     public static final String CHANNEL_ID = "exampleChannel";
 
@@ -12,6 +15,7 @@ public class NotifApp extends Application {
     public void onCreate() {
         super.onCreate();
         createNotificationChannel();
+        initInterceptor();
     }
 
     private void createNotificationChannel() {
@@ -26,4 +30,21 @@ public class NotifApp extends Application {
             manager.createNotificationChannel(channel);
         }
     }
+
+    private void  initInterceptor(){
+        //initialisation de stetho pour l'interption des requêtes HTTP
+        Stetho.initializeWithDefaults(this);
+
+        //initialisation de LeakCanary
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
+        // Normal app init code...
+    }
+
+
+
 }
