@@ -1,24 +1,26 @@
 package com.ezpass.smopaye_mobile;
 
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.View;
 import android.support.v4.view.GravityCompat;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.view.MenuItem;
-import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
-
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     private String resultat_bd, telephone;
-    private TextView statut, statut_nom;
+    private TextView statut, statut_nom, txtclose;
 
     BottomBar bottomBar;
     DbHandler db;
@@ -56,6 +58,8 @@ public class MainActivity extends AppCompatActivity
 
     FirebaseUser fuser;
     //DatabaseReference reference;
+
+    Dialog myDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -397,7 +401,20 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra("telephone", telephone);
             startActivity(intent);
         }else if(id == R.id.nav_share){
-            Toast.makeText(this, "Partager à vos amis", Toast.LENGTH_SHORT).show();
+        //partager votre lien avec unique ID
+            myDialog = new Dialog(this);
+            myDialog.setContentView(R.layout.layout_dialog_invite_friends);
+            txtclose =(TextView) myDialog.findViewById(R.id.txtclose);
+            txtclose.setText("X");
+            txtclose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    myDialog.dismiss();
+                }
+            });
+            myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            myDialog.show();
+
         } else if(id == R.id.nav_notation){
             Toast.makeText(this, "noter nous sur playstore", Toast.LENGTH_SHORT).show();
         }
