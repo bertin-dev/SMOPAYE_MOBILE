@@ -84,16 +84,6 @@ dependencies {
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
 
 
-
-
-
-
-
-
-
-
-
-
     //Badget de notification sur l'icon d'accueil
     implementation 'com.github.arturogutierrez:badges:1.0.5@aar'
 
@@ -113,7 +103,7 @@ dependencies {
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
 
 
-       //utilise minimum api 24 (la gestion des vues)
+    //utilise minimum api 24 (la gestion des vues)
     implementation 'com.jakewharton:butterknife:9.0.0-rc2'
     annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc2'
 

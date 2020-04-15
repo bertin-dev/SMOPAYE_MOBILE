@@ -5,18 +5,25 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 
+import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
 
 public class NotifApp extends Application {
     public static final String CHANNEL_ID = "exampleChannel";
 
+    //check network
+    private static NotifApp mInstance;
+
     @Override
     public void onCreate() {
         super.onCreate();
         createNotificationChannel();
         initInterceptor();
+
+        mInstance = this;
     }
+
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -45,6 +52,13 @@ public class NotifApp extends Application {
         // Normal app init code...
     }
 
-
+    //check network
+    public static synchronized NotifApp getInstance(){
+        return mInstance;
+    }
+    //check network
+    public void setConnectivityListener(ConnectivityReceiver.ConnectivityReceiverListener listener){
+        ConnectivityReceiver.connectivityReceiverListener = listener;
+    }
 
 }
