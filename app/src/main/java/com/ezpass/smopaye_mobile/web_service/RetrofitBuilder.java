@@ -62,6 +62,9 @@ public class RetrofitBuilder {
         return retrofit.create(service);
     }
 
+    /*
+    méthode permettant d'accéder aux ressources privées afin d'obtenir les authorizations
+     */
     public static <T> T createServiceWithAuth(Class<T> service, final TokenManager tokenManager){
 
         OkHttpClient newClient = client.newBuilder().addInterceptor(new Interceptor() {

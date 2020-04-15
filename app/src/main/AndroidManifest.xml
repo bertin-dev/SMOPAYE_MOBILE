@@ -29,7 +29,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".vuesUtilisateur.Souscription_User_AutoEnreg"></activity>
+        <activity android:name=".checkInternetDynamically.OfflineActivity"></activity>
+        <activity android:name=".vuesUtilisateur.Souscription_User_AutoEnreg" />
         <activity
             android:name=".vuesUtilisateur.SouscriptionUploadIMGidCard"
             android:screenOrientation="portrait" />

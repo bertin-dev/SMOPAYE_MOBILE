@@ -34,6 +34,10 @@ import com.ezpass.smopaye_mobile.vuesAdmin.AccueilFragmentAdmin;
 import com.ezpass.smopaye_mobile.vuesAgent.AccueilFragmentAgent;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.AccueilFragmentUser;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
+import com.ezpass.smopaye_mobile.web_service.ApiService;
+import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
+import com.ezpass.smopaye_mobile.web_service_access.ResponseUser;
+import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.github.arturogutierrez.Badges;
 import com.github.arturogutierrez.BadgesNotSupportedException;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,6 +48,12 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.BottomBarTab;
 import com.roughike.bottombar.OnTabSelectListener;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity
@@ -61,10 +71,59 @@ public class MainActivity extends AppCompatActivity
 
     Dialog myDialog;
 
+
+    //Integration de la rest API
+    private static final String TAG = "MainActivity";
+    @BindView(R.id.txt_statut)
+     TextView txt_statut;
+    @BindView(R.id.txt_statut_nom)
+     TextView txt_statut_nom;
+
+    ApiService service;
+    TokenManager tokenManager;
+    Call<ResponseUser> call;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Integration de la rest API
+        ButterKnife.bind(this);
+        tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        //verification si on a pa le token dans les sharepreferences alors on retourne vers le login activity
+        if(tokenManager.getToken() == null){
+            startActivity(new Intent(MainActivity.this, Login.class));
+            finish();
+        }
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
+
+        call = service.response_user();
+        call.enqueue(new Callback<ResponseUser>() {
+            @Override
+            public void onResponse(Call<ResponseUser> call, Response<ResponseUser> response) {
+             Log.w(TAG, "onResponse " +response);
+
+             if(response.isSuccessful()){
+
+                 txt_statut.setText(response.body().getAllDataUser().get(0).getRule());
+
+             } else{
+                 tokenManager.deleteToken();
+                 startActivity(new Intent(MainActivity.this, Login.class));
+                 finish();
+             }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseUser> call, Throwable t) {
+                Log.w(TAG, "onFailure " +t.getMessage());
+            }
+        });
+
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -546,5 +605,17 @@ public class MainActivity extends AppCompatActivity
        reference1.child(fuser.getUid()).setValue(token1);
    }
 
+
+
+   //Intégration de l'API REST
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(call != null){
+            call.cancel();
+            call = null;
+        }
+    }
 
 }

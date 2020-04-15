@@ -287,7 +287,7 @@
     <string name="reessayer">REESSAYER</string>
 
     <string name="NotificationsVides">Notifications vides</string>
-    <string name="connexionLimite">Connexion internet Limitée.</string>
+    <string name="connexionLimite">Serveur Inaccessible.</string>
     <string name="pasDeConnexionInternet">Pas de connexion internet.</string>
 
 
@@ -511,7 +511,6 @@
     <string name="username">nom d\'utilisateur</string>
 
 
-
     <!--array-->
     <string name="choisirLangue">Choisir votre langue</string>
     <string name="langueFrancaise">Francais</string>
@@ -553,4 +552,11 @@
     <string name="communicate">Autres</string>
     <string name="inviteFriend">Inviter des amis</string>
     <string name="notation">Noter l\'application E-ZPASS</string>
+
+    <string name="veuillezInsererNom">S\'il vous plait veuillez inserer votre nom</string>
+    <string name="veuillezInsererPrenom">S\'il vous plait veuillez inserer votre prenom</string>
+    <string name="veuillezInsererTelephone">S\'il vous plait veuillez inserer votre téléphone</string>
+    <string name="veuillezInsererPJ">S\'il vous plait veuillez inserer votre N°Pièce</string>
+    <string name="veuillezInsererAdresse">S\'il vous plait veuillez inserer votre Adresse</string>
+    <string name="veuillezInsererNumCompte">S\'il vous plait veuillez inserer votre N°Compte</string>
 </resources>

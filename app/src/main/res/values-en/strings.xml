@@ -115,7 +115,7 @@
     <string name="connexionIndisponible">Connection Unavailable</string>
     <string name="connexionInexistante">Connection does not exist</string>
     <string name="connexionIntrouvable">Internet connection not found.</string>
-    <string name="connexionLimite">Limited internet connection.</string>
+    <string name="connexionLimite">Inaccessible server.</string>
     <string name="connexionServeurGoogle">Connection to Google Server</string>
     <string name="connexionServeurSmopaye">Connection to Smopaye server</string>
     <string name="connexionserver">Connection to server</string>
@@ -469,5 +469,14 @@
     <string name="communicate">Other</string>
     <string name="inviteFriend">Invite friends</string>
     <string name="notation">Rate the E-ZPASS application</string>
+
+
+
+    <string name="veuillezInsererNom">Please insert your Name</string>
+    <string name="veuillezInsererPrenom">Please insert your surname</string>
+    <string name="veuillezInsererTelephone">Please insert your number</string>
+    <string name="veuillezInsererPJ">Please insert your Part number</string>
+    <string name="veuillezInsererAdresse">Please insert your adress</string>
+    <string name="veuillezInsererNumCompte">Please insert your account number</string>
 
 </resources>
