@@ -89,7 +89,9 @@ dependencies {
 
     //QR code
     //implementation 'com.google.zxing:core:3.2.1' //deja intégré dans la bibliotheque Core 3.1.0
-    implementation 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
+    //implementation 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
+    implementation('com.journeyapps:zxing-android-embedded:4.1.0') { transitive = false }
+    //implementation 'com.google.zxing:core:3.3.0'
 
     //library de validation
     implementation 'com.basgeekball:awesome-validation:4.2'
@@ -110,5 +112,9 @@ dependencies {
 
     //permet de gerer toutes les erreurs produites par les nouvelles library intégrés
     implementation 'com.android.support:multidex:1.0.3'
+
+
+    //library pour la nouvelle progress Lite
+    implementation 'cc.cloudist.acplibrary:library:1.2.1'
 
 }

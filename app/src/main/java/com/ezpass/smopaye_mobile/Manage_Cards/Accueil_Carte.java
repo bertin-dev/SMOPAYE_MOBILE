@@ -51,7 +51,7 @@ public class Accueil_Carte extends AppCompatActivity {
         write.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), EcrireCarte.class);
+                Intent intent = new Intent(getApplicationContext(), WriteInCard.class);
                 startActivity(intent);
             }
         });
