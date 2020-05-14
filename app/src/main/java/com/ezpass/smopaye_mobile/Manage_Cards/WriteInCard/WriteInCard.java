@@ -1,4 +1,4 @@
-package com.ezpass.smopaye_mobile.Manage_Cards;
+package com.ezpass.smopaye_mobile.Manage_Cards.WriteInCard;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -23,12 +23,14 @@ import com.telpo.tps550.api.TelpoException;
 import com.telpo.tps550.api.nfc.Nfc;
 import com.telpo.tps550.api.util.StringUtil;
 
-public class InformationsCard extends AppCompatActivity {
+import java.util.Calendar;
+import java.util.Random;
 
-    private EditText idCarte, numCarteLong, numCarteCourt, typeCarte1, atqa1, sak1;
-    private Button BtnOpenNFC;
-    private AlertDialog.Builder build;
-    private ProgressDialog progressDialog;
+public class WriteInCard extends AppCompatActivity {
+
+    private Button BtnEcrireCarte, BtnEcrireCarteSaveBDAuto;
+    private EditText numCartePrive, numCartePublic, numCartePriveAuto, numCartePublicAuto;
+
     ///////////////////////////////////////////
     private EditText uid_editText = null;
     private Thread readThread;
@@ -41,37 +43,112 @@ public class InformationsCard extends AppCompatActivity {
     private final byte A_CPU = 1;
     private final byte A_M1 = 2;
     private Nfc nfc = new Nfc(this);
-    long time1, time2;
-    private final String TAG = "EnregCarte";
+    private long time1, time2;
+    private final String TAG = "EcrireCarte";
+    private ProgressDialog progressDialog;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_informations_card);
+        setContentView(R.layout.activity_write_in_card);
 
-        getSupportActionBar().setTitle(getString(R.string.gesCard));
+        getSupportActionBar().setTitle(getString(R.string.writeInCard));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        BtnEcrireCarte = (Button) findViewById(R.id.BtnEcrireCarte);
+        numCartePrive = (EditText) findViewById(R.id.numCartePrive);
+        numCartePublic = (EditText) findViewById(R.id.numCartePublic);
 
-        idCarte = (EditText) findViewById(R.id.idCarte);
-        numCarteLong = (EditText) findViewById(R.id.numCarteLong);
-        numCarteCourt = (EditText) findViewById(R.id.numCarteCourt);
-        typeCarte1 = (EditText) findViewById(R.id.typeCarte1);
-        atqa1 = (EditText) findViewById(R.id.atqa1);
-        sak1 = (EditText) findViewById(R.id.sak1);
+        BtnEcrireCarteSaveBDAuto = (Button) findViewById(R.id.BtnEcrireCarteSaveBDAuto);
+        numCartePriveAuto = (EditText) findViewById(R.id.numCartePriveAuto);
+        numCartePublicAuto = (EditText) findViewById(R.id.numCartePublicAuto);
 
+        progressDialog = new ProgressDialog(WriteInCard.this);
 
-        BtnOpenNFC = (Button) findViewById(R.id.BtnOpenNFC);
-
-        build = new AlertDialog.Builder(this);
-        progressDialog = new ProgressDialog(InformationsCard.this);
-
-        BtnOpenNFC.setOnClickListener(new View.OnClickListener() {
+        BtnEcrireCarte.setEnabled(false);
+        BtnEcrireCarte.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                if(numCartePrive.length() <= 0 || numCartePublic.length() <= 0){
+                    Toast.makeText(WriteInCard.this, getString(R.string.champsVide), Toast.LENGTH_SHORT).show();
+                }
+                else {
+
+                    if(numCartePrive.length() < 8 ){
+                        Toast.makeText(WriteInCard.this, getString(R.string.nbrCaractere) + " 8", Toast.LENGTH_SHORT).show();
+                    }
+
+                    else if(numCartePublic.length() < 32){
+                        Toast.makeText(WriteInCard.this, getString(R.string.nbrCaractere) + " 32", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        try {
+                            nfc.open();
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    // On ajoute un message à notre progress dialog
+                                    progressDialog.setMessage(getString(R.string.passerCarte));
+                                    // On donne un titre à notre progress dialog
+                                    progressDialog.setTitle(getString(R.string.attenteCarte));
+                                    // On spécifie le style
+                                    //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                                    // On affiche notre message
+                                    progressDialog.show();
+                                    //build.setPositiveButton("ok", new View.OnClickListener()
+                                }
+                            });
+                            readThread = new ReadThread();
+                            readThread.start();
+
+                        } catch (TelpoException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+
+            }
+        });
+
+
+
+        //ECRIRE ET SAUVEGARDER AUTOMATIQUEMENT DANS LA BD
+        BtnEcrireCarteSaveBDAuto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(!numCartePriveAuto.getText().toString().equalsIgnoreCase(""))
+                    numCartePriveAuto.setText("");
+                if(!numCartePublicAuto.getText().toString().equalsIgnoreCase(""))
+                    numCartePublicAuto.setText("");
+
+
+                //Compte a rebour de 30 secondes
+                /*new CountDownTimer(30000, 1000) {
+                    public void onTick(long millisUntilFinished) {
+                        numCartePriveAuto.setText(millisUntilFinished / 1000 + "");
+                        numCartePublicAuto.setText(millisUntilFinished / 1000 + "");
+                    }
+                    public void onFinish() {
+                        Toast.makeText(EcrireCarte.this, "Time Over", Toast.LENGTH_SHORT).show();
+                    }
+                }.start();*/
+
+
+                Calendar rightNow = Calendar.getInstance();
+                long offset = rightNow.get(Calendar.ZONE_OFFSET) +  rightNow.get(Calendar.DST_OFFSET);
+                String sinceMidnight = Long.toString((rightNow.getTimeInMillis() + offset) %  (24 * 60 * 60 * 1000));
+                String resultatLetter = genererLetter("abcdef");
+                String resultTotal = resultatLetter.toUpperCase() + sinceMidnight;
+                numCartePriveAuto.setText(resultTotal.substring(0, 8));
+                // numCartePublicAuto.setText(result);
                 try {
                     nfc.open();
 
@@ -176,10 +253,12 @@ public class InformationsCard extends AppCompatActivity {
                                     .setCancelable(false)
                                     .show();*/
 
-                            idCarte.setText(StringUtil.toHexString(uid));
+                            /*idCarte.setText(StringUtil.toHexString(uid));
                             typeCarte1.setText( "A " + type);
                             atqa1.setText(StringUtil.toHexString(atqa));
                             sak1.setText(StringUtil.toHexString(sak));
+                            m1CardAuthenticate();*/
+
                             m1CardAuthenticate();
                             progressDialog.dismiss();
                             try {
@@ -204,9 +283,35 @@ public class InformationsCard extends AppCompatActivity {
 
 
 
+    private String genererLetter(String alphabet){
+        // String alphabet= "abcdefghijklmnopqrstuvwxyz";
+        String s = "";
+        Random random = new Random();
+        int randomLen = 1+random.nextInt(9);
+        for (int i = 0; i < randomLen; i++) {
+            char c = alphabet.charAt(random.nextInt(6));
+            s+=c;
+        }
+        return s;
+    }
+
+
+
+    private static String generateCode() {
+
+        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String fullalphabet = alphabet + alphabet.toLowerCase() + "123456789";
+        Random random = new Random();
+
+        char code = fullalphabet.charAt(random.nextInt(9));
+
+        return Character.toString(code);
+
+    }
+
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         try {
             nfc.close();
         } catch (TelpoException e) {
@@ -235,11 +340,21 @@ public class InformationsCard extends AppCompatActivity {
 
         if (status) {
             Log.d(TAG, "m1CardAuthenticate success!");
-            //writeBlockData();
-            readBlockData();
+            //writeDataPublic();
 
-            //OwriteValueData();
-            readValueData();
+            Toast.makeText(this, "N°: " + readIDPrive(), Toast.LENGTH_SHORT).show();
+
+            if(readIDPrive().equalsIgnoreCase("00000000"))
+                writeDataPrive();
+            else
+            {
+                new AlertDialog.Builder(WriteInCard.this)
+                        .setMessage("Votre Carte contient déjà du contenu")
+                        .setPositiveButton("OK", null)
+                        .setCancelable(false)
+                        .show();
+                Toast.makeText(this, "Votre Carte contient déjà du contenu", Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
             Log.d(TAG, "m1CardAuthenticate fail!");
@@ -247,13 +362,13 @@ public class InformationsCard extends AppCompatActivity {
     }
 
 
-    private void writeBlockData() {
+    private void writeDataPublic() {
         byte[] blockData = null;
         String blockStr;
         Boolean status = true;
 
         Log.d(TAG, "writeBlockData...");
-        blockStr = numCarteLong.getText().toString();
+        blockStr = numCartePublic.getText().toString();
         blockData = toByteArray(blockStr);
 
         try {
@@ -273,28 +388,6 @@ public class InformationsCard extends AppCompatActivity {
         }
     }
 
-
-    private void readBlockData() {
-        byte[] data = null;
-        try {
-
-            time1 = System.currentTimeMillis();
-            data = nfc.m1_read_block(blockNum_1);
-            time2 = System.currentTimeMillis();
-            Log.e("yw read_block", (time2 - time1) + "");
-
-
-        } catch (TelpoException e) {
-            e.printStackTrace();
-        }
-
-        if (data == null) {
-            Log.e(TAG, "readBlockBtn fail!");
-            Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
-        } else {
-            numCarteLong.setText(StringUtil.toHexString(data));
-        }
-    }
 
 
     private static byte[] toByteArray(String hexString) {
@@ -369,33 +462,19 @@ public class InformationsCard extends AppCompatActivity {
     }
 
 
-    private void readValueData() {
-        byte[] data = null;
-        try {
-            data = nfc.m1_read_value(blockNum_2);
-        } catch (TelpoException e) {
-            e.printStackTrace();
-        }
-
-        if (null == data) {
-            Log.e(TAG, "readValueBtn fail!");
-            Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
-        } else {
-            numCarteCourt.setText(StringUtil.toHexString(data));
-        }
-    }
-
-    private void writeValueData() {
+    private void writeDataPrive() {
         byte[] valueData = null;
         String valueStr;
         boolean status = true;
 
         Log.d(TAG, "writeValueBtn...");
-        valueStr = numCarteCourt.getText().toString();
+        valueStr = numCartePriveAuto.getText().toString();
+        //valueStr = "00000000"; //initialisation
         valueData = toByteArray(valueStr);
 
         try {
             nfc.m1_write_value(blockNum_2, valueData, valueData.length);
+            //insertDataInDB(valueStr);
         } catch (TelpoException e) {
             status = false;
             e.printStackTrace();
@@ -410,6 +489,24 @@ public class InformationsCard extends AppCompatActivity {
         }
     }
 
+
+    private String readIDPrive() {
+        byte[] data = null;
+        try {
+            data = nfc.m1_read_value(blockNum_2);
+        } catch (TelpoException e) {
+            e.printStackTrace();
+        }
+
+        if (null == data) {
+            Log.e(TAG, "readValueBtn fail!");
+            Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
+            return null;
+        } else {
+            //numCarteCourt.setText(StringUtil.toHexString(data));
+            return StringUtil.toHexString(data);
+        }
+    }
 
 
     /*                    GESTION DU MENU DROIT                  */
@@ -450,4 +547,5 @@ public class InformationsCard extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

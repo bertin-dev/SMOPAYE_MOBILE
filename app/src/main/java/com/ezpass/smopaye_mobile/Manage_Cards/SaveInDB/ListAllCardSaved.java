@@ -1,4 +1,4 @@
-package com.ezpass.smopaye_mobile.Manage_Cards;
+package com.ezpass.smopaye_mobile.Manage_Cards.SaveInDB;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

@@ -1,4 +1,4 @@
-package com.ezpass.smopaye_mobile.Manage_Cards;
+package com.ezpass.smopaye_mobile.Manage_Cards.SaveInDB;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -41,12 +41,8 @@ import retrofit2.Response;
 
 public class SaveBD extends AppCompatActivity {
 
-    private Button PasserCarteSaveBDAuto, SaveCarte;
-    private EditText numCartePriveAuto, numCartePublicAuto;
     private static final String TAG = "SaveBD";
     private Context context;
-
-
     ///////////////////////////////////////////
     private EditText uid_editText = null;
     private Thread readThread;
@@ -62,7 +58,7 @@ public class SaveBD extends AppCompatActivity {
     private long time1, time2;
     private ProgressDialog progressDialog;
     private AlertDialog.Builder build_error;
-    private String myId = "";  //PAS ENCORE INITIALISER AVEC UNE VALEUR
+    private int myId = 0;  //PAS ENCORE INITIALISER AVEC UNE VALEUR
 
     /* Déclaration des objets liés à la communication avec le web service*/
     private ApiService service;

@@ -1,4 +1,4 @@
-package com.ezpass.smopaye_mobile.Manage_Cards;
+package com.ezpass.smopaye_mobile.Manage_Cards.WriteInCard;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -23,14 +23,11 @@ import com.telpo.tps550.api.TelpoException;
 import com.telpo.tps550.api.nfc.Nfc;
 import com.telpo.tps550.api.util.StringUtil;
 
-import java.util.Calendar;
-import java.util.Random;
+public class Reset extends AppCompatActivity {
 
-public class WriteInCard extends AppCompatActivity {
-
-    private Button BtnEcrireCarte, BtnEcrireCarteSaveBDAuto;
-    private EditText numCartePrive, numCartePublic, numCartePriveAuto, numCartePublicAuto;
-
+    private Button BtnInit;
+    private EditText numCartePriveAutoInit;
+    private static final String TAG = "Reset";
     ///////////////////////////////////////////
     private EditText uid_editText = null;
     private Thread readThread;
@@ -42,113 +39,28 @@ public class WriteInCard extends AppCompatActivity {
     private final byte B_CPU = 3;
     private final byte A_CPU = 1;
     private final byte A_M1 = 2;
-    private Nfc nfc = new Nfc(this);
+    Nfc nfc = new Nfc(this);
     private long time1, time2;
-    private final String TAG = "EcrireCarte";
     private ProgressDialog progressDialog;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_write_in_card);
+        setContentView(R.layout.activity_reset);
 
-        getSupportActionBar().setTitle(getString(R.string.writeInCard));
+        getSupportActionBar().setTitle(getString(R.string.gesCard));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        BtnEcrireCarte = (Button) findViewById(R.id.BtnEcrireCarte);
-        numCartePrive = (EditText) findViewById(R.id.numCartePrive);
-        numCartePublic = (EditText) findViewById(R.id.numCartePublic);
 
-        BtnEcrireCarteSaveBDAuto = (Button) findViewById(R.id.BtnEcrireCarteSaveBDAuto);
-        numCartePriveAuto = (EditText) findViewById(R.id.numCartePriveAuto);
-        numCartePublicAuto = (EditText) findViewById(R.id.numCartePublicAuto);
+        progressDialog = new ProgressDialog(Reset.this);
+        BtnInit = (Button) findViewById(R.id.BtnInit);
+        numCartePriveAutoInit = (EditText) findViewById(R.id.numCartePriveAutoInit);
 
-        progressDialog = new ProgressDialog(WriteInCard.this);
-
-        BtnEcrireCarte.setEnabled(false);
-        BtnEcrireCarte.setOnClickListener(new View.OnClickListener() {
+        BtnInit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(numCartePrive.length() <= 0 || numCartePublic.length() <= 0){
-                    Toast.makeText(WriteInCard.this, getString(R.string.champsVide), Toast.LENGTH_SHORT).show();
-                }
-                else {
-
-                    if(numCartePrive.length() < 8 ){
-                        Toast.makeText(WriteInCard.this, getString(R.string.nbrCaractere) + " 8", Toast.LENGTH_SHORT).show();
-                    }
-
-                    else if(numCartePublic.length() < 32){
-                        Toast.makeText(WriteInCard.this, getString(R.string.nbrCaractere) + " 32", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        try {
-                            nfc.open();
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                    // On ajoute un message à notre progress dialog
-                                    progressDialog.setMessage(getString(R.string.passerCarte));
-                                    // On donne un titre à notre progress dialog
-                                    progressDialog.setTitle(getString(R.string.attenteCarte));
-                                    // On spécifie le style
-                                    //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                                    // On affiche notre message
-                                    progressDialog.show();
-                                    //build.setPositiveButton("ok", new View.OnClickListener()
-                                }
-                            });
-                            readThread = new ReadThread();
-                            readThread.start();
-
-                        } catch (TelpoException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-
-            }
-        });
-
-
-
-        //ECRIRE ET SAUVEGARDER AUTOMATIQUEMENT DANS LA BD
-        BtnEcrireCarteSaveBDAuto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(!numCartePriveAuto.getText().toString().equalsIgnoreCase(""))
-                    numCartePriveAuto.setText("");
-                if(!numCartePublicAuto.getText().toString().equalsIgnoreCase(""))
-                    numCartePublicAuto.setText("");
-
-
-                //Compte a rebour de 30 secondes
-                /*new CountDownTimer(30000, 1000) {
-                    public void onTick(long millisUntilFinished) {
-                        numCartePriveAuto.setText(millisUntilFinished / 1000 + "");
-                        numCartePublicAuto.setText(millisUntilFinished / 1000 + "");
-                    }
-                    public void onFinish() {
-                        Toast.makeText(EcrireCarte.this, "Time Over", Toast.LENGTH_SHORT).show();
-                    }
-                }.start();*/
-
-
-                Calendar rightNow = Calendar.getInstance();
-                long offset = rightNow.get(Calendar.ZONE_OFFSET) +  rightNow.get(Calendar.DST_OFFSET);
-                String sinceMidnight = Long.toString((rightNow.getTimeInMillis() + offset) %  (24 * 60 * 60 * 1000));
-                String resultatLetter = genererLetter("abcdef");
-                String resultTotal = resultatLetter.toUpperCase() + sinceMidnight;
-                numCartePriveAuto.setText(resultTotal.substring(0, 8));
-                // numCartePublicAuto.setText(result);
                 try {
                     nfc.open();
 
@@ -157,9 +69,9 @@ public class WriteInCard extends AppCompatActivity {
                         public void run() {
 
                             // On ajoute un message à notre progress dialog
-                            progressDialog.setMessage(getString(R.string.passerCarte));
+                            progressDialog.setMessage("Passer la carte");
                             // On donne un titre à notre progress dialog
-                            progressDialog.setTitle(getString(R.string.attenteCarte));
+                            progressDialog.setTitle("En attente de carte");
                             // On spécifie le style
                             //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                             // On affiche notre message
@@ -173,9 +85,10 @@ public class WriteInCard extends AppCompatActivity {
                 } catch (TelpoException e) {
                     e.printStackTrace();
                 }
+
+
             }
         });
-
 
 
         handler = new Handler() {
@@ -283,35 +196,9 @@ public class WriteInCard extends AppCompatActivity {
 
 
 
-    private String genererLetter(String alphabet){
-        // String alphabet= "abcdefghijklmnopqrstuvwxyz";
-        String s = "";
-        Random random = new Random();
-        int randomLen = 1+random.nextInt(9);
-        for (int i = 0; i < randomLen; i++) {
-            char c = alphabet.charAt(random.nextInt(6));
-            s+=c;
-        }
-        return s;
-    }
-
-
-
-    private static String generateCode() {
-
-        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        String fullalphabet = alphabet + alphabet.toLowerCase() + "123456789";
-        Random random = new Random();
-
-        char code = fullalphabet.charAt(random.nextInt(9));
-
-        return Character.toString(code);
-
-    }
-
 
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         try {
             nfc.close();
         } catch (TelpoException e) {
@@ -342,53 +229,84 @@ public class WriteInCard extends AppCompatActivity {
             Log.d(TAG, "m1CardAuthenticate success!");
             //writeDataPublic();
 
-            Toast.makeText(this, "N°: " + readIDPrive(), Toast.LENGTH_SHORT).show();
-
-            if(readIDPrive().equalsIgnoreCase("00000000"))
-                writeDataPrive();
-            else
-            {
-                new AlertDialog.Builder(WriteInCard.this)
-                        .setMessage("Votre Carte contient déjà du contenu")
+            if(numCartePriveAutoInit.getText().toString().equalsIgnoreCase("00000000")) {
+                new AlertDialog.Builder(Reset.this)
+                        .setMessage("Votre Carte avait déjà été initialisé")
                         .setPositiveButton("OK", null)
                         .setCancelable(false)
                         .show();
-                Toast.makeText(this, "Votre Carte contient déjà du contenu", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                writeDataPrive();
+                //Toast.makeText(this, "Votre Carte est déjà initialisé", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
             Log.d(TAG, "m1CardAuthenticate fail!");
         }
+        progressDialog.dismiss();
     }
 
 
-    private void writeDataPublic() {
-        byte[] blockData = null;
-        String blockStr;
-        Boolean status = true;
+    private class ReadThread extends Thread {
+        byte[] nfcData = null;
 
-        Log.d(TAG, "writeBlockData...");
-        blockStr = numCartePublic.getText().toString();
-        blockData = toByteArray(blockStr);
+        @Override
+        public void run() {
+            try {
+
+                time1 = System.currentTimeMillis();
+                nfcData = nfc.activate(10 * 1000); // 10s
+                time2 = System.currentTimeMillis();
+                Log.e("yw activate", (time2 - time1) + "");
+                if (null != nfcData) {
+                    handler.sendMessage(handler.obtainMessage(SHOW_NFC_DATA, nfcData));
+                } else {
+                    Log.d(TAG, "Check Card timeout...");
+                    handler.sendMessage(handler.obtainMessage(CHECK_NFC_TIMEOUT, null));
+                }
+            } catch (TelpoException e) {
+                Log.e("yw", e.toString());
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private void writeDataPrive() {
+        byte[] valueData = null;
+        String valueStr;
+        boolean status = true;
+
+        Log.d(TAG, "writeValueBtn...");
+        //valueStr = numCartePriveAutoInit.getText().toString();
+        valueStr = "00000000"; //initialisation
+        valueData = toByteArray(valueStr);
 
         try {
-            nfc.m1_write_block(blockNum_1, blockData, blockData.length);
+            nfc.m1_write_value(blockNum_2, valueData, valueData.length);
+            //insertDataInDB(valueStr);
         } catch (TelpoException e) {
             status = false;
-            Log.e("yw", e.toString());
             e.printStackTrace();
         }
 
         if (status) {
-            Log.d(TAG, "writeBlockData success!");
+            Log.d(TAG, "writeValueData success!");
             Toast.makeText(this, getString(R.string.operation_succss), Toast.LENGTH_SHORT).show();
+            new AlertDialog.Builder(Reset.this)
+                    .setMessage("Carte reinitialisé avec success")
+                    .setPositiveButton("OK", null)
+                    .setCancelable(false)
+                    .show();
+            numCartePriveAutoInit.setText(valueStr);
         } else {
-            Log.e(TAG, "writeBlockData fail!");
+            Log.e(TAG, "writeValueData fail!");
             Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
         }
+        progressDialog.dismiss();
     }
-
-
 
     private static byte[] toByteArray(String hexString) {
         int hexStringLength = hexString.length();
@@ -435,78 +353,6 @@ public class WriteInCard extends AppCompatActivity {
         return byteArray;
     }
 
-
-
-    private class ReadThread extends Thread {
-        byte[] nfcData = null;
-
-        @Override
-        public void run() {
-            try {
-
-                time1 = System.currentTimeMillis();
-                nfcData = nfc.activate(10 * 1000); // 10s
-                time2 = System.currentTimeMillis();
-                Log.e("yw activate", (time2 - time1) + "");
-                if (null != nfcData) {
-                    handler.sendMessage(handler.obtainMessage(SHOW_NFC_DATA, nfcData));
-                } else {
-                    Log.d(TAG, "Check Card timeout...");
-                    handler.sendMessage(handler.obtainMessage(CHECK_NFC_TIMEOUT, null));
-                }
-            } catch (TelpoException e) {
-                Log.e("yw", e.toString());
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-    private void writeDataPrive() {
-        byte[] valueData = null;
-        String valueStr;
-        boolean status = true;
-
-        Log.d(TAG, "writeValueBtn...");
-        valueStr = numCartePriveAuto.getText().toString();
-        //valueStr = "00000000"; //initialisation
-        valueData = toByteArray(valueStr);
-
-        try {
-            nfc.m1_write_value(blockNum_2, valueData, valueData.length);
-            //insertDataInDB(valueStr);
-        } catch (TelpoException e) {
-            status = false;
-            e.printStackTrace();
-        }
-
-        if (status) {
-            Log.d(TAG, "writeValueData success!");
-            Toast.makeText(this, getString(R.string.operation_succss), Toast.LENGTH_SHORT).show();
-        } else {
-            Log.e(TAG, "writeValueData fail!");
-            Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-    private String readIDPrive() {
-        byte[] data = null;
-        try {
-            data = nfc.m1_read_value(blockNum_2);
-        } catch (TelpoException e) {
-            e.printStackTrace();
-        }
-
-        if (null == data) {
-            Log.e(TAG, "readValueBtn fail!");
-            Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
-            return null;
-        } else {
-            //numCarteCourt.setText(StringUtil.toHexString(data));
-            return StringUtil.toHexString(data);
-        }
-    }
 
 
     /*                    GESTION DU MENU DROIT                  */

@@ -1,58 +1,29 @@
-package com.ezpass.smopaye_mobile.Manage_Cards;
+package com.ezpass.smopaye_mobile.Manage_Cards.SaveInDB;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
 
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
-import com.ezpass.smopaye_mobile.Manage_Cards.SaveInDB.Menu_Save;
-import com.ezpass.smopaye_mobile.Manage_Cards.WriteInCard.Menu_Write;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 
-public class Accueil_Carte extends AppCompatActivity {
-
-    private LinearLayout Linear_SaveInBd;
-    private LinearLayout Linear_WriteInCard;
+public class UpdateBD extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_accueil_carte);
+        setContentView(R.layout.activity_update_bd);
 
-
-        getSupportActionBar().setTitle(getString(R.string.cardInfo));
+        getSupportActionBar().setTitle(getString(R.string.modifier));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
-        Linear_SaveInBd = (LinearLayout) findViewById(R.id.Linear_SaveInBd);
-        Linear_WriteInCard = (LinearLayout) findViewById(R.id.Linear_WriteInCard);
-
-
-
-        Linear_SaveInBd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Menu_Save.class);
-                startActivity(intent);
-            }
-        });
-
-        Linear_WriteInCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Menu_Write.class);
-                startActivity(intent);
-            }
-        });
     }
-
 
 
     /*                    GESTION DU MENU DROIT                  */

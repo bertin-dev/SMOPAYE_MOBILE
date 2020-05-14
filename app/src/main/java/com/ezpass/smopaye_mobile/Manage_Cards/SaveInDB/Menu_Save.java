@@ -1,4 +1,4 @@
-package com.ezpass.smopaye_mobile.Manage_Cards;
+package com.ezpass.smopaye_mobile.Manage_Cards.SaveInDB;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,53 +6,71 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.Button;
 
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
-import com.ezpass.smopaye_mobile.Manage_Cards.SaveInDB.Menu_Save;
-import com.ezpass.smopaye_mobile.Manage_Cards.WriteInCard.Menu_Write;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 
-public class Accueil_Carte extends AppCompatActivity {
+public class Menu_Save extends AppCompatActivity {
 
-    private LinearLayout Linear_SaveInBd;
-    private LinearLayout Linear_WriteInCard;
+    private Button BtnListCarteEnreg;
+    private Button BtnEnregCarte;
+    private Button BtnUpdate;
+    private Button BtnDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_accueil_carte);
+        setContentView(R.layout.activity_menu_save);
 
 
         getSupportActionBar().setTitle(getString(R.string.cardInfo));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        BtnListCarteEnreg = (Button) findViewById(R.id.BtnListCarteEnreg);
+        BtnEnregCarte = (Button) findViewById(R.id.BtnEnregCarte);
+        BtnUpdate = (Button) findViewById(R.id.BtnUpdate);
+        BtnDelete = (Button) findViewById(R.id.BtnDelete);
 
-        Linear_SaveInBd = (LinearLayout) findViewById(R.id.Linear_SaveInBd);
-        Linear_WriteInCard = (LinearLayout) findViewById(R.id.Linear_WriteInCard);
 
 
-
-        Linear_SaveInBd.setOnClickListener(new View.OnClickListener() {
+        BtnListCarteEnreg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Menu_Save.class);
+                Intent intent = new Intent(getApplicationContext(), ListAllCardSaved.class);
                 startActivity(intent);
             }
         });
 
-        Linear_WriteInCard.setOnClickListener(new View.OnClickListener() {
+        BtnEnregCarte.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Menu_Write.class);
+                Intent intent = new Intent(getApplicationContext(), SaveBD.class);
                 startActivity(intent);
             }
         });
+
+        BtnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), UpdateBD.class);
+                startActivity(intent);
+            }
+        });
+
+        BtnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DeleteBD.class);
+                startActivity(intent);
+            }
+        });
+
+
     }
-
 
 
     /*                    GESTION DU MENU DROIT                  */
