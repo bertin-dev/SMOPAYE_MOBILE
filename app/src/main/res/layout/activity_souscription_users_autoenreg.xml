@@ -6,10 +6,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:id="@+id/souscription"
+    android:id="@+id/auto_souscription"
     android:background="@color/white"
     tools:context=".vuesUtilisateur.Souscription_User_AutoEnreg">
-
 
 
     <LinearLayout
@@ -31,58 +30,93 @@
             android:orientation="vertical"
             android:foregroundGravity="center_horizontal|center_vertical">
 
-
-            <EditText
-                android:id="@+id/nom"
-                android:textColor="@color/bgColorStandard"
-                android:layout_gravity="center"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_nom"
                 android:hint="@string/nom"
-                android:imeOptions="actionNext"
-                android:padding="10dp"
-                android:layout_marginBottom="20dp"
+                android:textColorHint="@color/bgColorStandard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:inputType="text"
-                android:textStyle="bold|italic"
-                android:background="@drawable/edittextborder"
-                android:layout_width="match_parent"
-                android:textColorHint="@color/bgColorStandard"
-                android:layout_height="wrap_content" />
+                app:errorEnabled="true">
 
-            <EditText
-                android:id="@+id/prenom"
-                android:textColor="@color/bgColorStandard"
-                android:layout_gravity="center"
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tie_nom"
+                    android:textColor="@color/bgColorStandard"
+                    android:layout_gravity="center"
+                    android:imeOptions="actionNext"
+                    android:padding="7dp"
+                    android:drawablePadding="7dp"
+                    android:maxLines="1"
+                    android:inputType="textPersonName"
+                    android:background="@drawable/edittextborder"
+                    android:textStyle="bold|italic"
+                    android:textColorHint="@color/bgColorStandard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_prenom"
                 android:hint="@string/prenom"
-                android:imeOptions="actionNext"
-                android:padding="10dp"
-                android:textStyle="bold|italic"
-                android:layout_marginBottom="20dp"
+                android:textColorHint="@color/bgColorStandard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:inputType="text"
-                android:background="@drawable/edittextborder"
-                android:layout_width="match_parent"
-                android:textColorHint="@color/bgColorStandard"
-                android:layout_height="wrap_content" />
+                app:errorEnabled="true">
 
-            <EditText
-                android:id="@+id/numeroTel"
-                android:textColor="@color/bgColorStandard"
-                android:layout_gravity="center"
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tie_prenom"
+                    android:textColor="@color/bgColorStandard"
+                    android:layout_gravity="center"
+                    android:imeOptions="actionNext"
+                    android:padding="7dp"
+                    android:drawablePadding="7dp"
+                    android:maxLines="1"
+                    android:inputType="textPersonName"
+                    android:background="@drawable/edittextborder"
+                    android:textStyle="bold|italic"
+                    android:textColorHint="@color/bgColorStandard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_numeroTel"
                 android:hint="@string/telephone"
-                android:imeOptions="actionNext"
-                android:padding="10dp"
-                android:layout_marginBottom="20dp"
+                android:textColorHint="@color/bgColorStandard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:inputType="number"
-                android:maxLength="9"
-                android:textStyle="bold|italic"
-                android:background="@drawable/edittextborder"
-                android:layout_width="match_parent"
-                android:textColorHint="@color/bgColorStandard"
-                android:layout_height="wrap_content" />
+                app:counterEnabled="true"
+                app:counterMaxLength="9"
+                app:errorEnabled="true">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tie_numeroTel"
+                    android:textColor="@color/bgColorStandard"
+                    android:layout_gravity="center"
+                    android:imeOptions="actionNext"
+                    android:padding="7dp"
+                    android:drawablePadding="7dp"
+                    android:maxLines="1"
+                    android:inputType="number"
+                    android:background="@drawable/edittextborder"
+                    android:textStyle="bold|italic"
+                    android:textColorHint="@color/bgColorStandard"
+                    android:layout_width="match_parent"
+                    android:maxLength="9"
+                    android:layout_height="wrap_content"/>
+
+
+            </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -105,8 +139,7 @@
                     android:textStyle="bold|italic"
                     android:textSize="17sp"
                     android:textColorHint="@color/bgColorStandard"
-                    android:textColor="@color/bgColorStandard"
-                    />
+                    android:textColor="@color/bgColorStandard" />
 
                 <Spinner
                     android:id="@+id/typePjustificative"
@@ -123,39 +156,62 @@
 
             </LinearLayout>
 
-            <EditText
-                android:id="@+id/cni"
-                android:textColor="@color/bgColorStandard"
-                android:layout_gravity="center"
-                android:hint="@string/cni"
-                android:imeOptions="actionNext"
-                android:padding="10dp"
-                android:layout_marginBottom="20dp"
-                android:textStyle="bold|italic"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_cni"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:inputType="text"
-                android:background="@drawable/edittextborder"
-                android:layout_width="match_parent"
-                android:textColorHint="@color/bgColorStandard"
-                android:layout_height="wrap_content" />
+                app:errorEnabled="true">
 
-            <EditText
-                android:id="@+id/adresse"
-                android:textColor="@color/bgColorStandard"
-                android:layout_gravity="center"
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tie_cni"
+                    android:textColor="@color/bgColorStandard"
+                    android:layout_gravity="center"
+                    android:imeOptions="actionNext"
+                    android:padding="7dp"
+                    android:drawablePadding="7dp"
+                    android:maxLines="1"
+                    android:inputType="text"
+                    android:background="@drawable/edittextborder"
+                    android:textStyle="bold|italic"
+                    android:textColorHint="@color/bgColorStandard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+
+            </android.support.design.widget.TextInputLayout>
+
+
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_adresse"
                 android:hint="@string/adresse"
-                android:imeOptions="actionNext"
-                android:padding="10dp"
-                android:layout_marginBottom="20dp"
-                android:textStyle="bold|italic"
+                android:textColorHint="@color/bgColorStandard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:inputType="text"
-                android:background="@drawable/edittextborder"
-                android:layout_width="match_parent"
-                android:textColorHint="@color/bgColorStandard"
-                android:layout_height="wrap_content" />
+                app:errorEnabled="true">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tie_adresse"
+                    android:textColor="@color/bgColorStandard"
+                    android:layout_gravity="center"
+                    android:imeOptions="actionNext"
+                    android:padding="7dp"
+                    android:drawablePadding="7dp"
+                    android:maxLines="1"
+                    android:inputType="text"
+                    android:background="@drawable/edittextborder"
+                    android:textStyle="bold|italic"
+                    android:textColorHint="@color/bgColorStandard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+
+            </android.support.design.widget.TextInputLayout>
 
 
             <LinearLayout
@@ -163,7 +219,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:imeOptions="actionNext"
-                android:padding="10dp"
+                android:padding="7dp"
+                android:drawablePadding="7dp"
                 android:textStyle="bold|italic"
                 android:gravity="center"
                 android:layout_gravity="center_horizontal|center_vertical"
@@ -190,7 +247,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:imeOptions="actionNext"
-                    android:padding="8dp"
+                    android:padding="7dp"
+                    android:drawablePadding="7dp"
                     android:textStyle="bold|italic"
                     android:textColorHint="@color/bgColorStandard"
                     android:textColor="@color/bgColorStandard"
@@ -202,7 +260,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:padding="10dp"
+                android:padding="7dp"
+                android:drawablePadding="7dp"
                 android:imeOptions="actionNext"
                 android:gravity="center"
                 android:layout_gravity="center_horizontal|center_vertical"
@@ -219,8 +278,7 @@
                     android:textStyle="bold|italic"
                     android:textSize="17sp"
                     android:textColorHint="@color/bgColorStandard"
-                    android:textColor="@color/bgColorStandard"
-                    />
+                    android:textColor="@color/bgColorStandard" />
 
                 <android.support.v7.widget.AppCompatSpinner
                     android:id="@+id/statut"
@@ -229,7 +287,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:imeOptions="actionNext"
-                    android:padding="8dp"
+                    android:padding="7dp"
+                    android:drawablePadding="7dp"
                     android:textStyle="bold|italic"
                     android:textColorHint="@color/bgColorStandard"
                     android:textColor="@color/bgColorStandard"/>
@@ -241,7 +300,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:imeOptions="actionNext"
-                android:padding="10dp"
+                android:padding="7dp"
+                android:drawablePadding="7dp"
                 android:gravity="center"
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_marginRight="10dp"
@@ -269,7 +329,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:imeOptions="actionNext"
-                    android:padding="8dp"
+                    android:padding="7dp"
+                    android:drawablePadding="7dp"
                     android:textStyle="bold|italic"
                     android:textColorHint="@color/bgColorStandard"
                     android:textColor="@color/bgColorStandard"/>
@@ -278,131 +339,6 @@
 
             </LinearLayout>
 
-            <!-- <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_marginBottom="20dp"
-                 android:imeOptions="actionNext"
-                 android:padding="10dp"
-                 android:gravity="center"
-                 android:layout_gravity="center_horizontal|center_vertical"
-                 android:layout_marginRight="10dp"
-                 android:layout_marginLeft="10dp"
-                 android:weightSum="100"
-                 android:orientation="horizontal">
-
-                 <TextView
-                     android:layout_width="0dp"
-                     android:layout_weight="25"
-                     android:layout_height="wrap_content"
-                     android:text="@string/operateur"
-                     android:textSize="17sp"
-                     android:textStyle="bold|italic"
-                     android:textColorHint="@color/bgColorStandard"
-                     android:textColor="@color/bgColorStandard"
-                     />
-
-                 <Spinner
-                     android:id="@+id/operateurs"
-                     android:layout_weight="75"
-                     android:layout_width="0dp"
-                     android:layout_height="wrap_content"
-                     android:layout_gravity="center"
-                     android:imeOptions="actionNext"
-                     android:padding="8dp"
-                     android:textStyle="bold|italic"
-                     android:background="@drawable/edittextborder"
-                     android:textColorHint="@color/bgColorStandard"
-                     android:textColor="@color/bgColorStandard"
-                     android:entries="@array/operateurs"/>
-
-             </LinearLayout>-->
-
-            <EditText
-                android:id="@+id/numCarte"
-                android:textColor="@color/bgColorStandard"
-                android:layout_gravity="center"
-                android:hint="@string/numdelaCarte"
-                android:imeOptions="actionNext"
-                android:layout_marginBottom="10dp"
-                android:padding="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
-                android:inputType="text"
-                android:visibility="gone"
-                android:textStyle="bold|italic"
-                android:background="@drawable/edittextborder"
-                android:layout_width="match_parent"
-                android:textColorHint="@color/bgColorStandard"
-                android:layout_height="wrap_content" />
-
-
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:padding="10dp"
-                android:gravity="center"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:weightSum="100"
-                android:visibility="gone"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="40"
-                    android:layout_height="wrap_content"
-                    android:text="@string/abonnement"
-                    android:textSize="17sp"
-                    android:textStyle="bold|italic"
-                    android:textColorHint="@color/bgColorStandard"
-                    android:textColor="@color/bgColorStandard"
-                    />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="60"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <CheckBox
-                        android:id="@+id/AbonnementMensuel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="onCheckboxClicked"
-                        android:textColor="@color/bgColorStandard"
-                        android:textStyle="bold|italic"
-                        android:theme="@style/BlueCheck"
-                        android:text="@string/AbonnementMensuel" />
-
-                    <CheckBox
-                        android:id="@+id/AbonnementHebdomadaire"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="onCheckboxClicked"
-                        android:textColor="@color/bgColorStandard"
-                        android:textStyle="bold|italic"
-                        android:theme="@style/BlueCheck"
-                        android:text="@string/AbonnementHebdomadaire" />
-
-                    <CheckBox
-                        android:id="@+id/AbonnementService"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="onCheckboxClicked"
-                        android:textStyle="bold|italic"
-                        android:textColor="@color/bgColorStandard"
-                        android:text="@string/AbonnementService"
-                        android:theme="@style/BlueCheck"
-                        android:checked="true"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
 
             <TextView
                 android:textColor="@color/bgColorStandard"
@@ -421,6 +357,7 @@
             <LinearLayout
                 android:gravity="center"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="30dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:textAlignment="center"
@@ -463,19 +400,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content">
-                <ProgressBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:id="@+id/pbLoader"
-                    android:visibility="invisible"/>
-
-            </LinearLayout>
         </LinearLayout>
 
 
@@ -505,7 +429,8 @@
                 android:textColor="@color/bgColorStandard"
                 android:textSize="20sp"
                 android:layout_marginBottom="20dp"
-                android:text="@string/connexionIntrouvable" />
+                android:text="@string/connexionIntrouvable"
+                android:gravity="center_horizontal" />
 
 
             <TextView
@@ -519,7 +444,8 @@
                 android:paddingLeft="10dp"
                 android:textColor="@color/textColorStandard"
                 android:textSize="15sp"
-                android:text="@string/msgConnexionInternetIntrouvable" />
+                android:text="@string/msgConnexionInternetIntrouvable"
+                android:gravity="center_horizontal" />
 
             <Button
                 android:id="@+id/btnReessayer"

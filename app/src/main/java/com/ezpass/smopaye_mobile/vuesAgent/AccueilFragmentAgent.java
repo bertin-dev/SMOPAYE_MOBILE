@@ -1,15 +1,10 @@
 package com.ezpass.smopaye_mobile.vuesAgent;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,35 +18,22 @@ import com.ezpass.smopaye_mobile.MenuQRCode;
 import com.ezpass.smopaye_mobile.MenuRetraitOperateur;
 import com.ezpass.smopaye_mobile.PayerFacture;
 import com.ezpass.smopaye_mobile.R;
-import com.ezpass.smopaye_mobile.ServicesIndisponible;
 import com.ezpass.smopaye_mobile.vuesAccepteur.ConsulterSolde;
 import com.ezpass.smopaye_mobile.vuesAccepteur.VerifierNumCarte;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.RechargePropreCompte;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.Souscription;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
-import java.io.FileInputStream;
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
-
-import static android.content.Context.CLIPBOARD_SERVICE;
 
 public class AccueilFragmentAgent extends Fragment {
 
-    TextView jour, jourSemaine, moisAnnee, categorie, session;
-    LinearLayout RechargeAvecCashAgent, ConsultSoldeAgent, CheckCardNumberAgent, btnPayerFacture, btnQrCode, btnRetraitOperateur;
-    FloatingActionButton InscriptionUserByAgent;
+    private TextView jour, jourSemaine, moisAnnee, categorie, session;
+    private LinearLayout RechargeAvecCashAgent, ConsultSoldeAgent, CheckCardNumberAgent, btnPayerFacture, btnQrCode, btnRetraitOperateur;
+    private FloatingActionButton InscriptionUserByAgent;
     private Button consulterHistoriqueAgent;
-
-    /////////////////////////////////LIRE CONTENU DES FICHIERS////////////////////
-    String file = "tmp_number";
-    int c;
-    String temp_number = "";
+    private String statut1, telephone, code_number_sender, mycategorie;
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         View view =  inflater.inflate(R.layout.fragment_accueil_agent, container, false);
@@ -71,30 +53,19 @@ public class AccueilFragmentAgent extends Fragment {
         jourSemaine = (TextView) view.findViewById(R.id.jourSemaine);
         moisAnnee   = (TextView) view.findViewById(R.id.moisAnnee);
 
-        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
-        try{
-            FileInputStream fIn = getActivity().openFileInput(file);
-            while ((c = fIn.read()) != -1){
-                temp_number = temp_number + Character.toString((char)c);
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
 
 
 
         //recupération des informations de la BD pendant l'authentificatiion sous forme de SESSION
         //avec les données quittant de Activity -> Fragment
         assert getArguments() != null;
-        String retour = getArguments().getString("result_BD");
-        assert retour != null;
-        String[] parts = retour.split("-");
-        String statut1 = parts[2]; // utilisateur, accepteur , agent
+        telephone = getArguments().getString("telephone");
+        statut1 = getArguments().getString("role");
+        code_number_sender = getArguments().getString("compte");
+        mycategorie = getArguments().getString("categorie");
 
-        String catAgent = parts[4]; // chauffeur, moto_taxi, bus, cargo
-        categorie.setText(catAgent);
-        session.setText(statut1);
+        categorie.setText(mycategorie); // chauffeur, moto_taxi, bus, cargo   A GERER DANS LE NOUVEAU WEB SERVICE
+        session.setText(statut1); //Administrateur, Utilisateur etc...
 
 
 
@@ -157,8 +128,6 @@ public class AccueilFragmentAgent extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MenuHistoriqueTransaction.class);
                 startActivity(intent);
-                /*Intent intent = new Intent(getActivity(), ServicesIndisponible.class);
-                startActivity(intent);*/
             }
         });
 
@@ -170,7 +139,8 @@ public class AccueilFragmentAgent extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PayerFacture.class);
-                intent.putExtra("telephone", temp_number);
+                intent.putExtra("compte", code_number_sender);
+                intent.putExtra("telephone", telephone);
                 startActivity(intent);
             }
         });

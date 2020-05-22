@@ -19,14 +19,14 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
     private EditText editTextMontant, edit_num_carte;
     private QRCodeModalDialog.ExampleDialogListener listener;
     /////////////////////////////////LIRE CONTENU DES FICHIERS////////////////////
-    String file = "tmp_data_user";
-    int c;
-    String tmp_data = "";
+    private String file = "tmp_number";
+    private int c;
+    private String numCarteDonataire= "";
 
 
-    public QRCodeModalDialog newInstanceCode(String numCarteAccepteur) {
+    public QRCodeModalDialog newInstanceCode(String numCarteBeneficiaire) {
         Bundle args = new Bundle();
-        args.putString("contenuCode", numCarteAccepteur);
+        args.putString("numCarteBeneficiaire", numCarteBeneficiaire);
         QRCodeModalDialog frag = new QRCodeModalDialog();
         frag.setArguments(args);
         return frag;
@@ -47,16 +47,14 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
         try{
             FileInputStream fIn = getActivity().openFileInput(file);
             while ((c = fIn.read()) != -1){
-                tmp_data = tmp_data + Character.toString((char)c);
+                numCarteDonataire = numCarteDonataire + Character.toString((char)c);
             }
         }
         catch (Exception e){
             e.printStackTrace();
         }
 
-        String[] parts = tmp_data.split("-");
-        String cardNumber = parts[10]; // 12345678
-        edit_num_carte.setText(cardNumber);
+        edit_num_carte.setText(numCarteDonataire);
 
         builder.setView(view)
                 .setTitle(getString(R.string.insererMontant))
@@ -69,11 +67,11 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String numCarteAccepteur = (String) getArguments().getString("contenuCode");
-                        String numCarteUser = edit_num_carte.getText().toString().trim();
+                        String beneficiaireCard = (String) getArguments().getString("numCarteBeneficiaire");
+                        String donataireCard = edit_num_carte.getText().toString().trim();
                         String montant = editTextMontant.getText().toString().trim();
 
-                        if(numCarteUser.equalsIgnoreCase("")){
+                        if(donataireCard.equalsIgnoreCase("")){
                             Toast.makeText(getContext(), getString(R.string.veuillezInsererCompte), Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -83,7 +81,7 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
                             return;
                         }
 
-                            listener.applyTexts(numCarteAccepteur, numCarteUser, montant);
+                            listener.applyTexts(beneficiaireCard, donataireCard, montant);
                     }
                 });
 
@@ -103,6 +101,6 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
     }
 
     public interface ExampleDialogListener {
-        void applyTexts(String numCarteAccepteur, String numCarteUtilisateur, String montantUtilisateur);
+        void applyTexts(String beneficiaireCard, String donataireCard, String montant);
     }
 }

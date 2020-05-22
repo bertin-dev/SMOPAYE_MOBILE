@@ -17,14 +17,13 @@
             android:orientation="vertical"
             android:gravity="top"
             android:background="#FFF"
-            android:textAlignment="center"
             android:foregroundGravity="center_horizontal|center_vertical"
             android:layout_gravity="top">
 
             <LinearLayout
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -147,7 +146,7 @@
                 android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/debicarte"
+                    android:id="@+id/numCarteCache"
                     android:layout_marginTop="60dp"
                     android:layout_gravity="center"
                     android:hint="numCarte"
@@ -157,22 +156,33 @@
                     android:visibility="gone"
                     android:layout_height="wrap_content" />
 
-                <EditText
-                    android:id="@+id/debitmontant"
-                    android:textColor="@color/bgColorStandard"
-                    android:layout_gravity="center"
-                    android:hint="@string/montant"
-                    android:imeOptions="actionNext"
-                    android:padding="10dp"
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/til_debitmontant"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
                     android:layout_marginLeft="20dp"
-                    android:inputType="number"
-                    android:textSize="40sp"
-                    android:textStyle="bold|italic"
-                    android:background="@drawable/edittextborder"
-                    android:layout_width="match_parent"
+                    android:hint="@string/montant"
                     android:textColorHint="@color/bgColorStandard"
-                    android:layout_height="wrap_content" />
+                    app:errorEnabled="true">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/tie_debitmontant"
+                        android:textColor="@color/bgColorStandard"
+                        android:layout_gravity="center"
+                        android:maxLines="1"
+                        android:textStyle="bold|italic"
+                        android:imeOptions="actionDone"
+                        android:padding="10dp"
+                        android:textSize="40sp"
+                        android:inputType="number"
+                        android:background="@drawable/edittextborder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+
+                </android.support.design.widget.TextInputLayout>
 
 
                 <LinearLayout
@@ -196,30 +206,8 @@
                         android:background="@drawable/btn_rounded"
                         android:text="@string/passerCarte" />
 
-
-                    <!--////////////////////////BOUTON MONETBIL////////////////////////////////////////-->
-                    <Button
-                        android:id="@+id/onMakePaymentPress"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:text="Monetbil"/>
-
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_height="wrap_content">
-                    <ProgressBar
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="20dp"
-                        android:id="@+id/pbLoader"
-                        android:visibility="invisible"/>
-
-                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -248,7 +236,8 @@
                     android:textColor="@color/bgColorStandard"
                     android:textSize="20sp"
                     android:layout_marginBottom="20dp"
-                    android:text="@string/connexionIntrouvable" />
+                    android:text="@string/connexionIntrouvable"
+                    android:gravity="center_horizontal" />
 
 
                 <TextView
@@ -262,7 +251,8 @@
                     android:paddingLeft="10dp"
                     android:textColor="@color/textColorStandard"
                     android:textSize="15sp"
-                    android:text="@string/msgConnexionInternetIntrouvable" />
+                    android:text="@string/msgConnexionInternetIntrouvable"
+                    android:gravity="center_horizontal" />
 
                 <Button
                     android:id="@+id/btnReessayer"

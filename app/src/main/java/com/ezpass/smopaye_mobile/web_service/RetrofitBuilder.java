@@ -15,7 +15,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
 
 public class RetrofitBuilder {
 
-    private static final String BASE_URL = "http://192.168.0.10/tutos/tuto_passport/public/api/";
+    private static final String BASE_URL = "https://webservice.domaineteste.space.smopaye.fr/public/";
 
     private final static OkHttpClient client = buildClient();
     private final static Retrofit retrofit = buildRetrofit(client);

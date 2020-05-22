@@ -4,11 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,8 +65,9 @@ public class DemarrageOffreSmopaye extends AppCompatActivity {
 
         // layouts of welcome sliders
         layouts = new int[]{
-                R.layout.activity_slide3_offre_smopaye,
-                R.layout.slide2_offre_smopaye
+                R.layout.slide1_offre_smopaye,
+                R.layout.slide2_offre_smopaye,
+                R.layout.slide3_offre_smopaye
         };
 
         // adding bottom dots
@@ -91,7 +91,7 @@ public class DemarrageOffreSmopaye extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // checking for last page if true launch MainActivity
-                int current = getItem(+1);
+                int current = getItem(+2);
                 if (current < layouts.length) {
                     // move to next screen
                     viewPager.setCurrentItem(current);
@@ -105,7 +105,7 @@ public class DemarrageOffreSmopaye extends AppCompatActivity {
 
 
     private void addBottomDots(int currentPage) {
-        dots = new TextView[layouts.length];
+        /*dots = new TextView[layouts.length];
 
         int[] colorsActive = getResources().getIntArray(R.array.array_dot_active);
         int[] colorsInactive = getResources().getIntArray(R.array.array_dot_inactive);
@@ -120,7 +120,7 @@ public class DemarrageOffreSmopaye extends AppCompatActivity {
         }
 
         if (dots.length > 0)
-            dots[currentPage].setTextColor(colorsActive[currentPage]);
+            dots[currentPage].setTextColor(colorsActive[currentPage]);*/
     }
 
     private int getItem(int i) {
@@ -145,7 +145,13 @@ public class DemarrageOffreSmopaye extends AppCompatActivity {
                 // last page. make button text to GOT IT
                 btnNext.setText(getString(R.string.terminer));
                 btnSkip.setVisibility(View.GONE);
-            } else {
+            }
+            else if (position == layouts.length - 2) {
+                // last page. make button text to GOT IT
+                btnNext.setText(getString(R.string.next));
+                btnSkip.setVisibility(View.VISIBLE);
+            }
+            else {
                 // still pages are left
                 btnNext.setText(getString(R.string.next));
                 btnSkip.setVisibility(View.VISIBLE);
@@ -210,6 +216,11 @@ public class DemarrageOffreSmopaye extends AppCompatActivity {
                         startActivity(intent);
                     }
                     if(position == 1){
+                        Intent intent = new Intent(getApplicationContext(), WebViewMonetbil.class);
+                        intent.putExtra("urlMonetbil", "https://smopaye.cm.smopaye.cm/detail_tpe");
+                        startActivity(intent);
+                    }
+                    if(position == 2){
                         Intent intent = new Intent(getApplicationContext(), WebViewMonetbil.class);
                         intent.putExtra("urlMonetbil", "https://smopaye.cm.smopaye.cm/detail_tpe");
                         startActivity(intent);

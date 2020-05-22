@@ -5,10 +5,10 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.R;
-import com.ezpass.smopaye_mobile.Tutoriel;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.telpo.tps550.api.TelpoException;
@@ -75,7 +74,7 @@ public class VerifierNumCarte extends AppCompatActivity {
         getSupportActionBar().setTitle(getString(R.string.numeroCarte));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        id_carte = (Button) findViewById(R.id.Btn_id_carte);
+        id_carte = (Button) findViewById(R.id.btnPasserCarte);
         showNumCarte = (LinearLayout) findViewById(R.id.afficheNumCarte);
         carte = (EditText) findViewById(R.id.id_carte);
         valeurAbonnement = (EditText) findViewById(R.id.valeurAbonnement);

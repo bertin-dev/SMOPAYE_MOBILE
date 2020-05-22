@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ezpass.smopaye_mobile">
 
+    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
+
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -24,16 +26,31 @@
     <application
         android:name=".NotifApp"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/logo_icon_official"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".checkInternetDynamically.OfflineActivity"></activity>
+        <activity android:name=".Setting.SendEmail"></activity>
+        <activity android:name=".Setting.EditProfil" />
+        <activity android:name=".Setting.MyAccount" />
+        <activity android:name=".Setting.Setting" />
+        <activity android:name=".Manage_Cards.SaveInDB.DeleteBD" />
+        <activity android:name=".Manage_Cards.SaveInDB.Menu_Save" />
+        <activity android:name=".Manage_Cards.WriteInCard.Menu_Write" />
+        <activity android:name=".Manage_Cards.SaveInDB.UpdateBD" />
+        <activity android:name=".Manage_Cards.SaveInDB.SaveBD" />
+        <activity android:name=".Manage_Cards.WriteInCard.WriteInCard" />
+        <activity android:name=".Manage_Cards.SaveInDB.ListAllCardSaved" />
+        <activity android:name=".Manage_Cards.WriteInCard.InformationsCard" />
+        <activity android:name=".Manage_Cards.WriteInCard.Reset" />
+        <activity android:name=".Manage_Cards.Accueil_Carte" />
+        <activity android:name=".checkInternetDynamically.OfflineActivity" />
         <activity android:name=".vuesUtilisateur.Souscription_User_AutoEnreg" />
         <activity
             android:name=".vuesUtilisateur.SouscriptionUploadIMGidCard"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity android:name=".RetraitChezSmopaye" />
         <activity android:name=".MenuRetraitOperateur" />
         <activity android:name=".AffichageQRCode" />
@@ -47,7 +64,6 @@
         <activity android:name=".vuesAdmin.ListUserAndAgentEdited" />
         <activity android:name=".vuesAdmin.SouscriptionGoogleOnly" />
         <activity android:name=".ServicesIndisponible" />
-        <activity android:name=".Slide3_offre_smopaye" />
         <activity android:name=".vuesAdmin.ModifListUserAndAgents" />
         <activity
             android:name=".vuesAdmin.ListeUserAndAgents"
@@ -146,7 +162,6 @@
         <activity
             android:name=".vuesAccepteur.DebitCarte"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".HideShowAndroidEditTextPassword" />
         <activity android:name=".Login" />
         <activity android:name=".Demarrage">
             <intent-filter>
@@ -186,11 +201,7 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service> <!-- QR CODE -->
-        <activity
-            android:name="com.journeyapps.barcodescanner.CaptureActivity"
-            android:screenOrientation="portrait"
-            tools:replace="screenOrientation" />
+        </service>
     </application>
 
 </manifest>

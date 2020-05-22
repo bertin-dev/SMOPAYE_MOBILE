@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="20dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingEnd="20dp">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="250dp"
+        android:layout_height="275dp"
+        android:paddingStart="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingEnd="20dp"
+        android:background="@color/white"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/txtclose"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:textColor="@android:color/white"
+            android:text="X"
+            android:textStyle="bold"
+            android:layout_gravity="end"
+            android:gravity="center"
+            android:background="@drawable/bg"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageView
+                android:cropToPadding="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/logo_icon_official_foreground"
+                android:layout_gravity="center"/>
+            <TextView
+                android:id="@+id/myVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Version 15.16.36"
+                android:textColor="@android:color/black"
+                android:layout_gravity="center_horizontal"/>
+
+            <TextView
+                android:id="@+id/copy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginBottom="50dp"
+                android:text="C 2020 E-ZPASS by Smopaye"
+                android:textColor="@android:color/darker_gray"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</ScrollView>

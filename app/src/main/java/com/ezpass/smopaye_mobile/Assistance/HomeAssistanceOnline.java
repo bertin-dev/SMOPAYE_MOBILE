@@ -1,6 +1,7 @@
 package com.ezpass.smopaye_mobile.Assistance;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -8,12 +9,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
@@ -34,7 +33,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.Nullable;
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -46,13 +44,8 @@ public class HomeAssistanceOnline extends AppCompatActivity {
     private DatabaseReference reference;
     private CircleImageView profil_image;
     private TextView username;
-    private String retourBD, telephone, sessionUser;
+    private String telephone, sessionUser;
 
-    private String file = "tmp_number";
-    private String file2 = "tmp_data_user";
-    int c;
-    private String temp_number = "";
-    private  String temp_databD = "";
 
 
     @Override
@@ -67,30 +60,9 @@ public class HomeAssistanceOnline extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
        // getSupportActionBar().hide();
 
-        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
-        try{
-            FileInputStream fIn = openFileInput(file);
-            while ((c = fIn.read()) != -1){
-                temp_number = temp_number + Character.toString((char)c);
-            }
-
-            FileInputStream fIn2 = openFileInput(file2);
-            while ((c = fIn2.read()) != -1){
-                temp_databD = temp_databD + Character.toString((char)c);
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
-        telephone = temp_number;
-        retourBD = temp_databD;
-       /* Intent intent = getIntent();
-        retourBD = intent.getStringExtra("resultatBD");
-        telephone = intent.getStringExtra("telephone");*/
-
-        String[] parts = retourBD.split("-");
-        sessionUser = parts[2]; // Accepteur, Administrateur, Utilisateur, Agent
+        Intent intent = getIntent();
+        telephone = intent.getStringExtra("telephone");
+        sessionUser = intent.getStringExtra("role");
 
 
         profil_image = findViewById(R.id.profile_image);

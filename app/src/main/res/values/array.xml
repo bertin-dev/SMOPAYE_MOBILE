@@ -48,6 +48,11 @@
     </string-array>
 
 
+    <string-array name="type_comment">
+        <item >Problème</item>
+        <item>Suggestion</item>
+        <item>Très satisfaisant</item>
+    </string-array>
 
 
 </resources>

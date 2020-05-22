@@ -1,14 +1,10 @@
 package com.ezpass.smopaye_mobile.vuesAdmin;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,35 +13,29 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ezpass.smopaye_mobile.Manage_Cards.Accueil_Carte;
 import com.ezpass.smopaye_mobile.MenuHistoriqueTransaction;
 import com.ezpass.smopaye_mobile.MenuQRCode;
 import com.ezpass.smopaye_mobile.PayerFacture;
 import com.ezpass.smopaye_mobile.R;
-import com.ezpass.smopaye_mobile.ServicesIndisponible;
 import com.ezpass.smopaye_mobile.vuesAccepteur.ConsulterSolde;
 import com.ezpass.smopaye_mobile.vuesAccepteur.VerifierNumCarte;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.RechargePropreCompte;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.Souscription;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
-import java.io.FileInputStream;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-import static android.content.Context.CLIPBOARD_SERVICE;
-
 public class AccueilFragmentAdmin  extends Fragment {
 
-    TextView jour, jourSemaine, moisAnnee;
-    LinearLayout GesCompt, CheckCardNumber, ConsulterSolde, RechargeAvecCashAdmin, btnPayerFacture, btnQrCode;
-    FloatingActionButton Register;
+    private TextView jour, jourSemaine, moisAnnee, myCategorie, myRole;
+    private LinearLayout GesCompt, CheckCardNumber, ConsulterSolde, RechargeAvecCashAdmin, btnPayerFacture, btnQrCode, btn_gesCartes;
+    private FloatingActionButton Register;
     private Button consulterHistoriqueAdmin;
-    /////////////////////////////////LIRE CONTENU DES FICHIERS////////////////////
-    String file = "tmp_number";
-    int c;
-    String temp_number = "";
+    private String code_number_sender, telephone, role, categorie;
+
+
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         View view =  inflater.inflate(R.layout.fragment_accueil_admin, container, false);
@@ -55,21 +45,26 @@ public class AccueilFragmentAdmin  extends Fragment {
         CheckCardNumber = (LinearLayout) view.findViewById(R.id.btnCheckCardNumber);
         ConsulterSolde = (LinearLayout) view.findViewById(R.id.btnConsulterSolde);
         RechargeAvecCashAdmin = (LinearLayout) view.findViewById(R.id.btnRechargeAvecCashAdmin);
+        btn_gesCartes = (LinearLayout) view.findViewById(R.id.btn_gesCartes);
 
         jour = (TextView) view.findViewById(R.id.jour);
         jourSemaine = (TextView) view.findViewById(R.id.jourSemaine);
         moisAnnee   = (TextView) view.findViewById(R.id.moisAnnee);
 
-        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
-        try{
-            FileInputStream fIn = getActivity().openFileInput(file);
-            while ((c = fIn.read()) != -1){
-                temp_number = temp_number + Character.toString((char)c);
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        myRole   = (TextView) view.findViewById(R.id.myRole);
+        myCategorie   = (TextView) view.findViewById(R.id.myCategorie);
+
+        //recupération des informations de la BD pendant l'authentificatiion sous forme de SESSION
+        //avec les données quittant de Activity -> Fragment
+        assert getArguments() != null;
+        code_number_sender = getArguments().getString("compte");
+        telephone = getArguments().getString("telephone");
+        categorie = getArguments().getString("categorie");
+        role = getArguments().getString("role");
+
+        myCategorie.setText(categorie);
+        myRole.setText(role);
+
 
 
         //Vérification si la langue du telephone est en Francais
@@ -142,8 +137,6 @@ public class AccueilFragmentAdmin  extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MenuHistoriqueTransaction.class);
                 startActivity(intent);
-                /*Intent intent = new Intent(getActivity(), ServicesIndisponible.class);
-                startActivity(intent);*/
             }
         });
 
@@ -154,7 +147,8 @@ public class AccueilFragmentAdmin  extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PayerFacture.class);
-                intent.putExtra("telephone", temp_number);
+                intent.putExtra("compte", code_number_sender);
+                intent.putExtra("telephone", telephone);
                 startActivity(intent);
             }
         });
@@ -176,6 +170,14 @@ public class AccueilFragmentAdmin  extends Fragment {
                 intentIntegrator.setBeepEnabled(true);
                 intentIntegrator.setBarcodeImageEnabled(true);
                 intentIntegrator.initiateScan();*/
+            }
+        });
+
+        btn_gesCartes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), Accueil_Carte.class);
+                startActivity(intent);
             }
         });
 

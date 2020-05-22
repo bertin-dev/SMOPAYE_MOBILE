@@ -14,6 +14,17 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:id="@+id/authWindows"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:focusable="true"
+            android:gravity="center_vertical|center_horizontal"
+            android:foregroundGravity="center_horizontal|center_vertical"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
         <EditText
             android:id="@+id/idCarteCacheTelecollecte"
             android:layout_width="wrap_content"
@@ -113,6 +124,9 @@
                 android:text="@string/telecollecteChauffeur"/>
         </LinearLayout>
 
+
+    </LinearLayout>
+
         <LinearLayout
             android:id="@+id/internetIndisponible"
             android:visibility="gone"
@@ -139,7 +153,8 @@
                 android:textColor="@color/bgColorStandard"
                 android:textSize="20sp"
                 android:layout_marginBottom="20dp"
-                android:text="@string/connexionIntrouvable" />
+                android:text="@string/connexionIntrouvable"
+                android:gravity="center_horizontal" />
 
 
             <TextView
@@ -153,7 +168,8 @@
                 android:paddingLeft="10dp"
                 android:textColor="@color/textColorStandard"
                 android:textSize="15sp"
-                android:text="@string/msgConnexionInternetIntrouvable" />
+                android:text="@string/msgConnexionInternetIntrouvable"
+                android:gravity="center_horizontal" />
 
             <Button
                 android:id="@+id/btnReessayer"

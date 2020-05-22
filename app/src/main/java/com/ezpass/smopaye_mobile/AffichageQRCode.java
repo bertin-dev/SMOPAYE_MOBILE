@@ -6,11 +6,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.net.Uri;
-import android.os.Environment;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +22,6 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -32,18 +29,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.SecureRandom;
-import java.util.HashMap;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
-import static com.ezpass.smopaye_mobile.ChaineConnexion.encryptBytes;
 import static com.ezpass.smopaye_mobile.ChaineConnexion.getsecurity_keys;
 
 public class AffichageQRCode extends AppCompatActivity {
@@ -81,8 +69,9 @@ public class AffichageQRCode extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        String[] parts = temp_.split("-");
-        String cardNumber = parts[10]; // 12345678
+       /* String[] parts = temp_.split("-");
+        String cardNumber = parts[10]; // 12345678*/
+        String cardNumber = "12345678"; // 12345678
 
 
         String carteCrypte = "E-ZPASS" + cardNumber.toLowerCase() + getsecurity_keys();

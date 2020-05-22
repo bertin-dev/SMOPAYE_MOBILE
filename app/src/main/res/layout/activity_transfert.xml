@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/transfert"
     android:background="@color/white"
     tools:context=".Transfert">
 
@@ -13,7 +14,6 @@
         android:orientation="vertical"
         android:gravity="top"
         android:background="#FFF"
-        android:textAlignment="center"
         android:foregroundGravity="center_horizontal|center_vertical"
         android:layout_gravity="top">
 
@@ -101,39 +101,60 @@
                 android:textColorHint="@color/bgColorStandard"
                 android:layout_height="wrap_content" />
 
-            <EditText
-                android:id="@+id/numCarteBeneficiaire"
-                android:textColor="@color/bgColorStandard"
-                android:layout_gravity="center"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_numCarteBeneficiaire"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
                 android:hint="@string/numdeCarteBeneficiaire"
-                android:imeOptions="actionNext"
-                android:padding="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginBottom="20dp"
-                android:inputType="text"
-                android:textStyle="bold|italic"
-                android:background="@drawable/edittextborder"
-                android:layout_width="match_parent"
                 android:textColorHint="@color/bgColorStandard"
-                android:layout_height="wrap_content" />
+                app:errorEnabled="true"
+                app:counterEnabled="true"
+                app:counterMaxLength="8">
 
-            <EditText
-                android:id="@+id/montantBeneficiaire"
-                android:textColor="@color/bgColorStandard"
-                android:layout_gravity="center"
-                android:hint="@string/montantBeneficiaire"
-                android:imeOptions="actionNext"
-                android:padding="10dp"
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tie_numCarteBeneficiaire"
+                    android:textColor="@color/bgColorStandard"
+                    android:layout_gravity="center"
+                    android:maxLines="1"
+                    android:textStyle="bold|italic"
+                    android:imeOptions="actionNext"
+                    android:padding="10dp"
+                    android:maxLength="8"
+                    android:inputType="text"
+                    android:background="@drawable/edittextborder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_montantBeneficiaire"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:layout_marginBottom="20dp"
-                android:inputType="number"
-                android:textStyle="bold|italic"
-                android:background="@drawable/edittextborder"
-                android:layout_width="match_parent"
+                android:hint="@string/montantBeneficiaire"
                 android:textColorHint="@color/bgColorStandard"
-                android:layout_height="wrap_content" />
+                app:errorEnabled="true">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tie_montantBeneficiaire"
+                    android:textColor="@color/bgColorStandard"
+                    android:layout_gravity="center"
+                    android:maxLines="1"
+                    android:textStyle="bold|italic"
+                    android:imeOptions="actionDone"
+                    android:padding="10dp"
+                    android:inputType="number"
+                    android:background="@drawable/edittextborder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+
+            </android.support.design.widget.TextInputLayout>
 
 
 
@@ -143,6 +164,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:textAlignment="center"
+                android:layout_marginBottom="50dp"
                 android:layout_height="wrap_content">
                 <Button
                     android:id="@+id/btnTransfert"
@@ -162,7 +184,7 @@
                     android:background="@drawable/btn_rounded"
                     android:text="@string/effectuer" />
                 <Button
-                    android:id="@+id/rbtnOpenNFC"
+                    android:id="@+id/btnOpenNFC"
                     android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
@@ -182,19 +204,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content">
-                <ProgressBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:id="@+id/pbLoader"
-                    android:visibility="invisible"/>
-
-            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -223,7 +232,8 @@
                 android:textColor="@color/bgColorStandard"
                 android:textSize="20sp"
                 android:layout_marginBottom="20dp"
-                android:text="@string/connexionIntrouvable" />
+                android:text="@string/connexionIntrouvable"
+                android:gravity="center_horizontal" />
 
 
             <TextView
@@ -237,7 +247,8 @@
                 android:paddingLeft="10dp"
                 android:textColor="@color/textColorStandard"
                 android:textSize="15sp"
-                android:text="@string/msgConnexionInternetIntrouvable" />
+                android:text="@string/msgConnexionInternetIntrouvable"
+                android:gravity="center_horizontal" />
 
             <Button
                 android:id="@+id/btnReessayer"

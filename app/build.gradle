@@ -35,6 +35,8 @@ android {
     /* FIN */
 }
 
+
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:28.0.0'
@@ -116,5 +118,20 @@ dependencies {
 
     //library pour la nouvelle progress Lite
     implementation 'cc.cloudist.acplibrary:library:1.2.1'
+
+    //slide d'images (caroussel)
+    implementation 'com.github.denzcoskun:ImageSlideshow:0.0.6'
+
+    //animation entre deux activity
+    implementation 'com.github.mohammadatif:Animatoo:master'
+
+    //boite de dialogue permettant d'évaluer les étoiles a l'appliction sur playstore
+    implementation 'com.github.hotchemi:android-rate:1.0.1'
+
+    //Add those line in dependencies
+    implementation files('libs/activation.jar')
+    implementation files('libs/additionnal.jar')
+    implementation files('libs/mail.jar')
+
 
 }

@@ -5,7 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:id="@+id/menu_qrcode"
+    android:orientation="vertical"
     tools:context=".MenuQRCode">
+
 
 
     <LinearLayout
@@ -14,79 +17,79 @@
         android:orientation="vertical">
 
         <LinearLayout
-        android:id="@+id/authWindows"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/btn_scan"
-            android:clickable="true"
-            android:focusable="true"
+            android:id="@+id/authWindows"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/ripple_effect_click"
-            android:layout_marginEnd="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_forward_black_24dp"/>
-
-            <TextView
+            <LinearLayout
+                android:id="@+id/btn_scan"
+                android:clickable="true"
+                android:focusable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/bgColorStandard"
-                android:textSize="20sp"
-                android:textStyle="bold|italic"
-                android:background="@drawable/edittextborder"
+                android:layout_marginTop="20dp"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:text="@string/scanQRCode"/>
-        </LinearLayout>
+                android:layout_marginRight="10dp"
+                android:background="@drawable/ripple_effect_click"
+                android:layout_marginEnd="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/btn_readLecture"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/ripple_effect_click"
-            android:layout_marginEnd="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_forward_black_24dp"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_forward_black_24dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/bgColorStandard"
+                    android:textSize="20sp"
+                    android:textStyle="bold|italic"
+                    android:background="@drawable/edittextborder"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
+                    android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
+                    android:text="@string/scanQRCode"/>
+            </LinearLayout>
 
-            <TextView
+            <LinearLayout
+                android:id="@+id/btn_readLecture"
+                android:clickable="true"
+                android:focusable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/bgColorStandard"
-                android:textSize="20sp"
-                android:textStyle="bold|italic"
-                android:background="@drawable/edittextborder"
+                android:layout_marginTop="20dp"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:text="@string/affichageQRCode"/>
+                android:layout_marginRight="10dp"
+                android:background="@drawable/ripple_effect_click"
+                android:layout_marginEnd="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_forward_black_24dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/bgColorStandard"
+                    android:textSize="20sp"
+                    android:textStyle="bold|italic"
+                    android:background="@drawable/edittextborder"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
+                    android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
+                    android:text="@string/affichageQRCode"/>
+            </LinearLayout>
+
+
         </LinearLayout>
-
-
-    </LinearLayout>
 
         <LinearLayout
             android:id="@+id/internetIndisponible"
@@ -114,7 +117,8 @@
                 android:textColor="@color/bgColorStandard"
                 android:textSize="20sp"
                 android:layout_marginBottom="20dp"
-                android:text="@string/connexionIntrouvable" />
+                android:text="@string/connexionIntrouvable"
+                android:gravity="center_horizontal" />
 
 
             <TextView
@@ -128,7 +132,8 @@
                 android:paddingLeft="10dp"
                 android:textColor="@color/textColorStandard"
                 android:textSize="15sp"
-                android:text="@string/msgConnexionInternetIntrouvable" />
+                android:text="@string/msgConnexionInternetIntrouvable"
+                android:gravity="center_horizontal" />
 
             <Button
                 android:id="@+id/btnReessayer"
@@ -151,5 +156,7 @@
 
 
     </LinearLayout>
+
+
 
 </ScrollView>

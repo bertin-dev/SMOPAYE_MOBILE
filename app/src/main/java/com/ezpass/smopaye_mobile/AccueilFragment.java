@@ -1,15 +1,10 @@
 package com.ezpass.smopaye_mobile;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,33 +17,22 @@ import com.ezpass.smopaye_mobile.Assistance.HomeAssistanceOnline;
 import com.ezpass.smopaye_mobile.vuesAccepteur.ConsulterRecette;
 import com.ezpass.smopaye_mobile.vuesAccepteur.ConsulterSolde;
 import com.ezpass.smopaye_mobile.vuesAccepteur.DebitCarte;
-import com.ezpass.smopaye_mobile.vuesUtilisateur.MenuRechargeCompte;
 import com.ezpass.smopaye_mobile.vuesAccepteur.MenuRetraitTelecollecte;
 import com.ezpass.smopaye_mobile.vuesAccepteur.VerifierNumCarte;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.RechargePropreCompte;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
-
-import java.io.FileInputStream;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-import static android.content.Context.CLIPBOARD_SERVICE;
-
 public class AccueilFragment extends Fragment {
 
-    private TextView jour, jourSemaine, moisAnnee;
+    private TextView jour, jourSemaine, moisAnnee, myRole, myCategorie;
     private LinearLayout debitCarte, MenuRechargeTelecollecte, ConsultationRecetteChauffeur, RechargeAvecCashChauffeur, VerifierNumCarteChauffeur, ConsultationSoldeChauffeur, btnPayerFacture, btnQrCode;
     private Button consulterHistoriqueAccepteur;
-    FloatingActionButton assistanceOnline;
+    private FloatingActionButton assistanceOnline;
 
-    /////////////////////////////////LIRE CONTENU DES FICHIERS////////////////////
-    String file = "tmp_number";
-    int c;
-    String temp_number = "";
-    //String code, numCarte, montant;
+    private String code_number_sender, telephone, role, categorie;
 
     public AccueilFragment() {
         // Required empty public constructor
@@ -81,31 +65,19 @@ public class AccueilFragment extends Fragment {
         jour = (TextView) view.findViewById(R.id.jour);
         jourSemaine = (TextView) view.findViewById(R.id.jourSemaine);
         moisAnnee   = (TextView) view.findViewById(R.id.moisAnnee);
-
-
-/////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
-        try{
-            FileInputStream fIn = getActivity().openFileInput(file);
-            while ((c = fIn.read()) != -1){
-                temp_number = temp_number + Character.toString((char)c);
-            }
-            //Toast.makeText(getActivity(), temp, Toast.LENGTH_SHORT).show();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        myRole   = (TextView) view.findViewById(R.id.myRole);
+        myCategorie   = (TextView) view.findViewById(R.id.myCategorie);
 
         //recupération des informations de la BD pendant l'authentificatiion sous forme de SESSION
         //avec les données quittant de Activity -> Fragment
-       /* assert getArguments() != null;
-        String retour = getArguments().getString("result_BD");
-        String telephone = getArguments().getString("telephone");
-        assert retour != null;
-        String[] parts = retour.split("-");
+        assert getArguments() != null;
+         code_number_sender = getArguments().getString("compte");
+         telephone = getArguments().getString("telephone");
+         categorie = getArguments().getString("categorie");
+         role = getArguments().getString("role");
 
-        tel = Objects.requireNonNull(getArguments()).getString("telephone");*/
-
-
+        myRole.setText(role);
+        myCategorie.setText(categorie);
 
        //Vérification si la langue du telephone est en Francais
         if(Locale.getDefault().getLanguage().contentEquals("fr")){
@@ -129,15 +101,13 @@ public class AccueilFragment extends Fragment {
         }
 
 
-
-
         //DEBITER UNE CARTE
         debitCarte = (LinearLayout) view.findViewById(R.id.btnDebitCarteChauffeur);
         debitCarte.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent2 = new Intent(getActivity(), DebitCarte.class);
-                intent2.putExtra("telephone", temp_number);
+                intent2.putExtra("telephone", telephone);
                 startActivity(intent2);
             }
         });
@@ -199,8 +169,6 @@ public class AccueilFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MenuHistoriqueTransaction.class);
                 startActivity(intent);
-                /*Intent intent = new Intent(getActivity(), ServicesIndisponible.class);
-                startActivity(intent);*/
             }
         });
 
@@ -210,8 +178,8 @@ public class AccueilFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), HomeAssistanceOnline.class);
-                //intent.putExtra("resultatBD", resultat_bd);
-                //intent.putExtra("telephone", telephone);
+                intent.putExtra("role", role);
+                intent.putExtra("telephone", telephone);
                 startActivity(intent);
             }
         });
@@ -223,7 +191,8 @@ public class AccueilFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PayerFacture.class);
-                intent.putExtra("telephone", temp_number);
+                intent.putExtra("compte", code_number_sender);
+                intent.putExtra("telephone", telephone);
                 startActivity(intent);
             }
         });

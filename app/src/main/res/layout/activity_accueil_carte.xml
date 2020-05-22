@@ -1,116 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@drawable/spalash_gradient_bg"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:layout_gravity="center"
+    android:id="@+id/accueil_carte"
     tools:context=".Manage_Cards.Accueil_Carte">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|center_vertical"
         android:gravity="center"
+        android:layout_marginTop="50dp"
         android:orientation="vertical">
 
-
-        <Button
-            android:id="@+id/BtnInfo"
+        <ImageView
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:layout_marginLeft="30dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginRight="30dp"
-            android:textColor="#ffffff"
-            android:textStyle="bold"
-            android:shadowDx="@android:integer/config_longAnimTime"
-            android:background="@drawable/btn_rounded"
-            android:text="@string/informations"
-            android:gravity="center_horizontal" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="20dp"/>
+            android:scaleType="centerCrop"
+            android:src="@drawable/card" />
 
-        <Button
-            android:id="@+id/BtnWrite"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:layout_marginLeft="30dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginRight="30dp"
-            android:textColor="#ffffff"
-            android:textStyle="bold"
-            android:shadowDx="@android:integer/config_longAnimTime"
-            android:background="@drawable/btn_rounded"
-            android:text="@string/ecrire"
-            android:gravity="center_horizontal" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="20dp"/>
+            android:clipToPadding="false"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/BtnEnregCarte"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:layout_marginLeft="30dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginRight="30dp"
-            android:textColor="#ffffff"
-            android:textStyle="bold"
-            android:shadowDx="@android:integer/config_longAnimTime"
-            android:background="@drawable/btn_rounded"
-            android:text="@string/enregCarteBD"
-            android:gravity="center_horizontal" />
+            <android.support.v7.widget.CardView
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:id="@+id/bankcardId"
+                android:layout_width="160dp"
+                android:layout_height="190dp"
+                android:layout_margin="10dp"
+                android:focusable="true">
+                <LinearLayout
+                    android:id="@+id/Linear_SaveInBd"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:src="@drawable/ic_credit_card_black_24dp"
+                        android:padding="10dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:layout_marginTop="10dp"
+                        android:text="SAUVEGARDER, MODIFIER LES CARTES"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/textColorGray"
+                        android:layout_margin="10dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:textStyle="bold"
+                        android:text="Sauvegarde des Cartes"
+                        android:background="#0C61AB"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:layout_width="160dp"
+                android:layout_height="190dp"
+                android:layout_margin="10dp"
+                android:focusable="true">
+                <LinearLayout
+                    android:id="@+id/Linear_WriteInCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+
+                        android:src="@drawable/ic_create_card_24dp"
+                        android:padding="10dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:text="LECTURE, ECRITURE DES CARTES"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/textColorGray"
+                        android:layout_margin="10dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="Ecriture des cartes"
+                        android:padding="5dp"
+                        android:textStyle="bold"
+                        android:background="#0C61AB"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="20dp"/>
-
-        <Button
-            android:id="@+id/BtnListCarteEnreg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:layout_marginLeft="30dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginRight="30dp"
-            android:textColor="#ffffff"
-            android:textStyle="bold"
-            android:shadowDx="@android:integer/config_longAnimTime"
-            android:background="@drawable/btn_rounded"
-            android:text="@string/listCarteSave"
-            android:gravity="center_horizontal" />
 
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="20dp"/>
 
-        <Button
-            android:id="@+id/BtnReset"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:layout_marginLeft="30dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginRight="30dp"
-            android:textColor="#ffffff"
-            android:textStyle="bold"
-            android:shadowDx="@android:integer/config_longAnimTime"
-            android:background="@drawable/btn_rounded"
-            android:text="@string/resetCarte"
-            android:gravity="center_horizontal" />
+
+        </LinearLayout>
+
+
 
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

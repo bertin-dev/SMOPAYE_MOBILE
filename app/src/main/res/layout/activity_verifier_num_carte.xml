@@ -16,7 +16,6 @@
         android:orientation="vertical"
         android:gravity="top"
         android:background="#FFF"
-        android:textAlignment="center"
         android:foregroundGravity="center_horizontal|center_vertical"
         android:layout_gravity="top">
 
@@ -91,9 +90,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="35dp"
+                    android:layout_marginLeft="35dp"
                     android:layout_marginStart="20dp"
-                    android:layout_marginRight="20dp"
                     android:layout_marginEnd="20dp"
                     android:orientation="vertical">
                     <TextView
@@ -114,8 +113,8 @@
                         android:hint="@string/numCarte"
                         android:imeOptions="actionNext"
                         android:padding="15dp"
-                        android:layout_marginRight="50dp"
-                        android:layout_marginLeft="50dp"
+                        android:layout_marginRight="35dp"
+                        android:layout_marginLeft="35dp"
                         android:inputType="text"
                         android:enabled="false"
                         android:textStyle="bold"
@@ -152,8 +151,8 @@
                         android:hint="@string/services"
                         android:imeOptions="actionNext"
                         android:padding="15dp"
-                        android:layout_marginRight="50dp"
-                        android:layout_marginLeft="50dp"
+                        android:layout_marginRight="35dp"
+                        android:layout_marginLeft="35dp"
                         android:inputType="text"
                         android:enabled="false"
                         android:textStyle="bold"
@@ -190,8 +189,8 @@
                         android:hint="28 Avril 2020"
                         android:imeOptions="actionNext"
                         android:padding="15dp"
-                        android:layout_marginRight="50dp"
-                        android:layout_marginLeft="50dp"
+                        android:layout_marginRight="35dp"
+                        android:layout_marginLeft="35dp"
                         android:inputType="datetime"
                         android:enabled="false"
                         android:textStyle="bold"
@@ -213,7 +212,7 @@
                 android:textAlignment="center"
                 android:layout_height="wrap_content">
                 <Button
-                    android:id="@+id/Btn_id_carte"
+                    android:id="@+id/btnPasserCarte"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:textColor="#ffffff"
@@ -228,19 +227,6 @@
                     android:text="@string/passerCarte" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content">
-                <ProgressBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:id="@+id/pbLoader"
-                    android:visibility="invisible"/>
-
-            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/payerAbonnement"
     android:background="@color/white"
     tools:context=".PayerAbonnement">
 
@@ -13,7 +14,6 @@
         android:orientation="vertical"
         android:gravity="top"
         android:background="#FFF"
-        android:textAlignment="center"
         android:foregroundGravity="center_horizontal|center_vertical"
         android:layout_gravity="top">
 
@@ -79,26 +79,36 @@
             android:focusableInTouchMode="true"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/numCarteBeneficiaire"
-                android:textColor="@color/bgColorStandard"
-                android:layout_gravity="center"
-                android:hint="@string/numdeCarte"
-                android:imeOptions="actionNext"
-                android:padding="10dp"
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_numCarteBeneficiaire"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:layout_marginBottom="20dp"
-                android:inputType="text"
-                android:textStyle="bold|italic"
-                android:maxLength="8"
-                android:background="@drawable/edittextborder"
-                android:layout_width="match_parent"
+                android:hint="@string/numdeCarte"
                 android:textColorHint="@color/bgColorStandard"
-                android:layout_height="wrap_content" />
-            <!--android:digits="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"-->
+                app:errorEnabled="true"
+                app:counterEnabled="true"
+                app:counterMaxLength="8">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tie_numCarteBeneficiaire"
+                    android:textColor="@color/bgColorStandard"
+                    android:layout_gravity="center"
+                    android:maxLines="1"
+                    android:textStyle="bold|italic"
+                    android:imeOptions="actionNext"
+                    android:padding="10dp"
+                    android:maxLength="8"
+                    android:inputType="text"
+                    android:background="@drawable/edittextborder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
 
+            </android.support.design.widget.TextInputLayout>
 
 
             <LinearLayout
@@ -156,10 +166,10 @@
             </LinearLayout>
 
 
-
             <LinearLayout
                 android:gravity="center"
                 android:layout_marginTop="40dp"
+                android:layout_marginBottom="50dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:textAlignment="center"
@@ -182,7 +192,7 @@
                     android:background="@drawable/btn_rounded"
                     android:text="@string/effectuer" />
                 <Button
-                    android:id="@+id/rbtnOpenNFC"
+                    android:id="@+id/btnOpenNFC"
                     android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
@@ -202,19 +212,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content">
-                <ProgressBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:id="@+id/pbLoader"
-                    android:visibility="invisible"/>
-
-            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -243,7 +240,8 @@
                 android:textColor="@color/bgColorStandard"
                 android:textSize="20sp"
                 android:layout_marginBottom="20dp"
-                android:text="@string/connexionIntrouvable" />
+                android:text="@string/connexionIntrouvable"
+                android:gravity="center_horizontal" />
 
 
             <TextView
@@ -257,7 +255,8 @@
                 android:paddingLeft="10dp"
                 android:textColor="@color/textColorStandard"
                 android:textSize="15sp"
-                android:text="@string/msgConnexionInternetIntrouvable" />
+                android:text="@string/msgConnexionInternetIntrouvable"
+                android:gravity="center_horizontal" />
 
             <Button
                 android:id="@+id/btnReessayer"

@@ -8,12 +8,80 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <include
-        layout="@layout/app_bar_main"
+
+    <LinearLayout
+        android:id="@+id/authWindows"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/app_bar_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/internetIndisponible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center_vertical|center_horizontal"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/conStatusIv"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="20dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_action_wifi" />
+
+        <TextView
+            android:id="@+id/titleNetworkLimited"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center_horizontal"
+            android:text="@string/connexionIntrouvable"
+            android:textAlignment="center"
+            android:textColor="@color/bgColorStandard"
+            android:textSize="20sp" />
 
 
+        <TextView
+            android:id="@+id/msgNetworkLimited"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
+            android:paddingEnd="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/msgConnexionInternetIntrouvable"
+            android:textAlignment="center"
+            android:textColor="@color/textColorStandard"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/btnReessayer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="100dp"
+            android:background="@drawable/btn_rounded"
+            android:padding="10dp"
+            android:shadowDx="@android:integer/config_longAnimTime"
+            android:text="@string/reessayer"
+            android:textColor="#ffffff"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
 
 
     <!--Pied de page-->
@@ -71,8 +139,7 @@
 
     </RelativeLayout>
 
-
-
+    <!--Drawer Navigation-->
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"

@@ -36,6 +36,7 @@ tools:showIn="@layout/app_bar_main"
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/myRole"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/etatStatut"
@@ -47,6 +48,7 @@ tools:showIn="@layout/app_bar_main"
                         android:textStyle="bold"
                         android:paddingStart="15dp" />
                     <TextView
+                        android:id="@+id/myCategorie"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/typeEtatStatut"

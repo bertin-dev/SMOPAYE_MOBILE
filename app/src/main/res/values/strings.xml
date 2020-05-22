@@ -84,7 +84,6 @@
     <!-- <string name="cmdCarteEZPASS"><a href="http://www.google.com">Commander votre Carte E-ZPASS</a></string>-->
     <string name="cmdCarteEZPASS">Commander votre Carte E-ZPASS</string>
 
-
     <string name="listAgentsUsers">Liste Agents et Users</string>
     <string name="ModifAccepteur">Modification</string>
     <string name="SuppAccepteur">Suppression</string>
@@ -412,7 +411,6 @@
     <string name="leSolde">le Solde</string>
     <string name="compteCredite">Votre compte a bien été crédité d\'un montant de</string>
     <string name="impossibleLireCarte">Impossible de lire la carte</string>
-    <string name="insererMontant">Inserer Montant</string>
     <string name="veuillezInsererMontant">Veuillez inserer votre montant</string>
     <string name="faireRetrait">Faire un Retrait</string>
     <string name="veuillezInsererCompte">SVP Veuillez Inserer votre numéro de compte</string>
@@ -559,4 +557,69 @@
     <string name="veuillezInsererPJ">S\'il vous plait veuillez inserer votre N°Pièce</string>
     <string name="veuillezInsererAdresse">S\'il vous plait veuillez inserer votre Adresse</string>
     <string name="veuillezInsererNumCompte">S\'il vous plait veuillez inserer votre N°Compte</string>
+    <string name="networkOnline">Vous êtes connecté à internet</string>
+    <string name="networkOffline">Aucune connexion</string>
+
+    <string name="compteCourt">Votre numéro de compte est court</string>
+    <string name="insererCompte">Veuillez inserer votre numéro de compte</string>
+    <string name="insererMontant">Veuillez Inserer le montant</string>
+    <string name="insererNewPassword">Veuillez inserer le nouveau mot de passe</string>
+    <string name="insererOldPassword">Veuillez inserer l\'ancien mot de passe</string>
+    <string name="insererPasswordConfirm">Veuillez inserer le mot de passe de confirmation</string>
+
+    <string name="operationDone">Opération terminé</string>
+
+    <string name="slide_4_title">Code QR E-ZPASS</string>
+    <string name="slide_4_desc">E-Zpass is a reliable way to send and receive money using our payment platform. It is done easily using a QR code. E-zpass encourages users to use the QR code in the payment process.</string>
+    <string name="cmdQRCodeEZPASS">effectuer votre Payement</string>
+
+    <!--gestion des cartes-->
+    <string name="gesCard">Gestion des Cartes</string>
+    <string name="resetCard">Reinitialisation des Cartes</string>
+    <string name="cardInfo">Information de la carte</string>
+
+    <string name="enregCarteBD">ENREGISTRER LA CARTE</string>
+    <string name="listCarteSave">LISTE DES CARTES ENREGISTREES</string>
+    <string name="ecrire">ECRIRE SUR LA CARTE</string>
+
+    <string name="idCarte">ID CARTE</string>
+    <string name="numCarteLong">N° SERIE </string>
+    <string name="numCarteCourt">N° CARTE</string>
+    <string name="expireDate">30-11-2021</string>
+
+    <string name="infoCarteSmopaye">Informations SMOPAYE</string>
+    <string name="infoCarteVierge">Informations Carte</string>
+    <string name="informations">Informations</string>
+
+    <string name="typeHexaCourt">N° CARTE SMOPAYE (8 Caractères Hexadécimal)</string>
+    <string name="typeHexaLong">N° SERIE SMOPAYE (8 Caractères Hexadécimal)</string>
+    <string name="desc_Date">Date d\'expiration de la carte.</string>
+
+    <string name="ecrireCarte">Ecrire sur la Carte</string>
+    <string name="nbrCaractere">Nombre de Caractères inférieur à </string>
+    <string name="search">Recherche</string>
+
+
+    <string name="ecrireManuellement">Méthode Manuelle</string>
+    <string name="ecrireAutomatiquement">Méthode Automatique</string>
+    <string name="saveBD">Sauvegarder</string>
+    <string name="resetCarte">Initialiser la carte</string>
+    <string name="initialisation">INITIALISATION AUTOMATIQUE</string>
+    <string name="writeInCard">Ecrire sur la carte</string>
+    <!--FIN-->
+
+    <string name="cardNotReset">Votre carte n\'a pas encore été initialisé</string>
+    <string name="modifProfil">modifier profile</string>
+
+    <!--<string name="rate_dialog_title">Custom title</string>
+    <string name="rate_dialog_message">Custom message</string>
+    <string name="rate_dialog_ok">Custom rate now</string>
+    <string name="rate_dialog_cancel">Custom remind later</string>
+    <string name="rate_dialog_no">Custom no</string>-->
+
+    <string name="giveComment">Faîtes-nous part de vos commentaires</string>
+    <string name="send">Envoyer</string>
+    <string name="insererCommentaire">Veuillez inserer votre commentaire</string>
+    <string name="insererEmail">Veuillez inserer votre Email</string>
+
 </resources>

@@ -33,6 +33,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/myRole"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/admin"
@@ -44,6 +45,7 @@
                         android:textStyle="bold"
                         android:paddingStart="15dp" />
                     <TextView
+                        android:id="@+id/myCategorie"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/statutAdmin"
@@ -58,7 +60,6 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAlignment="center"
                         android:layout_gravity="end"
                         android:layout_marginEnd="40dp"
                         android:layout_marginRight="40dp"
@@ -192,74 +193,10 @@
 
             </android.support.v7.widget.CardView>
 
-            <!--VERSION POUR TPE-->
-            <!-- <android.support.v7.widget.CardView
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_marginTop="20dp"
-                 android:layout_gravity="center"
-                 android:layout_centerHorizontal="true">
-
-                 <LinearLayout
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:orientation="horizontal">
-                     <LinearLayout
-                         android:gravity="center"
-                         android:orientation="vertical"
-                         android:background="@drawable/border_right"
-                         android:layout_width="100dp"
-                         android:padding="15dp"
-                         android:layout_height="110dp">
-
-                         <ImageView
-                             android:layout_width="wrap_content"
-                             android:layout_height="wrap_content"
-                             android:src="@drawable/search"/>
-
-                     </LinearLayout>
-
-                     <LinearLayout
-                         android:gravity="center"
-                         android:orientation="vertical"
-                         android:layout_width="250dp"
-                         android:layout_height="110dp">
-
-                         <TextView
-                             android:layout_width="match_parent"
-                             android:layout_height="wrap_content"
-                             android:padding="18dp"
-                             android:textAlignment="gravity"
-                             android:textColor="#262626"
-                             android:text="Consulter l'Historique de vos transactions éffectuées pour votre compte pour plus de détails"
-                             android:textSize="14sp"
-                             />
-
-                         <Button
-                             android:layout_width="wrap_content"
-                             android:layout_height="30dp"
-                             android:text="Consulter"
-                             android:textSize="12sp"
-                             android:gravity="center"
-                             android:textAlignment="center"
-                             android:background="#039BE5"
-                             android:layout_gravity="end"
-                             android:layout_marginBottom="10dp"
-                             android:layout_marginRight="5dp"
-                             android:textColor="#ffffff"/>
-
-
-                     </LinearLayout>
-
-                 </LinearLayout>
-
-             </android.support.v7.widget.CardView>-->
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
-                android:layout_marginBottom="80dp"
                 android:gravity="center"
                 android:weightSum="100"
                 android:textAlignment="center"
@@ -298,7 +235,8 @@
                             android:textColor="#262626"
                             android:textStyle="bold"
                             android:textAlignment="center"
-                            android:text="@string/rechargeComptes"/>
+                            android:text="@string/rechargeComptes"
+                            android:gravity="center_horizontal" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -323,7 +261,8 @@
                             android:textColor="#262626"
                             android:textStyle="bold"
                             android:textAlignment="center"
-                            android:text="@string/payerFacture"/>
+                            android:text="@string/payerFacture"
+                            android:gravity="center_horizontal" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -348,7 +287,8 @@
                             android:textColor="#262626"
                             android:textStyle="bold"
                             android:textAlignment="center"
-                            android:text="@string/verification"/>
+                            android:text="@string/verification"
+                            android:gravity="center_horizontal" />
                     </LinearLayout>
 
 
@@ -386,7 +326,8 @@
                             android:textColor="#262626"
                             android:textStyle="bold"
                             android:textAlignment="center"
-                            android:text="@string/gesComptes"/>
+                            android:text="@string/gesComptes"
+                            android:gravity="center_horizontal" />
 
                     </LinearLayout>
 
@@ -412,7 +353,8 @@
                             android:textColor="#262626"
                             android:textStyle="bold"
                             android:textAlignment="center"
-                            android:text="@string/qrcode"/>
+                            android:text="@string/qrcode"
+                            android:gravity="center_horizontal" />
 
                     </LinearLayout>
 
@@ -438,13 +380,53 @@
                             android:textColor="#262626"
                             android:textStyle="bold"
                             android:textAlignment="center"
-                            android:text="@string/consulterSolde"/>
+                            android:text="@string/consulterSolde"
+                            android:gravity="center_horizontal" />
                     </LinearLayout>
 
                 </LinearLayout>
 
+
+
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginBottom="50dp"
+                android:paddingEnd="15dp"
+                android:paddingRight="15dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/btn_gesCartes"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="150dp"
+                        android:layout_height="120dp"
+                        android:padding="5dp"
+                        android:background="@drawable/ripple_effect_click"
+                        android:src="@drawable/consult_carte_icon"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#262626"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        android:text="@string/consulterSolde"
+                        android:gravity="center_horizontal" />
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

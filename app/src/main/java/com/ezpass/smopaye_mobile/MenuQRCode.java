@@ -6,21 +6,25 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,7 +41,14 @@ import com.ezpass.smopaye_mobile.RemoteNotifications.Data;
 import com.ezpass.smopaye_mobile.RemoteNotifications.MyResponse;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Sender;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
+import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
+import com.ezpass.smopaye_mobile.web_service.ApiService;
+import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
+import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
+import com.ezpass.smopaye_mobile.web_service_access.ApiError;
+import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
+import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -49,39 +60,26 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Random;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
-public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.ExampleDialogListener{
+public class MenuQRCode extends AppCompatActivity
+                        implements QRCodeModalDialog.ExampleDialogListener,
+                                   ConnectivityReceiver.ConnectivityReceiverListener{
 
-    private LinearLayout btn_scan, btn_readLecture;
+    private static final String TAG = "MenuQRCode";
     private ProgressDialog progressDialog;
     private AlertDialog.Builder build_error;
-    private LinearLayout internetIndisponible, authWindows;
-    private Button btnReessayer;
-    private ImageView conStatusIv;
-    private TextView titleNetworkLimited, msgNetworkLimited;
-
-    private String carteAccepteur = "";
-    private String carteUtilisateur = "";
-    private String montant = "";
 
 
     //BD LOCALE
@@ -90,8 +88,28 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
     private DateFormat shortDateFormat;
 
     //SERVICES GOOGLE FIREBASE
-    APIService apiService;
-    FirebaseUser fuser;
+    private APIService apiService;
+    private FirebaseUser fuser;
+
+    /* Déclaration des objets liés à la communication avec le web service*/
+    private ApiService service;
+    private TokenManager tokenManager;
+    private Call<AccessToken> call;
+
+
+    @BindView(R.id.authWindows)
+    LinearLayout authWindows;
+    @BindView(R.id.internetIndisponible)
+    LinearLayout internetIndisponible;
+    @BindView(R.id.conStatusIv)
+    ImageView conStatusIv;
+    @BindView(R.id.titleNetworkLimited)
+    TextView titleNetworkLimited;
+    @BindView(R.id.msgNetworkLimited)
+    TextView msgNetworkLimited;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,72 +120,495 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        btn_scan = (LinearLayout) findViewById(R.id.btn_scan);
-        btn_readLecture = (LinearLayout) findViewById(R.id.btn_readLecture);
-        btnReessayer = (Button) findViewById(R.id.btnReessayer);
-        conStatusIv = (ImageView) findViewById(R.id.conStatusIv);
-        titleNetworkLimited = (TextView) findViewById(R.id.titleNetworkLimited);
-        msgNetworkLimited = (TextView) findViewById(R.id.msgNetworkLimited);
 
-        //pour enchainer deux boites de dialogue simultanément il faut mettre "this" à la place de "getApplicationContext()"
+        //initialisation des objets qui seront manipulés
+        ButterKnife.bind(this);
+        service = RetrofitBuilder.createService(ApiService.class);
+        tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         progressDialog = new ProgressDialog(this);
+        build_error = new AlertDialog.Builder(this);
         //service google firebase
         apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
+       }
 
-        btn_scan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentIntegrator intentIntegrator = new IntentIntegrator(MenuQRCode.this);
-                intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
-                intentIntegrator.setCameraId(0);
-                intentIntegrator.setOrientationLocked(false);
-                intentIntegrator.setPrompt(getString(R.string.ezpassScan));
-                intentIntegrator.setBeepEnabled(true);
-                intentIntegrator.setBarcodeImageEnabled(true);
-                intentIntegrator.initiateScan();
+       @OnClick(R.id.btn_scan)
+       void scanQRCode(){
+           IntentIntegrator intentIntegrator = new IntentIntegrator(MenuQRCode.this);
+           intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+           intentIntegrator.setCameraId(0);
+           intentIntegrator.setOrientationLocked(false);
+           intentIntegrator.setPrompt(getString(R.string.ezpassScan));
+           intentIntegrator.setBeepEnabled(true);
+           intentIntegrator.setBarcodeImageEnabled(true);
+           intentIntegrator.initiateScan();
+       }
+
+       @OnClick(R.id.btn_readLecture)
+       void readQRCode(){
+           Intent intent = new Intent(getApplicationContext(), AffichageQRCode.class);
+           startActivity(intent);
+       }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(
+                requestCode, resultCode, intent);
+          // handle scan result
+
+        if(scanResult != null && scanResult.getContents() != null){
+
+            int pos = scanResult.getContents().indexOf("E-ZPASS");
+            if (pos >= 0) {
+                String carteNumber = scanResult.getContents().substring(7, 15).toUpperCase();
+                openDialog(carteNumber);
+            } else{
+                Toast.makeText(this, getString(R.string.erreurQRcode), Toast.LENGTH_SHORT).show();
             }
-        });
-
-
-        btn_readLecture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), AffichageQRCode.class);
-                startActivity(intent);
-            }
-        });
-
-        btnReessayer.setOnClickListener(this::checkNetworkConnectionStatus);
+        }
     }
 
-    private void checkNetworkConnectionStatus(View view) {
+    public void openDialog(String numcard_beneficiaire) {
+        QRCodeModalDialog exampleDialog = new QRCodeModalDialog().newInstanceCode(numcard_beneficiaire);
+        exampleDialog.show(getSupportFragmentManager(), "example dialog");
+    }
 
+    @Override
+    public void applyTexts(String beneficiaireCard, String donataireCard, String montant) {
+        new GetHttpResponse(beneficiaireCard, donataireCard, montant).execute();
+    }
+
+
+
+
+
+    /**
+     * checkNetworkConnectionStatus() méthode permettant de verifier si la connexion existe ou si le serveur est accessible
+     * @since 2019
+     * */
+    @OnClick(R.id.btnReessayer)
+    void checkNetworkConnectionStatus(){
+        boolean isConnected = ConnectivityReceiver.isConnected();
+        showSnackBar(isConnected);
+
+        if(isConnected){
+            changeActivity();
+        }
+    }
+
+    private void changeActivity() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
-
         if(activeInfo != null && activeInfo.isConnected()){
-
-            ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
-            dialog.show();
-
+            progressDialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
+            progressDialog.show();
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {
-                    dialog.dismiss();
-                    //this.recreate();
-                    finish();
-                    startActivity(getIntent());
+                    progressDialog.dismiss();
+                    recreate();
+                    //finish();
+                    //startActivity(getIntent());
                 }
-            }, 3000); // 3000 milliseconds delay
+            }, 2000); // 2000 milliseconds delay
 
         } else{
             progressDialog.dismiss();
             authWindows.setVisibility(View.GONE);
             internetIndisponible.setVisibility(View.VISIBLE);
-            Toast.makeText(MenuQRCode.this, getString(R.string.connexionIntrouvable), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.connexionIntrouvable), Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void showSnackBar(boolean isConnected) {
+        String message;
+        int color = Color.WHITE;
+        Snackbar snackbar;
+        View view;
+
+        if(isConnected){
+            message = getString(R.string.networkOnline);
+            snackbar = Snackbar.make(findViewById(R.id.menu_qrcode), message, Snackbar.LENGTH_LONG);
+            view = snackbar.getView();
+            TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(color);
+            textView.setBackgroundColor(Color.parseColor("#039BE5"));
+            textView.setGravity(Gravity.CENTER);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
+            }
+        } else{
+            message = getString(R.string.networkOffline);
+            snackbar = Snackbar.make(findViewById(R.id.menu_qrcode), message, Snackbar.LENGTH_INDEFINITE);
+            view = snackbar.getView();
+            TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(color);
+            textView.setGravity(Gravity.CENTER);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
+            }
+        }
+        snackbar.show();
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        /*if(!isConnected){
+            changeActivity();
+        }*/
+        showSnackBar(isConnected);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        //register intent filter
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
+        registerReceiver(connectivityReceiver, intentFilter);
+
+        //register connection status listener
+        NotifApp.getInstance().setConnectivityListener(this);
+    }
+
+
+
+    /**
+     * onDestroy() methode Callback qui permet de détruire une activity et libérer l'espace mémoire
+     * @since 2020
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if(call != null){
+            call.cancel();
+            call = null;
+        }
+    }
+
+    private class GetHttpResponse extends AsyncTask<Void, Void, Void> {
+
+        private String beneficiaireCard;
+        private String donataireCard;
+        private String montant;
+
+        public GetHttpResponse(String beneficiaireCard, String donataireCard, String montant) {
+            this.beneficiaireCard = beneficiaireCard;
+            this.donataireCard = donataireCard;
+            this.montant = montant;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            paiementQrCodeInServerSmopaye(this.beneficiaireCard, this.donataireCard, this.montant);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressDialog.dismiss();
+        }
+    }
+
+    private void paiementQrCodeInServerSmopaye(String beneficiaireCard, String donataireCard, String montant) {
+
+        String id_card = beneficiaireCard;
+
+        call = service.transaction(Integer.parseInt(montant), "qrcode", donataireCard, beneficiaireCard);
+        call.enqueue(new Callback<AccessToken>() {
+            @Override
+            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+                Log.w(TAG, "SMOPAYE_SERVER onResponse: " + response);
+                progressDialog.dismiss();
+
+                assert response.body() != null;
+                if(response.isSuccessful()){
+                    String msgReceiver = response.body().getMessage().getCard_receiver().getNotif();
+                    String msgSender = response.body().getMessage().getCard_sender().getNotif();
+
+                    if(response.body().getMessage().isSuccess()){
+                        tokenManager.saveToken(response.body());
+                        successResponse(beneficiaireCard, msgReceiver, donataireCard, msgSender);
+                    } else{
+                        errorResponse(beneficiaireCard, msgReceiver);
+                    }
+                } else{
+                    ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                    Toast.makeText(MenuQRCode.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                    errorResponse(beneficiaireCard, apiError.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<AccessToken> call, Throwable t) {
+
+                progressDialog.dismiss();
+                Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
+
+                /*Vérification si la connexion internet accessible*/
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
+                if(!(activeInfo != null && activeInfo.isConnected())){
+                    authWindows.setVisibility(View.GONE);
+                    internetIndisponible.setVisibility(View.VISIBLE);
+                    Toast.makeText(MenuQRCode.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
+                }
+                /*Vérification si le serveur est inaccessible*/
+                else{
+                    authWindows.setVisibility(View.GONE);
+                    internetIndisponible.setVisibility(View.VISIBLE);
+                    conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
+                    titleNetworkLimited.setText(getString(R.string.connexionLimite));
+                    //msgNetworkLimited.setText();
+                    Toast.makeText(MenuQRCode.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+    }
+
+    private void successResponse(String id_cardReceiver, String msgReceiver, String id_cardSender, String msgSender) {
+
+        /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
+        //SERVICE GOOGLE FIREBASE
+
+        /*****************************************************RECEIVER MESSAGE******************************/
+        Query queryReceiver = FirebaseDatabase.getInstance().getReference("Users")
+                .orderByChild("id_carte")
+                .equalTo(id_cardReceiver);
+
+        queryReceiver.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        User user = userSnapshot.getValue(User.class);
+                        if (user.getId_carte().equals(id_cardReceiver)) {
+                            RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.qrcode), msgReceiver, "success");
+                            //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MenuQRCode.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                else{
+                    Toast.makeText(MenuQRCode.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+/*****************************************************SENDER MESSAGE******************************/
+        Query querySender = FirebaseDatabase.getInstance().getReference("Users")
+                .orderByChild("id_carte")
+                .equalTo(id_cardSender);
+
+        querySender.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        User user = userSnapshot.getValue(User.class);
+                        if (user.getId_carte().equals(id_cardSender)) {
+                            RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.qrcode), id_cardSender, "success");
+                            //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MenuQRCode.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                else{
+                    Toast.makeText(MenuQRCode.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
+        LocalNotification(getString(R.string.qrcode), msgSender);
+
+        ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
+        dbHandler = new DbHandler(getApplicationContext());
+        aujourdhui = new Date();
+        shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+        dbHandler.insertUserDetails(getString(R.string.qrcode), msgSender, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+
+
+        View view = LayoutInflater.from(MenuQRCode.this).inflate(R.layout.alert_dialog_success, null);
+        TextView title = (TextView) view.findViewById(R.id.title);
+        TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+        ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+        title.setText(getString(R.string.information));
+        imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
+        statutOperation.setText(msgSender);
+        build_error.setPositiveButton("OK", null);
+        build_error.setCancelable(false);
+        build_error.setView(view);
+        build_error.show();
+    }
+
+    private void errorResponse(String id_card, String response){
+
+        /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
+        //SERVICE GOOGLE FIREBASE
+        final String id_carte_sm = id_card;
+
+        Query query = FirebaseDatabase.getInstance().getReference("Users")
+                .orderByChild("id_carte")
+                .equalTo(id_carte_sm);
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        User user = userSnapshot.getValue(User.class);
+                        if (user.getId_carte().equals(id_carte_sm)) {
+                            RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.qrcode), response, "error");
+                            //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MenuQRCode.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                else{
+                    Toast.makeText(MenuQRCode.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
+        LocalNotification(getString(R.string.qrcode), response);
+
+        ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
+        dbHandler = new DbHandler(getApplicationContext());
+        aujourdhui = new Date();
+        shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+        dbHandler.insertUserDetails(getString(R.string.qrcode), response, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+
+        View view = LayoutInflater.from(this).inflate(R.layout.alert_dialog_success, null);
+        TextView title = (TextView) view.findViewById(R.id.title);
+        TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+        ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+        title.setText(getString(R.string.information));
+        imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+        statutOperation.setText(response);
+        build_error.setPositiveButton("OK", null);
+        build_error.setCancelable(false);
+        build_error.setView(view);
+        build_error.show();
+    }
+
+
+
+    private void RemoteNotification(final String receiver, final String username, final String title, final String message, final String statut_notif){
+
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = tokens.orderByKey().equalTo(receiver);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Token token = snapshot.getValue(Token.class);
+
+                    Data data = new Data(fuser.getUid(), R.mipmap.logo_official, username + ": " + message, title, receiver, statut_notif);
+                    Sender sender = new Sender(data, token.getToken());
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    if(response.code() == 200){
+                                        if(response.body().success != 1){
+                                            Toast.makeText(getApplication(), getString(R.string.echoue), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    private void LocalNotification(String titles, String subtitles){
+
+        ///////////////DEBUT NOTIFICATIONS///////////////////////////////
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+
+        RemoteViews collapsedView = new RemoteViews(getPackageName(),
+                R.layout.notif_collapsed);
+        RemoteViews expandedView = new RemoteViews(getPackageName(),
+                R.layout.notif_expanded);
+
+        Intent clickIntent = new Intent(getApplicationContext(), NotifReceiver.class);
+        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
+                0, clickIntent, 0);
+
+        collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
+        collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
+
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
+        expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
+
+        Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                .setSmallIcon(R.mipmap.logo_official)
+                .setCustomContentView(collapsedView)
+                .setCustomBigContentView(expandedView)
+                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                .build();
+
+        notificationManager.notify(new Random().nextInt(), notification);
+        ////////////////////////////////////FIN NOTIFICATIONS/////////////////////
+    }
+
+
 
 
 
@@ -215,461 +656,6 @@ public class MenuQRCode extends AppCompatActivity implements QRCodeModalDialog.E
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-
-
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-
-        IntentResult scanResult = IntentIntegrator.parseActivityResult(
-                requestCode, resultCode, intent);
-// handle scan result
-
-        if(scanResult != null && scanResult.getContents() != null){
-
-            int pos = scanResult.getContents().indexOf("E-ZPASS");
-            if (pos >= 0) {
-                String carteNumber = scanResult.getContents().substring(7, 15).toUpperCase();
-                openDialog(carteNumber);
-            } else{
-                Toast.makeText(this, getString(R.string.erreurQRcode), Toast.LENGTH_SHORT).show();
-            }
-
-            /*String mdp = "E-ZPASS by " + getString(R.string.app_name) +  "/" + getPackageName() + "/123456789";
-            HashMap<String, byte[]> map1 = getContentQRCode(scanResult.getContents());
-            byte[] decrypted = decryptData(map1, mdp);
-            if (decrypted != null)
-            {
-                String decryptedString = new String(decrypted);
-                Log.e("MYAPP", "Decrypted String is : " + decryptedString);
-                Toast.makeText(this, decryptedString, Toast.LENGTH_SHORT).show();
-            }*/
-
-            //openDialog(scanResult.getContents());
-            /*FragmentManager fm = getSupportFragmentManager();
-            Fragment newFrame = AccueilFragment.newInstanceQRCode(scanResult.toString(), carteUtilisateur, montant);
-            fm.beginTransaction().replace(R.id.fragment_container, newFrame).commit();*/
-        }
-    }
-
-    /*private static HashMap<String, byte[]> getContentQRCode(String resultatContentQRCode)
-    {
-
-        String [] split1 = resultatContentQRCode.split(",");
-
-        String [] split2 = split1[0].split("=\\[");
-        byte[] encrypt = split2[1].getBytes();
-
-
-        String [] split3 = split1[1].split("=\\[");
-        byte[] iv = split3[1].getBytes();
-
-
-        String [] split4 = split1[2].split("=\\=[");
-        byte[] salt = split4[1].getBytes();
-
-
-
-        HashMap<String,byte[]> map = new HashMap<String,byte[]>();
-        map.put("salt", encrypt);
-        map.put("iv", iv);
-        map.put("encrypted", salt);
-
-
-          //equivalence de ce qui est en haut
-        String [] split = resultatContentQRCode.split(",");
-        HashMap<String, byte[]> map = new HashMap<String, byte[]>();
-        for(String temp : split){
-            String [] tempo = temp.split("=\\[");
-            map.put(tempo[0],tempo[1].getBytes());
-        }
-
-
-        return map;
-    }*/
-
-
-    public void openDialog(String accepteurNumCarte) {
-        QRCodeModalDialog exampleDialog = new QRCodeModalDialog().newInstanceCode(accepteurNumCarte);
-        exampleDialog.show(getSupportFragmentManager(), "example dialog");
-    }
-
-    @Override
-    public void applyTexts(String numCarteAccepteur, String numCarteUtilisateur, String montantUtilisateur) {
-
-        new GetHttpResponse(numCarteAccepteur, numCarteUtilisateur, montantUtilisateur).execute();
-        //LoadQRCode(numCarteAccepteur, numCarteUtilisateur, montantUtilisateur);
-    }
-
-
-    public class GetHttpResponse extends AsyncTask<Void, Void, Void> {
-
-        private String accepteurNumber;
-        private String userNumber;
-        private String userAmont;
-
-        public GetHttpResponse(String accepteurNumber, String userNumber, String userAmont) {
-            this.accepteurNumber = accepteurNumber;
-            this.userNumber = userNumber;
-            this.userAmont = userAmont;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            LoadQRCode(this.accepteurNumber, this.userNumber, this.userAmont);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            progressDialog.dismiss();
-        }
-    }
-
-
-
-
-
-
-    private void LoadQRCode(final String numCarteAccepteur, final String numCarteCli, final String montantCliPayer){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-                    //********************DEBUT***********
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // On ajoute un message à notre progress dialog
-                            progressDialog.setMessage(getString(R.string.connexionserver));
-                            // On donne un titre à notre progress dialog
-                            progressDialog.setTitle(getString(R.string.attenteReponseServer));
-                            // On spécifie le style
-                            //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                            // On affiche notre message
-                            progressDialog.show();
-                            //build.setPositiveButton("ok", new View.OnClickListener()
-                        }
-                    });
-                    //*******************FIN*****
-
-
-                    final Uri.Builder builder = new Uri.Builder();
-                    builder.appendQueryParameter("auth","Card");
-                    builder.appendQueryParameter("login", "transfert");
-                    builder.appendQueryParameter("MONTANT", montantCliPayer);
-                    builder.appendQueryParameter("CARDNDON", numCarteCli);
-                    builder.appendQueryParameter("CARDN", numCarteAccepteur);
-                    builder.appendQueryParameter("typeTransfer", "QRCode");
-                    builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
-                    builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
-
-
-                    URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() +builder.build().toString());//"http://192.168.20.11:1234/recharge.php"
-                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                    httpURLConnection.setConnectTimeout(5000);
-                    httpURLConnection.setRequestMethod("POST");
-                    httpURLConnection.connect();
-
-
-                    InputStream inputStream = httpURLConnection.getInputStream();
-
-                    final BufferedReader bufferedReader  =  new BufferedReader(new InputStreamReader(inputStream));
-
-                    String string="";
-                    String data="";
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(MenuQRCode.this, getString(R.string.encoursTraitement), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                    while (bufferedReader.ready() || data==""){
-                        data+=bufferedReader.readLine();
-                    }
-                    bufferedReader.close();
-                    inputStream.close();
-
-
-                    final String f = data.trim();
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressDialog.dismiss();
-
-
-                            int pos = f.toLowerCase().indexOf("succès");
-                            if (pos >= 0) {
-
-
-                                /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
-                                //SERVICE GOOGLE FIREBASE
-                                final String id_carte_sm = numCarteAccepteur.trim();
-
-                                Query query = FirebaseDatabase.getInstance().getReference("Users")
-                                        .orderByChild("id_carte")
-                                        .equalTo(id_carte_sm);
-
-                                query.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                        if(dataSnapshot.exists()){
-                                            for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                                                User user = userSnapshot.getValue(User.class);
-                                                if (user.getId_carte().equals(id_carte_sm)) {
-                                                    RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.paiementQRCode), f, "success");
-                                                    //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
-                                                } else {
-                                                    Toast.makeText(MenuQRCode.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        }
-                                        else{
-                                            Toast.makeText(MenuQRCode.this, getString(R.string.userNonReconnu), Toast.LENGTH_LONG).show();
-                                        }
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                    }
-                                });
-
-
-                                //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                LocalNotification(getString(R.string.paiementQRCode), f);
-
-                                ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
-                                dbHandler = new DbHandler(getApplicationContext());
-                                aujourdhui = new Date();
-                                shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                dbHandler.insertUserDetails(getString(R.string.paiementQRCode), f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
-
-
-                                build_error = new AlertDialog.Builder(MenuQRCode.this);
-                                View view = LayoutInflater.from(MenuQRCode.this).inflate(R.layout.alert_dialog_success, null);
-                                TextView title = (TextView) view.findViewById(R.id.title);
-                                TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                                ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                                title.setText(getString(R.string.information));
-                                imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
-                                statutOperation.setText(f);
-                                build_error.setPositiveButton("OK", null);
-                                build_error.setCancelable(false);
-                                build_error.setView(view);
-                                build_error.show();
-                            } else{
-
-
-                                /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
-                                //SERVICE GOOGLE FIREBASE
-                                final String id_carte_sm = numCarteAccepteur.trim();
-
-                                Query query = FirebaseDatabase.getInstance().getReference("Users")
-                                        .orderByChild("id_carte")
-                                        .equalTo(id_carte_sm);
-
-                                query.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                        if(dataSnapshot.exists()){
-                                            for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                                                User user = userSnapshot.getValue(User.class);
-                                                if (user.getId_carte().equals(id_carte_sm)) {
-                                                    RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.paiementQRCode), f, "error");
-                                                    //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
-                                                } else {
-                                                    Toast.makeText(MenuQRCode.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        }
-                                        else{
-                                            Toast.makeText(MenuQRCode.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
-                                        }
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                    }
-                                });
-
-
-                                //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                LocalNotification(getString(R.string.paiementQRCode), f);
-
-                                ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
-                                dbHandler = new DbHandler(getApplicationContext());
-                                aujourdhui = new Date();
-                                shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                dbHandler.insertUserDetails(getString(R.string.paiementQRCode), f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
-
-                                build_error = new AlertDialog.Builder(MenuQRCode.this);
-                                View view = LayoutInflater.from(MenuQRCode.this).inflate(R.layout.alert_dialog_success, null);
-                                TextView title = (TextView) view.findViewById(R.id.title);
-                                TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                                ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                                title.setText(getString(R.string.information));
-                                imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                                statutOperation.setText(f);
-                                build_error.setPositiveButton("OK", null);
-                                build_error.setCancelable(false);
-                                build_error.setView(view);
-                                build_error.show();
-                            }
-
-
-
-
-                            Toast.makeText(getApplicationContext(), f, Toast.LENGTH_LONG).show();
-                        }
-                    });
-
-
-                    //    JSONObject jsonObject = new JSONObject(data);
-                    //  jsonObject.getString("status");
-                    JSONArray jsonArray = new JSONArray(data);
-                    for (int i=0;i<jsonArray.length();i++){
-                        final JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    Toast.makeText(MenuQRCode.this, jsonObject.getString("telephone"), Toast.LENGTH_SHORT).show();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                    }
-
-                } catch (final IOException e) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Toast.makeText(Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                            //Check si la connexion existe
-                            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                            NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
-                            if(!(activeInfo != null && activeInfo.isConnected())){
-                                progressDialog.dismiss();
-                                authWindows.setVisibility(View.GONE);
-                                internetIndisponible.setVisibility(View.VISIBLE);
-                                Toast.makeText(MenuQRCode.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
-                            } else{
-                                progressDialog.dismiss();
-                                authWindows.setVisibility(View.GONE);
-                                internetIndisponible.setVisibility(View.VISIBLE);
-                                conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
-                                titleNetworkLimited.setText(getString(R.string.connexionLimite));
-                                //msgNetworkLimited.setText();
-                                Toast.makeText(MenuQRCode.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                    e.printStackTrace();
-                    try {
-                        Thread.sleep(2000);
-                        //Toast.makeText(RechargePropreCompte.this, "Impossible de se connecter au serveur", Toast.LENGTH_SHORT).show();
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
-                    }
-                    progressDialog.dismiss();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-
-
-    private void RemoteNotification(final String receiver, final String username, final String title, final String message, final String statut_notif){
-
-        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
-        Query query = tokens.orderByKey().equalTo(receiver);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    Token token = snapshot.getValue(Token.class);
-
-                    Data data = new Data(fuser.getUid(), R.mipmap.logo_official, username + ": " + message, title, receiver, statut_notif);
-                    Sender sender = new Sender(data, token.getToken());
-                    apiService.sendNotification(sender)
-                            .enqueue(new Callback<MyResponse>() {
-                                @Override
-                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                                    if(response.code() == 200){
-                                        if(response.body().success != 1){
-                                            Toast.makeText(MenuQRCode.this, getString(R.string.echoue), Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<MyResponse> call, Throwable t) {
-
-                                }
-                            });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-
-    public void LocalNotification(String titles, String subtitles){
-
-        ///////////////DEBUT NOTIFICATIONS///////////////////////////////
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
-
-        RemoteViews collapsedView = new RemoteViews(getPackageName(),
-                R.layout.notif_collapsed);
-        RemoteViews expandedView = new RemoteViews(getPackageName(),
-                R.layout.notif_expanded);
-
-        Intent clickIntent = new Intent(getApplicationContext(), NotifReceiver.class);
-        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
-                0, clickIntent, 0);
-
-        collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
-        collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
-
-        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
-        expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
-
-        Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setSmallIcon(R.mipmap.logo_official)
-                .setCustomContentView(collapsedView)
-                .setCustomBigContentView(expandedView)
-                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-                .build();
-
-        notificationManager.notify(new Random().nextInt(), notification);
-        ////////////////////////////////////FIN NOTIFICATIONS/////////////////////
     }
 
 

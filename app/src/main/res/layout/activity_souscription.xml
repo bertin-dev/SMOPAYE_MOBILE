@@ -140,8 +140,7 @@
                     android:textStyle="bold|italic"
                     android:textSize="17sp"
                     android:textColorHint="@color/bgColorStandard"
-                    android:textColor="@color/bgColorStandard"
-                    />
+                    android:textColor="@color/bgColorStandard" />
 
                 <Spinner
                     android:id="@+id/typePjustificative"
@@ -281,8 +280,7 @@
                     android:textStyle="bold|italic"
                     android:textSize="17sp"
                     android:textColorHint="@color/bgColorStandard"
-                    android:textColor="@color/bgColorStandard"
-                    />
+                    android:textColor="@color/bgColorStandard" />
 
                 <android.support.v7.widget.AppCompatSpinner
                     android:id="@+id/statut"
@@ -352,7 +350,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                app:errorEnabled="true">
+                app:errorEnabled="true"
+                app:counterEnabled="true"
+                app:counterMaxLength="8">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/tie_numCarte"
@@ -362,6 +362,7 @@
                     android:padding="7dp"
                     android:drawablePadding="7dp"
                     android:maxLines="1"
+                    android:maxLength="8"
                     android:inputType="text"
                     android:background="@drawable/edittextborder"
                     android:textStyle="bold|italic"
@@ -454,6 +455,7 @@
             <LinearLayout
                 android:gravity="center"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="30dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:textAlignment="center"
@@ -496,22 +498,10 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content">
-                <ProgressBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:id="@+id/pbLoader"
-                    android:visibility="invisible"/>
-
-            </LinearLayout>
         </LinearLayout>
 
 
+        <!--cette page s'affiche si la connexion est indisponible-->
         <LinearLayout
             android:id="@+id/internetIndisponible"
             android:visibility="gone"

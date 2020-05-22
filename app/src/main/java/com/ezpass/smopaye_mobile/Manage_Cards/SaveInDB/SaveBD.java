@@ -1,5 +1,6 @@
 package com.ezpass.smopaye_mobile.Manage_Cards.SaveInDB;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -13,8 +14,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -58,22 +57,23 @@ public class SaveBD extends AppCompatActivity {
     private long time1, time2;
     private ProgressDialog progressDialog;
     private AlertDialog.Builder build_error;
-    private int myId = 0;  //PAS ENCORE INITIALISER AVEC UNE VALEUR
+    private String myId_card = "";  //PAS ENCORE INITIALISER AVEC UNE VALEUR
 
     /* Déclaration des objets liés à la communication avec le web service*/
     private ApiService service;
     private TokenManager tokenManager;
     private Call<AccessToken> call;
+    //DatePicker expire_date;
+    private EditText expire_date;
 
     @BindView(R.id.numCartePriveAutoSaveBD)
     EditText numCartePriveAutoSaveBD;
     @BindView(R.id.numCartePublicAutoSaveBD)
     EditText numCartePublicAutoSaveBD;
-    @BindView(R.id.expire_date)
-    DatePicker expire_date;
 
 
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +90,8 @@ public class SaveBD extends AppCompatActivity {
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         progressDialog = new ProgressDialog(SaveBD.this);
         build_error = new AlertDialog.Builder(SaveBD.this);
+
+        expire_date = (EditText) findViewById(R.id.expire_date);
 
         handler = new Handler() {
             @Override
@@ -192,8 +194,9 @@ public class SaveBD extends AppCompatActivity {
 
         String id_card = numCartePriveAutoSaveBD.getText().toString();
         String serial_card = numCartePublicAutoSaveBD.getText().toString();
-        expire_date.init(2021, 11, 30, null);
-        String exp = expire_date.getYear() + "-" + (expire_date.getMonth() + 1) + "-" +  expire_date.getDayOfMonth();
+        //expire_date.init(2021, 11, 30, null);
+        //String exp = expire_date.getYear() + "-" + (expire_date.getMonth() + 1) + "-" +  expire_date.getDayOfMonth();
+        String exp = expire_date.getText().toString().trim();
 
         if(id_card.trim().equalsIgnoreCase("") || serial_card.trim().equalsIgnoreCase("")){
             Toast.makeText(SaveBD.this, getString(R.string.champsVide), Toast.LENGTH_SHORT).show();
@@ -218,7 +221,7 @@ public class SaveBD extends AppCompatActivity {
                         //build.setPositiveButton("ok", new View.OnClickListener()
                     }
                 });
-                insertDataInDB(id_card, serial_card, exp, myId);
+                insertDataInDB(id_card, serial_card, exp, myId_card);
             }
         }
     }
@@ -282,7 +285,7 @@ public class SaveBD extends AppCompatActivity {
         if (status) {
             Log.d(TAG, "m1CardAuthenticate success!");
             //writeBlockData();
-            //readBlockData();
+            readBlockData();
 
             //OwriteValueData();
             readValueDataCourt();
@@ -293,8 +296,8 @@ public class SaveBD extends AppCompatActivity {
     }
 
 
-/*
-   public void readBlockData() {
+
+   private void readBlockData() {
         byte[] data = null;
         try {
 
@@ -312,11 +315,11 @@ public class SaveBD extends AppCompatActivity {
             Log.e(TAG, "readBlockBtn fail!");
             Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
         } else {
-            numCartePriveAuto.setText(StringUtil.toHexString(data));
+            numCartePublicAutoSaveBD.setText(StringUtil.toHexString(data));
         }
     }
 
-    public void writeBlockData() {
+    /*public void writeBlockData() {
         byte[] blockData = null;
         String blockStr;
         Boolean status = true;
@@ -426,14 +429,14 @@ public class SaveBD extends AppCompatActivity {
             Log.e(TAG, "readValueBtn fail!");
             Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
         } else {
-            numCartePriveAuto.setText(StringUtil.toHexString(data));
+            numCartePriveAutoSaveBD.setText(StringUtil.toHexString(data));
         }
     }
 
 
-    private void insertDataInDB(String code_number, String serial_number, String end_date, int created_by){
+    private void insertDataInDB(String code_number, String serial_number, String end_date, String created_by){
 
-        call = service.created_card(code_number, serial_number, end_date, created_by);
+        call = service.createCards(code_number, serial_number, end_date, Integer.parseInt(created_by));
         call.enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
@@ -444,12 +447,12 @@ public class SaveBD extends AppCompatActivity {
 
                     if(response.body().isSuccess()){
                         tokenManager.saveToken(response.body());
-                        successResponse(response.body().getMessage());
+                        successResponse(response.message());
                     } else {
-                        errorResponse(response.body().getMessage());
+                        errorResponse(response.errorBody().toString());
                     }
                 } else{
-                        errorResponse(response.body().getMessage());
+                        errorResponse(response.errorBody().toString());
                 }
 
             }

@@ -1,56 +1,53 @@
 package com.ezpass.smopaye_mobile.vuesUtilisateur;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+import com.basgeekball.awesomevalidation.AwesomeValidation;
+import com.basgeekball.awesomevalidation.ValidationStyle;
+import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
-import com.ezpass.smopaye_mobile.ChaineConnexion;
+import com.ezpass.smopaye_mobile.Login;
+import com.ezpass.smopaye_mobile.NotifApp;
+import com.ezpass.smopaye_mobile.Profil_user.Categorie;
+import com.ezpass.smopaye_mobile.Profil_user.Role;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
-import com.telpo.tps550.api.TelpoException;
+import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
+import com.ezpass.smopaye_mobile.web_service.ApiService;
+import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
+import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.telpo.tps550.api.nfc.Nfc;
-import com.telpo.tps550.api.util.StringUtil;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,19 +57,25 @@ import java.util.Timer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static android.content.ContentValues.TAG;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class Souscription_User_AutoEnreg extends AppCompatActivity {
+public class Souscription_User_AutoEnreg extends AppCompatActivity
+                                         implements ConnectivityReceiver.ConnectivityReceiverListener{
 
-    private EditText nom,prenom,telephone,cni,numCarte, adresse;
-    private Spinner sexe, statut, typeChauffeur, typePjustificative;
-    private Button btnSuivant, btnOpenNFC;
+
+    private static final String TAG = "Souscription_User_AutoE";
     private ProgressDialog progressDialog;
+    private AlertDialog.Builder build_error;
     /////////////////////////////////////////////////////////////////////////////////
-    Handler handler;
-    Runnable runnable;
-    Timer timer;
-    Thread readThread;
+    private Handler handler;
+    private Runnable runnable;
+    private Timer timer;
+    private Thread readThread;
     private byte blockNum_1 = 1;
     private byte blockNum_2 = 2;
     private final int CHECK_NFC_TIMEOUT = 1;
@@ -81,73 +84,67 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
     private final byte B_CPU = 3;
     private final byte A_CPU = 1;
     private final byte A_M1 = 2;
-    Nfc nfc = new Nfc(this);
-    DialogInterface dialog;
-    AlertDialog.Builder build_error;
-
-
-    private CheckBox AbonnementMensuel;
-    private CheckBox AbonnementHebdomadaire;
-    private CheckBox AbonnementService;
-
-
-
-    private String abonnement = "service";
-
-
-    private LinearLayout internetIndisponible, authWindows;
-    private Button btnReessayer;
-    ImageView conStatusIv;
-    TextView titleNetworkLimited, msgNetworkLimited;
-
-    /////////////////////////////////LIRE CONTENU DES FICHIERS////////////////////
-    String file = "tmp_number";
-    int c;
-    String temp_number = "";
-
-
-    BufferedInputStream is;
-    String line = null;
-    String result = null;
-
-    String[] id_session;
-    String[] nom_session;
-
-    String[] IDCathegorie;
-    String[] NOMCath;
-    String[] typeuser;
-
-
-    ArrayList<String> listStatut = new ArrayList<>();
-    List<String> idStatut = new ArrayList<String>();
-
-    String num_statut = "";
-    String num_categorie = "";
-
-    ArrayList<String> maListeIDCat = new ArrayList<>();
-    ArrayList<String> ListIDTypeUser = new ArrayList<>();
-    ArrayList<String> maListe = new ArrayList<>();
-
-    HashMap<Integer, String> listAllSession = new HashMap<>();
-    HashMap<Integer, String> listAllCategorie = new HashMap<>();
-    HashMap<Integer, String> listFILTRECategorie = new HashMap<>();
-
-
-    ArrayList<String> maListeIDCat1 = new ArrayList<>();
-    ArrayList<String> ListIDTypeUser1 = new ArrayList<>();
-    ArrayList<String> maListe1 = new ArrayList<>();
-    String[] IDCathegorie1;
-    String[] NOMCath1;
-    String[] typeuser1;
+    private Nfc nfc = new Nfc(this);
 
 
     private String[] sexe1;
     private String[] pieceJ;
+    private String num_statut = "";
+    private String num_categorie = "";
+
+    private HashMap<Integer, String> listAllSession = new HashMap<>();
+    private HashMap<Integer, String> listAllCategorie = new HashMap<>();
+    private HashMap<Integer, String> listFILTRECategorie = new HashMap<>();
+
+    /* Déclaration des objets liés à la communication avec le web service*/
+    private ApiService service;
+    private Call<List<Categorie>> call;
+    private AwesomeValidation validator;
+    private TokenManager tokenManager;
+
+    /////////////////////////////////LIRE CONTENU DES FICHIERS////////////////////
+    private String file = "tmp_number";
+    private  int c;
+    private String temp_number = "";
+
+    //recuperation des vues
+    @BindView(R.id.til_nom)
+    TextInputLayout til_nom;
+    @BindView(R.id.til_prenom)
+    TextInputLayout til_prenom;
+    @BindView(R.id.til_numeroTel)
+    TextInputLayout til_numeroTel;
+    @BindView(R.id.til_cni)
+    TextInputLayout til_cni;
+    @BindView(R.id.tie_cni)
+    TextInputEditText tie_cni;
+    @BindView(R.id.til_adresse)
+    TextInputLayout til_adresse;
+
+    @BindView(R.id.authWindows)
+    LinearLayout authWindows;
+    @BindView(R.id.internetIndisponible)
+    LinearLayout internetIndisponible;
+    @BindView(R.id.conStatusIv)
+    ImageView conStatusIv;
+    @BindView(R.id.titleNetworkLimited)
+    TextView titleNetworkLimited;
+    @BindView(R.id.msgNetworkLimited)
+    TextView msgNetworkLimited;
+
+    @BindView(R.id.typePjustificative)
+    Spinner typePjustificative;
+    @BindView(R.id.sexe)
+    Spinner sexe;
+    @BindView(R.id.statut)
+    Spinner statut;
+    @BindView(R.id.typeChauffeur)
+    Spinner typeChauffeur;
+
 
     @Override
     protected void onStart() {
         super.onStart();
-
         //Check si la connexion existe
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
@@ -157,18 +154,96 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
             internetIndisponible.setVisibility(View.VISIBLE);
             Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        new loadDataSpinner(getApplication(), statut).execute();
+        StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
+
+        tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        //verification si on a pas le token dans les sharepreferences alors on retourne vers le login activity
+        if(tokenManager.getToken() == null){
+            startActivity(new Intent(Souscription_User_AutoEnreg.this, Login.class));
+            finish();
+        }
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
+        call = service.getAllCategories();
+        call.enqueue(new Callback<List<Categorie>>() {
+            @Override
+            public void onResponse(Call<List<Categorie>> call, Response<List<Categorie>> response) {
+                Log.w(TAG, "SMOPAYE_SERVER onResponse " +response);
+
+                if(response.isSuccessful()){
+
+                    listAllSession.clear();
+                    listAllCategorie.clear();
+
+                    List<Categorie> mycategories = response.body();
+                    for(int i = 0; i<mycategories.size(); i++){
+
+                        Role myRole = mycategories.get(i).getRole();
+
+                        listAllSession.put(myRole.getId(),  myRole.getname());
+                        listAllCategorie.put(mycategories.get(i).getId(), mycategories.get(i).getname());
+                    }
+                    List<StringWithTag> itemList = new ArrayList<>();
+                    /* Iterate through your original collection, in this case defined with an Integer key and String value. */
+                    for (Map.Entry<Integer, String> entry : listAllSession.entrySet()) {
+                        Integer key = entry.getKey();
+                        String value = entry.getValue();
+
+                        /* Build the StringWithTag List using these keys and values. */
+                        itemList.add(new StringWithTag(value, key));
+                    }
+                    /* Set your ArrayAdapter with the StringWithTag, and when each entry is shown in the Spinner, .toString() is called. */
+                    ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(Souscription_User_AutoEnreg.this, R.layout.spinner_item, itemList);
+                    spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
+                    statut.setAdapter(spinnerAdapter);
+                }
+                else{
+                    tokenManager.deleteToken();
+                    startActivity(new Intent(Souscription_User_AutoEnreg.this, Login.class));
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Categorie>> call, Throwable t) {
+                Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
+
+                //Vérification si la connexion internet accessible
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
+                if(!(activeInfo != null && activeInfo.isConnected())){
+                    authWindows.setVisibility(View.GONE);
+                    internetIndisponible.setVisibility(View.VISIBLE);
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
+                }
+                //Vérification si le serveur est inaccessible
+                else{
+                    authWindows.setVisibility(View.GONE);
+                    internetIndisponible.setVisibility(View.VISIBLE);
+                    conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
+                    titleNetworkLimited.setText(getString(R.string.connexionLimite));
+                    //msgNetworkLimited.setText();
+                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 
 
+    /**
+     * @author bertin mounok
+     * @powered by smopaye sarl
+     * @Copyright 2019-2020
+     * @param savedInstanceState Callback method onCreate() she using for the started activity
+     * @since 2019
+     * @version 1.2.7
+     * */
 
 
     @Override
@@ -177,69 +252,45 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
         setContentView(R.layout.activity_souscription_users_autoenreg);
 
         getSupportActionBar().setTitle(getString(R.string.Souscription_User_AutoEnregEtape1));
-        //getSupportParentActivityIntent().putExtra("resultatBD", "Administrateur");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        //récupération des vues en lien dans notre activity
+        ButterKnife.bind(this);
+        service = RetrofitBuilder.createService(ApiService.class);
+        validator = new AwesomeValidation(ValidationStyle.BASIC);
+        tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
 
         progressDialog = new ProgressDialog(Souscription_User_AutoEnreg.this);
         build_error = new AlertDialog.Builder(Souscription_User_AutoEnreg.this);
 
+        setupRulesValidatForm();
 
-        nom = (EditText) findViewById(R.id.nom);
-        prenom = (EditText) findViewById(R.id.prenom);
-        sexe = (Spinner) findViewById(R.id.sexe);
-        telephone = (EditText) findViewById(R.id.numeroTel);
-        cni = (EditText) findViewById(R.id.cni);
-        statut = (Spinner) findViewById(R.id.statut);
-        numCarte = (EditText) findViewById(R.id.numCarte);
-        btnSuivant = (Button) findViewById(R.id.btnSuivant);
-        //btnAnnuler = (Button) findViewById(R.id.btnAnnuler);
-        btnOpenNFC = (Button) findViewById(R.id.btnOpenNFC);
-        // operateur = (Spinner) findViewById(R.id.operateurs);
 
-        typeChauffeur = (Spinner) findViewById(R.id.typeChauffeur);
-
-        adresse = (EditText) findViewById(R.id.adresse);
-        AbonnementMensuel = (CheckBox) findViewById(R.id.AbonnementMensuel);
-        AbonnementHebdomadaire = (CheckBox) findViewById(R.id.AbonnementHebdomadaire);
-        AbonnementService = (CheckBox) findViewById(R.id.AbonnementService);
-        typePjustificative = (Spinner) findViewById(R.id.typePjustificative);
-
-        authWindows = (LinearLayout) findViewById(R.id.authWindows);
-        internetIndisponible = (LinearLayout) findViewById(R.id.internetIndisponible);
-        btnReessayer = (Button) findViewById(R.id.btnReessayer);
-        conStatusIv = (ImageView) findViewById(R.id.conStatusIv);
-        titleNetworkLimited = (TextView) findViewById(R.id.titleNetworkLimited);
-        msgNetworkLimited = (TextView) findViewById(R.id.msgNetworkLimited);
-
+        // Initializing a String Array
         //Vérification si la langue du telephone est en Francais
-        if(Locale.getDefault().getLanguage().contentEquals("fr")){
-
+        if(Locale.getDefault().getLanguage().contentEquals("fr")) {
             // Initializing a String Array
-             sexe1 = new String[]{
+            sexe1 = new String[]{
                     "Masculin",
                     "Feminin"
             };
-
             // Initializing a String Array
-               pieceJ = new String[]{
+            pieceJ = new String[]{
                     "CNI",
                     "passeport",
                     "recipissé",
                     "carte de séjour",
                     "carte d'étudiant"
             };
-
-        } else{
+        } else {
             // Initializing a String Array
             sexe1 = new String[]{
                     "Male",
                     "Feminine"
             };
-
             // Initializing a String Array
-              pieceJ = new String[]{
+            pieceJ = new String[]{
                     "CNI",
                     "passport",
                     "receipt",
@@ -248,29 +299,23 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
             };
         }
 
-        // Initializing an ArrayAdapter
+        // Initializing an ArrayAdapter gender
         ArrayAdapter<String> spinnerArrayAdapter3 = new ArrayAdapter<String>(
                 this, R.layout.spinner_item, sexe1);
         spinnerArrayAdapter3.setDropDownViewResource(R.layout.spinner_item);
         sexe.setAdapter(spinnerArrayAdapter3);
 
-        // Initializing an ArrayAdapter
+
+        // Initializing an ArrayAdapter justificatives
         ArrayAdapter<String> spinnerArrayAdapter4 = new ArrayAdapter<String>(
                 this, R.layout.spinner_item, pieceJ);
         spinnerArrayAdapter4.setDropDownViewResource(R.layout.spinner_item);
         typePjustificative.setAdapter(spinnerArrayAdapter4);
 
 
-        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
-        try{
-            FileInputStream fIn = getApplicationContext().openFileInput(file);
-            while ((c = fIn.read()) != -1){
-                temp_number = temp_number + Character.toString((char)c);
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        readTempNumberInFile();
+
+
 
         typePjustificative.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -279,41 +324,41 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
                 switch (position){
                     case 0:
                         if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
-                            cni.setHint("N° CNI");
+                            tie_cni.setHint("N° CNI");
                         } else {
-                            cni.setHint("N° CNI");
+                            tie_cni.setHint("N° CNI");
                         }
                         break;
                     case 1:
                         if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
-                            cni.setHint("N° Passeport");
+                            tie_cni.setHint("N° Passeport");
                         } else {
-                            cni.setHint("N° Passport");
+                            tie_cni.setHint("N° Passport");
                         }
                         break;
                     case 2:
                         if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
-                            cni.setHint("N° Recipissé");
+                            tie_cni.setHint("N° Recipissé");
                         } else {
-                            cni.setHint("N° Receipt");
+                            tie_cni.setHint("N° Receipt");
                         }
                         break;
                     case 3:
                         if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
-                            cni.setHint("N° Carte de séjour");
+                            tie_cni.setHint("N° Carte de séjour");
                         } else {
-                            cni.setHint("N° Residence permit");
+                            tie_cni.setHint("N° Residence permit");
                         }
                         break;
                     case 4:
                         if ((Locale.getDefault().getLanguage().contentEquals("fr"))) {
-                            cni.setHint("N° Carte d'étudiant");
+                            tie_cni.setHint("N° Carte d'étudiant");
                         } else {
-                            cni.setHint("N° Student card");
+                            tie_cni.setHint("N° Student card");
                         }
                         break;
                     default:
-                        cni.setHint("");
+                        tie_cni.setHint("");
                 }
 
             }
@@ -335,7 +380,80 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
 
                 if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase(listAllSession.get(key))){
                     num_statut = String.valueOf(key);
-                    new AsyncTaskFiltreCategorie(String.valueOf(key), Souscription_User_AutoEnreg.this).execute();
+
+                    call = service.getAllCategories();
+                    call.enqueue(new Callback<List<Categorie>>() {
+                        @Override
+                        public void onResponse(Call<List<Categorie>> call, Response<List<Categorie>> response) {
+
+                            Log.w(TAG, "SMOPAYE_SERVER onResponse " +response);
+                            if(response.isSuccessful()){
+
+                                listFILTRECategorie.clear();
+
+                                List<Categorie> mycategories = response.body();
+                                for(int i = 0; i<mycategories.size(); i++){
+
+                                    if(Integer.parseInt(num_statut)==mycategories.get(i).getRole_id()){
+                                        listFILTRECategorie.put(mycategories.get(i).getId(), mycategories.get(i).getname());
+                                    }
+
+                                }
+
+                                //------------------------------
+
+                                List<StringWithTag> itemList1 = new ArrayList<>();
+
+                                /* Iterate through your original collection, in this case defined with an Integer key and String value. */
+                                for (Map.Entry<Integer, String> entry : listFILTRECategorie.entrySet()) {
+                                    Integer key = entry.getKey();
+                                    String value = entry.getValue();
+                                    /* Build the StringWithTag List using these keys and values. */
+
+                                    itemList1.add(new StringWithTag(value, key));
+                                }
+
+                                /* Set your ArrayAdapter with the StringWithTag, and when each entry is shown in the Spinner, .toString() is called. */
+                                ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(Souscription_User_AutoEnreg.this, R.layout.spinner_item, itemList1);
+                                spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
+                                typeChauffeur.setAdapter(spinnerAdapter);
+                                //------------------------------
+
+
+                            }
+                            else{
+                                tokenManager.deleteToken();
+                                startActivity(new Intent(Souscription_User_AutoEnreg.this, Login.class));
+                                finish();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<Categorie>> call, Throwable t) {
+
+                            Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
+
+                            //Vérification si la connexion internet accessible
+                            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
+                            if(!(activeInfo != null && activeInfo.isConnected())){
+                                authWindows.setVisibility(View.GONE);
+                                internetIndisponible.setVisibility(View.VISIBLE);
+                                Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
+                            }
+                            //Vérification si le serveur est inaccessible
+                            else{
+                                authWindows.setVisibility(View.GONE);
+                                internetIndisponible.setVisibility(View.VISIBLE);
+                                conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
+                                titleNetworkLimited.setText(getString(R.string.connexionLimite));
+                                //msgNetworkLimited.setText();
+                                Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    });
+
                 }
 
             }
@@ -366,437 +484,323 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+    }
+
+    @OnClick(R.id.btnSuivant)
+    void auto_register(){
+
+        if(!validateNom(til_nom) | !validatePrenom(til_prenom) | !validateTel(til_numeroTel) | !validateCni(til_cni)
+                | !validateAdress(til_adresse) | !validateRole(statut) | !validateCategorie(typeChauffeur)){
+            return;
+        }
+
+        validator.clear();
+
+        /*Action à poursuivre si tous les champs sont remplis*/
+        if(validator.validate()){
 
 
+            Intent intent = new Intent(getApplicationContext(), SouscriptionUploadIMGidCard.class);
+            intent.putExtra("NOM", til_nom.getEditText().getText().toString().trim().toLowerCase());
+            intent.putExtra("PRENOM", til_prenom.getEditText().getText().toString().trim().toLowerCase());
+            intent.putExtra("GENRE", (sexe.getSelectedItem().toString().trim().toLowerCase().equalsIgnoreCase("masculin") || sexe.getSelectedItem().toString().trim().toLowerCase().equalsIgnoreCase("male") ? "MASCULIN" : "FEMININ" ));
+            intent.putExtra("TELEPHONE", til_numeroTel.getEditText().getText().toString().trim());
+            intent.putExtra("CNI", typePjustificative.getSelectedItem().toString().trim()+"-"+til_cni.getEditText().getText().toString().trim());
+            intent.putExtra("sessioncompte", num_statut);
+            intent.putExtra("Adresse", til_adresse.getEditText().getText().toString().trim());
+            intent.putExtra("IDCathegorie", num_categorie);
+            intent.putExtra("uniquser", temp_number);
+            intent.putExtra("sessioncompteValue", statut.getSelectedItem().toString().trim());
+            intent.putExtra("IDCathegorieValue", typeChauffeur.getSelectedItem().toString().trim());
+            startActivity(intent);
 
+        }
 
-
-        btnSuivant.setOnClickListener(new View.OnClickListener() {
-
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onClick(View v) {
-
-                if(nom.getText().toString().trim().equals("")){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " " + getString(R.string.nom), Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
-                    TextView title = (TextView) view.findViewById(R.id.title);
-                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                    title.setText(getString(R.string.information));
-                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.veuillezInserer) + " " + getString(R.string.nom));
-                    build_error.setPositiveButton("OK", null);
-                    build_error.setCancelable(false);
-                    build_error.setView(view);
-                    build_error.show();
-                    return;
-                }
-
-                if(prenom.getText().toString().trim().equals("")){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " " + getString(R.string.prenom), Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
-                    TextView title = (TextView) view.findViewById(R.id.title);
-                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                    title.setText(getString(R.string.information));
-                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.veuillezInserer) + " " + getString(R.string.prenom));
-                    build_error.setPositiveButton("OK", null);
-                    build_error.setCancelable(false);
-                    build_error.setView(view);
-                    build_error.show();
-                    return;
-                }
-
-                if(telephone.getText().toString().trim().equals("")){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " " + getString(R.string.numeroTel), Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
-                    TextView title = (TextView) view.findViewById(R.id.title);
-                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                    title.setText(getString(R.string.information));
-                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.veuillezInserer) + " " + getString(R.string.numeroTel));
-                    build_error.setPositiveButton("OK", null);
-                    build_error.setCancelable(false);
-                    build_error.setView(view);
-                    build_error.show();
-                    return;
-                }
-
-
-                if(telephone.length()< 9){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.verifierNumero), Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
-                    TextView title = (TextView) view.findViewById(R.id.title);
-                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                    title.setText(getString(R.string.information));
-                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.verifierNumero));
-                    build_error.setPositiveButton("OK", null);
-                    build_error.setCancelable(false);
-                    build_error.setView(view);
-                    build_error.show();
-                    return;
-                }
-
-                if(cni.getText().toString().trim().equals("")){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " " + getString(R.string.numeroDe) + " " + typePjustificative.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
-                    TextView title = (TextView) view.findViewById(R.id.title);
-                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                    title.setText(getString(R.string.information));
-                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.veuillezInserer) + " " + getString(R.string.numeroDe) + " " + typePjustificative.getSelectedItem().toString());
-                    build_error.setPositiveButton("OK", null);
-                    build_error.setCancelable(false);
-                    build_error.setView(view);
-                    build_error.show();
-                    return;
-                }
-
-                if(adresse.getText().toString().trim().equals("")){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " " + getString(R.string.adresse), Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
-                    TextView title = (TextView) view.findViewById(R.id.title);
-                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                    title.setText(getString(R.string.information));
-                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.veuillezInserer) + " " + getString(R.string.adresse));
-                    build_error.setPositiveButton("OK", null);
-                    build_error.setCancelable(false);
-                    build_error.setView(view);
-                    build_error.show();
-                    return;
-                }
-
-                /*if(numCarte.getText().toString().isEmpty()){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " numéro de compte.", Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
-                    TextView title = (TextView) view.findViewById(R.id.title);
-                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                    title.setText(getString(R.string.information));
-                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.veuillezInserer) + " numéro de compte.");
-                    build_error.setPositiveButton("OK", null);
-                    build_error.setCancelable(false);
-                    build_error.setView(view);
-                    build_error.show();
-                    return;
-                }*/
-
-                if(statut.getCount() == 0){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " " + getString(R.string.AlertStatutListDeroulante), Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
-                    TextView title = (TextView) view.findViewById(R.id.title);
-                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                    title.setText(getString(R.string.information));
-                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.veuillezInserer) + " " + getString(R.string.AlertStatutListDeroulante));
-                    build_error.setPositiveButton("OK", null);
-                    build_error.setCancelable(false);
-                    build_error.setView(view);
-                    build_error.show();
-                    return;
-                }
-
-                if(typeChauffeur.getCount() == 0){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " " + getString(R.string.AlertCategorieListDeroulante), Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
-                    TextView title = (TextView) view.findViewById(R.id.title);
-                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                    title.setText(getString(R.string.information));
-                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.veuillezInserer) + " " + getString(R.string.AlertCategorieListDeroulante));
-                    build_error.setPositiveButton("OK", null);
-                    build_error.setCancelable(false);
-                    build_error.setView(view);
-                    build_error.show();
-                    return;
-                }
-
-                if(!isValid(nom.getText().toString().trim())){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.votre) + " " + getString(R.string.nom) + " " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
-                    TextView title = (TextView) view.findViewById(R.id.title);
-                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                    title.setText(getString(R.string.information));
-                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.votre) + " " + getString(R.string.nom) + " " + getString(R.string.invalidCararatere));
-                    build_error.setPositiveButton("OK", null);
-                    build_error.setCancelable(false);
-                    build_error.setView(view);
-                    build_error.show();
-                    return;
-                }
-
-                if(!isValid(prenom.getText().toString().trim())){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.votre) + " " + getString(R.string.prenom) + " " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
-                    TextView title = (TextView) view.findViewById(R.id.title);
-                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                    title.setText(getString(R.string.information));
-                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.votre) + " " + getString(R.string.prenom) + " " + getString(R.string.invalidCararatere));
-                    build_error.setPositiveButton("OK", null);
-                    build_error.setCancelable(false);
-                    build_error.setView(view);
-                    build_error.show();
-                    return;
-                }
-
-                if(!isValid(cni.getText().toString().trim())){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.votre) + " " + typePjustificative.getSelectedItem().toString() + " " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
-                    TextView title = (TextView) view.findViewById(R.id.title);
-                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                    title.setText(getString(R.string.information));
-                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.votre) + " " + typePjustificative.getSelectedItem().toString() + " " + getString(R.string.invalidCararatere));
-                    build_error.setPositiveButton("OK", null);
-                    build_error.setCancelable(false);
-                    build_error.setView(view);
-                    build_error.show();
-                    return;
-                }
-
-                if(!isValid(adresse.getText().toString().trim())){
-                    Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.votre) + " " + getString(R.string.adresse) + " " + getString(R.string.invalidCararatere), Toast.LENGTH_SHORT).show();
-                    View view = LayoutInflater.from(Souscription_User_AutoEnreg.this).inflate(R.layout.alert_dialog_success, null);
-                    TextView title = (TextView) view.findViewById(R.id.title);
-                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                    title.setText(getString(R.string.information));
-                    imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                    statutOperation.setText(getString(R.string.votre) + " " + getString(R.string.adresse) + " " + getString(R.string.invalidCararatere));
-                    build_error.setPositiveButton("OK", null);
-                    build_error.setCancelable(false);
-                    build_error.setView(view);
-                    build_error.show();
-                    return;
-                }
-
-
-
-                Intent intent = new Intent(getApplicationContext(), SouscriptionUploadIMGidCard.class);
-                intent.putExtra("NOM", nom.getText().toString().trim().toLowerCase());
-                intent.putExtra("PRENOM", prenom.getText().toString().trim().toLowerCase());
-                intent.putExtra("GENRE", (sexe.getSelectedItem().toString().trim().toLowerCase().equalsIgnoreCase("masculin") || sexe.getSelectedItem().toString().trim().toLowerCase().equalsIgnoreCase("male") ? "MASCULIN" : "FEMININ" ));
-                intent.putExtra("TELEPHONE", telephone.getText().toString().trim());
-                intent.putExtra("CNI", typePjustificative.getSelectedItem().toString().trim()+"-"+cni.getText().toString().trim());
-                intent.putExtra("sessioncompte", num_statut);
-                intent.putExtra("Adresse", adresse.getText().toString().trim());
-                intent.putExtra("IDCARTE", numCarte.getText().toString().trim().toUpperCase());
-                intent.putExtra("IDCathegorie", num_categorie);
-                intent.putExtra("typeAbon", abonnement);
-                intent.putExtra("uniquser", temp_number);
-                intent.putExtra("sessioncompteValue", statut.getSelectedItem().toString().trim());
-                intent.putExtra("IDCathegorieValue", typeChauffeur.getSelectedItem().toString().trim());
-                startActivity(intent);
-
-            }
-
-        });
-
-
-
-        //PASSAGE DE LA CARTE
-        btnOpenNFC.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    nfc.open();
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            // On ajoute un message à notre progress dialog
-                            progressDialog.setMessage(getString(R.string.passerCarte));
-                            // On donne un titre à notre progress dialog
-                            progressDialog.setTitle(getString(R.string.attenteCarte));
-                            // On spécifie le style
-                            //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                            // On affiche notre message
-                            progressDialog.show();
-                            //build.setPositiveButton("ok", new View.OnClickListener()
-
-                        }
-                    });
-                } catch (TelpoException e) {
-                    e.printStackTrace();
-                }
-                readThread = new Souscription_User_AutoEnreg.ReadThread();
-                readThread.start();
-            }
-        });
-
-
-        //DETECTION DE TYPE DE CARTE ET SON ID
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case CHECK_NFC_TIMEOUT: {
-                        Toast.makeText(getApplicationContext(), "Check card time out!", Toast.LENGTH_LONG).show();
-                       /* open_btn.setEnabled(true);
-                        close_btn.setEnabled(false);
-                        check_btn.setEnabled(false);*/
-                    }
-                    break;
-                    case SHOW_NFC_DATA: {
-                        byte[] uid_data = (byte[]) msg.obj;
-                        if (uid_data[0] == 0x42) {
-                            // TYPE B类（暂时只支持cpu卡）
-                            byte[] atqb = new byte[uid_data[16]];
-                            byte[] pupi = new byte[4];
-                            String type = null;
-
-                            System.arraycopy(uid_data, 17, atqb, 0, uid_data[16]);
-                            System.arraycopy(uid_data, 29, pupi, 0, 4);
-
-                            if (uid_data[1] == B_CPU) {
-                                type = "CPU";
-                               /* sendApduBtn.setEnabled(true);
-                                getAtsBtn.setEnabled(true);*/
-                            } else {
-                                type = "unknow";
-                            }
-
-                            new AlertDialog.Builder(Souscription_User_AutoEnreg.this)
-                                    .setMessage(getString(R.string.card_type) + getString(R.string.type_b) + " " + type +
-                                            "\r\n" + getString(R.string.atqb_data) + StringUtil.toHexString(atqb) +
-                                            "\r\n" + getString(R.string.pupi_data) + StringUtil.toHexString(pupi))
-                                    .setPositiveButton("OK", null)
-                                    .setCancelable(false)
-                                    .show();
-
-                           /* uid_editText.setText(getString(R.string.card_type) + getString(R.string.type_b) + " " + type +
-                                    "\r\n" + getString(R.string.atqb_data) + StringUtil.toHexString(atqb) +
-                                    "\r\n" + getString(R.string.pupi_data) + StringUtil.toHexString(pupi));*/
-
-                        } else if (uid_data[0] == 0x41) {
-                            // TYPE A类（CPU, M1）
-                            byte[] atqa = new byte[2];
-                            byte[] sak = new byte[1];
-                            byte[] uid = new byte[uid_data[5]];
-                            String type = null;
-
-                            System.arraycopy(uid_data, 2, atqa, 0, 2);
-                            System.arraycopy(uid_data, 4, sak, 0, 1);
-                            System.arraycopy(uid_data, 6, uid, 0, uid_data[5]);
-
-                            if (uid_data[1] == A_CPU) {
-                                type = "CPU";
-                                /*sendApduBtn.setEnabled(true);
-                                getAtsBtn.setEnabled(true);*/
-                            } else if (uid_data[1] == A_M1) {
-                                type = "M1";
-                                // authenticateBtn.setEnabled(true);
-                            } else {
-                                type = "unknow";
-                            }
-                           /* new AlertDialog.Builder(Login.this)
-                                    .setMessage(getString(R.string.card_type) + getString(R.string.type_a) + " " + type +
-                                            "\r\n" + getString(R.string.atqa_data) + StringUtil.toHexString(atqa) +
-                                            "\r\n" + getString(R.string.sak_data) + StringUtil.toHexString(sak) +
-                                            "\r\n" + getString(R.string.uid_data) + StringUtil.toHexString(uid))
-                                    .setPositiveButton("OK", null)
-                                    .setCancelable(false)
-                                    .show();*/
-                            //numCarte.setText(StringUtil.toHexString(uid));
-                            m1CardAuthenticate();
-                            progressDialog.dismiss();
-                            try {
-                                nfc.close();
-                            } catch (TelpoException e) {
-                                e.printStackTrace();
-                            }
-
-                        } else {
-                            Log.e(TAG, "unknow type card!!");
-                        }
-                    }
-                    break;
-
-                    default:
-                        break;
-                }
-            }
-        };
-
-
-        btnReessayer.setOnClickListener(this::checkNetworkConnectionStatus);
 
     }
 
-    public void checkNetworkConnectionStatus(View view) {
+    /**
+     * validateNom() méthode permettant de verifier si le nom inséré est valide
+     * @param til_nom
+     * @return Boolean
+     * @since 2019
+     * */
+    private Boolean validateNom(TextInputLayout til_nom){
+        String my_name = til_nom.getEditText().getText().toString().trim();
+        if(my_name.isEmpty()){
+            til_nom.setError(getString(R.string.veuillezInserer) + " " + getString(R.string.nom));
+            return false;
+        } else if(!isValid(my_name)){
+            til_nom.setError(getString(R.string.votre) + " " + getString(R.string.nom) + " " + getString(R.string.invalidCararatere));
+            return false;
+        } else {
+            til_nom.setError(null);
+            return true;
+        }
+    }
 
+
+    /**
+     * validateStatut() méthode permettant de verifier si le statut listé est chargé
+     * @param status
+     * @return Boolean
+     * @since 2019
+     * */
+    private Boolean validateRole(Spinner status){
+
+        if(status.getCount() == 0){
+            Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " " + getString(R.string.AlertStatutListDeroulante), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * validateCat() méthode permettant de verifier si la categorie listé est bien chargé
+     * @param cat
+     * @return Boolean
+     * @since 2019
+     * */
+    private Boolean validateCategorie(Spinner cat){
+
+        if(cat.getCount() == 0){
+            Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.veuillezInserer) + " " + getString(R.string.AlertCategorieListDeroulante), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * validatePrenom() méthode permettant de verifier si le prenom inséré est valide
+     * @param til_prenom
+     * @return Boolean
+     * @since 2019
+     * */
+    private Boolean validatePrenom(TextInputLayout til_prenom){
+        String my_surname = til_prenom.getEditText().getText().toString().trim();
+        if(my_surname.isEmpty()){
+            til_prenom.setError(getString(R.string.veuillezInserer) + " " + getString(R.string.prenom));
+            return false;
+        } else if(!isValid(my_surname)){
+            til_prenom.setError(getString(R.string.votre) + " " + getString(R.string.prenom) + " " + getString(R.string.invalidCararatere));
+            return false;
+        } else {
+            til_prenom.setError(null);
+            return true;
+        }
+    }
+
+
+    /**
+     * validateCni() méthode permettant de verifier si le cni inséré est valide
+     * @param til_cni
+     * @return Boolean
+     * @since 2019
+     * */
+    private Boolean validateCni(TextInputLayout til_cni){
+        String my_cni = til_cni.getEditText().getText().toString().trim();
+        if(my_cni.isEmpty()){
+            til_cni.setError(getString(R.string.veuillezInserer) + " " + getString(R.string.numeroDe) + " " + typePjustificative.getSelectedItem().toString());
+            return false;
+        } else if(!isValid(my_cni)){
+            til_cni.setError(getString(R.string.votre) + " " + typePjustificative.getSelectedItem().toString() + " " + getString(R.string.invalidCararatere));
+            return false;
+        } else {
+            til_cni.setError(null);
+            return true;
+        }
+    }
+
+
+    /**
+     * validateAdress() méthode permettant de verifier si le cni inséré est valide
+     * @param til_adress
+     * @return Boolean
+     * @since 2019
+     * */
+    private Boolean validateAdress(TextInputLayout til_adress){
+        String my_adress = til_adress.getEditText().getText().toString().trim();
+        if(my_adress.isEmpty()){
+            til_adress.setError(getString(R.string.veuillezInserer) + " " + getString(R.string.adresse));
+            return false;
+        } else if(!isValid(my_adress)){
+            til_adress.setError(getString(R.string.votre) + " " + getString(R.string.adresse) + " " + getString(R.string.invalidCararatere));
+            return false;
+        } else {
+            til_adress.setError(null);
+            return true;
+        }
+    }
+
+
+    /**
+     * validateTel() méthode permettant de verifier si le telephone inséré est valide
+     * @param til_tel
+     * @return Boolean
+     * @since 2019
+     * */
+    private Boolean validateTel(TextInputLayout til_tel){
+        String my_phone = til_tel.getEditText().getText().toString().trim();
+        if(my_phone.isEmpty()){
+            til_tel.setError(getString(R.string.insererTelephone));
+            return false;
+        } else if(my_phone.length() < 9){
+            til_tel.setError(getString(R.string.telephoneCourt));
+            return false;
+        } else {
+            til_tel.setError(null);
+            return true;
+        }
+    }
+
+    private void readTempNumberInFile() {
+        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
+        try{
+            FileInputStream fIn = getApplicationContext().openFileInput(file);
+            while ((c = fIn.read()) != -1){
+                temp_number = temp_number + Character.toString((char)c);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * setupRulesValidatForm() méthode permettant de changer la couleur des champs de saisie en cas d'érreur et vérifi si les champs de saisie sont vides
+     * @since 2020
+     * */
+    private void setupRulesValidatForm(){
+
+        //coloration des champs lorsqu'il y a erreur
+        til_nom.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+        til_prenom.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+        til_numeroTel.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+        til_cni.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+        til_adresse.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+
+        validator.addValidation(this, R.id.til_nom, RegexTemplate.NOT_EMPTY, R.string.veuillezInsererNom);
+        validator.addValidation(this, R.id.til_prenom, RegexTemplate.NOT_EMPTY, R.string.veuillezInsererPrenom);
+        validator.addValidation(this, R.id.til_numeroTel, RegexTemplate.NOT_EMPTY, R.string.veuillezInsererTelephone);
+        validator.addValidation(this, R.id.til_numeroTel, RegexTemplate.TELEPHONE, R.string.verifierNumero);
+        validator.addValidation(this, R.id.til_cni, RegexTemplate.NOT_EMPTY, R.string.veuillezInsererPJ);
+        validator.addValidation(this, R.id.til_adresse, RegexTemplate.NOT_EMPTY, R.string.veuillezInsererAdresse);
+    }
+
+
+    /**
+     * checkNetworkConnectionStatus() méthode permettant de verifier si la connexion existe ou si le serveur est accessible
+     * @since 2019
+     * */
+    @OnClick(R.id.btnReessayer)
+    void checkNetworkConnectionStatus(){
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        showSnackBar(isConnected);
+
+       // if(!isConnected){ changeActivity(); }
+        if(isConnected){
+            changeActivity();
+        }
+    }
+
+    private void changeActivity() {
+        /*Intent intent = new Intent(this, OfflineActivity.class);
+        startActivity(intent);*/
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
-
         if(activeInfo != null && activeInfo.isConnected()){
-
-            ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
-            dialog.show();
-
+            progressDialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
+            progressDialog.show();
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {
-                    dialog.dismiss();
-                    //this.recreate();
-                    finish();
-                    startActivity(getIntent());
+                    progressDialog.dismiss();
+                    recreate();
                 }
-            }, 3000); // 3000 milliseconds delay
+            }, 2000); // 2000 milliseconds delay
 
         } else{
             progressDialog.dismiss();
             authWindows.setVisibility(View.GONE);
             internetIndisponible.setVisibility(View.VISIBLE);
-            Toast.makeText(Souscription_User_AutoEnreg.this, getString(R.string.connexionIntrouvable), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.connexionIntrouvable), Toast.LENGTH_SHORT).show();
         }
     }
 
+    private void showSnackBar(boolean isConnected) {
+        String message;
+        int color = Color.WHITE;
+        Snackbar snackbar;
+        View view;
 
-
-    public class ReadThread extends Thread {
-        byte[] nfcData = null;
-
-        @Override
-        public void run() {
-            try {
-
-                time1 = System.currentTimeMillis();
-                nfcData = nfc.activate(10 * 1000); // 10s
-                time2 = System.currentTimeMillis();
-                Log.e("yw activate", (time2 - time1) + "");
-                if (null != nfcData) {
-                    handler.sendMessage(handler.obtainMessage(SHOW_NFC_DATA, nfcData));
-                } else {
-                    Log.d(TAG, "Check Card timeout...");
-                    handler.sendMessage(handler.obtainMessage(CHECK_NFC_TIMEOUT, null));
-                }
-            } catch (TelpoException e) {
-                Log.e("yw", e.toString());
-                e.printStackTrace();
+        if(isConnected){
+            message = getString(R.string.networkOnline);
+            snackbar = Snackbar.make(findViewById(R.id.auto_souscription), message, Snackbar.LENGTH_LONG);
+            view = snackbar.getView();
+            TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(color);
+            textView.setBackgroundColor(Color.parseColor("#039BE5"));
+            textView.setGravity(Gravity.CENTER);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
+            }
+        } else{
+            message = getString(R.string.networkOffline);
+            snackbar = Snackbar.make(findViewById(R.id.auto_souscription), message, Snackbar.LENGTH_INDEFINITE);
+            view = snackbar.getView();
+            TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(color);
+            textView.setGravity(Gravity.CENTER);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
             }
         }
+        snackbar.show();
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        /*if(!isConnected){
+            changeActivity();
+        }*/
+        showSnackBar(isConnected);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //register intent filter
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
+        registerReceiver(connectivityReceiver, intentFilter);
+
+        //register connection status listener
+        NotifApp.getInstance().setConnectivityListener(this);
     }
 
 
 
-    public static boolean isValid(String str)
+    /**
+     * onDestroy() methode Callback qui permet de détruire une activity et libérer l'espace mémoire
+     * @since 2020
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(call != null){
+            call.cancel();
+            call = null;
+        }
+    }
+
+
+
+    private static boolean isValid(String str)
     {
         boolean isValid = false;
         String expression = "^[a-z_A-Z0-9éèê'çà ]*$";
@@ -811,55 +815,6 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
     }
 
 
-
-
-
-    public void m1CardAuthenticate() {
-        Boolean status = true;
-        byte[] passwd = {(byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff};
-        try {
-
-            time1 = System.currentTimeMillis();
-            nfc.m1_authenticate(blockNum_1, (byte) 0x0B, passwd);//0x0B
-            time2 = System.currentTimeMillis();
-            Log.e("yw m1_authenticate", (time2 - time1) + "");
-
-
-        } catch (TelpoException e) {
-            status = false;
-            e.printStackTrace();
-            Log.e("yw", e.toString());
-        }
-
-        if (status) {
-            Log.d(TAG, "m1CardAuthenticate success!");
-            //writeBlockData();
-            //readBlockData();
-
-            //OwriteValueData();
-            readValueDataCourt();
-        } else {
-            Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "m1CardAuthenticate fail!");
-        }
-    }
-
-
-    public void readValueDataCourt() {
-        byte[] data = null;
-        try {
-            data = nfc.m1_read_value(blockNum_2);
-        } catch (TelpoException e) {
-            e.printStackTrace();
-        }
-
-        if (null == data) {
-            Log.e(TAG, "readValueBtn fail!");
-            Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
-        } else {
-            numCarte.setText(StringUtil.toHexString(data));
-        }
-    }
 
     /*                    GESTION DU MENU DROIT                  */
     @Override
@@ -909,343 +864,11 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity {
     }
 
 
-
-
-    public class loadDataSpinner extends AsyncTask<Void, Void, Void> {
-
-        Context c;
-        Spinner sp;
-
-        public loadDataSpinner(Context c, Spinner sp) {
-            this.c = c;
-            this.sp = sp;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            //chargement et affichage des données du statut EX: Administrateur, Accepteur, Agent, Utilisateur
-            LoadDbAllSessionInSpinner();
-
-            //chargement sans affichage des données des Categories EX: mini-bus, restaurant smopaye
-            LoadDbALLCategorieInpinner();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-
-
-            List<StringWithTag> itemList = new ArrayList<>();
-
-            /* Iterate through your original collection, in this case defined with an Integer key and String value. */
-            for (Map.Entry<Integer, String> entry : listAllSession.entrySet()) {
-                Integer key = entry.getKey();
-                String value = entry.getValue();
-
-                /* Build the StringWithTag List using these keys and values. */
-                itemList.add(new StringWithTag(value, key));
-            }
-
-            /* Set your ArrayAdapter with the StringWithTag, and when each entry is shown in the Spinner, .toString() is called. */
-            ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(c, R.layout.spinner_item, itemList);
-            spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
-            sp.setAdapter(spinnerAdapter);
-        }
-    }
-
-
-
-    private void LoadDbAllSessionInSpinner(){
-//connection
-        try{
-            final Uri.Builder builder = new Uri.Builder();
-            builder.appendQueryParameter("auth","Users");
-            builder.appendQueryParameter("login", "register");
-            builder.appendQueryParameter("infoname", "status");
-            builder.appendQueryParameter("uniquser", temp_number);
-            builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
-            builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
-
-            URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
-
-            //URL url = new URL(adressUrl);
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
-            con.setRequestMethod("GET");
-            is = new BufferedInputStream(con.getInputStream());
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
-
-//content
-        try{
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            StringBuilder sb = new StringBuilder();
-            while ((line = br.readLine()) != null){
-                sb.append(line + "\n");
-            }
-            is.close();
-            result=sb.toString();
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
-
-//JSON
-        try{
-            JSONArray ja = new JSONArray(result);
-            JSONObject jo = null;
-
-            listStatut.clear();
-            idStatut.clear();
-
-            listAllSession.clear();
-
-
-            id_session = new String[ja.length()];
-            nom_session = new String[ja.length()];
-
-            for(int i=0; i<=ja.length();i++){
-                jo = ja.getJSONObject(i);
-                id_session[i] = jo.getString("id_session");
-                nom_session[i] = jo.getString("nom_session");
-
-
-                if(nom_session[i].toLowerCase().trim().equalsIgnoreCase("utilisateur")) {
-                    listStatut.add(nom_session[i]);
-                    idStatut.add(id_session[i]);
-                    listAllSession.put(Integer.parseInt(id_session[i]),  nom_session[i]);
-                }
-
-
-            }
-
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
-
-
-    }
-
-
-    private void LoadDbALLCategorieInpinner(){
-//connection
-
-        try{
-            final Uri.Builder builder = new Uri.Builder();
-            builder.appendQueryParameter("auth","Users");
-            builder.appendQueryParameter("login", "register");
-            builder.appendQueryParameter("infoname", "cath");
-            builder.appendQueryParameter("uniquser", temp_number);
-            builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
-            builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
-
-            URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
-
-            //URL url = new URL(adressUrl);
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
-            con.setRequestMethod("GET");
-            is = new BufferedInputStream(con.getInputStream());
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
-
-//content
-        try{
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            StringBuilder sb = new StringBuilder();
-            while ((line = br.readLine()) != null){
-                sb.append(line + "\n");
-            }
-            is.close();
-            result=sb.toString();
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
-
-//JSON
-        try{
-            JSONArray ja = new JSONArray(result);
-            JSONObject jo = null;
-
-            maListe.clear();
-            maListeIDCat.clear();
-            ListIDTypeUser.clear();
-
-            IDCathegorie = new String[ja.length()];
-            NOMCath = new String[ja.length()];
-            typeuser = new String[ja.length()];
-
-            for(int i=0; i<=ja.length();i++){
-                jo = ja.getJSONObject(i);
-
-                IDCathegorie[i] = jo.getString("IDCathegorie");
-                NOMCath[i] = jo.getString("NOMCath");
-                typeuser[i] = jo.getString("typeuser");
-
-                ListIDTypeUser.add(typeuser[i]);
-                maListe.add(NOMCath[i]);
-                maListeIDCat.add(IDCathegorie[i]);
-
-                listAllCategorie.put(Integer.parseInt(IDCathegorie[i]),  NOMCath[i]);
-
-            }
-
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
-    }
-
-
-
-    //FILTRE DES CATEGORIES
-    private class AsyncTaskFiltreCategorie extends AsyncTask<Void, Void, Void>{
-
-        private String id;
-        private Context context;
-
-        public AsyncTaskFiltreCategorie(String id, Context context) {
-            this.id = id;
-            this.context = context;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            LoadDbFILTRECategorieInpinner(id);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-
-            /*ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(context, R.layout.spinner_item, maListe1);
-            spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
-            typeChauffeur.setAdapter(spinnerArrayAdapter);*/
-
-
-
-            //------------------------------
-
-            List<StringWithTag> itemList1 = new ArrayList<>();
-
-            /* Iterate through your original collection, in this case defined with an Integer key and String value. */
-            for (Map.Entry<Integer, String> entry : listFILTRECategorie.entrySet()) {
-                Integer key = entry.getKey();
-                String value = entry.getValue();
-                /* Build the StringWithTag List using these keys and values. */
-
-                itemList1.add(new StringWithTag(value, key));
-            }
-
-            /* Set your ArrayAdapter with the StringWithTag, and when each entry is shown in the Spinner, .toString() is called. */
-            ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(context, R.layout.spinner_item, itemList1);
-            spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
-            typeChauffeur.setAdapter(spinnerAdapter);
-            //------------------------------
-
-        }
-    }
-
-    private void LoadDbFILTRECategorieInpinner(String id){
-//connection
-
-        try{
-            final Uri.Builder builder = new Uri.Builder();
-            builder.appendQueryParameter("auth","Users");
-            builder.appendQueryParameter("login", "register");
-            builder.appendQueryParameter("infoname", "cath");
-            builder.appendQueryParameter("uniquser", temp_number);
-            builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
-            builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
-
-            URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
-
-            //URL url = new URL(adressUrl);
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
-            con.setRequestMethod("GET");
-            is = new BufferedInputStream(con.getInputStream());
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
-
-//content
-        try{
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            StringBuilder sb = new StringBuilder();
-            while ((line = br.readLine()) != null){
-                sb.append(line + "\n");
-            }
-            is.close();
-            result=sb.toString();
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
-
-//JSON
-        try{
-            JSONArray ja = new JSONArray(result);
-            JSONObject jo = null;
-
-            maListe1.clear();
-            maListeIDCat1.clear();
-            ListIDTypeUser1.clear();
-
-            listFILTRECategorie.clear();
-
-            IDCathegorie1 = new String[ja.length()];
-            NOMCath1 = new String[ja.length()];
-            typeuser1 = new String[ja.length()];
-
-            for(int i=0; i<=ja.length();i++){
-                jo = ja.getJSONObject(i);
-
-                IDCathegorie1[i] = jo.getString("IDCathegorie");
-                NOMCath1[i] = jo.getString("NOMCath");
-                typeuser1[i] = jo.getString("typeuser");
-
-
-                if(typeuser1[i].equals(id)){
-                    ListIDTypeUser1.add(typeuser1[i]);
-                    maListe1.add(NOMCath1[i]);
-                    maListeIDCat1.add(IDCathegorie1[i]);
-                    listFILTRECategorie.put(Integer.parseInt(IDCathegorie1[i]),  NOMCath1[i]);
-                }
-
-
-            }
-
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
-    }
-
-
     private static class StringWithTag {
         public String string;
         public Object tag;
 
-        public StringWithTag(String string, Object tag) {
+        private StringWithTag(String string, Object tag) {
             this.string = string;
             this.tag = tag;
         }

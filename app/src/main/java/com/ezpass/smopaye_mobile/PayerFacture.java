@@ -6,23 +6,28 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -31,6 +36,9 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.basgeekball.awesomevalidation.AwesomeValidation;
+import com.basgeekball.awesomevalidation.ValidationStyle;
+import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.RemoteFragments.APIService;
@@ -40,7 +48,14 @@ import com.ezpass.smopaye_mobile.RemoteNotifications.Data;
 import com.ezpass.smopaye_mobile.RemoteNotifications.MyResponse;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Sender;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
+import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
+import com.ezpass.smopaye_mobile.web_service.ApiService;
+import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
+import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
+import com.ezpass.smopaye_mobile.web_service_access.ApiError;
+import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
+import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -53,41 +68,36 @@ import com.telpo.tps550.api.TelpoException;
 import com.telpo.tps550.api.nfc.Nfc;
 import com.telpo.tps550.api.util.StringUtil;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.ContentValues.TAG;
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
-public class PayerFacture extends AppCompatActivity {
+public class PayerFacture extends AppCompatActivity
+                          implements ConnectivityReceiver.ConnectivityReceiverListener{
 
-    private EditText numTelDonataire, numCarteBeneficiaire, montantBeneficiaire;
-    private Button btnTransfert, rbtnOpenNFC;
-    private String tel;
+    private static final String TAG = "PayerFacture";
+    private String tel, code_number_sender;
     private ProgressDialog progressDialog;
+    private AlertDialog.Builder build_error;
     /////////////////////////////////////////////////////////////////////////////////
-    Handler handler;
-    Runnable runnable;
-    Timer timer;
-    Thread readThread;
+    private Handler handler;
+    private Runnable runnable;
+    private Timer timer;
+    private Thread readThread;
     private final int CHECK_NFC_TIMEOUT = 1;
     private final int SHOW_NFC_DATA = 2;
     long time1, time2;
@@ -96,11 +106,7 @@ public class PayerFacture extends AppCompatActivity {
     private final byte B_CPU = 3;
     private final byte A_CPU = 1;
     private final byte A_M1 = 2;
-    Nfc nfc = new Nfc(this);
-    private AlertDialog.Builder build_error;
-
-    /*NOTIFICATION*/
-    private NotificationManagerCompat notificationManager;
+    private Nfc nfc = new Nfc(this);
 
 
     //BD LOCALE
@@ -109,22 +115,42 @@ public class PayerFacture extends AppCompatActivity {
     private DateFormat shortDateFormat;
 
     //SERVICES GOOGLE FIREBASE
-    APIService apiService;
-    FirebaseUser fuser;
-    FirebaseUser firebaseUser;
-    DatabaseReference reference;
+    private APIService apiService;
+    private FirebaseUser fuser;
+    private FirebaseUser firebaseUser;
+    private DatabaseReference reference;
 
-    LinearLayout internetIndisponible, authWindows;
-    Button btnReessayer;
+
+    /* Déclaration des objets liés à la communication avec le web service*/
+    private ApiService service;
+    private TokenManager tokenManager;
+    private AwesomeValidation validator;
+    private Call<AccessToken> call;
+
+
+    @BindView(R.id.til_numCarteBeneficiaire)
+    TextInputLayout til_numCarteBeneficiaire;
+    @BindView(R.id.til_montantBeneficiaire)
+    TextInputLayout til_montantBeneficiaire;
+
+    @BindView(R.id.tie_numCarteBeneficiaire)
+    TextInputEditText tie_numCarteBeneficiaire;
+    @BindView(R.id.tie_montantBeneficiaire)
+    TextInputEditText tie_montantBeneficiaire;
+
+    @BindView(R.id.numTelDonataire)
+    EditText numTelDonataire;
+
+    @BindView(R.id.authWindows)
+    LinearLayout authWindows;
+    @BindView(R.id.internetIndisponible)
+    LinearLayout internetIndisponible;
+    @BindView(R.id.conStatusIv)
     ImageView conStatusIv;
-    TextView titleNetworkLimited, msgNetworkLimited;
-
-    /////////////////////////////////LIRE CONTENU DES FICHIERS////////////////////
-    String file = "tmp_data_user";
-    int c;
-    String temp_data = "";
-
-    String cardNumber = "";
+    @BindView(R.id.titleNetworkLimited)
+    TextView titleNetworkLimited;
+    @BindView(R.id.msgNetworkLimited)
+    TextView msgNetworkLimited;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,83 +159,503 @@ public class PayerFacture extends AppCompatActivity {
 
 
         getSupportActionBar().setTitle(getString(R.string.payerFacture));
-        //getSupportParentActivityIntent().putExtra("resultatBD", "Administrateur");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
-        numTelDonataire = (EditText) findViewById(R.id.numTelDonataire);
-        numCarteBeneficiaire = (EditText) findViewById(R.id.numCarteBeneficiaire);
-        montantBeneficiaire = (EditText) findViewById(R.id.montantBeneficiaire);
-        btnTransfert = (Button) findViewById(R.id.btnTransfert);
-        rbtnOpenNFC = (Button) findViewById(R.id.rbtnOpenNFC);
-
-        authWindows = (LinearLayout) findViewById(R.id.authWindows);
-        internetIndisponible = (LinearLayout) findViewById(R.id.internetIndisponible);
-        btnReessayer = (Button) findViewById(R.id.btnReessayer);
-        conStatusIv = (ImageView) findViewById(R.id.conStatusIv);
-        titleNetworkLimited = (TextView) findViewById(R.id.titleNetworkLimited);
-        msgNetworkLimited = (TextView) findViewById(R.id.msgNetworkLimited);
-
+        //initialisation des objets qui seront manipulés
+        ButterKnife.bind(this);
+        service = RetrofitBuilder.createService(ApiService.class);
+        tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        validator = new AwesomeValidation(ValidationStyle.TEXT_INPUT_LAYOUT);
+        progressDialog = new ProgressDialog(PayerFacture.this);
+        build_error = new AlertDialog.Builder(PayerFacture.this);
         //service google firebase
         apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
 
+        /*Appels de toutes les méthodes qui seront utilisées*/
+        setupRulesValidatForm();
+        callHandlerMethod();
+
         Intent intent = getIntent();
         tel = intent.getStringExtra("telephone");
+        code_number_sender = intent.getStringExtra("compte");
         if(tel != null)
             numTelDonataire.setText(tel);
+    }
 
 
-        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
-        try{
-            FileInputStream fIn = openFileInput(file);
-            while ((c = fIn.read()) != -1){
-                temp_data = temp_data + Character.toString((char)c);
-            }
-        }
-        catch (Exception e){
+    /**
+     * openNFC() méthode permettant recupérer le contenu d'une carte NFC
+     * @since 2019
+     * */
+    @OnClick(R.id.btnOpenNFC)
+    void openNFC(){
+        try {
+            nfc.open();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // On ajoute un message à notre progress dialog
+                    progressDialog.setMessage(getString(R.string.passerCarte));
+                    // On donne un titre à notre progress dialog
+                    progressDialog.setTitle(getString(R.string.attenteCarte));
+                    // On spécifie le style
+                    //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    // On affiche notre message
+                    progressDialog.show();
+                    //build.setPositiveButton("ok", new View.OnClickListener()
+                }
+            });
+        } catch (TelpoException e) {
             e.printStackTrace();
         }
+        readThread = new ReadThread();
+        readThread.start();
+    }
 
-        String[] parts = temp_data.split("-");
-        cardNumber = parts[10]; // 12345678
 
+    /**
+     * payerFacture() méthode permettant de démarrer l'opération de payement des Factures
+     * @since 2019
+     * */
+    @OnClick(R.id.btnPayerFacture)
+    void payerFacture(){
 
-        progressDialog = new ProgressDialog(PayerFacture.this);
-        rbtnOpenNFC.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if(!validateCompte(til_numCarteBeneficiaire) | !validateMontant(til_montantBeneficiaire)){
+            return;
+        }
+        String id_cardBeneficiaire = til_numCarteBeneficiaire.getEditText().getText().toString();
+        String montantBeneficiaire = til_montantBeneficiaire.getEditText().getText().toString();
+        String telDonataire = numTelDonataire.getText().toString();
+        validator.clear();
 
-                try {
-                    nfc.open();
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            // On ajoute un message à notre progress dialog
-                            progressDialog.setMessage(getString(R.string.passerCarte));
-                            // On donne un titre à notre progress dialog
-                            progressDialog.setTitle(getString(R.string.attenteCarte));
-                            // On spécifie le style
-                            //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                            // On affiche notre message
-                            progressDialog.show();
-                            //build.setPositiveButton("ok", new View.OnClickListener()
-
-                        }
-                    });
-
-                } catch (TelpoException e) {
-                    e.printStackTrace();
+        /*Action à poursuivre si tous les champs sont remplis*/
+        if(validator.validate()){
+            //********************DEBUT***********
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // On ajoute un message à notre progress dialog
+                    progressDialog.setMessage(getString(R.string.connexionserver));
+                    // On donne un titre à notre progress dialog
+                    progressDialog.setTitle(getString(R.string.attenteReponseServer));
+                    // On spécifie le style
+                    //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    // On affiche notre message
+                    progressDialog.show();
+                    //build.setPositiveButton("ok", new View.OnClickListener()
                 }
-                readThread = new ReadThread();
-                readThread.start();
+            });
+            //*******************FIN*****
+            payementInSmopayeServer(montantBeneficiaire, "payer facture'",  code_number_sender, id_cardBeneficiaire);
+        }
+
+    }
+
+    private void payementInSmopayeServer(String montantBeneficiaire1, String typeTransaction1, String id_cardDonataire1, String id_cardBeneficiaire1) {
+
+        call = service.transaction(Integer.parseInt(montantBeneficiaire1), typeTransaction1, id_cardDonataire1, id_cardBeneficiaire1);
+        call.enqueue(new Callback<AccessToken>() {
+            @Override
+            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+                Log.w(TAG, "SMOPAYE_SERVER onResponse: " + response);
+                progressDialog.dismiss();
+
+                assert response.body() != null;
+                if(response.isSuccessful()){
+                    String msgReceiver = response.body().getMessage().getCard_receiver().getNotif();
+                    String msgSender = response.body().getMessage().getCard_sender().getNotif();
+
+                    if(response.body().getMessage().isSuccess()){
+                        tokenManager.saveToken(response.body());
+                        successResponse(id_cardBeneficiaire1, msgReceiver, id_cardDonataire1, msgSender);
+                    } else{
+                        errorResponse(id_cardBeneficiaire1, msgReceiver);
+                    }
+                } else{
+
+                    if(response.code() == 422){
+                        handleErrors(response.errorBody());
+                    }
+                    else{
+                        ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                        Toast.makeText(PayerFacture.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        errorResponse(id_cardBeneficiaire1, apiError.getMessage());
+                    } /*else{
+                        errorResponse(id_cardBeneficiaire1, response.errorBody());
+                    }*/
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AccessToken> call, Throwable t) {
+
+                progressDialog.dismiss();
+                Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
+
+                /*Vérification si la connexion internet accessible*/
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
+                if(!(activeInfo != null && activeInfo.isConnected())){
+                    authWindows.setVisibility(View.GONE);
+                    internetIndisponible.setVisibility(View.VISIBLE);
+                    Toast.makeText(PayerFacture.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
+                }
+                /*Vérification si le serveur est inaccessible*/
+                else{
+                    authWindows.setVisibility(View.GONE);
+                    internetIndisponible.setVisibility(View.VISIBLE);
+                    conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
+                    titleNetworkLimited.setText(getString(R.string.connexionLimite));
+                    //msgNetworkLimited.setText();
+                    Toast.makeText(PayerFacture.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
+    }
+
+
+    @OnClick(R.id.btnReessayer)
+    void checkNetworkConnectionStatus(){
+
+        boolean isConnected = ConnectivityReceiver.isConnected();
+        showSnackBar(isConnected);
+
+        if(isConnected){
+            changeActivity();
+        }
+    }
+
+    private void changeActivity() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
+        if(activeInfo != null && activeInfo.isConnected()){
+            progressDialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
+            progressDialog.show();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    progressDialog.dismiss();
+                    recreate();
+                }
+            }, 2000); // 2000 milliseconds delay
+
+        } else{
+            progressDialog.dismiss();
+            authWindows.setVisibility(View.GONE);
+            internetIndisponible.setVisibility(View.VISIBLE);
+            Toast.makeText(this, getString(R.string.connexionIntrouvable), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showSnackBar(boolean isConnected) {
+        String message;
+        int color = Color.WHITE;
+        Snackbar snackbar;
+        View view;
+
+        if(isConnected){
+            message = getString(R.string.networkOnline);
+            snackbar = Snackbar.make(findViewById(R.id.payerFacture), message, Snackbar.LENGTH_LONG);
+            view = snackbar.getView();
+            TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(color);
+            textView.setBackgroundColor(Color.parseColor("#039BE5"));
+            textView.setGravity(Gravity.CENTER);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
+            }
+        } else{
+            message = getString(R.string.networkOffline);
+            snackbar = Snackbar.make(findViewById(R.id.payerFacture), message, Snackbar.LENGTH_INDEFINITE);
+            view = snackbar.getView();
+            TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(color);
+            textView.setGravity(Gravity.CENTER);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
+            }
+        }
+        snackbar.show();
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        /*if(!isConnected){
+            changeActivity();
+        }*/
+        showSnackBar(isConnected);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //register intent filter
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
+        registerReceiver(connectivityReceiver, intentFilter);
+
+        //register connection status listener
+        NotifApp.getInstance().setConnectivityListener(this);
+    }
+
+
+
+    /**
+     * onDestroy() methode Callback qui permet de détruire une activity et libérer l'espace mémoire
+     * @since 2020
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(call != null){
+            call.cancel();
+            call = null;
+        }
+    }
+
+
+    /**
+     * handleErrors() méthode permettant de boucler sur toutes les erreurs trouvées dans les données retournées par l'API Rest
+     * @param responseBody
+     * @since 2020
+     * */
+    private void handleErrors(ResponseBody responseBody){
+
+        ApiError apiError = Utils_manageError.convertErrors(responseBody);
+        for(Map.Entry<String, List<String>> error: apiError.getErrors().entrySet()){
+
+            if(error.getKey().equals("card_number")){
+                til_numCarteBeneficiaire.setError(error.getValue().get(0));
+            }
+            if(error.getKey().equals("amount")){
+                til_montantBeneficiaire.setError(error.getValue().get(0));
+            }
+        }
+
+    }
+
+    private void successResponse(String id_cardReceiver, String msgReceiver, String id_cardSender, String msgSender) {
+
+        /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
+        //SERVICE GOOGLE FIREBASE
+
+        /*****************************************************RECEIVER MESSAGE******************************/
+        Query queryReceiver = FirebaseDatabase.getInstance().getReference("Users")
+                .orderByChild("id_carte")
+                .equalTo(id_cardReceiver);
+
+        queryReceiver.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        User user = userSnapshot.getValue(User.class);
+                        if (user.getId_carte().equals(id_cardReceiver)) {
+                            RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.paiementFacture), msgReceiver, "success");
+                            //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(PayerFacture.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                else{
+                    Toast.makeText(PayerFacture.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+/*****************************************************SENDER MESSAGE******************************/
+        Query querySender = FirebaseDatabase.getInstance().getReference("Users")
+                .orderByChild("id_carte")
+                .equalTo(id_cardSender);
+
+        querySender.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        User user = userSnapshot.getValue(User.class);
+                        if (user.getId_carte().equals(id_cardSender)) {
+                            RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.paiementFacture), id_cardSender, "success");
+                            //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(PayerFacture.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                else{
+                    Toast.makeText(PayerFacture.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
+        LocalNotification(getString(R.string.paiementFacture), msgSender);
+
+        ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
+        dbHandler = new DbHandler(getApplicationContext());
+        aujourdhui = new Date();
+        shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+        dbHandler.insertUserDetails(getString(R.string.paiementFacture), msgSender, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+
+
+        View view = LayoutInflater.from(PayerFacture.this).inflate(R.layout.alert_dialog_success, null);
+        TextView title = (TextView) view.findViewById(R.id.title);
+        TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+        ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+        title.setText(getString(R.string.information));
+        imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
+        statutOperation.setText(msgSender);
+        build_error.setPositiveButton("OK", null);
+        build_error.setCancelable(false);
+        build_error.setView(view);
+        build_error.show();
+
+        //supression des champs de saisis
+        tie_numCarteBeneficiaire.setText("");
+        tie_montantBeneficiaire.setText("");
+    }
+
+    private void errorResponse(String id_card, String response){
+
+        /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
+        //SERVICE GOOGLE FIREBASE
+        final String id_carte_sm = id_card;
+
+        Query query = FirebaseDatabase.getInstance().getReference("Users")
+                .orderByChild("id_carte")
+                .equalTo(id_carte_sm);
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        User user = userSnapshot.getValue(User.class);
+                        if (user.getId_carte().equals(id_carte_sm)) {
+                            RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.paiementFacture), response, "error");
+                            //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(PayerFacture.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                else{
+                    Toast.makeText(PayerFacture.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
+        LocalNotification(getString(R.string.paiementFacture), response);
+
+        ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
+        dbHandler = new DbHandler(getApplicationContext());
+        aujourdhui = new Date();
+        shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+        dbHandler.insertUserDetails(getString(R.string.paiementFacture), response, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+
+        View view = LayoutInflater.from(PayerFacture.this).inflate(R.layout.alert_dialog_success, null);
+        TextView title = (TextView) view.findViewById(R.id.title);
+        TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+        ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+        title.setText(getString(R.string.information));
+        imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+        statutOperation.setText(response);
+        build_error.setPositiveButton("OK", null);
+        build_error.setCancelable(false);
+        build_error.setView(view);
+        build_error.show();
+    }
+
+
+    /**
+     * validateCompte() méthode permettant de verifier si le numéro de compte inséré est valide
+     * @param til_num_compte1
+     * @return Boolean
+     * @since 2019
+     * */
+    private Boolean validateCompte(TextInputLayout til_num_compte1){
+        String my_numCompte = til_num_compte1.getEditText().getText().toString().trim();
+        if(my_numCompte.isEmpty()){
+            til_num_compte1.setError(getString(R.string.insererCompte));
+            return false;
+        } else if(my_numCompte.length() < 8){
+            til_num_compte1.setError(getString(R.string.compteCourt));
+            return false;
+        } else {
+            til_num_compte1.setError(null);
+            return true;
+        }
+    }
+
+    /**
+     * validateMontant() méthode permettant de verifier si le montant inséré est valide
+     * @param til_montant1
+     * @return Boolean
+     * @since 2019
+     * */
+    private boolean validateMontant(TextInputLayout til_montant1){
+        String montant = til_montant1.getEditText().getText().toString().trim();
+        if(montant.isEmpty()){
+            til_montant1.setError(getString(R.string.insererMontant));
+            return false;
+        } else {
+            til_montant1.setError(null);
+            return true;
+        }
+    }
+
+
+
+    /**
+     * setupRulesValidatForm() méthode permettant de changer la couleur des champs de saisie en cas d'érreur et vérifi si les champs de saisie sont vides
+     * @since 2020
+     * */
+    private void setupRulesValidatForm(){
+        //coloration des champs lorsqu'il y a erreur
+        til_numCarteBeneficiaire.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+        til_montantBeneficiaire.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+
+        validator.addValidation(this, R.id.til_numCarteBeneficiaire, RegexTemplate.NOT_EMPTY, R.string.verifierNumero);
+        validator.addValidation(this, R.id.til_montantBeneficiaire, RegexTemplate.NOT_EMPTY, R.string.insererPassword);
+    }
+
+
+    //DETECTION DE TYPE DE CARTE ET SON ID
+    private void callHandlerMethod() {
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -302,322 +748,10 @@ public class PayerFacture extends AppCompatActivity {
                 }
             }
         };
-
-
-        btnTransfert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(numTelDonataire.getText().length() <=0 || numCarteBeneficiaire.getText().length() <=0 || montantBeneficiaire.getText().length() <= 0)
-                {
-                    Toast.makeText(PayerFacture.this, getString(R.string.champsVide), Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    TransfertData(ChaineConnexion.getAdresseURLsmopayeServer());
-                }
-            }
-        });
-
-        btnReessayer.setOnClickListener(this::checkNetworkConnectionStatus);
     }
 
 
-
-    public void checkNetworkConnectionStatus(View view) {
-
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
-
-        if(activeInfo != null && activeInfo.isConnected()){
-
-            ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
-            dialog.show();
-
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    dialog.dismiss();
-                    //this.recreate();
-                    finish();
-                    startActivity(getIntent());
-                }
-            }, 3000); // 3000 milliseconds delay
-
-        } else{
-            progressDialog.dismiss();
-            authWindows.setVisibility(View.GONE);
-            internetIndisponible.setVisibility(View.VISIBLE);
-            Toast.makeText(PayerFacture.this, getString(R.string.connexionIntrouvable), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public  void TransfertData(final String adresse){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-                    //********************DEBUT***********
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // On ajoute un message à notre progress dialog
-                            progressDialog.setMessage(getString(R.string.connexionserver));
-                            // On donne un titre à notre progress dialog
-                            progressDialog.setTitle(getString(R.string.attenteReponseServer));
-                            // On spécifie le style
-                            //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                            // On affiche notre message
-                            progressDialog.show();
-                            //build.setPositiveButton("ok", new View.OnClickListener()
-                        }
-                    });
-                    //*******************FIN*****
-
-                    Uri.Builder builder = new Uri.Builder();
-                    builder.appendQueryParameter("auth","Card");
-                    builder.appendQueryParameter("login", "transfert");
-                    builder.appendQueryParameter("CARDNDON", cardNumber);
-                    //builder.appendQueryParameter("idTelephone", getSerialNumber().trim());
-                    builder.appendQueryParameter("uniquser", numTelDonataire.getText().toString().trim());
-                    builder.appendQueryParameter("CARDN", numCarteBeneficiaire.getText().toString().trim());
-                    builder.appendQueryParameter("MONTANT", montantBeneficiaire.getText().toString().trim());
-
-                    /*builder.appendQueryParameter("auth","Card");
-                    builder.appendQueryParameter("login", "transfert");
-                    builder.appendQueryParameter("telephone", numTelDonataire.getText().toString().trim());
-                    builder.appendQueryParameter("MONTANT", montantBeneficiaire.getText().toString().trim());
-                    builder.appendQueryParameter("CARDN", numCarteBeneficiaire.getText().toString().trim());*/
-                    builder.appendQueryParameter("typeTransfer", "Facture");
-                    builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
-                    builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
-
-
-                    URL url = new URL(adresse+builder.build().toString());//"http://192.168.20.11:1234/recharge.php"
-                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                    httpURLConnection.setConnectTimeout(5000);
-                    httpURLConnection.setRequestMethod("POST");
-                    httpURLConnection.connect();
-
-
-                    InputStream inputStream = httpURLConnection.getInputStream();
-
-                    final BufferedReader bufferedReader  =  new BufferedReader(new InputStreamReader(inputStream));
-
-                    String string="";
-                    String data="";
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(PayerFacture.this, getString(R.string.encoursTraitement), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                    while (bufferedReader.ready() || data==""){
-                        data+=bufferedReader.readLine();
-                    }
-                    bufferedReader.close();
-                    inputStream.close();
-
-
-                    final String f = data.trim();
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressDialog.dismiss();
-
-
-                            int pos = f.toLowerCase().indexOf("succès");
-                            if (pos >= 0) {
-
-
-                                /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
-                                //SERVICE GOOGLE FIREBASE
-                                final String id_carte_sm = numCarteBeneficiaire.getText().toString().trim();
-
-                                Query query = FirebaseDatabase.getInstance().getReference("Users")
-                                        .orderByChild("id_carte")
-                                        .equalTo(id_carte_sm);
-
-                                query.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                        if(dataSnapshot.exists()){
-                                            for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                                                User user = userSnapshot.getValue(User.class);
-                                                if (user.getId_carte().equals(id_carte_sm)) {
-                                                    RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.paiementFacture), f, "success");
-                                                    //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
-                                                } else {
-                                                    Toast.makeText(PayerFacture.this, getString(R.string.numCompteExistPas), Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        }
-                                        else{
-                                            Toast.makeText(PayerFacture.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
-                                        }
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                    }
-                                });
-
-
-                                //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                LocalNotification(getString(R.string.paiementFacture), f);
-
-                                ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
-                                dbHandler = new DbHandler(getApplicationContext());
-                                aujourdhui = new Date();
-                                shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                dbHandler.insertUserDetails(getString(R.string.paiementFacture), f, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
-
-
-                                build_error = new AlertDialog.Builder(PayerFacture.this);
-                                View view = LayoutInflater.from(PayerFacture.this).inflate(R.layout.alert_dialog_success, null);
-                                TextView title = (TextView) view.findViewById(R.id.title);
-                                TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                                ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                                title.setText(getString(R.string.information));
-                                imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
-                                statutOperation.setText(f);
-                                build_error.setPositiveButton("OK", null);
-                                build_error.setCancelable(false);
-                                build_error.setView(view);
-                                build_error.show();
-                            } else{
-
-
-                                /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
-                                //SERVICE GOOGLE FIREBASE
-                                final String id_carte_sm = numCarteBeneficiaire.getText().toString().trim();
-
-                                Query query = FirebaseDatabase.getInstance().getReference("Users")
-                                        .orderByChild("id_carte")
-                                        .equalTo(id_carte_sm);
-
-                                query.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                        if(dataSnapshot.exists()){
-                                            for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                                                User user = userSnapshot.getValue(User.class);
-                                                if (user.getId_carte().equals(id_carte_sm)) {
-                                                    RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.paiementFacture), f, "error");
-                                                    //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
-                                                } else {
-                                                    Toast.makeText(PayerFacture.this, getString(R.string.numCompteExistPas), Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        }
-                                        else{
-                                            Toast.makeText(PayerFacture.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
-                                        }
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                    }
-                                });
-
-
-                                //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-                                LocalNotification(getString(R.string.paiementFacture), f);
-
-                                ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
-                                dbHandler = new DbHandler(getApplicationContext());
-                                aujourdhui = new Date();
-                                shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                                dbHandler.insertUserDetails(getString(R.string.paiementFacture), f, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
-
-                                build_error = new AlertDialog.Builder(PayerFacture.this);
-                                View view = LayoutInflater.from(PayerFacture.this).inflate(R.layout.alert_dialog_success, null);
-                                TextView title = (TextView) view.findViewById(R.id.title);
-                                TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                                ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                                title.setText(getString(R.string.information));
-                                imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-                                statutOperation.setText(f);
-                                build_error.setPositiveButton("OK", null);
-                                build_error.setCancelable(false);
-                                build_error.setView(view);
-                                build_error.show();
-                            }
-
-
-
-
-                            Toast.makeText(getApplicationContext(), f, Toast.LENGTH_LONG).show();
-                        }
-                    });
-
-
-                    //    JSONObject jsonObject = new JSONObject(data);
-                    //  jsonObject.getString("status");
-                    JSONArray jsonArray = new JSONArray(data);
-                    for (int i=0;i<jsonArray.length();i++){
-                        final JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    Toast.makeText(PayerFacture.this, jsonObject.getString("telephone"), Toast.LENGTH_SHORT).show();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                    }
-
-                } catch (final IOException e) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Toast.makeText(Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                            //Check si la connexion existe
-                            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                            NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
-                            if(!(activeInfo != null && activeInfo.isConnected())){
-                                progressDialog.dismiss();
-                                authWindows.setVisibility(View.GONE);
-                                internetIndisponible.setVisibility(View.VISIBLE);
-                                Toast.makeText(PayerFacture.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
-                            } else{
-                                progressDialog.dismiss();
-                                authWindows.setVisibility(View.GONE);
-                                internetIndisponible.setVisibility(View.VISIBLE);
-                                conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
-                                titleNetworkLimited.setText(getString(R.string.connexionLimite));
-                                //msgNetworkLimited.setText();
-                                Toast.makeText(PayerFacture.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                    e.printStackTrace();
-                    try {
-                        Thread.sleep(2000);
-                        //Toast.makeText(RechargePropreCompte.this, "Impossible de se connecter au serveur", Toast.LENGTH_SHORT).show();
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
-                    }
-                    progressDialog.dismiss();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-
-    public class ReadThread extends Thread {
+    private class ReadThread extends Thread {
         byte[] nfcData = null;
 
         @Override
@@ -642,7 +776,7 @@ public class PayerFacture extends AppCompatActivity {
     }
 
 
-    public void m1CardAuthenticate() {
+    private void m1CardAuthenticate() {
         Boolean status = true;
         byte[] passwd = {(byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff};
         try {
@@ -673,7 +807,7 @@ public class PayerFacture extends AppCompatActivity {
     }
 
 
-    public void readValueDataCourt() {
+    private void readValueDataCourt() {
         byte[] data = null;
         try {
             data = nfc.m1_read_value(blockNum_2);
@@ -685,7 +819,7 @@ public class PayerFacture extends AppCompatActivity {
             Log.e(TAG, "readValueBtn fail!");
             Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
         } else {
-            numCarteBeneficiaire.setText(StringUtil.toHexString(data));
+            til_numCarteBeneficiaire.getEditText().setText(StringUtil.toHexString(data));
         }
     }
 
@@ -769,7 +903,7 @@ public class PayerFacture extends AppCompatActivity {
     }
 
 
-    public void LocalNotification(String titles, String subtitles){
+    private void LocalNotification(String titles, String subtitles){
 
         ///////////////DEBUT NOTIFICATIONS///////////////////////////////
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());

@@ -1,15 +1,10 @@
 package com.ezpass.smopaye_mobile.vuesUtilisateur;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,33 +19,25 @@ import com.ezpass.smopaye_mobile.MenuQRCode;
 import com.ezpass.smopaye_mobile.MenuRetraitOperateur;
 import com.ezpass.smopaye_mobile.PayerFacture;
 import com.ezpass.smopaye_mobile.R;
-import com.ezpass.smopaye_mobile.ServicesIndisponible;
 import com.ezpass.smopaye_mobile.vuesAccepteur.ConsulterSolde;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
-import java.io.FileInputStream;
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
-
-import static android.content.Context.CLIPBOARD_SERVICE;
 
 public class AccueilFragmentUser extends Fragment {
 
-    TextView jour, jourSemaine, moisAnnee;
+    private TextView jour, jourSemaine, moisAnnee, myRole, myCategorie;
     private LinearLayout btnRecharge, btnConsulter, btnPayerFacture, btnQrCode, btnRetraitOperateur;
     //private LinearLayout CheckCardNumber;
-    FloatingActionButton assistanceOnline;
+    private FloatingActionButton assistanceOnline;
     private Button consulterHistoriqueUser;
+    private String role;
+    private String telephone;
+    private String categorie;
+    private String myState;
 
-    /////////////////////////////////LIRE CONTENU DES FICHIERS////////////////////
-    String file = "tmp_number";
-    int c;
-    String temp_number = "";
+
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         View view =  inflater.inflate(R.layout.fragment_accueil_user, container, false);
@@ -66,15 +53,26 @@ public class AccueilFragmentUser extends Fragment {
         jourSemaine = (TextView) view.findViewById(R.id.jourSemaine);
         moisAnnee   = (TextView) view.findViewById(R.id.moisAnnee);
 
-        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
-        try{
-            FileInputStream fIn = getActivity().openFileInput(file);
-            while ((c = fIn.read()) != -1){
-                temp_number = temp_number + Character.toString((char)c);
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
+        myRole   = (TextView) view.findViewById(R.id.myRole);
+        myCategorie   = (TextView) view.findViewById(R.id.myCategorie);
+
+
+        //recupération des informations de la BD pendant l'authentificatiion sous forme de SESSION
+        //avec les données quittant de Activity -> Fragment
+        assert getArguments() != null;
+        role = getArguments().getString("role");
+        telephone = getArguments().getString("telephone");
+        categorie = getArguments().getString("categorie");
+        myState = getArguments().getString("etat");
+
+
+
+        myCategorie.setText(categorie);
+        myRole.setText(role);
+
+        Toast.makeText(getContext(), role, Toast.LENGTH_SHORT).show();
+        if(!"actif".equalsIgnoreCase(myState)) {
+            myRole.setText(getString(R.string.user));
         }
 
 
@@ -131,8 +129,8 @@ public class AccueilFragmentUser extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), HomeAssistanceOnline.class);
-                //intent.putExtra("resultatBD", resultat_bd);
-                //intent.putExtra("telephone", telephone);
+                intent.putExtra("role", role);
+                intent.putExtra("telephone", telephone);
                 startActivity(intent);
             }
         });
@@ -155,7 +153,7 @@ public class AccueilFragmentUser extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PayerFacture.class);
-                intent.putExtra("telephone", temp_number);
+                intent.putExtra("telephone", telephone);
                 startActivity(intent);
             }
         });
@@ -192,4 +190,6 @@ public class AccueilFragmentUser extends Fragment {
 
         return view;
     }
+
+
 }

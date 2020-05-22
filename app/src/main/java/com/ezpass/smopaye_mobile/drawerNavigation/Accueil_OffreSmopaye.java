@@ -4,22 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.ezpass.smopaye_mobile.DemarrageOffreSmopaye;
 import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.WebViewMonetbil;
@@ -71,8 +68,9 @@ public class Accueil_OffreSmopaye extends AppCompatActivity {
 
         // layouts of welcome sliders
         layouts = new int[]{
-                R.layout.activity_slide3_offre_smopaye,
-                R.layout.slide2_offre_smopaye
+                R.layout.slide1_offre_smopaye,
+                R.layout.slide2_offre_smopaye,
+                R.layout.slide3_offre_smopaye
         };
 
         // adding bottom dots
@@ -113,7 +111,7 @@ public class Accueil_OffreSmopaye extends AppCompatActivity {
 
 
     private void addBottomDots(int currentPage) {
-        dots = new TextView[layouts.length];
+       /* dots = new TextView[layouts.length];
 
         int[] colorsActive = getResources().getIntArray(R.array.array_dot_active);
         int[] colorsInactive = getResources().getIntArray(R.array.array_dot_inactive);
@@ -128,7 +126,7 @@ public class Accueil_OffreSmopaye extends AppCompatActivity {
         }
 
         if (dots.length > 0)
-            dots[currentPage].setTextColor(colorsActive[currentPage]);
+            dots[currentPage].setTextColor(colorsActive[currentPage]);*/
     }
 
     private int getItem(int i) {
@@ -217,6 +215,11 @@ public class Accueil_OffreSmopaye extends AppCompatActivity {
                         startActivity(intent);
                     }
                     if(position == 1){
+                        Intent intent = new Intent(getApplicationContext(), WebViewMonetbil.class);
+                        intent.putExtra("urlMonetbil", "https://smopaye.cm.smopaye.cm/detail_tpe");
+                        startActivity(intent);
+                    }
+                    if(position == 2){
                         Intent intent = new Intent(getApplicationContext(), WebViewMonetbil.class);
                         intent.putExtra("urlMonetbil", "https://smopaye.cm.smopaye.cm/detail_tpe");
                         startActivity(intent);

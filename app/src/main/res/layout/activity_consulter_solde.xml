@@ -82,21 +82,34 @@
             android:orientation="vertical">
 
 
-            <EditText
-                android:id="@+id/solde"
-                android:textColor="@color/bgColorStandard"
-                android:layout_gravity="center"
-                android:hint="@string/numdelaCarte"
-                android:imeOptions="actionNext"
-                android:padding="10dp"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_numCompte"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:inputType="text"
-                android:textStyle="italic|bold"
-                android:background="@drawable/edittextborder"
-                android:layout_width="match_parent"
+                android:hint="@string/numdelaCarte"
                 android:textColorHint="@color/bgColorStandard"
-                android:layout_height="wrap_content" />
+                app:errorEnabled="true"
+                app:counterEnabled="true"
+                app:counterMaxLength="8">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tie_numCompte"
+                    android:textColor="@color/bgColorStandard"
+                    android:layout_gravity="center"
+                    android:maxLines="1"
+                    android:textStyle="bold|italic"
+                    android:imeOptions="actionNext"
+                    android:padding="10dp"
+                    android:maxLength="8"
+                    android:inputType="text"
+                    android:background="@drawable/edittextborder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+
+            </android.support.design.widget.TextInputLayout>
 
 
             <LinearLayout
@@ -120,8 +133,7 @@
                     android:textStyle="bold|italic"
                     android:textSize="17sp"
                     android:textColorHint="@color/bgColorStandard"
-                    android:textColor="@color/bgColorStandard"
-                    />
+                    android:textColor="@color/bgColorStandard" />
 
                 <android.support.v7.widget.AppCompatSpinner
                     android:id="@+id/typeSolde"
@@ -146,7 +158,7 @@
                 android:textAlignment="center"
                 android:layout_height="wrap_content">
                 <Button
-                    android:id="@+id/consulter"
+                    android:id="@+id/btnConsulterSolde"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:textColor="#ffffff"
@@ -163,7 +175,7 @@
                     android:background="@drawable/btn_rounded"
                     android:text="@string/consulter" />
                 <Button
-                    android:id="@+id/soldeBtn"
+                    android:id="@+id/btnOpenNFC"
                     android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
@@ -183,19 +195,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content">
-                <ProgressBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:id="@+id/pbLoader"
-                    android:visibility="invisible"/>
-
-            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -224,7 +223,8 @@
                 android:textColor="@color/bgColorStandard"
                 android:textSize="20sp"
                 android:layout_marginBottom="20dp"
-                android:text="@string/connexionIntrouvable" />
+                android:text="@string/connexionIntrouvable"
+                android:gravity="center_horizontal" />
 
 
             <TextView
@@ -238,7 +238,8 @@
                 android:paddingLeft="10dp"
                 android:textColor="@color/textColorStandard"
                 android:textSize="15sp"
-                android:text="@string/msgConnexionInternetIntrouvable" />
+                android:text="@string/msgConnexionInternetIntrouvable"
+                android:gravity="center_horizontal" />
 
             <Button
                 android:id="@+id/btnReessayer"

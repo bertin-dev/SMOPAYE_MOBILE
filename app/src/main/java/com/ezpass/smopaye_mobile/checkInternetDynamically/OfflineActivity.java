@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.R;
@@ -12,6 +15,8 @@ import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 
 public class OfflineActivity extends AppCompatActivity {
+
+    private Button btnReessayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +27,14 @@ public class OfflineActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(getString(R.string.indisponible));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        btnReessayer = (Button)findViewById(R.id.btnReessayer);
+        btnReessayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(OfflineActivity.this, "Veuillez Réessayer", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
@@ -64,9 +77,9 @@ public class OfflineActivity extends AppCompatActivity {
             return true;
         }
 
-        /*if (id == android.R.id.home) {
+        if (id == android.R.id.home) {
             finish(); // close this activity and return to preview activity (if there is any)
-        }*/
+        }
 
         return super.onOptionsItemSelected(item);
     }

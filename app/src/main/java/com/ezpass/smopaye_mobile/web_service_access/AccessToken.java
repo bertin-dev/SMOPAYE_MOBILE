@@ -1,5 +1,9 @@
 package com.ezpass.smopaye_mobile.web_service_access;
 
+import com.ezpass.smopaye_mobile.web_service_response.Message;
+import com.ezpass.smopaye_mobile.web_service_response.MyData;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.squareup.moshi.Json;
 
 public class AccessToken {
@@ -14,6 +18,20 @@ public class AccessToken {
     String accessToken;
     @Json(name = "refresh_token")
     String refreshToken;
+
+
+    //************************************RESPONSE BODY*******************************************
+    @SerializedName("success")
+    @Expose
+    private boolean success;
+    @SerializedName("data")
+    @Expose
+    private MyData data;
+    @SerializedName("message")
+    @Expose
+    private Message message;
+    //************************************END*******************************************
+
 
 
     public String getTokenType() {
@@ -47,4 +65,34 @@ public class AccessToken {
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
+
+
+    //************************************RESPONSE BODY GETTER AND SETTER*******************************************
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public MyData getData() {
+        return data;
+    }
+
+    public void setData(MyData data) {
+        this.data = data;
+    }
+
+    public Message getMessage() {
+        return message;
+    }
+
+    public void setMessage(Message message) {
+        this.message = message;
+    }
+
+
+    //************************************END*******************************************
 }

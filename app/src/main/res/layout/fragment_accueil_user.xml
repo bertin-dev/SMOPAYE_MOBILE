@@ -35,17 +35,19 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/myRole"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/user"
                         android:layout_gravity="start"
                         android:textSize="20sp"
                         android:textColor="#fff"
-                        android:paddingLeft="15dp"
                         android:layout_marginTop="60dp"
                         android:textStyle="bold"
-                        android:paddingStart="15dp" />
+                        android:paddingStart="15dp"
+                        android:paddingLeft="15dp" />
                     <TextView
+                        android:id="@+id/myCategorie"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/typeUser"

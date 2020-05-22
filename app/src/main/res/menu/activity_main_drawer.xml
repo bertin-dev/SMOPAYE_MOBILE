@@ -46,7 +46,7 @@
         <menu>
             <item
                 android:id="@+id/nav_parametres"
-                android:visible="false"
+                android:visible="true"
                 android:icon="@drawable/ic_menu_manage"
                 android:title="@string/parametreDrawer" />
 

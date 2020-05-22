@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
@@ -9,32 +10,35 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginLeft="75dp"
+        android:gravity="center"
         android:layout_marginStart="75dp"
         android:orientation="vertical">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:src="@drawable/tpe" />
+            android:src="@drawable/card" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/slide_1_title"
+            android:text="@string/slide_3_title"
             android:textColor="@android:color/black"
             android:layout_marginLeft="@dimen/desc_padding"
             android:layout_marginRight="@dimen/desc_padding"
             android:textSize="@dimen/slide_title" />
 
         <TextView
+            android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="#fef2f2"
             android:layout_marginLeft="@dimen/desc_padding"
             android:layout_marginRight="@dimen/desc_padding"
-            android:text="@string/slide_2_desc"
+            android:text="@string/slide_3_desc"
             android:textColor="@color/textColorStandard"
             android:textSize="@dimen/slide_desc" />
 
@@ -50,7 +54,7 @@
             android:textAllCaps="false"
             android:shadowDx="@android:integer/config_longAnimTime"
             android:background="@drawable/btn_rounded_red"
-            android:text="@string/cmdTPEZPASS" />
+            android:text="@string/cmdCarteEZPASS" />
 
     </LinearLayout>
 </RelativeLayout>

@@ -204,7 +204,6 @@
     <string name="infoName">Bertin</string>
     <string name="information">Information</string>
     <string name="information_legales">legal information</string>
-    <string name="insererMontant">Insert Amount</string>
     <string name="insererMsg">Please insert a message</string>
     <string name="insererPassword">Please enter the password</string>
     <string name="insererTelephone">Please insert your phone number</string>
@@ -478,5 +477,70 @@
     <string name="veuillezInsererPJ">Please insert your Part number</string>
     <string name="veuillezInsererAdresse">Please insert your adress</string>
     <string name="veuillezInsererNumCompte">Please insert your account number</string>
+    <string name="networkOnline">You are connected to the internet</string>
+    <string name="networkOffline">No connection</string>
+
+    <string name="compteCourt">Your account number is short</string>
+    <string name="insererCompte">Please insert your account number</string>
+    <string name="insererMontant">Please insert amount</string>
+    <string name="insererNewPassword">Please enter new password</string>
+    <string name="insererOldPassword">Please enter old password</string>
+    <string name="insererPasswordConfirm">Please enter the password confirm</string>
+
+    <string name="operationDone">Operation Done</string>
+
+    <string name="slide_4_title">QR Code E-ZPASS</string>
+    <string name="slide_4_desc">E-Zpass est un moyen fiable d’envoyer et de recevoir de l’argent en utilisant notre plateforme de paiement. Il est fait facilement en utilisant un code QR. E-zpass encourage les utilisateurs à utiliser le code QR dans les processus de paiement.</string>
+    <string name="cmdQRCodeEZPASS">Make your Payment</string>
+
+    <!--gestion des cartes-->
+    <string name="gesCard">Card Management</string>
+    <string name="resetCard">Reset Cards</string>
+    <string name="cardInfo">Card information</string>
+
+    <string name="enregCarteBD">SAVE THE CARD</string>
+    <string name="listCarteSave">LIST OF REGISTERED CARDS</string>
+    <string name="ecrire">WRITE ON THE CARD</string>
+
+    <string name="idCarte">CARD ID</string>
+    <string name="numCarteLong">Serial Number</string>
+    <string name="numCarteCourt">Card Number</string>
+    <string name="expireDate">30-11-2021</string>
+
+    <string name="infoCarteSmopaye">SMOPAYE INFORMATION</string>
+    <string name="infoCarteVierge">Information Cards</string>
+    <string name="informations">Information</string>
+
+    <string name="typeHexaCourt">SMOPAYE CARD N ° (8 Hexadecimal Characters)</string>
+    <string name="typeHexaLong">SMOPAYE CARD N ° (8 Hexadecimal Characters)</string>
+    <string name="desc_Date">Card expiration date.</string>
+
+    <string name="ecrireCarte">Write on the Card</string>
+    <string name="nbrCaractere">Number of Characters less than</string>
+    <string name="search">Research</string>
+
+
+    <string name="ecrireManuellement">Manual method</string>
+    <string name="ecrireAutomatiquement">Automatic method</string>
+    <string name="saveBD">Save</string>
+    <string name="resetCarte">Initialize the card</string>
+    <string name="initialisation">AUTOMATIC INITIALIZATION</string>
+    <string name="writeInCard">Write in Card</string>
+    <!--FIN-->
+
+    <string name="cardNotReset">"Your card has not yet been initialized</string>
+    <string name="modifProfil">edit profile</string>
+
+    <!--<string name="rate_dialog_title">Custom title</string>
+    <string name="rate_dialog_message">Custom message</string>
+    <string name="rate_dialog_ok">Custom rate now</string>
+    <string name="rate_dialog_cancel">Custom remind later</string>
+    <string name="rate_dialog_no">Custom no</string>-->
+
+    <string name="giveComment">Faîtes-nous part de vos commentaires</string>
+    <string name="send">Send</string>
+    <string name="insererCommentaire">Please insert your comment</string>
+    <string name="insererEmail">Please insert your email</string>
+
 
 </resources>

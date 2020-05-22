@@ -7,19 +7,27 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,7 +50,11 @@ import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbUser;
+import com.ezpass.smopaye_mobile.Login;
+import com.ezpass.smopaye_mobile.NotifApp;
 import com.ezpass.smopaye_mobile.NotifReceiver;
+import com.ezpass.smopaye_mobile.Profil_user.Categorie;
+import com.ezpass.smopaye_mobile.Profil_user.Role;
 import com.ezpass.smopaye_mobile.QRCodeShow;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.RemoteFragments.APIService;
@@ -53,6 +65,7 @@ import com.ezpass.smopaye_mobile.RemoteNotifications.MyResponse;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Sender;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
+import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
 import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
@@ -76,12 +89,15 @@ import com.telpo.tps550.api.util.StringUtil;
 
 import java.io.FileInputStream;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -94,20 +110,23 @@ import retrofit2.Response;
 import static com.ezpass.smopaye_mobile.ChaineConnexion.getsecurity_keys;
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
-public class Souscription extends AppCompatActivity {
+public class Souscription extends AppCompatActivity
+                          implements ConnectivityReceiver.ConnectivityReceiverListener{
 
     private static final String TAG = "Souscription";
     private String abonnement = "service";
-    private ProgressDialog progressDialog, progressDialogGoogle, dialog;
+    private ProgressDialog progressDialog, progressDialogGoogle;
     private AlertDialog.Builder build_error;
+
     private String[] sexe1;
     private String[] pieceJ;
 
-    /* Déclaration des objets liés à la communication avec le web service*/
-    private ApiService service;
-    private Call<AccessToken> call;
-    private AwesomeValidation validator;
-    private TokenManager tokenManager;
+    private String num_statut = "";
+    private String num_categorie = "";
+
+    private HashMap<Integer, String> listAllSession = new HashMap<>();
+    private HashMap<Integer, String> listAllCategorie = new HashMap<>();
+    private HashMap<Integer, String> listFILTRECategorie = new HashMap<>();
 
     /*Déclaration des objets qui permettent d'écrire sur le fichier*/
     private String tmp_number = "tmp_number";
@@ -126,6 +145,16 @@ public class Souscription extends AppCompatActivity {
     private DatabaseReference reference;
     private APIService apiService;
     private FirebaseUser fuser;
+
+
+    /* Déclaration des objets liés à la communication avec le web service*/
+    private ApiService service;
+    private Call<AccessToken> call;
+    private Call<List<Categorie>> call2;
+    private AwesomeValidation validator;
+    private TokenManager tokenManager;
+
+
 
     /////////////////////////////////////////////////////////////////////////////////
     private Handler handler;
@@ -202,13 +231,93 @@ public class Souscription extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
+
+        tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        //verification si on a pas le token dans les sharepreferences alors on retourne vers le login activity
+        if(tokenManager.getToken() == null){
+            startActivity(new Intent(Souscription.this, Login.class));
+            finish();
+        }
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
+        call2 = service.getAllCategories();
+        call2.enqueue(new Callback<List<Categorie>>() {
+            @Override
+            public void onResponse(Call<List<Categorie>> call, Response<List<Categorie>> response) {
+                Log.w(TAG, "SMOPAYE_SERVER onResponse " +response);
+
+                if(response.isSuccessful()){
+
+                    listAllSession.clear();
+                    listAllCategorie.clear();
+
+                    List<Categorie> mycategories = response.body();
+                    for(int i = 0; i<mycategories.size(); i++){
+
+                        Role myRole = mycategories.get(i).getRole();
+
+                        listAllSession.put(myRole.getId(),  myRole.getname());
+                        listAllCategorie.put(mycategories.get(i).getId(), mycategories.get(i).getname());
+                    }
+                    List<StringWithTag> itemList = new ArrayList<>();
+                    /* Iterate through your original collection, in this case defined with an Integer key and String value. */
+                    for (Map.Entry<Integer, String> entry : listAllSession.entrySet()) {
+                        Integer key = entry.getKey();
+                        String value = entry.getValue();
+
+                        /* Build the StringWithTag List using these keys and values. */
+                        itemList.add(new StringWithTag(value, key));
+                    }
+                    /* Set your ArrayAdapter with the StringWithTag, and when each entry is shown in the Spinner, .toString() is called. */
+                    ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(Souscription.this, R.layout.spinner_item, itemList);
+                    spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
+                    statut.setAdapter(spinnerAdapter);
+                }
+                else{
+                    tokenManager.deleteToken();
+                    startActivity(new Intent(Souscription.this, Login.class));
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Categorie>> call, Throwable t) {
+                Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
+
+                //Vérification si la connexion internet accessible
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
+                if(!(activeInfo != null && activeInfo.isConnected())){
+                    authWindows.setVisibility(View.GONE);
+                    internetIndisponible.setVisibility(View.VISIBLE);
+                    Toast.makeText(Souscription.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
+                }
+                //Vérification si le serveur est inaccessible
+                else{
+                    authWindows.setVisibility(View.GONE);
+                    internetIndisponible.setVisibility(View.VISIBLE);
+                    conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
+                    titleNetworkLimited.setText(getString(R.string.connexionLimite));
+                    //msgNetworkLimited.setText();
+                    Toast.makeText(Souscription.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
     /**
      * @author bertin mounok
      * @powered by smopaye sarl
      * @Copyright 2019-2020
      * @param savedInstanceState Callback method onCreate() she using for the started activity
      * @since 2019
-     * @version 1.2.6
+     * @version 1.2.7
      * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -335,17 +444,90 @@ public class Souscription extends AppCompatActivity {
             }
         });
 
+        //selection des roles(utilisateur, accepteur, administrateur, agent)
         statut.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-               /* StringWithTag swt = (StringWithTag) parent.getItemAtPosition(position);
+                StringWithTag swt = (StringWithTag) parent.getItemAtPosition(position);
                 Integer key = (Integer) swt.tag;
 
                 if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase(listAllSession.get(key))){
                     num_statut = String.valueOf(key);
-                    new AsyncTaskFiltreCategorie(String.valueOf(key), Souscription.this).execute();
-                }*/
+                    call2 = service.getAllCategories();
+                    call2.enqueue(new Callback<List<Categorie>>() {
+                        @Override
+                        public void onResponse(Call<List<Categorie>> call, Response<List<Categorie>> response) {
+
+                            Log.w(TAG, "SMOPAYE_SERVER onResponse " +response);
+                            if(response.isSuccessful()){
+
+                                listFILTRECategorie.clear();
+
+                                List<Categorie> mycategories = response.body();
+                                for(int i = 0; i<mycategories.size(); i++){
+
+                                    if(Integer.parseInt(num_statut)==mycategories.get(i).getRole_id()){
+                                        listFILTRECategorie.put(mycategories.get(i).getId(), mycategories.get(i).getname());
+                                    }
+
+                                }
+
+                                //------------------------------
+
+                                List<StringWithTag> itemList1 = new ArrayList<>();
+
+                                /* Iterate through your original collection, in this case defined with an Integer key and String value. */
+                                for (Map.Entry<Integer, String> entry : listFILTRECategorie.entrySet()) {
+                                    Integer key = entry.getKey();
+                                    String value = entry.getValue();
+                                    /* Build the StringWithTag List using these keys and values. */
+
+                                    itemList1.add(new StringWithTag(value, key));
+                                }
+
+                                /* Set your ArrayAdapter with the StringWithTag, and when each entry is shown in the Spinner, .toString() is called. */
+                                ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(Souscription.this, R.layout.spinner_item, itemList1);
+                                spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
+                                typeChauffeur.setAdapter(spinnerAdapter);
+                                //------------------------------
+
+
+                            }
+                            else{
+                                tokenManager.deleteToken();
+                                startActivity(new Intent(Souscription.this, Login.class));
+                                finish();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<Categorie>> call, Throwable t) {
+
+                            Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
+
+                            //Vérification si la connexion internet accessible
+                            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
+                            if(!(activeInfo != null && activeInfo.isConnected())){
+                                authWindows.setVisibility(View.GONE);
+                                internetIndisponible.setVisibility(View.VISIBLE);
+                                Toast.makeText(Souscription.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
+                            }
+                            //Vérification si le serveur est inaccessible
+                            else{
+                                authWindows.setVisibility(View.GONE);
+                                internetIndisponible.setVisibility(View.VISIBLE);
+                                conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
+                                titleNetworkLimited.setText(getString(R.string.connexionLimite));
+                                //msgNetworkLimited.setText();
+                                Toast.makeText(Souscription.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    });
+
+                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -358,12 +540,12 @@ public class Souscription extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-               /* StringWithTag swt = (StringWithTag) parent.getItemAtPosition(position);
+                StringWithTag swt = (StringWithTag) parent.getItemAtPosition(position);
                 Integer key = (Integer) swt.tag;
 
                 if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase(listAllCategorie.get(key))){
                     num_categorie = String.valueOf(key);
-                }*/
+                }
             }
 
             @Override
@@ -483,32 +665,115 @@ public class Souscription extends AppCompatActivity {
         };
     }
 
+
     /**
      * checkNetworkConnectionStatus() méthode permettant de verifier si la connexion existe ou si le serveur est accessible
      * @since 2019
      * */
     @OnClick(R.id.btnReessayer)
-    void checkNetworkConnectionStatus() {
+    void checkNetworkConnectionStatus(){
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        showSnackBar(isConnected);
+
+        if(isConnected){
+            changeActivity();
+        }
+    }
+
+    private void changeActivity() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
         if(activeInfo != null && activeInfo.isConnected()){
-            dialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
-            dialog.show();
+            progressDialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
+            progressDialog.show();
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {
-                    dialog.dismiss();
+                    progressDialog.dismiss();
                     recreate();
-                    //finish();
-                    //startActivity(getIntent());
                 }
-            }, 3000); // 3000 milliseconds delay
+            }, 2000); // 2000 milliseconds delay
 
         } else{
             progressDialog.dismiss();
             authWindows.setVisibility(View.GONE);
             internetIndisponible.setVisibility(View.VISIBLE);
             Toast.makeText(Souscription.this, getString(R.string.connexionIntrouvable), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showSnackBar(boolean isConnected) {
+        String message;
+        int color = Color.WHITE;
+        Snackbar snackbar;
+        View view;
+
+        if(isConnected){
+            message = getString(R.string.networkOnline);
+            snackbar = Snackbar.make(findViewById(R.id.souscription), message, Snackbar.LENGTH_LONG);
+            view = snackbar.getView();
+            TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(color);
+            textView.setBackgroundColor(Color.parseColor("#039BE5"));
+            textView.setGravity(Gravity.CENTER);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
+            }
+        } else{
+            message = getString(R.string.networkOffline);
+            snackbar = Snackbar.make(findViewById(R.id.souscription), message, Snackbar.LENGTH_INDEFINITE);
+            view = snackbar.getView();
+            TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(color);
+            textView.setGravity(Gravity.CENTER);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
+            }
+        }
+        snackbar.show();
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        /*if(!isConnected){
+            changeActivity();
+        }*/
+        showSnackBar(isConnected);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //register intent filter
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
+        registerReceiver(connectivityReceiver, intentFilter);
+
+        //register connection status listener
+        NotifApp.getInstance().setConnectivityListener(this);
+    }
+
+
+
+    /**
+     * onDestroy() methode Callback qui permet de détruire une activity et libérer l'espace mémoire
+     * @since 2020
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(call != null){
+            call.cancel();
+            call = null;
+        }
+
+        if(call2 != null){
+            call2.cancel();
+            call2 = null;
         }
     }
 
@@ -548,6 +813,14 @@ public class Souscription extends AppCompatActivity {
      * @since 2020
      * */
     private void setupRulesValidatForm(){
+
+        //coloration des champs lorsqu'il y a erreur
+        til_nom.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+        til_prenom.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+        til_numeroTel.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+        til_cni.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+        til_adresse.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+        til_numCarte.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
 
         validator.addValidation(this, R.id.til_nom, RegexTemplate.NOT_EMPTY, R.string.veuillezInsererNom);
         validator.addValidation(this, R.id.til_prenom, RegexTemplate.NOT_EMPTY, R.string.veuillezInsererPrenom);
@@ -667,6 +940,11 @@ public class Souscription extends AppCompatActivity {
     @OnClick(R.id.btnSouscription)
     void register(){
 
+        if(!validateNom(til_nom) | !validatePrenom(til_prenom) | !validateTel(til_numeroTel) | !validateCni(til_cni)
+                | !validateAdress(til_adresse) | !validateRole(statut) | !validateCategorie(typeChauffeur) | !validateCompte(til_numCarte)){
+            return;
+        }
+
         String nom = til_nom.getEditText().getText().toString();
         String prenom = til_prenom.getEditText().getText().toString();
         String telephone = til_numeroTel.getEditText().getText().toString();
@@ -674,14 +952,6 @@ public class Souscription extends AppCompatActivity {
         String adresse = til_adresse.getEditText().getText().toString();
         String num_carte = til_numCarte.getEditText().getText().toString();
 
-
-
-        til_nom.setError(null);
-        til_prenom.setError(null);
-        til_numeroTel.setError(null);
-        til_cni.setError(null);
-        til_adresse.setError(null);
-        til_numCarte.setError(null);
 
        validator.clear();
 
@@ -708,6 +978,176 @@ public class Souscription extends AppCompatActivity {
 
     }
 
+
+    /**
+     * validateCompte() méthode permettant de verifier si le numéro de compte inséré est valide
+     * @param til_num_compte1
+     * @return Boolean
+     * @since 2019
+     * */
+    private Boolean validateCompte(TextInputLayout til_num_compte1){
+        String my_numCompte = til_num_compte1.getEditText().getText().toString().trim();
+        if(my_numCompte.isEmpty()){
+            til_num_compte1.setError(getString(R.string.insererCompte));
+            return false;
+        } else if(my_numCompte.length() < 8){
+            til_num_compte1.setError(getString(R.string.compteCourt));
+            return false;
+        } else {
+            til_num_compte1.setError(null);
+            return true;
+        }
+    }
+
+    /**
+     * validateNom() méthode permettant de verifier si le nom inséré est valide
+     * @param til_nom
+     * @return Boolean
+     * @since 2019
+     * */
+    private Boolean validateNom(TextInputLayout til_nom){
+        String my_name = til_nom.getEditText().getText().toString().trim();
+        if(my_name.isEmpty()){
+            til_nom.setError(getString(R.string.veuillezInserer) + " " + getString(R.string.nom));
+            return false;
+        } else if(!isValid(my_name)){
+            til_nom.setError(getString(R.string.votre) + " " + getString(R.string.nom) + " " + getString(R.string.invalidCararatere));
+            return false;
+        } else {
+            til_nom.setError(null);
+            return true;
+        }
+    }
+
+
+    /**
+     * validateStatut() méthode permettant de verifier si le statut listé est chargé
+     * @param status
+     * @return Boolean
+     * @since 2019
+     * */
+    private Boolean validateRole(Spinner status){
+
+        if(status.getCount() == 0){
+            Toast.makeText(this, getString(R.string.veuillezInserer) + " " + getString(R.string.AlertStatutListDeroulante), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * validateCat() méthode permettant de verifier si la categorie listé est bien chargé
+     * @param cat
+     * @return Boolean
+     * @since 2019
+     * */
+    private Boolean validateCategorie(Spinner cat){
+
+        if(cat.getCount() == 0){
+            Toast.makeText(this, getString(R.string.veuillezInserer) + " " + getString(R.string.AlertCategorieListDeroulante), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * validatePrenom() méthode permettant de verifier si le prenom inséré est valide
+     * @param til_prenom
+     * @return Boolean
+     * @since 2019
+     * */
+    private Boolean validatePrenom(TextInputLayout til_prenom){
+        String my_surname = til_prenom.getEditText().getText().toString().trim();
+        if(my_surname.isEmpty()){
+            til_prenom.setError(getString(R.string.veuillezInserer) + " " + getString(R.string.prenom));
+            return false;
+        } else if(!isValid(my_surname)){
+            til_prenom.setError(getString(R.string.votre) + " " + getString(R.string.prenom) + " " + getString(R.string.invalidCararatere));
+            return false;
+        } else {
+            til_prenom.setError(null);
+            return true;
+        }
+    }
+
+
+    /**
+     * validateCni() méthode permettant de verifier si le cni inséré est valide
+     * @param til_cni
+     * @return Boolean
+     * @since 2019
+     * */
+    private Boolean validateCni(TextInputLayout til_cni){
+        String my_cni = til_cni.getEditText().getText().toString().trim();
+        if(my_cni.isEmpty()){
+            til_cni.setError(getString(R.string.veuillezInserer) + " " + getString(R.string.numeroDe) + " " + typePjustificative.getSelectedItem().toString());
+            return false;
+        } else if(!isValid(my_cni)){
+            til_cni.setError(getString(R.string.votre) + " " + typePjustificative.getSelectedItem().toString() + " " + getString(R.string.invalidCararatere));
+            return false;
+        } else {
+            til_cni.setError(null);
+            return true;
+        }
+    }
+
+
+    /**
+     * validateAdress() méthode permettant de verifier si le cni inséré est valide
+     * @param til_adress
+     * @return Boolean
+     * @since 2019
+     * */
+    private Boolean validateAdress(TextInputLayout til_adress){
+        String my_adress = til_adress.getEditText().getText().toString().trim();
+        if(my_adress.isEmpty()){
+            til_adress.setError(getString(R.string.veuillezInserer) + " " + getString(R.string.adresse));
+            return false;
+        } else if(!isValid(my_adress)){
+            til_adress.setError(getString(R.string.votre) + " " + getString(R.string.adresse) + " " + getString(R.string.invalidCararatere));
+            return false;
+        } else {
+            til_adress.setError(null);
+            return true;
+        }
+    }
+
+    private static boolean isValid(String str)
+    {
+        boolean isValid = false;
+        String expression = "^[a-z_A-Z0-9éèê'çà ]*$";
+        CharSequence inputStr = str;
+        Pattern pattern = Pattern.compile(expression);
+        Matcher matcher = pattern.matcher(inputStr);
+        if(matcher.matches())
+        {
+            isValid = true;
+        }
+        return isValid;
+    }
+
+
+    /**
+     * validateTel() méthode permettant de verifier si le telephone inséré est valide
+     * @param til_tel
+     * @return Boolean
+     * @since 2019
+     * */
+    private Boolean validateTel(TextInputLayout til_tel){
+        String my_phone = til_tel.getEditText().getText().toString().trim();
+        if(my_phone.isEmpty()){
+            til_tel.setError(getString(R.string.insererTelephone));
+            return false;
+        } else if(my_phone.length() < 9){
+            til_tel.setError(getString(R.string.telephoneCourt));
+            return false;
+        } else {
+            til_tel.setError(null);
+            return true;
+        }
+    }
+
     /**
      * @param nom1 soumission du numéro du nom pour enregistrement
      * @param prenom1 soumission du prenom pour enregistrement
@@ -731,7 +1171,7 @@ public class Souscription extends AppCompatActivity {
                                              String status1, String abonnement1) {
 
 
-        call = service.register(nom1, prenom1, telephone1, cni1, adresse1, num_carte1);
+        call = service.register(nom1, prenom1, telephone1, cni1, adresse1, sexe1, num_statut, num_categorie, num_carte1, abonnement1);
         call.enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
@@ -745,12 +1185,22 @@ public class Souscription extends AppCompatActivity {
                           /*sauvegarde du token retourné par l'api si la reponse est bonne
                          nous utiliserons la classe TokenManager pour cela
                         */
-                    tokenManager.saveToken(response.body());
-                    new AsyncTaskRegisterDataInGoogleFirebaseServer(nom1, prenom1, sexe1, telephone1, typePJ1,
-                            cni1, session1, adresse1, num_carte1, typeUser1,
-                            status1, abonnement1, response.toString()).execute();
+                    if(response.body().isSuccess()){
+                        tokenManager.saveToken(response.body());
+                        new AsyncTaskRegisterDataInGoogleFirebaseServer(nom1, prenom1, sexe1, telephone1, typePJ1,
+                                cni1, session1, adresse1, num_carte1, typeUser1,
+                                status1, abonnement1, response.toString()).execute();
+                    } else {
+                        errorResponse("");
+                    }
                 } else{
-                    handleErrors(response.errorBody());
+
+                    if(response.code() == 422){
+                        handleErrors(response.errorBody());
+                    } else{
+                        errorResponse("");
+                    }
+
                 }
 
             }
@@ -785,6 +1235,21 @@ public class Souscription extends AppCompatActivity {
 
     }
 
+    private void errorResponse(String message) {
+
+        View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+        TextView title = (TextView) view.findViewById(R.id.title);
+        TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+        ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+        title.setText(getString(R.string.information));
+        imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+        statutOperation.setText(message);
+        build_error.setPositiveButton("OK", null);
+        build_error.setCancelable(false);
+        build_error.setView(view);
+        build_error.show();
+    }
+
     private void handleErrors(ResponseBody responseBody){
 
         ApiError apiError = Utils_manageError.convertErrors(responseBody);
@@ -794,20 +1259,27 @@ public class Souscription extends AppCompatActivity {
 
         for(Map.Entry<String, List<String>> error: apiError.getErrors().entrySet()){
 
-            if(error.getKey().equals("nom")){
+            if(error.getKey().equals("lastname")){
                 til_nom.setError(error.getValue().get(0));
             }
 
 
-            if(error.getKey().equals("prenom")){
+            if(error.getKey().equals("firstname")){
                 til_prenom.setError(error.getValue().get(0));
             }
 
 
-            if(error.getKey().equals("tel")){
+            if(error.getKey().equals("phone")){
                 til_numeroTel.setError(error.getValue().get(0));
             }
 
+            if(error.getKey().equals("cni")){
+                til_cni.setError(error.getValue().get(0));
+            }
+
+            if(error.getKey().equals("adress")){
+                til_adresse.setError(error.getValue().get(0));
+            }
 
             if(error.getKey().equals("numcarte")){
                 til_numCarte.setError(error.getValue().get(0));
@@ -819,7 +1291,7 @@ public class Souscription extends AppCompatActivity {
 
 
 
-    public class ReadThread extends Thread {
+    private class ReadThread extends Thread {
         byte[] nfcData = null;
 
         @Override
@@ -844,7 +1316,7 @@ public class Souscription extends AppCompatActivity {
     }
 
 
-    public void m1CardAuthenticate() {
+    private void m1CardAuthenticate() {
         Boolean status = true;
         byte[] passwd = {(byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff};
         try {
@@ -875,7 +1347,7 @@ public class Souscription extends AppCompatActivity {
     }
 
 
-    public void readValueDataCourt() {
+    private void readValueDataCourt() {
         byte[] data = null;
         try {
             data = nfc.m1_read_value(blockNum_2);
@@ -890,19 +1362,6 @@ public class Souscription extends AppCompatActivity {
             tie_numCarte.setText(StringUtil.toHexString(data));
         }
     }
-
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        if(call != null){
-            call.cancel();
-            call = null;
-        }
-    }
-
 
 
     //ETAPE 2: Envoi des données vers le serveur Google
@@ -1195,5 +1654,22 @@ public class Souscription extends AppCompatActivity {
 
         notificationManager.notify(new Random().nextInt(), notification);
         ////////////////////////////////////FIN NOTIFICATIONS/////////////////////
+    }
+
+
+
+    private static class StringWithTag {
+        public String string;
+        public Object tag;
+
+        private StringWithTag(String string, Object tag) {
+            this.string = string;
+            this.tag = tag;
+        }
+
+        @Override
+        public String toString() {
+            return string;
+        }
     }
 }

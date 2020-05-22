@@ -25,7 +25,8 @@
             android:textStyle="bold"
             android:textColor="@color/bgColorStandard"
             android:textSize="20sp"
-            android:text="@string/HistoriqueVides" />
+            android:text="@string/HistoriqueVides"
+            android:gravity="center_horizontal" />
     </LinearLayout>
 
     <ListView
