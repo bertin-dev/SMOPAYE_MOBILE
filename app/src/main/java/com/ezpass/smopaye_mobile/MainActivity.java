@@ -42,6 +42,7 @@ import com.ezpass.smopaye_mobile.Profil_user.DataUserCard;
 import com.ezpass.smopaye_mobile.Profil_user.Role;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
 import com.ezpass.smopaye_mobile.Setting.Setting;
+import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.drawerNavigation.Accueil_OffreSmopaye;
 import com.ezpass.smopaye_mobile.drawerNavigation.WebSite;
@@ -805,6 +806,16 @@ public class MainActivity extends AppCompatActivity
 
         //register connection status listener
         NotifApp.getInstance().setConnectivityListener(this);
+    }
+
+    /**
+     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     * @param newBase
+     * @since 2020
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
     }
 
 }

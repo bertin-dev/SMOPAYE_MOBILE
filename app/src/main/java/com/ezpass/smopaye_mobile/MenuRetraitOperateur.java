@@ -1,39 +1,20 @@
 package com.ezpass.smopaye_mobile;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
-import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
-import com.ezpass.smopaye_mobile.RemoteFragments.APIService;
-import com.ezpass.smopaye_mobile.RemoteNotifications.Client;
-import com.ezpass.smopaye_mobile.telecollecte.DatabaseManager;
-import com.ezpass.smopaye_mobile.telecollecte.ScoreData;
-import com.ezpass.smopaye_mobile.vuesAccepteur.MenuRetraitTelecollecte;
+import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.vuesAccepteur.RetraitAccepteur;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-import com.telpo.tps550.api.TelpoException;
 
 import java.io.FileInputStream;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.List;
 
 public class MenuRetraitOperateur extends AppCompatActivity {
 
@@ -125,4 +106,15 @@ public class MenuRetraitOperateur extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     * @param newBase
+     * @since 2020
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
+
 }

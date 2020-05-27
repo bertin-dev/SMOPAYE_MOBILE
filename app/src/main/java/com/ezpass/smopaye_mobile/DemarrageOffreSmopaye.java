@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.drawerNavigation.PrefManager;
 
 public class DemarrageOffreSmopaye extends AppCompatActivity {
@@ -247,6 +248,16 @@ public class DemarrageOffreSmopaye extends AppCompatActivity {
             View view = (View) object;
             container.removeView(view);
         }
+    }
+
+    /**
+     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     * @param newBase
+     * @since 2020
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
     }
 
 

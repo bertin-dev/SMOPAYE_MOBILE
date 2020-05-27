@@ -1,22 +1,17 @@
 package com.ezpass.smopaye_mobile.vuesAdmin;
 
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,7 +25,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RemoteViews;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,61 +33,34 @@ import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbUser;
-import com.ezpass.smopaye_mobile.NotifReceiver;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.RemoteFragments.APIService;
 import com.ezpass.smopaye_mobile.RemoteModel.User;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Client;
-import com.ezpass.smopaye_mobile.RemoteNotifications.Data;
-import com.ezpass.smopaye_mobile.RemoteNotifications.MyResponse;
-import com.ezpass.smopaye_mobile.RemoteNotifications.Sender;
-import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
+import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
-import com.ezpass.smopaye_mobile.vuesUtilisateur.Souscription;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.telpo.tps550.api.TelpoException;
 import com.telpo.tps550.api.nfc.Nfc;
 import com.telpo.tps550.api.util.StringUtil;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.Timer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 import static android.content.ContentValues.TAG;
-import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
 public class ModifSuppGoogleUser extends AppCompatActivity {
 
@@ -1005,5 +972,14 @@ public class ModifSuppGoogleUser extends AppCompatActivity {
         }
     }
 
+    /**
+     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     * @param newBase
+     * @since 2020
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
 
 }

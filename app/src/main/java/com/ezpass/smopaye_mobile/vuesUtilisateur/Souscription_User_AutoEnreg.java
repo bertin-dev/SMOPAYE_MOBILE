@@ -40,6 +40,7 @@ import com.ezpass.smopaye_mobile.NotifApp;
 import com.ezpass.smopaye_mobile.Profil_user.Categorie;
 import com.ezpass.smopaye_mobile.Profil_user.Role;
 import com.ezpass.smopaye_mobile.R;
+import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
@@ -881,4 +882,13 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity
 
 
 
+    /**
+     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     * @param newBase
+     * @since 2020
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
 }

@@ -1,5 +1,6 @@
 package com.ezpass.smopaye_mobile;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
+import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 
 public class TutorielUtilise extends AppCompatActivity {
@@ -65,5 +67,14 @@ public class TutorielUtilise extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     * @param newBase
+     * @since 2020
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
 
 }

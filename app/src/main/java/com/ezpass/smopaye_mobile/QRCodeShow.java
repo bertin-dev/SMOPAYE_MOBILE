@@ -1,15 +1,15 @@
 package com.ezpass.smopaye_mobile;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,15 +19,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
+import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.journeyapps.barcodescanner.BarcodeEncoder;
-import com.telpo.tps550.api.TelpoException;
-import com.telpo.tps550.api.printer.UsbThermalPrinter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -37,12 +35,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Hashtable;
 
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
-import static com.ezpass.smopaye_mobile.ChaineConnexion.encryptBytes;
 import static com.ezpass.smopaye_mobile.ChaineConnexion.getsecurity_keys;
 
 public class QRCodeShow extends AppCompatActivity {
@@ -494,5 +490,15 @@ public class QRCodeShow extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     * @param newBase
+     * @since 2020
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
     }
 }

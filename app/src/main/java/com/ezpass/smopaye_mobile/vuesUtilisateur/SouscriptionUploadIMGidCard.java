@@ -46,6 +46,7 @@ import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbUser;
 import com.ezpass.smopaye_mobile.NotifApp;
 import com.ezpass.smopaye_mobile.NotifReceiver;
 import com.ezpass.smopaye_mobile.R;
+import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.checkInternetDynamically.OfflineActivity;
@@ -859,6 +860,16 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
             call.cancel();
             call = null;
         }
+    }
+
+    /**
+     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     * @param newBase
+     * @since 2020
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
     }
 
 }
