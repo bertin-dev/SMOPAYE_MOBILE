@@ -46,4 +46,6 @@
     <color name="itemName">#535353</color>
     <color name="Description">#a9a9a9</color>
 
+    <color name="colorDivider">#ECECEC</color>
+
 </resources>

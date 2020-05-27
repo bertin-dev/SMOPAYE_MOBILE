@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
@@ -572,7 +573,21 @@ public class CarteFragment extends Fragment
 
     @OnClick(R.id.btnDetails)
     void detail_Card(){
-        Toast.makeText(getActivity(), "Details", Toast.LENGTH_SHORT).show();
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.BottomSheetDialogTheme);
+        View bottomSheetView = LayoutInflater.from(getContext())
+                .inflate(
+                        R.layout.layout_bottom_sheet,
+                        (LinearLayout)bottomSheetDialog.findViewById(R.id.bottomSheetContainer)
+                );
+        bottomSheetView.findViewById(R.id.btnClose).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "fermeture", Toast.LENGTH_SHORT).show();
+                bottomSheetDialog.dismiss();
+            }
+        });
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
     }
 
     @OnClick(R.id.btnReessayer)

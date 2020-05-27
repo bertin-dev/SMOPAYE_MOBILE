@@ -121,6 +121,7 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:layout_width="match_parent"
                         android:layout_height="80dp"
+                        android:scaleType="centerCrop"
                         android:src="@drawable/pub_ezpass"
                         android:id="@+id/pub_ezpass"/>
 
@@ -249,6 +250,9 @@
                 android:id="@+id/detailCompte"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
                 android:orientation="vertical">
                 <TextView
                     android:id="@+id/abc"
