@@ -7,10 +7,14 @@
     android:background="@color/white"
     tools:context=".Assistance.AgenceSmopaye">
 
+    <include
+        android:id="@+id/myToolbar"
+        layout="@layout/bar_layout"/>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/myToolbar"
         android:divider="@color/material_blue_grey_800"
         android:id="@+id/exp_list_view1">
     </ListView>

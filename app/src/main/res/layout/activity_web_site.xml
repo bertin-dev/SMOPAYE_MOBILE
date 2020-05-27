@@ -6,6 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".drawerNavigation.WebSite">
 
+    <include
+        android:id="@+id/myToolbar"
+        layout="@layout/bar_layout"/>
 
     <!--<RelativeLayout
         android:layout_width="match_parent"
@@ -19,6 +22,7 @@
 
     <WebView
         android:id="@+id/webView"
+        android:layout_below="@+id/myToolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"

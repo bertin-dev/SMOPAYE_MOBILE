@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -32,6 +33,8 @@ public class AgenceSmopaye extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agence_smopaye);
 
+        Toolbar toolbar = findViewById(R.id.myToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.pointDeVenteSmopaye));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

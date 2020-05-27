@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/view_pager"
     android:background="@color/white"
     tools:context=".TutorielUtilise">
 
-</android.support.v4.view.ViewPager>
+    <include
+        android:id="@+id/myToolbar"
+        layout="@layout/bar_layout"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:layout_below="@+id/myToolbar"
+        android:overScrollMode="never"
+        android:foregroundGravity="center">
+
+    </android.support.v4.view.ViewPager>
+
+</RelativeLayout>

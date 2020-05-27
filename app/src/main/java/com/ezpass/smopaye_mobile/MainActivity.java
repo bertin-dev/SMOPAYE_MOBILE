@@ -326,6 +326,7 @@ public class MainActivity extends AppCompatActivity
 
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment1).commit();
                     getSupportActionBar().setTitle(getString(R.string.accueil));
+                    toolbar.setSubtitle(getString(R.string.ezpass));
 
                     /************************************************FIN**********************/
 
@@ -343,6 +344,7 @@ public class MainActivity extends AppCompatActivity
                             switch (tabId){
                                 case R.id.nav_Accueil:
                                     getSupportActionBar().setTitle(getString(R.string.accueil));
+                                    toolbar.setSubtitle(getString(R.string.ezpass));
                                     //selectedFragment = new AccueilFragment();
                                     if(session.toLowerCase().equalsIgnoreCase("administrateur"))
                                     {
@@ -359,7 +361,7 @@ public class MainActivity extends AppCompatActivity
                                             bundle.putString("compte", myCompte);
                                             bundle.putString("role", session);
                                             bundle.putString("categorie", myCategorie);
-                                            bundle1.putString("etat", etat);
+                                            bundle.putString("etat", etat);
                                             selectedFragment = new AccueilFragmentUser();
                                             selectedFragment.setArguments(bundle);
                                         }
@@ -370,7 +372,7 @@ public class MainActivity extends AppCompatActivity
                                         bundle.putString("compte", myCompte);
                                         bundle.putString("role", session);
                                         bundle.putString("categorie", myCategorie); //mini-bus cargo, petit-commerce
-                                        bundle1.putString("etat", etat);
+                                        bundle.putString("etat", etat);
                                         selectedFragment = new AccueilFragmentUser();
                                         selectedFragment.setArguments(bundle);
                                     }
@@ -399,7 +401,7 @@ public class MainActivity extends AppCompatActivity
                                             bundle.putString("compte", myCompte);
                                             bundle.putString("role", session);
                                             bundle.putString("categorie", myCategorie);
-                                            bundle1.putString("etat", etat);
+                                            bundle.putString("etat", etat);
                                             selectedFragment = new AccueilFragmentUser();
                                             selectedFragment.setArguments(bundle);
                                         }
@@ -408,6 +410,7 @@ public class MainActivity extends AppCompatActivity
 
                                 case R.id.nav_maCarte:
                                     getSupportActionBar().setTitle(getString(R.string.maCarteSmopaye));
+                                    toolbar.setSubtitle(getString(R.string.ezpass));
                                     bundle.putString("abonnement", myAbon);
                                     bundle.putString("myId_card", myId_card);
                                     bundle.putString("telephone", myPhone);
@@ -417,11 +420,12 @@ public class MainActivity extends AppCompatActivity
                                     break;
                                 case R.id.nav_pointSmopaye:
                                     getSupportActionBar().setTitle(getString(R.string.pointDeVenteSmopaye));
+                                    toolbar.setSubtitle(getString(R.string.ezpass));
                                     selectedFragment = new PointSmopayeFragment();
                                     break;
                                 case R.id.nav_notifications:
                                     getSupportActionBar().setTitle(getString(R.string.notifications));
-
+                                    toolbar.setSubtitle(getString(R.string.ezpass));
                                     nearby.setBadgeCount(Integer.parseInt(db.GetNumNotifications()));
 
                                     DbHandler db1 = new DbHandler(getApplicationContext());

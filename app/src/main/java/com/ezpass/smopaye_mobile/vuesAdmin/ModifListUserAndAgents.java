@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -53,6 +54,8 @@ public class ModifListUserAndAgents extends AppCompatActivity {
         setContentView(R.layout.activity_modif_list_user_and_agents);
 
 
+        Toolbar toolbar = findViewById(R.id.myToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.listAccepteurs));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

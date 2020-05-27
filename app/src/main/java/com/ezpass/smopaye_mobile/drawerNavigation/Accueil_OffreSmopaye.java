@@ -35,7 +35,7 @@ public class Accueil_OffreSmopaye extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
 
        /* //initiate a check box
         CheckBox simpleCheckBox = (CheckBox) findViewById(R.id.simpleCheckBox);

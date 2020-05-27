@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -41,6 +42,8 @@ public class HistoriqueTransactions extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historique_transactions);
 
+        Toolbar toolbar = findViewById(R.id.myToolbar);
+        setSupportActionBar(toolbar);
 
         titleTypeTransaction = (TextView) findViewById(R.id.titleTypeTransaction);
         mois = (TextView) findViewById(R.id.txt_moisHistorique);
@@ -52,21 +55,25 @@ public class HistoriqueTransactions extends AppCompatActivity {
         if (typeHistoriqueTransaction.toLowerCase().equalsIgnoreCase("recharge")) {
             titleTypeTransaction.setText(getString(R.string.recharge));
             getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.recharge));
+            toolbar.setSubtitle(getString(R.string.recharge));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
         } else if(typeHistoriqueTransaction.toLowerCase().equalsIgnoreCase("debitcarte")){
             titleTypeTransaction.setText(getString(R.string.debitCarte));
             getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.debitCarte));
+            toolbar.setSubtitle(getString(R.string.debitCarte));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
         } else if(typeHistoriqueTransaction.toLowerCase().equalsIgnoreCase("transfert")){
             titleTypeTransaction.setText(getString(R.string.transfert));
             getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.transfert));
+            toolbar.setSubtitle(getString(R.string.transfert));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
         } else if(typeHistoriqueTransaction.toLowerCase().equalsIgnoreCase("telecollecte")){
             titleTypeTransaction.setText(getString(R.string.telecollecte));
             getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.telecollecte));
+            toolbar.setSubtitle(getString(R.string.telecollecte));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
         } else{

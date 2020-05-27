@@ -18,6 +18,10 @@
         android:orientation="vertical"
         android:gravity="center">
 
+        <include
+            android:id="@+id/myToolbar"
+            layout="@layout/bar_layout"/>
+
         <LinearLayout
             android:id="@+id/authWindows"
             android:layout_width="match_parent"
@@ -25,9 +29,6 @@
             android:layout_gravity="top"
             android:gravity="center"
             android:visibility="visible"
-            android:focusable="true"
-            android:layout_marginTop="30dp"
-            android:focusableInTouchMode="true"
             android:orientation="vertical"
             android:foregroundGravity="center_horizontal|center_vertical">
 

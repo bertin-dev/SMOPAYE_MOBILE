@@ -36,7 +36,7 @@ public class DemarrageOffreSmopaye extends AppCompatActivity {
         setContentView(R.layout.activity_demarrage_offre_smopaye);
 
 
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
 
        /* //initiate a check box
         CheckBox simpleCheckBox = (CheckBox) findViewById(R.id.simpleCheckBox);

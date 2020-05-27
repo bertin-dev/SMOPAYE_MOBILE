@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 
+import java.util.Calendar;
 import java.util.Locale;
 
 public class Setting extends AppCompatActivity {
@@ -42,7 +44,7 @@ public class Setting extends AppCompatActivity {
     private ListView listAllSetting;
     private String [] config;
     private Dialog myDialog;
-    private TextView txtclose, titleLanguage, myVersion;
+    private TextView txtclose, titleLanguage, myVersion, copy;
     private RadioButton radioFr, radioEn;
     private  Boolean checked;
     String currentLanguage = (Locale.getDefault().getLanguage().contentEquals("fr")) ? "fr" : "en", currentLang;
@@ -51,11 +53,16 @@ public class Setting extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        /*Toolbar toolbar = findViewById(R.id.myToolbar);
-        setSupportActionBar(toolbar);*/
+        Toolbar toolbar = findViewById(R.id.myToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.config));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setSubtitle(getString(R.string.monCompte));
+        toolbar.setLogo(R.mipmap.logo_official);
+        //getSupportActionBar().setSubtitle(getString(R.string.monCompte));
+        //getSupportActionBar().setIcon(R.mipmap.logo_official);
+        //getSupportActionBar().setLogo(R.mipmap.logo_official);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
         /*getSupportActionBar().setTitle(getString(R.string.config));
@@ -74,17 +81,17 @@ public class Setting extends AppCompatActivity {
                     "Langue par défaut",
                     "Informations légales",
                     "Fournir des commentaires",
-                    "A propos de l'Application"
+                    "Á propos de l'Application"
             };
         } else {
             // Initializing a String Array
             config = new String[]{
-                    "Research update",
+                    "Check for updates",
                     "My Account",
                     "Default language",
-                    "Legale informations",
-                    "give comments",
-                    "Apropos Application"
+                    "Legal information",
+                    "Provide feedback",
+                    "About the App"
             };
         }
 
@@ -182,6 +189,7 @@ public class Setting extends AppCompatActivity {
                                 checked = ((RadioButton) v).isChecked();
                                 if(checked){
                                     setLocale("fr");
+                                    myDialog.dismiss();
                                 }
 
                             }
@@ -192,6 +200,7 @@ public class Setting extends AppCompatActivity {
                                 checked = ((RadioButton) v).isChecked();
                                 if(checked){
                                     setLocale("en");
+                                    myDialog.dismiss();
                                 }
                             }
                         });
@@ -218,12 +227,14 @@ public class Setting extends AppCompatActivity {
                         startActivity(intent);
                         break;
 
-                    case 6:
+                    case 5:
                         //Apropos Application
                         myDialog = new Dialog(Setting.this);
                         myDialog.setContentView(R.layout.layout_dialog_apropos_ezpass);
                         myVersion = (TextView) myDialog.findViewById(R.id.myVersion);
+                        copy = (TextView) myDialog.findViewById(R.id.copy);
                         myVersion.setText("Version " + BuildConfig.VERSION_NAME);
+                        copy.setText("© " + Calendar.getInstance().get(Calendar.YEAR) + " E-ZPASS by SMOPAYE");
 
                         txtclose =(TextView) myDialog.findViewById(R.id.txtclose);
                         txtclose.setText("X");
@@ -292,6 +303,7 @@ public class Setting extends AppCompatActivity {
             }
 
             Intent refresh = new Intent(this, Setting.class);
+            //refresh.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             refresh.putExtra(currentLang, localeName);
             startActivity(refresh);
 

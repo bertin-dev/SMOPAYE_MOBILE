@@ -6,6 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".vuesAdmin.ListUserGoogle">
 
+    <include
+        android:id="@+id/myToolbar"
+        layout="@layout/bar_layout"/>
+
     <ProgressBar
         android:id="@+id/pd_listUserGoogle"
         android:orientation="horizontal"
@@ -17,6 +21,7 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_utilisateurGoogle"
+        android:layout_below="@+id/myToolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

@@ -21,6 +21,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -160,7 +161,10 @@ public class RechargePropreCompte extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recharge_propre_compte);
 
+        Toolbar toolbar = findViewById(R.id.myToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.rechargeCompte));
+        toolbar.setSubtitle(getString(R.string.modeRecharge));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 

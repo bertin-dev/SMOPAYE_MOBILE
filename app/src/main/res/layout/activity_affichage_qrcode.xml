@@ -10,17 +10,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="center_horizontal|center_vertical"
-        android:foregroundGravity="center_vertical|center_horizontal"
         android:gravity="center">
 
+        <include
+            android:id="@+id/myToolbar"
+            layout="@layout/bar_layout"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="150dp"
             android:layout_gravity="center_vertical|center_horizontal"
             android:gravity="center"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:background="@drawable/bg3">
             <ImageView
                 android:layout_width="180dp"
@@ -34,9 +35,8 @@
             android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:gravity="center"
-            android:layout_gravity="center_horizontal|center_vertical">
+            android:layout_gravity="center_vertical|center_horizontal">
 
 
             <ImageView

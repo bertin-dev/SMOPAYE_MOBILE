@@ -3,6 +3,7 @@ package com.ezpass.smopaye_mobile.Assistance;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
@@ -15,6 +16,8 @@ public class DetailsAgenceSmopaye extends AppCompatActivity {
         setContentView(R.layout.activity_details_agence_smopaye);
 
 
+        Toolbar toolbar = findViewById(R.id.myToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.details));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

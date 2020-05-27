@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,10 +23,12 @@ import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 
+import java.util.Locale;
+
 public class MyAccount extends AppCompatActivity {
 
     private ListView listAllAccount;
-    private String [] myAccount = {"Informations du compte", "Changer de mot de passe"};
+    private String [] myAccount;
 
 
     @Override
@@ -34,11 +36,28 @@ public class MyAccount extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_account);
 
-        getSupportActionBar().setTitle(getString(R.string.monCompte));
+        Toolbar toolbar = findViewById(R.id.myToolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getString(R.string.config));
+        getSupportActionBar().setSubtitle(getString(R.string.monCompte));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         listAllAccount = (ListView)findViewById(R.id.listAllAccount);
+
+        if(Locale.getDefault().getLanguage().contentEquals("fr")) {
+            // Initializing a String Array
+            myAccount = new String[]{
+                    "Informations du compte",
+                    "Changer de mot de passe"
+            };
+        } else {
+            // Initializing a String Array
+            myAccount = new String[]{
+                    "Account information",
+                    "Change password"
+            };
+        }
 
         // Initialize an array adapter
         ArrayAdapter<String> adapter =new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, myAccount){
@@ -87,16 +106,6 @@ public class MyAccount extends AppCompatActivity {
 
     }
 
-    /**
-     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
-     * @param newBase
-     * @since 2020
-     */
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleHelper.onAttach(newBase));
-    }
-
     /*                    GESTION DU MENU DROIT                  */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -134,5 +143,16 @@ public class MyAccount extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    /**
+     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     * @param newBase
+     * @since 2020
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
     }
 }

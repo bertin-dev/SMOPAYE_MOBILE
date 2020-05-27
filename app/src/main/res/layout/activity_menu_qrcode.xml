@@ -16,6 +16,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <include
+            android:id="@+id/myToolbar"
+            layout="@layout/bar_layout"/>
+
         <LinearLayout
             android:id="@+id/authWindows"
             android:layout_width="match_parent"

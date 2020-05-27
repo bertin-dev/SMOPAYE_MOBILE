@@ -11,6 +11,9 @@
     android:background="@color/white"
     tools:context=".vuesAdmin.ListeUserAndAgents">
 
+    <include
+        android:id="@+id/myToolbar"
+        layout="@layout/bar_layout"/>
 
     <EditText
         android:drawableEnd="@drawable/ic_search_black_24dp"
@@ -18,6 +21,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/edittext1"
+        android:layout_below="@+id/myToolbar"
         android:hint="@string/rechercher"
         android:gravity="center"/>
 
@@ -33,7 +37,7 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_below="@+id/edittext1"
         android:id="@+id/listViewContent" />
 
 </RelativeLayout>

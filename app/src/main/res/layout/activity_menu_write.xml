@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,13 +7,17 @@
     android:background="@drawable/spalash_gradient_bg"
     tools:context=".Manage_Cards.WriteInCard.Menu_Write">
 
+    <include
+        android:id="@+id/myToolbar"
+        layout="@layout/bar_layout"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
         android:gravity="center"
+        android:layout_centerInParent="true"
         android:orientation="vertical">
-
 
         <Button
             android:id="@+id/BtnInfo"
@@ -71,4 +75,4 @@
             android:gravity="center_horizontal|center_vertical" />
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

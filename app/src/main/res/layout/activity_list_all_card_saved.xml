@@ -11,6 +11,10 @@
     android:focusableInTouchMode="true"
     tools:context=".Manage_Cards.SaveInDB.ListAllCardSaved">
 
+    <include
+        android:id="@+id/myToolbar"
+        layout="@layout/bar_layout"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

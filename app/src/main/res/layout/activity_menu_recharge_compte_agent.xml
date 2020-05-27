@@ -13,13 +13,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <include
+            android:id="@+id/myToolbar"
+            layout="@layout/bar_layout"/>
+
         <LinearLayout
             android:id="@+id/btnRechargeCompteAgent"
             android:clickable="true"
             android:focusable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_gravity="center_vertical|center_horizontal"
             android:layout_marginRight="10dp"
             android:background="@drawable/ripple_effect_click"

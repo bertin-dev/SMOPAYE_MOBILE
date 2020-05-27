@@ -6,7 +6,7 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="config">CONFIGURATION</string>
+    <string name="config">Configuration</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
@@ -622,5 +622,14 @@
     <string name="send">Envoyer</string>
     <string name="insererCommentaire">Veuillez inserer votre commentaire</string>
     <string name="insererEmail">Veuillez inserer votre Email</string>
+    <string name="ezpass">EZPASS</string>
+    <string name="modePaiement">Mode de Paiement</string>
+    <string name="modeRecharge">Mode de Recharge</string>
+    <string name="transfertCompteAcompte">Compte à Compte</string>
+    <string name="voirDetails">Voir les Détails</string>
+    <string name="pjValid">Pièce d\'identité valide</string>
+    <string name="fillForm">Remplir le formulaire</string>
+    <string name="modeRetrait">Mode de retrait</string>
+    <string name="savedCards">Cartes enregistrées</string>
 
 </resources>

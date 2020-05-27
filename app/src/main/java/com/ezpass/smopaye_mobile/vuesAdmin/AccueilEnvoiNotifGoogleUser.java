@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -81,6 +82,8 @@ public class AccueilEnvoiNotifGoogleUser extends AppCompatActivity implements Mo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accueil_envoi_notif_google_user);
 
+        Toolbar toolbar = findViewById(R.id.myToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.envoiNotification));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

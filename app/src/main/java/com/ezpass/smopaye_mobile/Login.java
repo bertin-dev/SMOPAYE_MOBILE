@@ -47,9 +47,9 @@ import com.ezpass.smopaye_mobile.RemoteNotifications.Data;
 import com.ezpass.smopaye_mobile.RemoteNotifications.MyResponse;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Sender;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
-import com.ezpass.smopaye_mobile.Setting.Setting;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
+import com.ezpass.smopaye_mobile.vuesUtilisateur.Souscription_User_AutoEnreg;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
 import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
@@ -180,7 +180,7 @@ public class Login extends AppCompatActivity
         setContentView(R.layout.activity_login);
 
         /*Mise en cache de la barre des titre dans le login*/
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
 
         /*Initialisation de tous les objets qui seront manipulés*/
         ButterKnife.bind(this);
@@ -372,7 +372,7 @@ public class Login extends AppCompatActivity
 
     @OnClick(R.id.btnAutoRegister)
     void autoRegister(){
-        Intent intent = new Intent(getApplicationContext(), Setting.class);
+        Intent intent = new Intent(getApplicationContext(), Souscription_User_AutoEnreg.class);
         startActivity(intent);
     }
 

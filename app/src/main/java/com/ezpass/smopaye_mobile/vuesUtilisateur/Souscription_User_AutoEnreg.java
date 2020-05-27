@@ -18,6 +18,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -252,7 +253,10 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_souscription_users_autoenreg);
 
+        Toolbar toolbar = findViewById(R.id.myToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.Souscription_User_AutoEnregEtape1));
+        toolbar.setSubtitle(getString(R.string.fillForm));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 

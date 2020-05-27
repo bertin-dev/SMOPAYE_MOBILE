@@ -1,24 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/setting"
+    android:layout_centerHorizontal="true"
+    android:layout_centerVertical="true"
+    android:layout_centerInParent="true"
     tools:context=".Setting.Setting">
 
 
 
-    <!--<include
+
+    <include
         android:id="@+id/myToolbar"
-        layout="@layout/bar_layout"/>-->
+        layout="@layout/bar_layout"/>
 
+    <RelativeLayout
+        android:id="@+id/titleConfig"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:gravity="center"
+        android:visibility="visible"
+        android:layout_below="@+id/myToolbar"
+        android:background="@drawable/bg3">
+        <ImageView
+            android:layout_width="180dp"
+            android:layout_height="50dp"
+            android:src="@drawable/logo" />
+    </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="5dp"
+        android:layout_below="@+id/titleConfig"
         android:gravity="center">
 
         <ListView
@@ -26,11 +43,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:padding="5dp"
             android:textColor="@color/textColorBlack"
             android:layout_marginTop="10dp"
             android:layout_gravity="center_horizontal|center_vertical"
             android:gravity="center"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>

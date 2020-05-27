@@ -11,6 +11,7 @@
     tools:context=".vuesAccepteur.DebitCarte">
 
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,6 +20,10 @@
             android:background="#FFF"
             android:foregroundGravity="center_horizontal|center_vertical"
             android:layout_gravity="top">
+
+            <include
+                android:id="@+id/myToolbar"
+                layout="@layout/bar_layout"/>
 
             <LinearLayout
                 android:layout_height="wrap_content"

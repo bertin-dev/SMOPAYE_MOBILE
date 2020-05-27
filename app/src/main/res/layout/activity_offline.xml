@@ -16,6 +16,10 @@
           android:gravity="center"
           android:foregroundGravity="center_vertical|center_horizontal">
 
+          <include
+              android:id="@+id/myToolbar"
+              layout="@layout/bar_layout"/>
+
           <ImageView
               android:id="@+id/conStatusIv"
               android:layout_width="120dp"

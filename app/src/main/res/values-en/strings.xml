@@ -107,7 +107,7 @@
     <string name="cocherAbonnement">Please check a Subscription</string>
     <string name="compteCredite">Your account has been credited with an amount of</string>
     <string name="compteDe">The Account of</string>
-    <string name="config">CONFIGURATION</string>
+    <string name="config">configuration</string>
     <string name="confirmPass">Confirm password</string>
     <string name="confirmer">confirm</string>
     <string name="connexion">Login</string>
@@ -542,6 +542,15 @@
     <string name="send">Send</string>
     <string name="insererCommentaire">Please insert your comment</string>
     <string name="insererEmail">Please insert your email</string>
+    <string name="ezpass">EZPASS</string>
+    <string name="modePaiement">Payment method</string>
+    <string name="modeRecharge">recharge mode</string>
+    <string name="transfertCompteAcompte">account to account</string>
+    <string name="voirDetails">See the details</string>
+    <string name="pjValid">valid ID</string>
+    <string name="fillForm">Fill in the form</string>
+    <string name="modeRetrait">Withdrawal mode</string>
+    <string name="savedCards">Saved cards</string>
 
 
 </resources>

@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/my_account"
-    android:padding="5dp"
     tools:context=".Setting.MyAccount">
 
-    <LinearLayout
+    <include
+        android:id="@+id/myToolbar"
+        layout="@layout/bar_layout"/>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_below="@+id/myToolbar"
         android:gravity="center">
 
         <ListView
@@ -24,6 +29,6 @@
             android:layout_gravity="center_horizontal|center_vertical"
             android:gravity="center"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>

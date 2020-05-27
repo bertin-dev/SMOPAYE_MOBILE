@@ -13,9 +13,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="top"
-        android:background="#FFF"
+        android:background="@color/white"
         android:foregroundGravity="center_horizontal|center_vertical"
         android:layout_gravity="top">
+
+        <include
+            android:id="@+id/myToolbar"
+            layout="@layout/bar_layout"/>
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
