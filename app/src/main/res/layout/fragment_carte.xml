@@ -55,7 +55,7 @@
                 app:period="1000"
                 app:delay="0"
                 app:error_image="@drawable/error"
-                app:placeholder="@drawable/placeholder"/>
+                app:placeholder="@drawable/carte_smopaye"/>
 
 
             <LinearLayout
@@ -67,7 +67,7 @@
                 android:background="@color/white"
                 android:foregroundGravity="center_vertical|center_horizontal">
 
-                <LinearLayout
+                <!--<LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="50"
                     android:layout_height="wrap_content"
@@ -84,8 +84,6 @@
                         android:text="@string/consultSoldeDeLaCarte"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
-
-
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="50"
@@ -109,30 +107,151 @@
                         android:textSize="15sp"
                         android:text="@string/utiliserAutreCarte"
                         android:layout_height="wrap_content" />
+                </LinearLayout>-->
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="30"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:weightSum="100"
+                    android:orientation="horizontal"
+                    android:background="@drawable/border_right">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:src="@drawable/pub_ezpass"
+                        android:id="@+id/pub_ezpass"/>
+
                 </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="70"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingStart="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingRight="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/type_abon"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/textColorBlack"
+                        android:text="Mon Abonnement"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/type_abon">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="100">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="60"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:id="@+id/tAbonnement"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/bgColorStandard"
+                                    android:text="Service"/>
+
+                                <TextView
+                                    android:id="@+id/tel"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/bgColorStandard"
+                                    android:text="+237 694048925"/>
+                            </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="40"
+                            android:padding="10dp"
+                            android:orientation="vertical">
+
+                            <Button
+                                android:id="@+id/btnDetails"
+                                android:layout_height="match_parent"
+                                android:layout_width="wrap_content"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
+                                android:padding="5dp"
+                                android:background="@color/bgColorStandard"
+                                android:text="détail" />
+
+                        </LinearLayout>
+
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
 
             </LinearLayout>
 
         </LinearLayout>
 
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:paddingLeft="30dp"
             android:paddingStart="30dp"
             android:paddingEnd="30dp"
             android:paddingRight="30dp"
-            android:orientation="vertical"
+            android:background="@android:color/white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textColorBlack"
+                android:textStyle="bold"
+                android:gravity="right"
+                android:layout_marginBottom="10dp"
+                android:textSize="15sp"
+                android:text="Mise à jour le 26/05/2020 à 16:15"/>
+
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/allDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp"
+            android:paddingRight="30dp"
             android:background="@color/white">
 
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/detailCompte"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/abc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#000"
@@ -140,20 +259,24 @@
                     android:textSize="20sp"
                     android:text="@string/libelleCarteAbonement"/>
                 <TextView
+                    android:layout_below="@+id/abc"
                     android:id="@+id/CarteNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#262626"
                     android:textSize="15sp"
                     android:text="@string/numCarteAbonement"/>
-            </LinearLayout>
+            </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/detailsCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:layout_below="@+id/detailCompte"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/typCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#000"
@@ -162,40 +285,23 @@
                     android:text="@string/typeCarte"/>
                 <TextView
                     android:id="@+id/tVtypeCarte"
+                    android:layout_below="@+id/typCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#262626"
                     android:textSize="15sp"
                     android:text="@string/valeurCarte"/>
-            </LinearLayout>
+            </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/detailsExpiration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/detailsCard"
                 android:layout_marginTop="20dp"
                 android:orientation="vertical">
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#000"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:text="@string/libelleAbonnementChoisi"/>
-                <TextView
-                    android:id="@+id/tAbonnement"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#262626"
-                    android:textSize="15sp"
-                    android:text="@string/typeAbonnement"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical">
-                <TextView
+                    android:id="@+id/expiration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#000"
@@ -204,20 +310,23 @@
                     android:text="@string/dateExp"/>
                 <TextView
                     android:id="@+id/tVdateExpirationCarte"
+                    android:layout_below="@+id/expiration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#262626"
                     android:textSize="15sp"
                     android:text="@string/DateExpLongFormat"/>
-            </LinearLayout>
+            </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:layout_below="@+id/detailsExpiration"
                 android:layout_marginBottom="100dp"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/verouCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#000"
@@ -226,6 +335,7 @@
                     android:text="@string/verouCarte"/>
 
                 <LinearLayout
+                    android:layout_below="@+id/verouCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:weightSum="100"
@@ -252,9 +362,16 @@
                         android:layout_height="wrap_content" />
 
                 </LinearLayout>
-            </LinearLayout>
+            </RelativeLayout>
 
-        </LinearLayout>
+            <ProgressBar
+                android:id="@+id/progressBar2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="visible"/>
+
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -316,8 +433,7 @@
             android:layout_marginRight="100dp"
             android:textStyle="bold"
             android:shadowDx="@android:integer/config_longAnimTime"
-            android:background="@drawable/btn_rounded"
-            />
+            android:background="@drawable/btn_rounded" />
 
 
     </LinearLayout>
