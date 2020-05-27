@@ -236,6 +236,7 @@
     <string name="modification">change</string>
     <string name="modificationCompte">Account modification</string>
     <string name="modifier">Edit</string>
+    <string name="modifierOuSupprimer">Edit or Remove</string>
     <string name="modifierEffectue">MODIFICATION DONE</string>
     <string name="moinNeufChiffre">Your phone contains less than 9 digits</string>
     <string name="monCompte">My account</string>

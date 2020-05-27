@@ -36,7 +36,6 @@
         <activity android:name=".Setting.EditProfil" />
         <activity android:name=".Setting.MyAccount" />
         <activity android:name=".Setting.Setting" />
-        <activity android:name=".Manage_Cards.SaveInDB.DeleteBD" />
         <activity android:name=".Manage_Cards.SaveInDB.Menu_Save" />
         <activity android:name=".Manage_Cards.WriteInCard.Menu_Write" />
         <activity android:name=".Manage_Cards.SaveInDB.UpdateBD" />

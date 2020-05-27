@@ -18,7 +18,6 @@ public class Menu_Save extends AppCompatActivity {
     private Button BtnListCarteEnreg;
     private Button BtnEnregCarte;
     private Button BtnUpdate;
-    private Button BtnDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +32,6 @@ public class Menu_Save extends AppCompatActivity {
         BtnListCarteEnreg = (Button) findViewById(R.id.BtnListCarteEnreg);
         BtnEnregCarte = (Button) findViewById(R.id.BtnEnregCarte);
         BtnUpdate = (Button) findViewById(R.id.BtnUpdate);
-        BtnDelete = (Button) findViewById(R.id.BtnDelete);
 
 
 
@@ -60,16 +58,6 @@ public class Menu_Save extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        BtnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), DeleteBD.class);
-                startActivity(intent);
-            }
-        });
-
-
     }
 
 

@@ -33,6 +33,7 @@
     <string name="montant">Montant</string>
     <string name="passerCarte">Passer la Carte</string>
     <string name="modifier">Modifier</string>
+    <string name="modifierOuSupprimer">Modifier ou supprimer</string>
 
 
     <string name="card_type">Card Type: </string>
