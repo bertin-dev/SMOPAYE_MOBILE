@@ -9,6 +9,7 @@ import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -171,7 +172,7 @@ public interface ApiService {
     /* Create Card */
     @POST("api/card")
     @FormUrlEncoded
-    Call<AccessToken> createCards(@Field("code_number") String code_number,
+    Call<AccessToken> createCard(@Field("code_number") String code_number,
                                    @Field("serial_number") String serial_number,
                                    @Field("end_date") String end_date,
                                    @Field("user_created") int user_created);
@@ -179,6 +180,23 @@ public interface ApiService {
     /* Lister all Card */
     @GET("api/card")
     Call<Response_Status> findAllCards();
+
+
+    /* update Card */
+    @PUT("api/card/{card_id}")
+    @FormUrlEncoded
+    Call<AccessToken> updateCard(@Path("card_id") int card_id,
+                                  @Field("code_number") String code_number,
+                                  @Field("serial_number") String serial_number,
+                                  @Field("end_date") String end_date,
+                                  @Field("user_created") int user_created);
+
+
+    /* delete Card */
+    @DELETE("api/card/{card_id}")
+    Call<AccessToken> deleteCard(@Path("card_id") int card_id);
+
+
     /*----------------------------------------------------------END CARD SMOPAYE-------------------------------------------------------*/
 
 }

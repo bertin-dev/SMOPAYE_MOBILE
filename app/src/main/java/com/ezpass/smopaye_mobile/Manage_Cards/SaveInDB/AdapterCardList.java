@@ -1,6 +1,7 @@
 package com.ezpass.smopaye_mobile.Manage_Cards.SaveInDB;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -52,6 +53,23 @@ public class AdapterCardList extends ArrayAdapter<Model_Card> {
 
         TextView txtV_cardState = (TextView) convertView.findViewById(R.id.cardState);
         txtV_cardState.setText(card.getCard_state());
+
+
+        //clique sur un élément de la listView
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //start Activity Card Form
+                Intent intent = new Intent(context, UpdateBD.class);
+                intent.putExtra("card_id", card.getId());
+                intent.putExtra("card_number", card.getCode_number());
+                intent.putExtra("serial_number", card.getSerial_number());
+                intent.putExtra("exp_date", card.getEnd_date());
+                context.startActivity(intent);
+
+            }
+        });
 
         return convertView;
     }

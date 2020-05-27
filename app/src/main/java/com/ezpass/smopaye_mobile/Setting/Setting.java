@@ -74,7 +74,6 @@ public class Setting extends AppCompatActivity {
                     "Langue par défaut",
                     "Informations légales",
                     "Fournir des commentaires",
-                    "Contactez nous",
                     "A propos de l'Application"
             };
         } else {
@@ -85,7 +84,6 @@ public class Setting extends AppCompatActivity {
                     "Default language",
                     "Legale informations",
                     "give comments",
-                    "Contact-us",
                     "Apropos Application"
             };
         }
@@ -125,7 +123,7 @@ public class Setting extends AppCompatActivity {
                 switch (position){
                     //rechercher les mises à jours
                     case 0:
-                       /* try {
+                        try {
                             Intent viewIntent =
                                     new Intent("android.intent.action.VIEW",
                                             Uri.parse("https://play.google.com/store/apps/details?id=com.ezpass.smopaye_mobile&hl=fr"));
@@ -134,9 +132,9 @@ public class Setting extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"Unable to Connect Try Again...",
                                     Toast.LENGTH_LONG).show();
                             e.printStackTrace();
-                        }*/
+                        }
 
-                         intent = new Intent(Intent.ACTION_VIEW);
+                         /*intent = new Intent(Intent.ACTION_VIEW);
                         Uri.Builder uriBuilder = Uri.parse("https://play.google.com/store/apps/details")
                                 .buildUpon()
                                 .appendQueryParameter("id", "com.ezpass.smopaye_mobile")
@@ -149,7 +147,7 @@ public class Setting extends AppCompatActivity {
 
                         intent.setData(uriBuilder.build());
                         intent.setPackage("com.android.vending");
-                        startActivity(intent);
+                        startActivity(intent);*/
 
                         break;
                     case 1:

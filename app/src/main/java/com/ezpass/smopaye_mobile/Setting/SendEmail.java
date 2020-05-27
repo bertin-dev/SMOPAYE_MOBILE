@@ -259,16 +259,18 @@ public class SendEmail extends AppCompatActivity
         String message = tie_desc_comment.getText().toString();
 
 
-        /*Intent intent = new Intent(Intent.ACTION_SEND);
+        // 1ère méthode: Envoi d'email avec un service de me ssagerie votre téléphone disponible
+        Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_EMAIL, tab_Email);
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
         intent.putExtra(Intent.EXTRA_TEXT, message);
 
         intent.setType("message/rfc822");
-        startActivity(Intent.createChooser(intent, "Choose an email client"));*/
+        startActivity(Intent.createChooser(intent, "Choose an email client"));
 
-        JavaMailAPI javaMailAPI = new JavaMailAPI(this, mail, subject, message);
-        javaMailAPI.execute();
+        // 2èùe méthode directement à partir d'une API intégrée dans l'application
+        //JavaMailAPI javaMailAPI = new JavaMailAPI(this, mail, subject, message);
+        //javaMailAPI.execute();
         }
 
     }

@@ -52,6 +52,16 @@ public class Model_Card {
         return id;
     }
 
+    public Model_Card() {
+    }
+
+    public Model_Card(String id, String code_number, String serial_number, String end_date) {
+        this.id = id;
+        this.code_number = code_number;
+        this.serial_number = serial_number;
+        this.end_date = end_date;
+    }
+
     public void setId(String id) {
         this.id = id;
     }

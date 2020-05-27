@@ -16,6 +16,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
 public class RetrofitBuilder {
 
     private static final String BASE_URL = "https://webservice.domaineteste.space.smopaye.fr/public/";
+    //private static final String BASE_URL = "http://192.168.8.103/public/";
 
     private final static OkHttpClient client = buildClient();
     private final static Retrofit retrofit = buildRetrofit(client);

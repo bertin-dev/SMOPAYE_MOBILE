@@ -57,7 +57,7 @@ public class SaveBD extends AppCompatActivity {
     private long time1, time2;
     private ProgressDialog progressDialog;
     private AlertDialog.Builder build_error;
-    private String myId_card = "";  //PAS ENCORE INITIALISER AVEC UNE VALEUR
+    private String myId_card = "10";  //PAS ENCORE INITIALISER AVEC UNE VALEUR
 
     /* Déclaration des objets liés à la communication avec le web service*/
     private ApiService service;
@@ -256,12 +256,18 @@ public class SaveBD extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
+
         try {
             nfc.close();
         } catch (TelpoException e) {
             e.printStackTrace();
         }
-        super.onDestroy();
+
+        if(call != null){
+            call.cancel();
+            call = null;
+        }
     }
 
 
@@ -436,7 +442,7 @@ public class SaveBD extends AppCompatActivity {
 
     private void insertDataInDB(String code_number, String serial_number, String end_date, String created_by){
 
-        call = service.createCards(code_number, serial_number, end_date, Integer.parseInt(created_by));
+        call = service.createCard(code_number, serial_number, end_date, Integer.parseInt(created_by));
         call.enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {

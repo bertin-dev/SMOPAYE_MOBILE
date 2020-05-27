@@ -207,9 +207,12 @@ public class CarteFragment extends Fragment
 
         ImageSlider imageSlider = view.findViewById(R.id.image_slider);
         List<SlideModel> slideModels = new ArrayList<>();
-        slideModels.add(new SlideModel(R.drawable.carte_smopaye, "Image 1"));
-        slideModels.add(new SlideModel(R.drawable.carte_smopaye, "Image 2"));
-        slideModels.add(new SlideModel(R.drawable.carte_smopaye, "Image 3"));
+        slideModels.add(new SlideModel(R.drawable.carte_smopaye, "Recto de ma Carte"));
+        slideModels.add(new SlideModel(R.drawable.pub_back_card, "Verso de ma carte"));
+        slideModels.add(new SlideModel(R.drawable.pub_qrcode, "Mon QR CODE"));
+        slideModels.add(new SlideModel(R.drawable.pub_distributor, "Ma solution de paiement"));
+        slideModels.add(new SlideModel(R.drawable.pub_kiosk, "mon distributeur Agrée"));
+        slideModels.add(new SlideModel(R.drawable.pub_parasol, "Mon parasole agréé"));
         imageSlider.setImageList(slideModels, true);
 
 
@@ -566,6 +569,11 @@ public class CarteFragment extends Fragment
         build_error.show();
     }
 
+
+    @OnClick(R.id.btnDetails)
+    void detail_Card(){
+        Toast.makeText(getActivity(), "Details", Toast.LENGTH_SHORT).show();
+    }
 
     @OnClick(R.id.btnReessayer)
     void checkNetworkConnectionStatus(){

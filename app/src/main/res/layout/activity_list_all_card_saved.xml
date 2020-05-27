@@ -7,6 +7,7 @@
     android:background="@color/white"
     android:orientation="vertical"
     android:focusable="true"
+    android:id="@+id/list_all_card_saved"
     android:focusableInTouchMode="true"
     tools:context=".Manage_Cards.SaveInDB.ListAllCardSaved">
 

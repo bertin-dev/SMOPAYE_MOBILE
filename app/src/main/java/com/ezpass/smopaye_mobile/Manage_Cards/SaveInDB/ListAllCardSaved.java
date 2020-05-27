@@ -92,7 +92,7 @@ public class ListAllCardSaved extends AppCompatActivity {
         cardCall.enqueue(new Callback<Response_Status>() {
             @Override
             public void onResponse(Call<Response_Status> call, Response<Response_Status> response) {
-                Log.w(TAG, "ListAllResponse onResponse: "+ response);
+                Log.w(TAG, "SMOPAYE SERVER onResponse: "+ response);
                 if(response.isSuccessful()){
                     assert response.body() != null;
                     myResponse = response.body();

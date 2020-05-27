@@ -211,7 +211,7 @@
     <string name="dateExp">Date d\'expiration de la carte</string>
     <string name="typeCarte">Type de carte</string>
     <string name="valeurCarte">Carte magnétique MA1</string>
-    <string name="verouCarte">Verouiller la carte</string>
+    <string name="verouCarte">Verouiller ma carte</string>
     <string name="balancerCarte">Balancer ce bouton pour empêcher toute transaction venant d\'elle</string>
     <string name="DateExpLongFormat">Lundi, le 25 decembre 2020</string>
     <string name="impossibleUsingCamera">Impossible d\'utiliser la caméra .. Veuillez nous autoriser à utiliser la caméra</string>
