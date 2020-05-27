@@ -1,5 +1,6 @@
 package com.ezpass.smopaye_mobile.Assistance;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.widget.ListView;
 
 import com.ezpass.smopaye_mobile.ExpandableListAdapter;
 import com.ezpass.smopaye_mobile.R;
+import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -150,6 +152,16 @@ public class AgenceSmopaye extends AppCompatActivity {
         listHashMap1.put(listDataHeader1.get(1), webDev);
         listHashMap1.put(listDataHeader1.get(2), deskDev);
         listHashMap1.put(listDataHeader1.get(3), databaseDev);
+    }
+
+    /**
+     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     * @param newBase
+     * @since 2020
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
     }
 
 }

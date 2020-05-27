@@ -1,5 +1,6 @@
 package com.ezpass.smopaye_mobile.Apropos;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.ezpass.smopaye_mobile.Assistance.Menu_Assistance;
 import com.ezpass.smopaye_mobile.BuildConfig;
 import com.ezpass.smopaye_mobile.R;
+import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 
 public class Apropos extends AppCompatActivity {
 
@@ -143,5 +145,15 @@ public class Apropos extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    /**
+     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     * @param newBase
+     * @since 2020
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
 
 }

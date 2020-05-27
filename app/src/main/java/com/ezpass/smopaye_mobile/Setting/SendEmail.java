@@ -33,6 +33,7 @@ import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.NotifApp;
 import com.ezpass.smopaye_mobile.R;
+import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
@@ -308,6 +309,16 @@ public class SendEmail extends AppCompatActivity
             til_email1.setError(null);
             return true;
         }
+    }
+
+    /**
+     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     * @param newBase
+     * @since 2020
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
     }
 
 

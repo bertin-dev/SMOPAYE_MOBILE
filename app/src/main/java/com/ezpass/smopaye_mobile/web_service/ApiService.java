@@ -63,7 +63,7 @@ public interface ApiService {
     /* Update Account */
     @PUT("api/update/{phone_number}")
     @FormUrlEncoded
-    Call<AccessToken> update_account(@Field("phone") int phone,
+    Call<AccessToken> update_account(@Path("phone_number") int phone_number,
                                      @Field("password") String password,
                                      @Field("ancien_password") String ancien_password);
 

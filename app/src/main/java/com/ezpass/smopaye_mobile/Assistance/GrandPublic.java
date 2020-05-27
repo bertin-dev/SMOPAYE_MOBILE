@@ -1,6 +1,7 @@
 package com.ezpass.smopaye_mobile.Assistance;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.R;
+import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 
 public class GrandPublic extends AppCompatActivity {
 
@@ -79,5 +81,15 @@ public class GrandPublic extends AppCompatActivity {
                 Toast.makeText(this, getString(R.string.permissionRefuse), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    /**
+     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     * @param newBase
+     * @since 2020
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
     }
 }

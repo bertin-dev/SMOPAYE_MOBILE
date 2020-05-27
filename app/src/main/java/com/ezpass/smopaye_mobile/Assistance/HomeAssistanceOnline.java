@@ -1,5 +1,6 @@
 package com.ezpass.smopaye_mobile.Assistance;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,6 +23,7 @@ import com.ezpass.smopaye_mobile.RemoteFragments.ProfileFragment;
 import com.ezpass.smopaye_mobile.RemoteFragments.UsersFragment;
 import com.ezpass.smopaye_mobile.RemoteModel.Chat;
 import com.ezpass.smopaye_mobile.RemoteModel.User;
+import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.google.firebase.auth.FirebaseAuth;
@@ -251,5 +253,14 @@ public class HomeAssistanceOnline extends AppCompatActivity {
     }
 
 
+    /**
+     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     * @param newBase
+     * @since 2020
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.ezpass.smopaye_mobile.Manage_Cards.WriteInCard;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.R;
+import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.telpo.tps550.api.TelpoException;
@@ -449,5 +451,15 @@ public class InformationsCard extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     * @param newBase
+     * @since 2020
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
     }
 }

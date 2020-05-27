@@ -1,10 +1,11 @@
 package com.ezpass.smopaye_mobile.Assistance;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -29,6 +30,7 @@ import com.ezpass.smopaye_mobile.RemoteNotifications.Data;
 import com.ezpass.smopaye_mobile.RemoteNotifications.MyResponse;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Sender;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
+import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,8 +50,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.ezpass.smopaye_mobile.ChaineConnexion.getAdresseURLGoogleAPI;
 
 public class MessageActivity extends AppCompatActivity {
 
@@ -371,5 +371,14 @@ public class MessageActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     * @param newBase
+     * @since 2020
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
 
 }
