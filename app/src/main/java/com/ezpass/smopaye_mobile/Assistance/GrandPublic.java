@@ -31,6 +31,7 @@ public class GrandPublic extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.serviceClient));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       //  getSupportActionBar().setDisplayShowHomeEnabled(true);
 

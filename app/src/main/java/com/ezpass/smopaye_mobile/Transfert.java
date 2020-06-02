@@ -54,10 +54,10 @@ import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
-import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
+import com.ezpass.smopaye_mobile.web_service_response.HomeResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -125,7 +125,7 @@ public class Transfert extends AppCompatActivity
     private ApiService service;
     private TokenManager tokenManager;
     private AwesomeValidation validator;
-    private Call<AccessToken> call;
+    private Call<HomeResponse> call;
 
     @BindView(R.id.til_numCarteBeneficiaire)
     TextInputLayout til_numCarteBeneficiaire;
@@ -159,7 +159,7 @@ public class Transfert extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.transfert));
-        toolbar.setSubtitle(getString(R.string.transfertCompteAcompte));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -518,10 +518,10 @@ public class Transfert extends AppCompatActivity
 
     private void transfertDataInSmopayeServer(String montant, String id_card_sender, String id_card_receiver) {
 
-        call = service.transaction(Integer.parseInt(montant), "transfert compte à compte", id_card_sender, id_card_receiver);
-        call.enqueue(new Callback<AccessToken>() {
+        call = service.transaction(Float.parseFloat(montant), id_card_sender, id_card_receiver, "TRANSFERT");
+        call.enqueue(new Callback<HomeResponse>() {
             @Override
-            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+            public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {
                 Log.w(TAG, "SMOPAYE_SERVER onResponse: " + response);
                 progressDialog.dismiss();
 
@@ -530,32 +530,29 @@ public class Transfert extends AppCompatActivity
                     String msgReceiver = response.body().getMessage().getCard_receiver().getNotif();
                     String msgSender = response.body().getMessage().getCard_sender().getNotif();
 
-                    if(response.body().getMessage().isSuccess()){
-                        tokenManager.saveToken(response.body());
+                        //tokenManager.saveToken(response.body());
                         successResponse(id_card_receiver, msgReceiver, id_card_sender, msgSender);
-                    } else{
-                        errorResponse(id_card_receiver, msgReceiver);
-                    }
+
                 }
                 else{
 
                     if(response.code() == 422){
                         handleErrors(response.errorBody());
                     }
-                    else {
+                    else if(response.code() == 401) {
                         ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
                         Toast.makeText(Transfert.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
                         errorResponse(id_card_receiver, apiError.getMessage());
-                    } /*else{
-                        errorResponse(id_card_receiver, response.errorBody().toString());
-                    }*/
+                    } else{
+                        errorResponse(id_card_receiver, response.message());
+                    }
 
                 }
 
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
+            public void onFailure(Call<HomeResponse> call, Throwable t) {
 
                 progressDialog.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());

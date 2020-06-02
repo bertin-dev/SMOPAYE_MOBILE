@@ -48,6 +48,16 @@ public class Setting extends AppCompatActivity {
     private RadioButton radioFr, radioEn;
     private  Boolean checked;
     String currentLanguage = (Locale.getDefault().getLanguage().contentEquals("fr")) ? "fr" : "en", currentLang;
+
+    //update account
+    private String nom;
+    private String prenom;
+    private String numeroTel;
+    private String cni;
+    private String adresse;
+    private String numero_card;
+    private String idUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +66,7 @@ public class Setting extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.config));
-        toolbar.setSubtitle(getString(R.string.monCompte));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         toolbar.setLogo(R.mipmap.logo_official);
         //getSupportActionBar().setSubtitle(getString(R.string.monCompte));
         //getSupportActionBar().setIcon(R.mipmap.logo_official);
@@ -65,9 +75,14 @@ public class Setting extends AppCompatActivity {
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
-        /*getSupportActionBar().setTitle(getString(R.string.config));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);*/
+        Intent intent = getIntent();
+        nom = intent.getStringExtra("nom");
+        prenom = intent.getStringExtra("prenom");
+        numeroTel = intent.getStringExtra("numeroTel");
+        cni = intent.getStringExtra("cni");
+        adresse = intent.getStringExtra("adresse");
+        numero_card = intent.getStringExtra("numero_card");
+        idUser = intent.getStringExtra("idUser");
 
 
         listAllSetting = (ListView)findViewById(R.id.listAllSetting);
@@ -160,6 +175,13 @@ public class Setting extends AppCompatActivity {
                     case 1:
                         //Mon Compte
                          intent = new Intent(Setting.this, MyAccount.class);
+                        intent.putExtra("nom", nom);
+                        intent.putExtra("prenom", prenom);
+                        intent.putExtra("numeroTel", numeroTel);
+                        intent.putExtra("cni", cni);
+                        intent.putExtra("adresse", adresse);
+                        intent.putExtra("numero_card", numero_card);
+                        intent.putExtra("idUser", idUser);
                         startActivity(intent);
                         break;
                     case 2:

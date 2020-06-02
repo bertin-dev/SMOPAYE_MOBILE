@@ -42,9 +42,10 @@ public class AffichageQRCode extends AppCompatActivity {
     private ImageView qrcode;
     private TextView card_number;
 
-    String fil = "tmp_data_user";
+
     int c;
-    String temp_ = "";
+    private String file2 = "tmp_card_number";
+    private String temp_card = "";
 
     private Bitmap bitmap;
 
@@ -56,6 +57,7 @@ public class AffichageQRCode extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.lecteurQRCode));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -64,19 +66,9 @@ public class AffichageQRCode extends AppCompatActivity {
 
 
         /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
-        try{
-            FileInputStream fIn = openFileInput(fil);
-            while ((c = fIn.read()) != -1){
-                temp_ = temp_ + Character.toString((char)c);
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
 
-       /* String[] parts = temp_.split("-");
-        String cardNumber = parts[10]; // 12345678*/
-        String cardNumber = "12345678"; // 12345678
+        readTempCardInFile();
+        String cardNumber = temp_card; // 12345678
 
 
         String carteCrypte = "E-ZPASS" + cardNumber.toLowerCase() + getsecurity_keys();
@@ -119,6 +111,19 @@ public class AffichageQRCode extends AppCompatActivity {
         // Display saved image uri to TextView
         card_number.setText(String.valueOf(carteCrypte));*/
 
+    }
+
+    private void readTempCardInFile() {
+        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
+        try{
+            FileInputStream fIn = getApplication().openFileInput(file2);
+            while ((c = fIn.read()) != -1){
+                temp_card = temp_card + Character.toString((char)c);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private Bitmap createBitmapCustomized(BitMatrix matrix) {

@@ -31,6 +31,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RemoteViews;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -70,11 +71,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -88,6 +92,7 @@ public class CarteFragment extends Fragment
     private static final String TAG = "CarteFragment";
     private ProgressDialog progressDialog;
     private AlertDialog.Builder build_error;
+    private ACProgressFlower dialog;
 
     private ApiService service;
     private TokenManager tokenManager;
@@ -104,10 +109,10 @@ public class CarteFragment extends Fragment
     private FirebaseUser fuser;
 
 
-    @BindView(R.id.CarteNumber)
-    TextView CarteNumber;
-    @BindView(R.id.tVtypeCarte)
-    TextView tVtypeCarte;
+    @BindView(R.id.AccountNumber)
+    TextView AccountNumber;
+    @BindView(R.id.AccountCard)
+    TextView AccountCard;
     @BindView(R.id.tAbonnement)
     TextView tAbonnement;
     @BindView(R.id.tVdateExpirationCarte)
@@ -116,6 +121,12 @@ public class CarteFragment extends Fragment
     Switch sWtVerouillerCarte;
     @BindView(R.id.etatDelaCarte)
     TextView etatDelaCarte;
+    @BindView(R.id.updateDate)
+    TextView updateDate;
+    @BindView(R.id.progressBar2)
+    ProgressBar progressBar2;
+    @BindView(R.id.tel)
+    TextView tel;
 
     private String etatCart = "";
     private String telephone = "";
@@ -127,6 +138,18 @@ public class CarteFragment extends Fragment
     private String temp_number = "";
     private String card_id = "";
     private String myId_card;
+    private String myPersonalAccountNumber;
+    private String myPersonalAccountState;
+    private String myPersonalAccountAmount;
+    private String unity;
+    private String deposit;
+    private String serial_number;
+    private String typeCard;
+    private String cardState;
+
+
+
+
 
     @BindView(R.id.authWindows)
     LinearLayout authWindows;
@@ -164,7 +187,7 @@ public class CarteFragment extends Fragment
 
         progressDialog = new ProgressDialog(getContext());
         //********************DEBUT***********
-        getActivity().runOnUiThread(new Runnable() {
+       /* getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 // On ajoute un message à notre progress dialog
@@ -177,8 +200,16 @@ public class CarteFragment extends Fragment
                 progressDialog.show();
                 //build.setPositiveButton("ok", new View.OnClickListener()
             }
-        });
+        });*/
         //*******************FIN*****
+
+
+        dialog = new ACProgressFlower.Builder(getContext())
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text(getString(R.string.loading))
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
 
         tokenManager = TokenManager.getInstance(getActivity().getSharedPreferences("prefs", MODE_PRIVATE));
         if(tokenManager.getToken() == null){
@@ -195,7 +226,9 @@ public class CarteFragment extends Fragment
         telephone = getArguments().getString("telephone");
         abonnement = getArguments().getString("abonnement");
         myId_card = getArguments().getString("myId_card");
-
+        myPersonalAccountNumber = getArguments().getString("myPersonalAccountNumber");
+        myPersonalAccountState = getArguments().getString("myPersonalAccountState");
+        myPersonalAccountAmount = getArguments().getString("myPersonalAccountAmount");
 
         build_error = new AlertDialog.Builder(getContext());
     }
@@ -212,8 +245,8 @@ public class CarteFragment extends Fragment
         slideModels.add(new SlideModel(R.drawable.pub_back_card, "Verso de ma carte"));
         slideModels.add(new SlideModel(R.drawable.pub_qrcode, "Mon QR CODE"));
         slideModels.add(new SlideModel(R.drawable.pub_distributor, "Ma solution de paiement"));
-        slideModels.add(new SlideModel(R.drawable.pub_kiosk, "mon distributeur Agrée"));
-        slideModels.add(new SlideModel(R.drawable.pub_parasol, "Mon parasole agréé"));
+        slideModels.add(new SlideModel(R.drawable.pub_kiosk, "Distributeur Smopaye"));
+        slideModels.add(new SlideModel(R.drawable.pub_parasol, "Parasole Smopaye"));
         imageSlider.setImageList(slideModels, true);
 
 
@@ -302,9 +335,22 @@ public class CarteFragment extends Fragment
                     if(response.body().isSuccess()){
                         DataUserCard card = response.body().getData();
 
+                        unity = card.getUnity();
+                        deposit = card.getDeposit();
+
+
+                        AccountNumber.setText(myPersonalAccountNumber);
+                        serial_number = card.getSerial_number();
+                        typeCard = card.getType();
+                        cardState = card.getCard_state();
+                        serial_number = card.getSerial_number();
+
                         card_id = card.getCode_number();
-                        tVtypeCarte.setText( getString(R.string.carteMag) + " " + card.getType());
-                        CarteNumber.setText(card_id);
+                        AccountCard.setText(card_id);
+                        tel.setText("+237 " + telephone);
+
+
+
                         tAbonnement.setText(abonnement);
                         etatCart = card.getCard_state();
 
@@ -324,8 +370,11 @@ public class CarteFragment extends Fragment
                             e.printStackTrace();
                         }
                         //FIN
-                        Toast.makeText(getContext(), card.getCard_state(), Toast.LENGTH_SHORT).show();
-                        Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        //recupere l'heure et la date courrante
+                        String current = new SimpleDateFormat("dd/MM/yyyy à HH:mm:ss", Locale.getDefault()).format(new Date());
+                        updateDate.setText("Mise à jour le " + current);
+
+
                     } else{
                         Toast.makeText(getContext(), getString(R.string.erreurSurvenue1), Toast.LENGTH_SHORT).show();
                     }
@@ -337,11 +386,14 @@ public class CarteFragment extends Fragment
                     getActivity().finish();
                 }
                 progressDialog.dismiss();
+                progressBar2.setVisibility(View.GONE);
+                dialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<Card> call, Throwable t) {
                 progressDialog.dismiss();
+                dialog.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
 
                 //Vérification si la connexion internet accessible
@@ -571,6 +623,7 @@ public class CarteFragment extends Fragment
     }
 
 
+    @SuppressLint("SetTextI18n")
     @OnClick(R.id.btnDetails)
     void detail_Card(){
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.BottomSheetDialogTheme);
@@ -579,6 +632,35 @@ public class CarteFragment extends Fragment
                         R.layout.layout_bottom_sheet,
                         (LinearLayout)bottomSheetDialog.findViewById(R.id.bottomSheetContainer)
                 );
+        TextView updateDateDialog = bottomSheetView.findViewById(R.id.updateDateDialog);
+        TextView soldeCompte = bottomSheetView.findViewById(R.id.soldeCompte);
+        TextView soldeUnite = bottomSheetView.findViewById(R.id.soldeUnite);
+        TextView soldeDepot = bottomSheetView.findViewById(R.id.soldeDepot);
+
+        TextView account_number = bottomSheetView.findViewById(R.id.account_number);
+        TextView state_account = bottomSheetView.findViewById(R.id.state_account);
+        TextView card_number = bottomSheetView.findViewById(R.id.card_number);
+        TextView serial_numbers = bottomSheetView.findViewById(R.id.serial_number);
+        TextView card_state = bottomSheetView.findViewById(R.id.card_state);
+        TextView card_type = bottomSheetView.findViewById(R.id.card_type);
+
+        String current = new SimpleDateFormat("dd/MM/yyyy à HH:mm:ss", Locale.getDefault()).format(new Date());
+        updateDateDialog.setText("Mise à jour le " + current);
+
+        soldeCompte.setText("Compte: " + myPersonalAccountAmount + " Fcfa");
+        soldeUnite.setText("Unité: " + unity + " Fcfa");
+        soldeDepot.setText("Dépot: " + deposit.substring(0, 10) + " Fcfa");
+
+        //compte
+        account_number.setText(myPersonalAccountNumber);
+        state_account.setText(myPersonalAccountState);
+
+        //card
+        card_number.setText(card_id);
+        serial_numbers.setText(serial_number);
+        card_state.setText(cardState);
+        card_type.setText(getString(R.string.carteMag) + " " + typeCard);
+
         bottomSheetView.findViewById(R.id.btnClose).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -586,6 +668,7 @@ public class CarteFragment extends Fragment
                 bottomSheetDialog.dismiss();
             }
         });
+
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
     }

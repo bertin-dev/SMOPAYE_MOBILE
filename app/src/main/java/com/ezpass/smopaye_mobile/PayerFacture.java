@@ -54,10 +54,10 @@ import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
-import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
+import com.ezpass.smopaye_mobile.web_service_response.HomeResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -127,7 +127,7 @@ public class PayerFacture extends AppCompatActivity
     private ApiService service;
     private TokenManager tokenManager;
     private AwesomeValidation validator;
-    private Call<AccessToken> call;
+    private Call<HomeResponse> call;
 
 
     @BindView(R.id.til_numCarteBeneficiaire)
@@ -163,6 +163,7 @@ public class PayerFacture extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.payerFacture));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -261,9 +262,9 @@ public class PayerFacture extends AppCompatActivity
     private void payementInSmopayeServer(String montantBeneficiaire1, String typeTransaction1, String id_cardDonataire1, String id_cardBeneficiaire1) {
 
         call = service.transaction(Integer.parseInt(montantBeneficiaire1), typeTransaction1, id_cardDonataire1, id_cardBeneficiaire1);
-        call.enqueue(new Callback<AccessToken>() {
+        call.enqueue(new Callback<HomeResponse>() {
             @Override
-            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+            public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {
                 Log.w(TAG, "SMOPAYE_SERVER onResponse: " + response);
                 progressDialog.dismiss();
 
@@ -272,12 +273,12 @@ public class PayerFacture extends AppCompatActivity
                     String msgReceiver = response.body().getMessage().getCard_receiver().getNotif();
                     String msgSender = response.body().getMessage().getCard_sender().getNotif();
 
-                    if(response.body().getMessage().isSuccess()){
+                    /*if(response.body().getMessage().isSuccess()){
                         tokenManager.saveToken(response.body());
                         successResponse(id_cardBeneficiaire1, msgReceiver, id_cardDonataire1, msgSender);
                     } else{
                         errorResponse(id_cardBeneficiaire1, msgReceiver);
-                    }
+                    }*/
                 } else{
 
                     if(response.code() == 422){
@@ -294,7 +295,7 @@ public class PayerFacture extends AppCompatActivity
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
+            public void onFailure(Call<HomeResponse> call, Throwable t) {
 
                 progressDialog.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());

@@ -67,10 +67,10 @@ import com.ezpass.smopaye_mobile.telecollecte.ScoreData;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
-import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
+import com.ezpass.smopaye_mobile.web_service_response.HomeResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -148,7 +148,7 @@ public class DebitCarte extends AppCompatActivity
     private ApiService service;
     private TokenManager tokenManager;
     private AwesomeValidation validator;
-    private Call<AccessToken> call;
+    private Call<HomeResponse> call;
 
 
     @BindView(R.id.til_debitmontant)
@@ -184,7 +184,7 @@ public class DebitCarte extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.Debit));
-        toolbar.setSubtitle(getString(R.string.modePaiement));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -612,17 +612,17 @@ public class DebitCarte extends AppCompatActivity
         //Intent in = getIntent();
         //telephone = in.getStringExtra("telephone");
 
-        call = service.debit_card(Integer.parseInt(montant), id_card, getSerialNumber());
-        call.enqueue(new Callback<AccessToken>() {
+        call = service.transaction(Integer.parseInt(montant), id_card, getSerialNumber(), "DEBIT");
+        call.enqueue(new Callback<HomeResponse>() {
             @Override
-            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+            public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {
 
                 progressDialog.dismiss();
 
                 if(response.isSuccessful()){
 
                     if(response.body().isSuccess()){
-                        tokenManager.saveToken(response.body());
+                        //tokenManager.saveToken(response.body());
                         //INSERTION DU MONTANT DEBITE DANS LA BASE DE DONNEES
                         databaseManager.insertScore(id_card, Integer.parseInt(montant));
                         final List<ScoreData> scores = databaseManager.readTop10();
@@ -651,7 +651,7 @@ public class DebitCarte extends AppCompatActivity
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
+            public void onFailure(Call<HomeResponse> call, Throwable t) {
 
                 progressDialog.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());

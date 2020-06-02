@@ -3,7 +3,7 @@ package com.ezpass.smopaye_mobile.Profil_user;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Role{
+public class CategoryUser {
 
     @SerializedName("id")
     @Expose
@@ -11,6 +11,9 @@ public class Role{
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("role_id")
+    @Expose
+    private String role_id;
 
     @SerializedName("created_at")
     @Expose
@@ -27,12 +30,20 @@ public class Role{
         this.id = id;
     }
 
-    public String getname() {
+    public String getName() {
         return name;
     }
 
-    public void setname(String name) {
+    public void setName(String name) {
         this.name = name;
+    }
+
+    public String getRole_id() {
+        return role_id;
+    }
+
+    public void setRole_id(String role_id) {
+        this.role_id = role_id;
     }
 
     public String getCreated_at() {

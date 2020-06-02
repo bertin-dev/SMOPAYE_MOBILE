@@ -126,9 +126,9 @@ public class Souscription extends AppCompatActivity
     private String num_statut = "";
     private String num_categorie = "";
 
-    private HashMap<Integer, String> listAllSession = new HashMap<>();
-    private HashMap<Integer, String> listAllCategorie = new HashMap<>();
-    private HashMap<Integer, String> listFILTRECategorie = new HashMap<>();
+    private HashMap<String, String> listAllSession = new HashMap<>();
+    private HashMap<String, String> listAllCategorie = new HashMap<>();
+    private HashMap<String, String> listFILTRECategorie = new HashMap<>();
 
     /*Déclaration des objets qui permettent d'écrire sur le fichier*/
     private String tmp_number = "tmp_number";
@@ -268,8 +268,8 @@ public class Souscription extends AppCompatActivity
                     }
                     List<StringWithTag> itemList = new ArrayList<>();
                     /* Iterate through your original collection, in this case defined with an Integer key and String value. */
-                    for (Map.Entry<Integer, String> entry : listAllSession.entrySet()) {
-                        Integer key = entry.getKey();
+                    for (Map.Entry<String, String> entry : listAllSession.entrySet()) {
+                        String key = entry.getKey();
                         String value = entry.getValue();
 
                         /* Build the StringWithTag List using these keys and values. */
@@ -330,7 +330,7 @@ public class Souscription extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.souscription));
-        toolbar.setSubtitle(getString(R.string.fillForm));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -455,7 +455,7 @@ public class Souscription extends AppCompatActivity
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 StringWithTag swt = (StringWithTag) parent.getItemAtPosition(position);
-                Integer key = (Integer) swt.tag;
+                String key = (String) swt.tag;
 
                 if(statut.getSelectedItem().toString().toLowerCase().equalsIgnoreCase(listAllSession.get(key))){
                     num_statut = String.valueOf(key);
@@ -472,7 +472,7 @@ public class Souscription extends AppCompatActivity
                                 List<Categorie> mycategories = response.body();
                                 for(int i = 0; i<mycategories.size(); i++){
 
-                                    if(Integer.parseInt(num_statut)==mycategories.get(i).getRole_id()){
+                                    if(num_statut.equals(mycategories.get(i).getRole_id())){
                                         listFILTRECategorie.put(mycategories.get(i).getId(), mycategories.get(i).getname());
                                     }
 
@@ -483,8 +483,8 @@ public class Souscription extends AppCompatActivity
                                 List<StringWithTag> itemList1 = new ArrayList<>();
 
                                 /* Iterate through your original collection, in this case defined with an Integer key and String value. */
-                                for (Map.Entry<Integer, String> entry : listFILTRECategorie.entrySet()) {
-                                    Integer key = entry.getKey();
+                                for (Map.Entry<String, String> entry : listFILTRECategorie.entrySet()) {
+                                    String key = entry.getKey();
                                     String value = entry.getValue();
                                     /* Build the StringWithTag List using these keys and values. */
 
@@ -546,7 +546,7 @@ public class Souscription extends AppCompatActivity
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 StringWithTag swt = (StringWithTag) parent.getItemAtPosition(position);
-                Integer key = (Integer) swt.tag;
+                String key = (String) swt.tag;
 
                 if(typeChauffeur.getSelectedItem().toString().toLowerCase().equalsIgnoreCase(listAllCategorie.get(key))){
                     num_categorie = String.valueOf(key);
@@ -1176,7 +1176,7 @@ public class Souscription extends AppCompatActivity
                                              String status1, String abonnement1) {
 
 
-        call = service.register(nom1, prenom1, telephone1, cni1, adresse1, sexe1, num_statut, num_categorie, num_carte1, abonnement1);
+        call = service.register(nom1, prenom1, sexe1.toLowerCase(), telephone1, adresse1, num_categorie, num_statut, cni1.toLowerCase(), num_carte1);
         call.enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
@@ -1190,20 +1190,19 @@ public class Souscription extends AppCompatActivity
                           /*sauvegarde du token retourné par l'api si la reponse est bonne
                          nous utiliserons la classe TokenManager pour cela
                         */
-                    if(response.body().isSuccess()){
-                        tokenManager.saveToken(response.body());
-                        new AsyncTaskRegisterDataInGoogleFirebaseServer(nom1, prenom1, sexe1, telephone1, typePJ1,
+                    assert response.body() != null;
+                    tokenManager.saveToken(response.body());
+                        /*new AsyncTaskRegisterDataInGoogleFirebaseServer(nom1, prenom1, sexe1, telephone1, typePJ1,
                                 cni1, session1, adresse1, num_carte1, typeUser1,
-                                status1, abonnement1, response.toString()).execute();
-                    } else {
-                        errorResponse("");
-                    }
+                                status1, abonnement1, response.toString()).execute();*/
+                    Toast.makeText(Souscription.this, "enregistrement éffectué", Toast.LENGTH_SHORT).show();
+
                 } else{
 
                     if(response.code() == 422){
                         handleErrors(response.errorBody());
                     } else{
-                        errorResponse("");
+                        errorResponse(response.message());
                     }
 
                 }

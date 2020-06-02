@@ -9,27 +9,11 @@ public class DataUser {
 
     @SerializedName("id")
     @Expose
-    private int id;
-
-    @SerializedName("lastname")
-    @Expose
-    private String lastname;
-
-    @SerializedName("firstname")
-    @Expose
-    private String firstname;
-
-    @SerializedName("gender")
-    @Expose
-    private String gender;
+    private String id;
 
     @SerializedName("phone")
     @Expose
     private String phone;
-
-    @SerializedName("cni")
-    @Expose
-    private String cni;
 
     @SerializedName("address")
     @Expose
@@ -51,58 +35,53 @@ public class DataUser {
     @Expose
     private String created_by;
 
-    @SerializedName("card_number")
+    @SerializedName("compte_id")
     @Expose
-    private String card_number;
+    private String compte_id;
 
     @SerializedName("role_id")
     @Expose
-    private int role_id;
+    private String role_id;
+
+    @SerializedName("created_at")
+    @Expose
+    private String created_at;
+
+    @SerializedName("updated_at")
+    @Expose
+    private String updated_at;
+
+
+    @SerializedName("categorie")
+    @Expose
+    private CategoryUser categorie;
+
+    @SerializedName("particulier")
+    @Expose
+    private List<Particulier> particulier;
 
     @SerializedName("role")
     @Expose
     private Role role;
 
-    @SerializedName("categorie")
+    @SerializedName("compte")
     @Expose
-    private Categorie categorie;
-
+    private Compte compte;
 
     @SerializedName("cards")
     @Expose
     private List<DataUserCard> cards;
 
+    @SerializedName("enterprise")
+    @Expose
+    private List<Entreprise> enterprise;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
     }
 
     public String getPhone() {
@@ -111,14 +90,6 @@ public class DataUser {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public String getCni() {
-        return cni;
-    }
-
-    public void setCni(String cni) {
-        this.cni = cni;
     }
 
     public String getAddress() {
@@ -161,22 +132,53 @@ public class DataUser {
         this.created_by = created_by;
     }
 
-    public String getCard_number() {
-        return card_number;
+    public String getCompte_id() {
+        return compte_id;
     }
 
-    public void setCard_number(String card_number) {
-        this.card_number = card_number;
+    public void setCompte_id(String compte_id) {
+        this.compte_id = compte_id;
     }
 
-    public int getRole_id() {
+    public String getRole_id() {
         return role_id;
     }
 
-    public void setRole_id(int role_id) {
+    public void setRole_id(String role_id) {
         this.role_id = role_id;
     }
 
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
+
+    public String getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(String updated_at) {
+        this.updated_at = updated_at;
+    }
+
+    public CategoryUser getCategorie() {
+        return categorie;
+    }
+
+    public void setCategorie(CategoryUser categorie) {
+        this.categorie = categorie;
+    }
+
+    public List<Particulier> getParticulier() {
+        return particulier;
+    }
+
+    public void setParticulier(List<Particulier> particulier) {
+        this.particulier = particulier;
+    }
 
     public Role getRole() {
         return role;
@@ -184,6 +186,14 @@ public class DataUser {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Compte getCompte() {
+        return compte;
+    }
+
+    public void setCompte(Compte compte) {
+        this.compte = compte;
     }
 
     public List<DataUserCard> getCards() {
@@ -194,11 +204,11 @@ public class DataUser {
         this.cards = cards;
     }
 
-    public Categorie getCategorie() {
-        return categorie;
+    public List<Entreprise> getEnterprise() {
+        return enterprise;
     }
 
-    public void setCategorie(Categorie categorie) {
-        this.categorie = categorie;
+    public void setEnterprise(List<Entreprise> enterprise) {
+        this.enterprise = enterprise;
     }
 }

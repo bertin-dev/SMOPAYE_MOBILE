@@ -102,6 +102,7 @@
                     android:textColor="@color/bgColorStandard"
                     android:layout_gravity="center"
                     android:maxLines="1"
+                    android:enabled="false"
                     android:textStyle="bold|italic"
                     android:imeOptions="actionNext"
                     android:padding="10dp"

@@ -228,7 +228,7 @@
     <string name="assistanceEnligne">ASSISTANCE EN LIGNE</string>
     <string name="assistanceOncline">Assistance en Ligne</string>
     <string name="contactezNous">Contactez-Nous</string>
-    <string name="serviceClient">Service Client SMOPAYE</string>
+    <string name="serviceClient">Service Client</string>
     <string name="boutiqueSmopaye">BOUTIQUES SMOPAYE</string>
     <string name="trouverProduitSmopaye">Retrouvez tous les produits, offres et services dans les boutiques Smpopaye</string>
     <string name="serviceClient7j7">Nous vous accueillons 7j/7, 24h/24</string>
@@ -368,7 +368,7 @@
     <string name="librarieChangelog">Cette librairie a été partiellement modifiée pour satisfaire les besoins du projet. Changelog est distribuée sous licence Apache 2.0 Plus d\'info: https://www.githug.com"</string>
     <string name="volley">Volley - version 1.1.1</string>
     <string name="openSourceProject">Copyright © 2012 The Android Open Source Project Volley est distribué sous licence Apache, Version 2.0 Plus d\'info: https://github.com/google/volley</string>
-    <string name="pointDeVenteSmopaye">Points de Vente SMOPAYE</string>
+    <string name="pointDeVenteSmopaye">Points de Vente</string>
     <string name="yaounde">YAOUNDE</string>
     <string name="soa">SOA</string>
     <string name="camair">CAMAIR</string>
@@ -384,7 +384,7 @@
     <string name="AlertMsgVide">Vous ne pouvez pas envoyer un message vide</string>
     <string name="AlertNouveauMsg">Nouveau Message</string>
     <string name="echoue">Echoué</string>
-    <string name="siteWebMobile">Site Web SMOPAYE</string>
+    <string name="siteWebMobile">Site Web</string>
     <string name="encoursTelechargement">Encours de Chargement…</string>
     <string name="pasMessage">Pas de Message</string>
     <string name="uploadEncours">Upload Encours…</string>
@@ -420,7 +420,7 @@
     <string name="dateSystemePosePB">La date de votre système pose problème.</string>
     <string name="operationRecharge">Opération de Recharge</string>
     <string name="rechargeAgent">Recharge Agent</string>
-    <string name="etatCompte">Etat de votre Compte</string>
+    <string name="etatCompte">Etat Compte</string>
     <string name="ModifierCompte">Modifier Compte</string>
     <string name="ModifMotDePasse">Modification du Mot de Passe</string>
     <string name="rechargeCompte">Recharger un Compte</string>
@@ -460,7 +460,7 @@
     <string name="lecteurQRCode">Lecteur QR Code</string>
     <string name="smopayePartarge">Smopaye Partage QR Code</string>
     <string name="smopayePartargeEZPASS">E-ZPASS Partage via</string>
-    <string name="maCarteSmopaye">Ma Carte Smopaye</string>
+    <string name="maCarteSmopaye">Mon Compte</string>
     <string name="carteMag">Carte magnétique</string>
     <string name="votreCarteVerouille">Votre Carte est verouillé.</string>
     <string name="votreCarteDeverouille">Votre Carte a été Devérouillé</string>
@@ -622,7 +622,7 @@
     <string name="send">Envoyer</string>
     <string name="insererCommentaire">Veuillez inserer votre commentaire</string>
     <string name="insererEmail">Veuillez inserer votre Email</string>
-    <string name="ezpass">EZPASS</string>
+    <string name="ezpass">E-ZPASS by SMOPAYE</string>
     <string name="modePaiement">Mode de Paiement</string>
     <string name="modeRecharge">Mode de Recharge</string>
     <string name="transfertCompteAcompte">Compte à Compte</string>
@@ -631,5 +631,10 @@
     <string name="fillForm">Remplir le formulaire</string>
     <string name="modeRetrait">Mode de retrait</string>
     <string name="savedCards">Cartes enregistrées</string>
+    <string name="numCard">N° Carte</string>
+    <string name="loading">Chargement…</string>
+    <string name="serial">N° Série Associé</string>
+    <string name="etatCarte">Etat Carte</string>
+    <string name="editProfil">Editer Profil</string>
 
 </resources>

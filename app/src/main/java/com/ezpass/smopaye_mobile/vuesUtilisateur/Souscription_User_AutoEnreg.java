@@ -94,9 +94,9 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity
     private String num_statut = "";
     private String num_categorie = "";
 
-    private HashMap<Integer, String> listAllSession = new HashMap<>();
-    private HashMap<Integer, String> listAllCategorie = new HashMap<>();
-    private HashMap<Integer, String> listFILTRECategorie = new HashMap<>();
+    private HashMap<String, String> listAllSession = new HashMap<>();
+    private HashMap<String, String> listAllCategorie = new HashMap<>();
+    private HashMap<String, String> listFILTRECategorie = new HashMap<>();
 
     /* Déclaration des objets liés à la communication avec le web service*/
     private ApiService service;
@@ -192,8 +192,8 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity
                     }
                     List<StringWithTag> itemList = new ArrayList<>();
                     /* Iterate through your original collection, in this case defined with an Integer key and String value. */
-                    for (Map.Entry<Integer, String> entry : listAllSession.entrySet()) {
-                        Integer key = entry.getKey();
+                    for (Map.Entry<String, String> entry : listAllSession.entrySet()) {
+                        String key = entry.getKey();
                         String value = entry.getValue();
 
                         /* Build the StringWithTag List using these keys and values. */
@@ -379,7 +379,7 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 StringWithTag swt = (StringWithTag) parent.getItemAtPosition(position);
-                Integer key = (Integer) swt.tag;
+                String key = (String) swt.tag;
                 //Toast.makeText(Souscription.this, listAllSession.get(key), Toast.LENGTH_SHORT).show();
                 //Toast.makeText(Souscription.this, String.valueOf(key), Toast.LENGTH_SHORT).show();
 
@@ -399,7 +399,7 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity
                                 List<Categorie> mycategories = response.body();
                                 for(int i = 0; i<mycategories.size(); i++){
 
-                                    if(Integer.parseInt(num_statut)==mycategories.get(i).getRole_id()){
+                                    if(num_statut.equals(mycategories.get(i).getRole_id())){
                                         listFILTRECategorie.put(mycategories.get(i).getId(), mycategories.get(i).getname());
                                     }
 
@@ -410,8 +410,8 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity
                                 List<StringWithTag> itemList1 = new ArrayList<>();
 
                                 /* Iterate through your original collection, in this case defined with an Integer key and String value. */
-                                for (Map.Entry<Integer, String> entry : listFILTRECategorie.entrySet()) {
-                                    Integer key = entry.getKey();
+                                for (Map.Entry<String, String> entry : listFILTRECategorie.entrySet()) {
+                                    String key = entry.getKey();
                                     String value = entry.getValue();
                                     /* Build the StringWithTag List using these keys and values. */
 
@@ -475,7 +475,7 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 StringWithTag swt = (StringWithTag) parent.getItemAtPosition(position);
-                Integer key = (Integer) swt.tag;
+                String key = (String) swt.tag;
                 //Toast.makeText(Souscription.this, listAllCategorie.get(key), Toast.LENGTH_SHORT).show();
                 //Toast.makeText(Souscription.this, String.valueOf(key), Toast.LENGTH_SHORT).show();
 

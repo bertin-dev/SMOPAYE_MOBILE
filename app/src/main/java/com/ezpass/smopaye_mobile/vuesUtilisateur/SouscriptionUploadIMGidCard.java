@@ -53,10 +53,10 @@ import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.checkInternetDynamically.OfflineActivity;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
-import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
+import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -127,7 +127,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
     /* Déclaration des objets liés à la communication avec le web service*/
     private ApiService service;
     private TokenManager tokenManager;
-    private Call<AccessToken> call;
+    private Call<AllMyResponse> call;
 
 
 
@@ -569,17 +569,17 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
 
     private void auto_registerInSmopayeServer(String prenom, String nom, String genre, String adresse, String idcategorie, String created_by, String sessioncompte, String cni, String tel, String imgName_recto, String imgName_verso) {
 
-        call = service.autoregister(prenom, nom, genre, adresse, idcategorie, created_by, sessioncompte, cni, tel, imgName_recto, imgName_verso);
-        call.enqueue(new Callback<AccessToken>() {
+        call = service.autoregister(prenom, nom, genre, adresse, idcategorie, created_by, sessioncompte, cni.toLowerCase(), tel, imgName_recto, imgName_verso);
+        call.enqueue(new Callback<AllMyResponse>() {
             @Override
-            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+            public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
 
                 progressDialog.dismiss();
 
                 if(response.isSuccessful()){
 
                     if(response.body().isSuccess()){
-                        tokenManager.saveToken(response.body());
+                        //tokenManager.saveToken(response.body());
                         successResponse("");
                     } else {
                         errorResponse("");
@@ -598,7 +598,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
+            public void onFailure(Call<AllMyResponse> call, Throwable t) {
                 progressDialog.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
 

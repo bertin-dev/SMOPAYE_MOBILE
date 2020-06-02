@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -134,6 +135,8 @@ public class RechargePropreCompte extends AppCompatActivity
 
     @BindView(R.id.til_numCartePropreCompte)
     TextInputLayout til_numCartePropreCompte;
+    @BindView(R.id.tie_numCartePropreCompte)
+    TextInputEditText tie_numCartePropreCompte;
     @BindView(R.id.til_montant)
     TextInputLayout til_montant;
 
@@ -156,6 +159,12 @@ public class RechargePropreCompte extends AppCompatActivity
     private int c;
     private String temp_number = "";
 
+    private String file2 = "tmp_card_number";
+    private String temp_card = "";
+
+    private String file3 = "tmp_card_id";
+    private String temp_card_id = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,7 +173,7 @@ public class RechargePropreCompte extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.rechargeCompte));
-        toolbar.setSubtitle(getString(R.string.modeRecharge));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -199,7 +208,39 @@ public class RechargePropreCompte extends AppCompatActivity
         readTempNumberInFile();
         callHandlerMethod();
         setupRulesValidatForm();
+        readTempIDCARDInFile();
+        readTempCardInFile();
+
+        tie_numCartePropreCompte.setText(temp_card);
+
     }
+
+    private void readTempIDCARDInFile() {
+        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
+        try{
+            FileInputStream fIn = getApplication().openFileInput(file3);
+            while ((c = fIn.read()) != -1){
+                temp_card_id = temp_card_id + Character.toString((char)c);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void readTempCardInFile() {
+        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
+        try{
+            FileInputStream fIn = getApplication().openFileInput(file2);
+            while ((c = fIn.read()) != -1){
+                temp_card = temp_card + Character.toString((char)c);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * recharge() méthode permettant de démarrer l'opération de recharge des comptes
@@ -233,13 +274,13 @@ public class RechargePropreCompte extends AppCompatActivity
                 }
             });
             //*******************FIN*****
-            rechargeInSmopayeServer(id_card, montant, temp_number);
+            rechargeInSmopayeServer(temp_card_id, montant, temp_number);
         }
     }
 
     private void rechargeInSmopayeServer(String id_card, String montant, String telephone) {
 
-        call = service.recharge(id_card, Integer.parseInt(montant), telephone);
+        call = service.recharge(Integer.parseInt(montant), telephone, id_card);
         call.enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
@@ -248,8 +289,8 @@ public class RechargePropreCompte extends AppCompatActivity
 
                 if(response.isSuccessful()){
 
-                    if(response.body().isSuccess()){
-                        tokenManager.saveToken(response.body());
+                    assert response.body() != null;
+                    tokenManager.saveToken(response.body());
 
                         if(isValidUrl(response.toString())){
                             Intent intent = new Intent(getApplicationContext(), WebViewMonetbil.class);
@@ -259,9 +300,7 @@ public class RechargePropreCompte extends AppCompatActivity
                             Toast.makeText(RechargePropreCompte.this, "Un problème est survenu lors de la redirection.", Toast.LENGTH_SHORT).show();
                         }
 
-                    } else{
-                        errorResponse(id_card, "");
-                    }
+
                 } else{
 
                     if(response.code() == 422){

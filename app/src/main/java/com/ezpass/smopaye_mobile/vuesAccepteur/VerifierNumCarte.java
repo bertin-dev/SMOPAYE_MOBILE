@@ -78,6 +78,7 @@ public class VerifierNumCarte extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.numeroCarte));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         id_carte = (Button) findViewById(R.id.btnPasserCarte);

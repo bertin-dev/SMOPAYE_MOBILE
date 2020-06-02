@@ -1,9 +1,5 @@
 package com.ezpass.smopaye_mobile.web_service_access;
 
-import com.ezpass.smopaye_mobile.web_service_response.Message;
-import com.ezpass.smopaye_mobile.web_service_response.MyData;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 import com.squareup.moshi.Json;
 
 public class AccessToken {
@@ -11,17 +7,21 @@ public class AccessToken {
     //me permet de mapper mes reponses JSON (Nous utiliserons MOSHI au lieu de GSON pour retrofit)
 
     @Json(name = "token_type")
+    private
     String tokenType;
     @Json(name = "expires_in")
+    private
     int expiresIn;
     @Json(name = "access_token")
+    private
     String accessToken;
     @Json(name = "refresh_token")
+    private
     String refreshToken;
 
 
     //************************************RESPONSE BODY*******************************************
-    @SerializedName("success")
+    /*@SerializedName("success")
     @Expose
     private boolean success;
     @SerializedName("data")
@@ -29,7 +29,7 @@ public class AccessToken {
     private MyData data;
     @SerializedName("message")
     @Expose
-    private Message message;
+    private Message message;*/
     //************************************END*******************************************
 
 
@@ -69,7 +69,7 @@ public class AccessToken {
 
     //************************************RESPONSE BODY GETTER AND SETTER*******************************************
 
-    public boolean isSuccess() {
+    /*public boolean isSuccess() {
         return success;
     }
 
@@ -91,7 +91,7 @@ public class AccessToken {
 
     public void setMessage(Message message) {
         this.message = message;
-    }
+    }*/
 
 
     //************************************END*******************************************

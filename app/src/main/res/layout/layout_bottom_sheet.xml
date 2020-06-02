@@ -53,24 +53,45 @@
                 android:text="Mon solde Restant"
                 android:textStyle="bold"
                 android:textColor="@color/textColorBlack"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/soldeCompte"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Compte: 1800 Fcfa"
+                android:textStyle="bold"
+                android:textColor="#FF5252"
                 android:textSize="17sp"/>
 
             <TextView
+                android:id="@+id/soldeUnite"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Unité: 18 535 Fcfa"
                 android:textStyle="bold"
                 android:textColor="#757575"
-                android:textSize="15sp"/>
+                android:textSize="13sp"/>
 
 
             <TextView
+                android:id="@+id/soldeDepot"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Dépot: 18 535 Fcfa"
                 android:textStyle="bold"
-                android:textColor="#FF5252"
-                android:textSize="16sp"/>
+                android:textColor="#757575"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/updateDateDialog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mise à jour le 26/05/2020 à 16:15"
+                android:textStyle="bold"
+                android:gravity="right"
+                android:textColor="#757575"
+                android:textSize="10sp"/>
 
         </LinearLayout>
 
@@ -80,72 +101,304 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginBottom="10dp"
+        android:background="@color/colorDivider"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/u"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Espace Compte"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="#757575"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:textSize="10sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="10dp"
+                    android:tint="#757575"
+                    android:src="@drawable/ic_account_circle_black_24dp"
+                    android:layout_marginLeft="10dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="25dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="25dp"
+                        android:textColor="@color/textColorBlack"
+                        android:text="@string/numCarte"
+                        android:textSize="15sp"/>
+                    <TextView
+                        android:id="@+id/account_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="25dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="25dp"
+                        android:text="BDAADA51"
+                        android:textColor="#757575"
+                        android:textSize="10sp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="10dp"
+                    android:tint="#757575"
+                    android:src="@drawable/ic_check_circle_black_24dp"
+                    android:layout_marginLeft="10dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="25dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="25dp"
+                        android:textColor="@color/textColorBlack"
+                        android:text="@string/etatCompte"
+                        android:textSize="15sp"/>
+                    <TextView
+                        android:id="@+id/state_account"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="25dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="25dp"
+                        android:text="Activer"
+                        android:textColor="#757575"
+                        android:textSize="10sp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
         android:layout_marginTop="10dp"
         android:background="@color/colorDivider"/>
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="12dp">
-
-
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="10dp"
-            android:tint="#757575"
-            android:src="@drawable/ic_person_black_64dp"
-            android:layout_marginLeft="10dp" />
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="25dp"
-            android:text="N°Compte: BDAADA51"
-            android:textSize="15dp"/>
+            android:text="Espace Carte"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:textColor="#757575"
+            android:textSize="10sp"/>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="12dp">
-
-
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="10dp"
-            android:tint="#757575"
-            android:src="@drawable/ic_person_black_64dp"
-            android:layout_marginLeft="10dp" />
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="25dp"
-            android:text="N°Compte: BDAADA51"
-            android:textSize="15dp"/>
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:weightSum="100"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:layout_weight="7"
+                android:layout_marginStart="10dp"
+                android:tint="#757575"
+                android:src="@drawable/ic_credit_card_black_24dp"
+                android:layout_marginLeft="10dp" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="43"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="25dp"
+                    android:textColor="@color/textColorBlack"
+                    android:text="@string/numCard"
+                    android:textSize="15sp"/>
+                <TextView
+                    android:id="@+id/card_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="25dp"
+                    android:text="BDAADA51"
+                    android:textColor="#757575"
+                    android:textSize="10sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="25dp"
+                    android:textColor="@color/textColorBlack"
+                    android:text="@string/serial"
+                    android:textSize="15sp"/>
+                <TextView
+                    android:id="@+id/serial_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="25dp"
+                    android:text="123456789"
+                    android:textColor="#757575"
+                    android:textSize="10sp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:weightSum="100"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:layout_weight="7"
+                android:layout_marginStart="10dp"
+                android:tint="#757575"
+                android:src="@drawable/ic_check_circle_black_24dp"
+                android:layout_marginLeft="10dp" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="43"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="25dp"
+                    android:textColor="@color/textColorBlack"
+                    android:text="@string/etatCarte"
+                    android:textSize="15sp"/>
+                <TextView
+                    android:id="@+id/card_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="25dp"
+                    android:text="Activer"
+                    android:textColor="#757575"
+                    android:textSize="10sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="50"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="25dp"
+                    android:textColor="@color/textColorBlack"
+                    android:text="@string/typeCarte"
+                    android:textSize="15sp"/>
+                <TextView
+                    android:id="@+id/card_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="25dp"
+                    android:text="@string/valeurCarte"
+                    android:textColor="#757575"
+                    android:textSize="10sp"/>
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
+
+
+
 
     <LinearLayout
         android:gravity="center"
@@ -153,6 +406,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:textAlignment="center"
+        android:visibility="gone"
         android:layout_height="wrap_content">
         <Button
             android:id="@+id/btnClose"

@@ -29,6 +29,14 @@ public class MyAccount extends AppCompatActivity {
 
     private ListView listAllAccount;
     private String [] myAccount;
+    //update account
+    private String nom;
+    private String prenom;
+    private String numeroTel;
+    private String cni;
+    private String adresse;
+    private String numero_card;
+    private String idUser;
 
 
     @Override
@@ -39,9 +47,19 @@ public class MyAccount extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.config));
-        getSupportActionBar().setSubtitle(getString(R.string.monCompte));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        Intent intent = getIntent();
+        nom = intent.getStringExtra("nom");
+        prenom = intent.getStringExtra("prenom");
+        numeroTel = intent.getStringExtra("numeroTel");
+        cni = intent.getStringExtra("cni");
+        adresse = intent.getStringExtra("adresse");
+        numero_card = intent.getStringExtra("numero_card");
+        idUser = intent.getStringExtra("idUser");
+
 
         listAllAccount = (ListView)findViewById(R.id.listAllAccount);
 
@@ -92,6 +110,13 @@ public class MyAccount extends AppCompatActivity {
                 switch (position){
                     case 0:
                         Intent intent = new Intent(MyAccount.this, EditProfil.class);
+                        intent.putExtra("nom", nom);
+                        intent.putExtra("prenom", prenom);
+                        intent.putExtra("numeroTel", numeroTel);
+                        intent.putExtra("cni", cni);
+                        intent.putExtra("adresse", adresse);
+                        intent.putExtra("numero_card", numero_card);
+                        intent.putExtra("idUser", idUser);
                         startActivity(intent);
                         break;
                     case 1:

@@ -7,19 +7,31 @@ public class Abonnement {
 
     @SerializedName("id")
     @Expose
-    private int id;
-    @SerializedName("name")
+    private String id;
+    @SerializedName("subscriptionCharge")
     @Expose
-    private String name;
-    @SerializedName("subscription_fees")
+    private String subscriptionCharge;
+    @SerializedName("subscription_id")
     @Expose
-    private String subscription_fees;
-    @SerializedName("periode_abon")
+    private String subscription_id;
+    @SerializedName("subscription_type")
     @Expose
-    private String periode_abon;
-    @SerializedName("type")
+    private String subscription_type;
+    @SerializedName("compte_id")
     @Expose
-    private String type;
+    private String compte_id;
+    @SerializedName("starting_date")
+    @Expose
+    private String starting_date;
+    @SerializedName("end_date")
+    @Expose
+    private String end_date;
+    @SerializedName("validate")
+    @Expose
+    private String validate;
+    @SerializedName("transaction_number")
+    @Expose
+    private String transaction_number;
     @SerializedName("created_at")
     @Expose
     private String created_at;
@@ -27,44 +39,76 @@ public class Abonnement {
     @Expose
     private String updated_at;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getSubscriptionCharge() {
+        return subscriptionCharge;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSubscriptionCharge(String subscriptionCharge) {
+        this.subscriptionCharge = subscriptionCharge;
     }
 
-    public String getSubscription_fees() {
-        return subscription_fees;
+    public String getSubscription_id() {
+        return subscription_id;
     }
 
-    public void setSubscription_fees(String subscription_fees) {
-        this.subscription_fees = subscription_fees;
+    public void setSubscription_id(String subscription_id) {
+        this.subscription_id = subscription_id;
     }
 
-    public String getPeriode_abon() {
-        return periode_abon;
+    public String getSubscription_type() {
+        return subscription_type;
     }
 
-    public void setPeriode_abon(String periode_abon) {
-        this.periode_abon = periode_abon;
+    public void setSubscription_type(String subscription_type) {
+        this.subscription_type = subscription_type;
     }
 
-    public String getType() {
-        return type;
+    public String getCompte_id() {
+        return compte_id;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setCompte_id(String compte_id) {
+        this.compte_id = compte_id;
+    }
+
+    public String getStarting_date() {
+        return starting_date;
+    }
+
+    public void setStarting_date(String starting_date) {
+        this.starting_date = starting_date;
+    }
+
+    public String getEnd_date() {
+        return end_date;
+    }
+
+    public void setEnd_date(String end_date) {
+        this.end_date = end_date;
+    }
+
+    public String getValidate() {
+        return validate;
+    }
+
+    public void setValidate(String validate) {
+        this.validate = validate;
+    }
+
+    public String getTransaction_number() {
+        return transaction_number;
+    }
+
+    public void setTransaction_number(String transaction_number) {
+        this.transaction_number = transaction_number;
     }
 
     public String getCreated_at() {

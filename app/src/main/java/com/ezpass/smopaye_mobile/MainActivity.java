@@ -1,5 +1,6 @@
 package com.ezpass.smopaye_mobile;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -36,9 +37,11 @@ import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.Assistance.HomeAssistanceOnline;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Profil_user.Abonnement;
-import com.ezpass.smopaye_mobile.Profil_user.Categorie;
+import com.ezpass.smopaye_mobile.Profil_user.CategoryUser;
+import com.ezpass.smopaye_mobile.Profil_user.Compte;
 import com.ezpass.smopaye_mobile.Profil_user.DataUser;
 import com.ezpass.smopaye_mobile.Profil_user.DataUserCard;
+import com.ezpass.smopaye_mobile.Profil_user.Particulier;
 import com.ezpass.smopaye_mobile.Profil_user.Role;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
 import com.ezpass.smopaye_mobile.Setting.Setting;
@@ -71,6 +74,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
 import hotchemi.android.rate.AppRate;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -87,6 +92,7 @@ public class MainActivity extends AppCompatActivity
     private DbHandler db;
     private BottomBarTab nearby;
     private Dialog myDialog;
+    private ACProgressFlower dialog;
 
     private TextView txt_role, txt_profile, txtclose, txt_telephone;
 
@@ -98,9 +104,13 @@ public class MainActivity extends AppCompatActivity
     private String myCompte = ""; // BDAADA51
     private String myId_card = ""; //1;
     private String myCategorie = "";
+    private String myPersonalAccountNumber = "";
+    private String myPersonalAccountState = "";
+    private String myPersonalAccountAmount = "";
     /*Déclaration des objets qui permettent d'écrire sur le fichier*/
     private String tmp_card_number = "tmp_card_number";
     private String telephone1 = "";
+    private String tmp_card_id = "tmp_card_id";
 
     //web service
     private ApiService service;
@@ -110,6 +120,15 @@ public class MainActivity extends AppCompatActivity
     //service google firebase
     private FirebaseUser fuser;
     //DatabaseReference reference;
+
+    //update account
+    private String nom;
+    private String prenom;
+    private String numeroTel;
+    private String cni;
+    private String adresse;
+    private String numero_card;
+    private String idUser;
 
 
     @BindView(R.id.authWindows)
@@ -128,7 +147,7 @@ public class MainActivity extends AppCompatActivity
         super.onPostCreate(savedInstanceState);
 
         //********************DEBUT***********
-        runOnUiThread(new Runnable() {
+        /*runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 // On ajoute un message à notre progress dialog
@@ -141,8 +160,15 @@ public class MainActivity extends AppCompatActivity
                 progressDialog.show();
                 //build.setPositiveButton("ok", new View.OnClickListener()
             }
-        });
+        });*/
         //*******************FIN*****
+
+        dialog = new ACProgressFlower.Builder(this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text(getString(R.string.loading))
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
 
     }
 
@@ -208,6 +234,7 @@ public class MainActivity extends AppCompatActivity
         //web service
         call = service.profil(telephone1);
         call.enqueue(new Callback<DataUser>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(Call<DataUser> call, Response<DataUser> response) {
                 Log.w(TAG, "SMOPAYE_SERVER onResponse " +response);
@@ -218,40 +245,54 @@ public class MainActivity extends AppCompatActivity
                     assert response.body() != null;
                     Fragment selectedFragment1 = null;
                     Bundle bundle1 = new Bundle();
+
+                    //id de l'utilisateur courant
+                    idUser = response.body().getId();
+
+                    CategoryUser categorie = response.body().getCategorie();
+                    List<Particulier> particulier = response.body().getParticulier();
                     Role role = response.body().getRole();
-                    Categorie categorie = response.body().getCategorie();
+                    Compte compte = response.body().getCompte();
+                    List<Abonnement> abonnement = compte.getCompte_subscriptions();
+                    List<DataUserCard> dataUserCards = response.body().getCards();
 
 
-                    profil_complet = (response.body().getFirstname() + " " + response.body().getLastname()).toUpperCase();
+                    profil_complet = (particulier.get(0).getFirstname() + " " + particulier.get(0).getLastname()).toUpperCase();
                     session = role.getname();
                     etat = response.body().getState();
                     myPhone = response.body().getPhone();
-                    myCompte = response.body().getCard_number();
-                    myCategorie = categorie.getname();
+                    myCompte = dataUserCards.get(0).getCode_number();
+                    myId_card = dataUserCards.get(0).getId();
+                    myCategorie = categorie.getName();
+                    myAbon = abonnement.get(0).getSubscription_type();
 
-                    //myId = response.body().getId();
-                    List<DataUserCard> data = response.body().getCards();
-                    myId_card = data.get(0).getId();
+                    //infos sur le compte personnel
+                    myPersonalAccountNumber = compte.getAccount_number();
+                    myPersonalAccountState = compte.getAccount_state();
+                    myPersonalAccountAmount = compte.getAmount();
 
-
-                    List<Abonnement> data2 = data.get(0).getSubscriptions();
-                    for(int j=0; j<data2.size();j++){
-                        myAbon = data2.get(j).getName();
-                    }
+                    //update account
+                    nom = particulier.get(0).getLastname();
+                    prenom = particulier.get(0).getFirstname();
+                    numeroTel = myPhone;
+                    cni = particulier.get(0).getCni();
+                    adresse = response.body().getAddress();
+                    numero_card = myCompte;
 
                     writeTempCardNumberInFile(myCompte);
+                    writeTempCardIDInFile(myId_card);
 
                     /************************************************DEBUT**************/
 
                     txt_role.setText(session); // Accepteur, Administrateur, Utilisateur, Agent
                     txt_profile.setText(profil_complet); //Bertin Mounok
-                    txt_telephone.setText(myPhone); //694048925
+                    txt_telephone.setText("+237 " + myPhone); //+237 694048925
 
 
                     if(session.toLowerCase().equalsIgnoreCase("administrateur")){
                         /*--------------------------------AJOUT DES ELEMENTS DANS LE HEADER DU  nav_header_main.xml---------------*/
 
-                        if(etat.toLowerCase().equalsIgnoreCase("actif")) {
+                        if(etat.toLowerCase().equalsIgnoreCase("activer")) {
                             bundle1.putString("telephone", myPhone);
                             bundle1.putString("compte", myCompte);
                             bundle1.putString("role", session);
@@ -281,7 +322,7 @@ public class MainActivity extends AppCompatActivity
                     }
                     else if(session.toLowerCase().equalsIgnoreCase("agent"))
                     {
-                        if(etat.toLowerCase().equalsIgnoreCase("actif"))
+                        if(etat.toLowerCase().equalsIgnoreCase("activer"))
                         {
                             bundle1.putString("telephone", myPhone);
                             bundle1.putString("compte", myCompte);
@@ -303,7 +344,7 @@ public class MainActivity extends AppCompatActivity
                     }
                     else if(session.toLowerCase().equalsIgnoreCase("accepteur"))  //il s 'agit d'un accepteur
                     {
-                        if(etat.toLowerCase().equalsIgnoreCase("actif")) {
+                        if(etat.toLowerCase().equalsIgnoreCase("activer")) {
                             bundle1.putString("telephone", myPhone);
                             bundle1.putString("compte", myCompte);
                             bundle1.putString("role", session);
@@ -322,6 +363,10 @@ public class MainActivity extends AppCompatActivity
                             txt_role.setText(getString(R.string.utilisateur));
                         }
                     }
+                    /*else{
+                        selectedFragment1 = new ServiceIndispinibleFragment();
+                        selectedFragment1.setArguments(bundle1);
+                    }*/
 
 
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment1).commit();
@@ -415,6 +460,9 @@ public class MainActivity extends AppCompatActivity
                                     bundle.putString("myId_card", myId_card);
                                     bundle.putString("telephone", myPhone);
                                     bundle.putString("categorie", myCategorie);
+                                    bundle.putString("myPersonalAccountNumber", myPersonalAccountNumber);
+                                    bundle.putString("myPersonalAccountState", myPersonalAccountState);
+                                    bundle.putString("myPersonalAccountAmount", myPersonalAccountAmount);
                                     selectedFragment = new CarteFragment();
                                     selectedFragment.setArguments(bundle);
                                     break;
@@ -448,12 +496,14 @@ public class MainActivity extends AppCompatActivity
                     finish();
                 }
                 progressDialog.dismiss();
+                dialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<DataUser> call, Throwable t) {
 
                 progressDialog.dismiss();
+                dialog.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
 
 
@@ -659,6 +709,13 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this, getString(R.string.questionFrequentes), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_parametres) {
             Intent intent = new Intent(getApplicationContext(), Setting.class);
+            intent.putExtra("nom", nom);
+            intent.putExtra("prenom", prenom);
+            intent.putExtra("numeroTel", numeroTel);
+            intent.putExtra("cni", cni);
+            intent.putExtra("adresse", adresse);
+            intent.putExtra("numero_card", numero_card);
+            intent.putExtra("idUser", idUser);
             startActivity(intent);
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -716,6 +773,26 @@ public class MainActivity extends AppCompatActivity
             fOut.write(fileContents.getBytes());
             fOut.close();
             File fileDir = new File(getFilesDir(), tmp_card_number);
+            //Toast.makeText(getBaseContext(), "File Saved at " + fileDir, Toast.LENGTH_LONG).show();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * writeTempCardIDInFile() methodes permettant l'écriture de l'ID CARTE dans le fichier tmp_card
+     * @param fileContents
+     * @since 2020
+     * @exception e
+     * */
+    private void writeTempCardIDInFile(String fileContents){
+        try{
+            //ecrire de l'ID CARD
+            FileOutputStream fOut = openFileOutput(tmp_card_id, MODE_PRIVATE);
+            fOut.write(fileContents.getBytes());
+            fOut.close();
+            File fileDir = new File(getFilesDir(), tmp_card_id);
             //Toast.makeText(getBaseContext(), "File Saved at " + fileDir, Toast.LENGTH_LONG).show();
         } catch (Exception e){
             e.printStackTrace();

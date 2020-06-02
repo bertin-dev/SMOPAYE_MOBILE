@@ -223,7 +223,7 @@
     <string name="listUserGoogle">Google User List</string>
     <string name="logicielTiers">Third party software</string>
     <string name="maCarteBottomNav">My account</string>
-    <string name="maCarteSmopaye">My Smopaye Card</string>
+    <string name="maCarteSmopaye">My Account</string>
     <string name="mdp">Password</string>
     <string name="menuRetrait">Withdrawal menu</string>
     <string name="menu_gallery">Gallery</string>
@@ -304,7 +304,7 @@
     <string name="payerFacture">Pay your Invoices</string>
     <string name="pays">Cameroon</string>
     <string name="permissionRefuse">Permission Denied</string>
-    <string name="pointDeVenteSmopaye">smopaye selling points</string>
+    <string name="pointDeVenteSmopaye">selling points</string>
     <string name="pointSmopayeBottomNav">Selling points</string>
     <string name="politiqueDeConfifentialite">By pressing Register, you accept our General Conditions of Use, our Privacy Policy. You may receive text messages (sms) from us.</string>
     <string name="prenom">Surname</string>
@@ -337,13 +337,13 @@
     <string name="sendNotifAllGoogleUser">Sending Notifications</string>
     <string name="sendNotifAllUser">All the users</string>
     <string name="sendNotifOneUser">An user</string>
-    <string name="serviceClient">SMOPAYE Customer Service</string>
+    <string name="serviceClient"> Customer Service</string>
     <string name="serviceClient7j7">We welcome you 7 days a week, 24 hours a day</string>
     <string name="serviceIndisponible">Service Unavailable.</string>
     <string name="services">Services</string>
     <string name="servicesV">Sale of cards, card recharge, rental of VSEs, transaction log made</string>
     <string name="siteWebDrawer">Website</string>
-    <string name="siteWebMobile">SMOPAYE website</string>
+    <string name="siteWebMobile">Website</string>
     <string name="skip">Do not show this message again</string>
     <string name="slide_1_title">E-ZPASS terminal</string>
     <string name="slide_2_desc">The E-ZPASS Terminal is a high-performance payment terminal in removable format. This latest generation device allows traders to accept payments anywhere and anytime.</string>
@@ -542,7 +542,7 @@
     <string name="send">Send</string>
     <string name="insererCommentaire">Please insert your comment</string>
     <string name="insererEmail">Please insert your email</string>
-    <string name="ezpass">EZPASS</string>
+    <string name="ezpass">EZPASS by SMOPAYE</string>
     <string name="modePaiement">Payment method</string>
     <string name="modeRecharge">recharge mode</string>
     <string name="transfertCompteAcompte">account to account</string>
@@ -551,6 +551,11 @@
     <string name="fillForm">Fill in the form</string>
     <string name="modeRetrait">Withdrawal mode</string>
     <string name="savedCards">Saved cards</string>
+    <string name="numCard">Card Number</string>
+    <string name="loading">Loading…</string>
+    <string name="serial">serial number associate</string>
+    <string name="etatCarte">Card status</string>
+    <string name="editProfil">Edit Profile</string>
 
 
 </resources>

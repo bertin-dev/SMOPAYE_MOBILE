@@ -133,7 +133,6 @@ public class ModalDialog_PasswordForgot extends AppCompatDialogFragment {
 
                 String telephone = telRetrieve.getEditText().getText().toString().trim();
                 String pieceJustificative = typePjustificative.getSelectedItem().toString().trim() + "-" +cniRetrieve.getEditText().getText().toString().trim();
-
                 if(!validateTelephone()){
                     return;
                 }
@@ -142,7 +141,7 @@ public class ModalDialog_PasswordForgot extends AppCompatDialogFragment {
                     return;
                 }
 
-                listener.applyTexts(telephone.trim(), pieceJustificative.trim());
+                listener.applyTexts(telephone.trim(), pieceJustificative.toLowerCase().trim());
 
             }
         });
@@ -190,7 +189,6 @@ public class ModalDialog_PasswordForgot extends AppCompatDialogFragment {
             return true;
         }
     }
-
 
 
     private Boolean validatePJ(){

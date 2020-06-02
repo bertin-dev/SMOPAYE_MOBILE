@@ -19,9 +19,9 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
     private EditText editTextMontant, edit_num_carte;
     private QRCodeModalDialog.ExampleDialogListener listener;
     /////////////////////////////////LIRE CONTENU DES FICHIERS////////////////////
-    private String file = "tmp_number";
     private int c;
-    private String numCarteDonataire= "";
+    private String file2 = "tmp_card_number";
+    private String temp_card = "";
 
 
     public QRCodeModalDialog newInstanceCode(String numCarteBeneficiaire) {
@@ -44,17 +44,9 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
         edit_num_carte = view.findViewById(R.id.edit_num_carte);
 
         /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
-        try{
-            FileInputStream fIn = getActivity().openFileInput(file);
-            while ((c = fIn.read()) != -1){
-                numCarteDonataire = numCarteDonataire + Character.toString((char)c);
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        readTempCardInFile();
 
-        edit_num_carte.setText(numCarteDonataire);
+        edit_num_carte.setText(temp_card);
 
         builder.setView(view)
                 .setTitle(getString(R.string.insererMontant))
@@ -86,6 +78,19 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
                 });
 
         return builder.create();
+    }
+
+    private void readTempCardInFile() {
+        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
+        try{
+            FileInputStream fIn = getActivity().openFileInput(file2);
+            while ((c = fIn.read()) != -1){
+                temp_card = temp_card + Character.toString((char)c);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

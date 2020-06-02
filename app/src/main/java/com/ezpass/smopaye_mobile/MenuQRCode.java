@@ -47,10 +47,8 @@ import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
-import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
-import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
-import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
+import com.ezpass.smopaye_mobile.web_service_response.HomeResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -69,6 +67,8 @@ import java.util.Random;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -82,6 +82,7 @@ public class MenuQRCode extends AppCompatActivity
     private static final String TAG = "MenuQRCode";
     private ProgressDialog progressDialog;
     private AlertDialog.Builder build_error;
+    private ACProgressFlower dialog;
 
 
     //BD LOCALE
@@ -96,7 +97,7 @@ public class MenuQRCode extends AppCompatActivity
     /* Déclaration des objets liés à la communication avec le web service*/
     private ApiService service;
     private TokenManager tokenManager;
-    private Call<AccessToken> call;
+    private Call<HomeResponse> call;
 
 
     @BindView(R.id.authWindows)
@@ -121,7 +122,7 @@ public class MenuQRCode extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.AccueilQRCode));
-        toolbar.setSubtitle(getString(R.string.modePaiement));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         //toolbar.setSubtitleTextColor(getResources().getColor(R.color.white));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -185,7 +186,8 @@ public class MenuQRCode extends AppCompatActivity
 
     @Override
     public void applyTexts(String beneficiaireCard, String donataireCard, String montant) {
-        new GetHttpResponse(beneficiaireCard, donataireCard, montant).execute();
+        //new GetHttpResponse(beneficiaireCard, donataireCard, montant).execute();
+        paiementQrCodeInServerSmopaye(beneficiaireCard, donataireCard, montant);
     }
 
 
@@ -331,13 +333,21 @@ public class MenuQRCode extends AppCompatActivity
 
     private void paiementQrCodeInServerSmopaye(String beneficiaireCard, String donataireCard, String montant) {
 
+        dialog = new ACProgressFlower.Builder(this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text(getString(R.string.loading))
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
+
         String id_card = beneficiaireCard;
 
-        call = service.transaction(Integer.parseInt(montant), "qrcode", donataireCard, beneficiaireCard);
-        call.enqueue(new Callback<AccessToken>() {
+        call = service.transaction(Float.parseFloat(montant), donataireCard, beneficiaireCard,"QRCODE");
+        call.enqueue(new Callback<HomeResponse>() {
             @Override
-            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+            public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {
                 Log.w(TAG, "SMOPAYE_SERVER onResponse: " + response);
+                dialog.dismiss();
                 progressDialog.dismiss();
 
                 assert response.body() != null;
@@ -345,23 +355,21 @@ public class MenuQRCode extends AppCompatActivity
                     String msgReceiver = response.body().getMessage().getCard_receiver().getNotif();
                     String msgSender = response.body().getMessage().getCard_sender().getNotif();
 
-                    if(response.body().getMessage().isSuccess()){
-                        tokenManager.saveToken(response.body());
+
+                        //tokenManager.saveToken(response.body());
                         successResponse(beneficiaireCard, msgReceiver, donataireCard, msgSender);
-                    } else{
-                        errorResponse(beneficiaireCard, msgReceiver);
-                    }
+
                 } else{
-                    ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
-                    Toast.makeText(MenuQRCode.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
-                    errorResponse(beneficiaireCard, apiError.getMessage());
+                    /*ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                    Toast.makeText(MenuQRCode.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();*/
+                    errorResponse(beneficiaireCard, "Une erreur est survenue");
                 }
 
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
-
+            public void onFailure(Call<HomeResponse> call, Throwable t) {
+                dialog.dismiss();
                 progressDialog.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
 

@@ -26,8 +26,8 @@ import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
-import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
+import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,7 +47,7 @@ public class UpdateBD extends AppCompatActivity {
     /* Déclaration des objets liés à la communication avec le web service*/
     private ApiService service;
     private TokenManager tokenManager;
-    private Call<AccessToken> call;
+    private Call<AllMyResponse> call;
 
     private String myId_card = "10";  //Identifiant de la carte de celui qui modifie
 
@@ -59,6 +59,7 @@ public class UpdateBD extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.modifier));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -159,9 +160,9 @@ public class UpdateBD extends AppCompatActivity {
         });
 
         call = service.deleteCard(card_id);
-        call.enqueue(new Callback<AccessToken>() {
+        call.enqueue(new Callback<AllMyResponse>() {
             @Override
-            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+            public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
 
                 Log.w(TAG, "SMOPAYE SERVER onResponse: " + response );
                 progressDialog.dismiss();
@@ -169,7 +170,7 @@ public class UpdateBD extends AppCompatActivity {
                 if(response.isSuccessful()){
 
                     if(response.body().isSuccess()){
-                        tokenManager.saveToken(response.body());
+                        //tokenManager.saveToken(response.body());
                         successResponse(response.message());
                     } else {
                         errorResponse(response.errorBody().toString());
@@ -181,7 +182,7 @@ public class UpdateBD extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
+            public void onFailure(Call<AllMyResponse> call, Throwable t) {
                 progressDialog.dismiss();
                 Log.w(TAG, "SMOPAYE SERVER onFailure: " + t.getMessage() );
             }
@@ -207,16 +208,16 @@ public class UpdateBD extends AppCompatActivity {
         });
 
         call = service.updateCard(Integer.parseInt(card_id), model_card.getCode_number(), model_card.getSerial_number(), model_card.getEnd_date(), Integer.parseInt(myId_card));
-        call.enqueue(new Callback<AccessToken>() {
+        call.enqueue(new Callback<AllMyResponse>() {
             @Override
-            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+            public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
                 Log.w(TAG, "SMOPAYE SERVER onResponse: " + response );
                 progressDialog.dismiss();
 
                 if(response.isSuccessful()){
 
                     if(response.body().isSuccess()){
-                        tokenManager.saveToken(response.body());
+                        //tokenManager.saveToken(response.body());
                         successResponse(response.message());
                     } else {
                         errorResponse(response.errorBody().toString());
@@ -228,7 +229,7 @@ public class UpdateBD extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
+            public void onFailure(Call<AllMyResponse> call, Throwable t) {
                 progressDialog.dismiss();
                 Log.w(TAG, " SMOPAYE SERVER onFailure: " + t.getMessage());
             }

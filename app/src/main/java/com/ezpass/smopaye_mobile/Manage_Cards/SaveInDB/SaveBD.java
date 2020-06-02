@@ -27,8 +27,8 @@ import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
-import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
+import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 import com.telpo.tps550.api.TelpoException;
 import com.telpo.tps550.api.nfc.Nfc;
 import com.telpo.tps550.api.util.StringUtil;
@@ -64,7 +64,7 @@ public class SaveBD extends AppCompatActivity {
     /* Déclaration des objets liés à la communication avec le web service*/
     private ApiService service;
     private TokenManager tokenManager;
-    private Call<AccessToken> call;
+    private Call<AllMyResponse> call;
     //DatePicker expire_date;
     private EditText expire_date;
 
@@ -84,6 +84,7 @@ public class SaveBD extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.writeInCard));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -447,16 +448,16 @@ public class SaveBD extends AppCompatActivity {
     private void insertDataInDB(String code_number, String serial_number, String end_date, String created_by){
 
         call = service.createCard(code_number, serial_number, end_date, Integer.parseInt(created_by));
-        call.enqueue(new Callback<AccessToken>() {
+        call.enqueue(new Callback<AllMyResponse>() {
             @Override
-            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+            public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
 
                 progressDialog.dismiss();
 
                 if(response.isSuccessful()){
 
                     if(response.body().isSuccess()){
-                        tokenManager.saveToken(response.body());
+                        //tokenManager.saveToken(response.body());
                         successResponse(response.message());
                     } else {
                         errorResponse(response.errorBody().toString());
@@ -468,7 +469,7 @@ public class SaveBD extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
+            public void onFailure(Call<AllMyResponse> call, Throwable t) {
 
                 progressDialog.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());

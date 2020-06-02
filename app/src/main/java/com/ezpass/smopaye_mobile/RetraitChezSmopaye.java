@@ -53,10 +53,10 @@ import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
-import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
+import com.ezpass.smopaye_mobile.web_service_response.HomeResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -127,7 +127,7 @@ public class RetraitChezSmopaye extends AppCompatActivity
     private ApiService service;
     private TokenManager tokenManager;
     private AwesomeValidation validator;
-    private Call<AccessToken> call;
+    private Call<HomeResponse> call;
 
 
     @BindView(R.id.til_numCartSmopaye)
@@ -173,6 +173,7 @@ public class RetraitChezSmopaye extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.retraitSmopaye));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -507,21 +508,17 @@ public class RetraitChezSmopaye extends AppCompatActivity
 
     private void retraitSmopaye(String id_card, String montant, String idcard_donataire, String telephone) {
 
-        call = service.retrait_smopaye(Integer.parseInt(montant) ,id_card, telephone);
-        call.enqueue(new Callback<AccessToken>() {
+        call = service.transaction(Float.parseFloat(montant), idcard_donataire, id_card, "RETRAIT_SMOPAYE");
+        call.enqueue(new Callback<HomeResponse>() {
             @Override
-            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+            public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {
 
                 progressDialog.dismiss();
 
                 if(response.isSuccessful()){
 
-                    if(response.body().isSuccess()){
-                        tokenManager.saveToken(response.body());
-                        successResponse(id_card, "");
-                    } else {
-                        errorResponse(id_card, "");
-                    }
+                    //tokenManager.saveToken(response.body());
+                    successResponse(id_card, response.message());
                 } else{
 
                     if(response.code() == 422){
@@ -531,7 +528,7 @@ public class RetraitChezSmopaye extends AppCompatActivity
                         ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
                         Toast.makeText(RetraitChezSmopaye.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        errorResponse(id_card, "");
+                        errorResponse(id_card, response.message());
                     }
 
                     //errorResponse(id_card, response.message());
@@ -541,7 +538,7 @@ public class RetraitChezSmopaye extends AppCompatActivity
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
+            public void onFailure(Call<HomeResponse> call, Throwable t) {
 
                 progressDialog.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());

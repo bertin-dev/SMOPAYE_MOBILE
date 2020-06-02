@@ -56,10 +56,10 @@ import com.ezpass.smopaye_mobile.telecollecte.ScoreData;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
-import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
+import com.ezpass.smopaye_mobile.web_service_response.HomeResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -128,7 +128,7 @@ public class MenuRetraitTelecollecte extends AppCompatActivity
     /* Déclaration des objets liés à la communication avec le web service*/
     private ApiService service;
     private TokenManager tokenManager;
-    private Call<AccessToken> call;
+    private Call<HomeResponse> call;
 
     @BindView(R.id.lntelecollecteAccepteur)
     LinearLayout lntelecollecteAccepteur;
@@ -163,6 +163,7 @@ public class MenuRetraitTelecollecte extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle( getString(R.string.telecollecte_retrait));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -368,17 +369,17 @@ public class MenuRetraitTelecollecte extends AppCompatActivity
 
     private void telecollecteInSmopayeServer(String id_card, String montant, String serial_number, String telephone) {
 
-        call = service.telecollecte(Integer.parseInt(montant), id_card, serial_number);
-        call.enqueue(new Callback<AccessToken>() {
+        call = service.transaction(Integer.parseInt(montant), id_card, serial_number, "");
+        call.enqueue(new Callback<HomeResponse>() {
             @Override
-            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+            public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {
 
                 progressDialog.dismiss();
 
                 if(response.isSuccessful()){
 
                     if(response.body().isSuccess()){
-                        tokenManager.saveToken(response.body());
+                        //tokenManager.saveToken(response.body());
                         successResponse(id_card, "");
                         //vider la base de données locale
                         databaseManager.viderdata();
@@ -401,7 +402,7 @@ public class MenuRetraitTelecollecte extends AppCompatActivity
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
+            public void onFailure(Call<HomeResponse> call, Throwable t) {
 
                 progressDialog.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());

@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -32,6 +33,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,10 +59,10 @@ import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
-import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
+import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -85,6 +87,8 @@ import java.util.Timer;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressPie;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -99,6 +103,7 @@ public class ConsulterSolde extends AppCompatActivity
     private static final String TAG = "ConsulterSolde";
     private  AlertDialog.Builder build_error;
     private ProgressDialog progressDialog;
+    private ACProgressPie dialog2;
     final String card = "";
 
     private String[] statut1;
@@ -133,17 +138,25 @@ public class ConsulterSolde extends AppCompatActivity
     private ApiService service;
     private TokenManager tokenManager;
     private AwesomeValidation validator;
-    private Call<AccessToken> call;
+    private Call<AllMyResponse> call;
 
 
     private String file = "tmp_number";
     private int c;
     private String tmp_number = "";
 
+    private String file2 = "tmp_card_number";
+    private String temp_card = "";
+
+    private String file3 = "tmp_card_id";
+    private String temp_card_id = "";
+
     @BindView(R.id.til_numCompte)
     TextInputLayout til_numCompte;
+    @BindView(R.id.tie_numCompte)
+    TextInputEditText tie_numCompte;
     @BindView(R.id.typeSolde)
-    android.support.v7.widget.AppCompatSpinner typeSolde;
+    Spinner typeSolde;
 
 
     @BindView(R.id.authWindows)
@@ -166,6 +179,7 @@ public class ConsulterSolde extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.verificationSolde));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -184,6 +198,10 @@ public class ConsulterSolde extends AppCompatActivity
         /*Appels de toutes les méthodes qui seront utilisées*/
         readTempNumberInFile();
         callHandlerMethod();
+        readTempIDCARDInFile();
+        readTempCardInFile();
+
+        tie_numCompte.setText(temp_card);
 
 
         //Vérification si la langue du telephone est en Francais
@@ -246,46 +264,48 @@ public class ConsulterSolde extends AppCompatActivity
 
         /*Action à poursuivre si tous les champs sont remplis*/
         if(validator.validate()){
-            openDialog();
+            //openDialog();
+
+            String id_card = til_numCompte.getEditText().getText().toString();
+            String typeSold = (typeSolde.getSelectedItem().toString().trim().toUpperCase().equalsIgnoreCase("UNITE") ||
+                    typeSolde.getSelectedItem().toString().trim().toUpperCase().equalsIgnoreCase("UNIT") ? "unity" : "deposit");
+            //********************DEBUT***********
+            dialog2 = new ACProgressPie.Builder(this)
+                    .ringColor(Color.WHITE)
+                    .pieColor(Color.WHITE)
+                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                    .build();
+            dialog2.show();
+            //*******************FIN*****
+            consulterSoldeSmopayeServer(temp_card_id, typeSold, tmp_number);
         }
     }
 
-    private void consulterSoldeSmopayeServer(String id_card, String pass, String typeSold, String tmp_number){
+    private void consulterSoldeSmopayeServer(String id_card, String typeSold, String tmp_number){
 
-        call = service.consult_account(id_card, pass, typeSold, tmp_number);
-        call.enqueue(new Callback<AccessToken>() {
+        call = service.consult_account(id_card, typeSold);
+        call.enqueue(new Callback<AllMyResponse>() {
             @Override
-            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+            public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
+                Log.w(TAG, "SMOPAYE_SERVER onResponse: " + response);
+                dialog2.dismiss();
 
-                progressDialog.dismiss();
+                assert response.body() != null;
 
                 if(response.isSuccessful()){
-
                     if(response.body().isSuccess()){
-                        tokenManager.saveToken(response.body());
-                        successResponse(id_card, "");
-                    } else {
-                        errorResponse(id_card, "");
+                       successResponse(id_card, response.body().getMessage());
+                    } else{
+                        errorResponse(id_card, response.body().getMessage());
                     }
                 } else{
-
-                    if(response.code() == 422){
-                        handleErrors(response.errorBody());
-                    }
-                    else if(response.code() == 401){
-                        ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
-                        Toast.makeText(ConsulterSolde.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
-                    } else{
-                        errorResponse(id_card, "");
-                    }
+                    errorResponse(id_card, response.body().getMessage());
                 }
-
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
-
-                progressDialog.dismiss();
+            public void onFailure(Call<AllMyResponse> call, Throwable t) {
+                dialog2.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
 
                 /*Vérification si la connexion internet accessible*/
@@ -807,7 +827,7 @@ public class ConsulterSolde extends AppCompatActivity
     public void applyTexts(String pass) {
 
 
-        String id_card = til_numCompte.getEditText().getText().toString();
+        /*String id_card = til_numCompte.getEditText().getText().toString();
         String typeSold = (typeSolde.getSelectedItem().toString().trim().toUpperCase().equalsIgnoreCase("UNITE") ||
                 typeSolde.getSelectedItem().toString().trim().toUpperCase().equalsIgnoreCase("UNIT") ? "UNITE" : "DEPOT");
         //********************DEBUT***********
@@ -826,7 +846,7 @@ public class ConsulterSolde extends AppCompatActivity
             }
         });
         //*******************FIN*****
-        consulterSoldeSmopayeServer(id_card, pass, typeSold, tmp_number);
+        consulterSoldeSmopayeServer(temp_card_id, pass, typeSold, tmp_number);*/
     }
 
 
@@ -898,6 +918,32 @@ public class ConsulterSolde extends AppCompatActivity
 
         notificationManager.notify(new Random().nextInt(), notification);
         ////////////////////////////////////FIN NOTIFICATIONS/////////////////////
+    }
+
+    private void readTempIDCARDInFile() {
+        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
+        try{
+            FileInputStream fIn = getApplication().openFileInput(file3);
+            while ((c = fIn.read()) != -1){
+                temp_card_id = temp_card_id + Character.toString((char)c);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void readTempCardInFile() {
+        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
+        try{
+            FileInputStream fIn = getApplication().openFileInput(file2);
+            while ((c = fIn.read()) != -1){
+                temp_card = temp_card + Character.toString((char)c);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**

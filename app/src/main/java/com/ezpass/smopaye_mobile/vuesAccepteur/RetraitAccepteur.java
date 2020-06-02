@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -135,6 +136,8 @@ public class RetraitAccepteur extends AppCompatActivity
 
     @BindView(R.id.til_numCarteAccepteur)
     TextInputLayout til_numCarteAccepteur;
+    @BindView(R.id.tie_numCarteAccepteur)
+    TextInputEditText tie_numCarteAccepteur;
 
     @BindView(R.id.authWindows)
     LinearLayout authWindows;
@@ -152,6 +155,16 @@ public class RetraitAccepteur extends AppCompatActivity
     private int c;
     private String temp_number = "";
 
+    private String file2 = "tmp_card_number";
+    private String temp_card = "";
+
+    private String file3 = "tmp_card_id";
+    private String temp_card_id = "";
+
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,7 +173,7 @@ public class RetraitAccepteur extends AppCompatActivity
 
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
-        toolbar.setSubtitle(getString(R.string.modeRetrait));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setTitle(getString(R.string.faireRetrait));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -177,10 +190,14 @@ public class RetraitAccepteur extends AppCompatActivity
         apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
+
         /*Appels de toutes les méthodes qui seront utilisées*/
         setupRulesValidatForm();
         readTempNumberInFile();
+        readTempCardInFile();
+        readTempIDCARDInFile();
 
+        tie_numCarteAccepteur.setText(temp_card);
     }
 
     /**
@@ -466,6 +483,33 @@ public class RetraitAccepteur extends AppCompatActivity
         }
     }
 
+    private void readTempCardInFile() {
+        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
+        try{
+            FileInputStream fIn = getApplication().openFileInput(file2);
+            while ((c = fIn.read()) != -1){
+                temp_card = temp_card + Character.toString((char)c);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void readTempIDCARDInFile() {
+        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
+        try{
+            FileInputStream fIn = getApplication().openFileInput(file3);
+            while ((c = fIn.read()) != -1){
+                temp_card_id = temp_card_id + Character.toString((char)c);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
 
     public void openDialog() {
         ModalDialogRetraitAccepteur exampleDialog = new ModalDialogRetraitAccepteur();
@@ -496,14 +540,14 @@ public class RetraitAccepteur extends AppCompatActivity
                 }
             });
             //*******************FIN*****
-            RetraitAccepteurInSmopayeServer(id_card, montant, temp_number);
+            RetraitAccepteurInSmopayeServer(temp_card_id, montant, temp_number);
         }
     }
 
     private void RetraitAccepteurInSmopayeServer(String id_card, String montant, String telephone) {
 
 
-        call = service.retrait_accepteur(id_card, montant, telephone);
+        call = service.retrait_accepteur(Integer.parseInt(montant), telephone, id_card);
         call.enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
@@ -512,12 +556,18 @@ public class RetraitAccepteur extends AppCompatActivity
 
                 if(response.isSuccessful()){
 
-                    if(response.body().isSuccess()){
+                    assert response.body() != null;
+                    tokenManager.saveToken(response.body());
+
+                    /*if(response.body().isSuccess()){
                         tokenManager.saveToken(response.body());
                         successResponse(id_card, "");
                     } else {
                         errorResponse(id_card, "");
-                    }
+                    }*/
+
+                    successResponse(id_card, response.message());
+
                 } else{
 
                     if(response.code() == 422){
@@ -527,7 +577,7 @@ public class RetraitAccepteur extends AppCompatActivity
                         ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
                         Toast.makeText(RetraitAccepteur.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
                     } else{
-                        errorResponse(id_card, "");
+                        errorResponse(id_card, response.message());
                     }
                 }
             }

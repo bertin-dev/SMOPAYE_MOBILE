@@ -57,10 +57,10 @@ import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
-import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
+import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -79,6 +79,8 @@ import java.util.Random;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressPie;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -92,6 +94,7 @@ public class ModifierCompte extends AppCompatActivity
 
     private static final String TAG = "ModifierCompte";
     private AlertDialog.Builder build_error;
+    private ACProgressPie dialog2;
     private ProgressDialog progressDialog;
     private String telephone1;
 
@@ -111,7 +114,7 @@ public class ModifierCompte extends AppCompatActivity
     private ApiService service;
     private TokenManager tokenManager;
     private AwesomeValidation validator;
-    private Call<AccessToken> call;
+    private Call<AllMyResponse> call;
 
     @BindView(R.id.til_modifTel)
     TextInputLayout til_modifTel;
@@ -142,6 +145,7 @@ public class ModifierCompte extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.ModifierCompte));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -151,7 +155,6 @@ public class ModifierCompte extends AppCompatActivity
         service = RetrofitBuilder.createService(ApiService.class);
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         validator = new AwesomeValidation(ValidationStyle.TEXT_INPUT_LAYOUT);
-        progressDialog = new ProgressDialog(ModifierCompte.this);
         build_error = new AlertDialog.Builder(ModifierCompte.this);
         //service google firebase
         apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
@@ -187,20 +190,12 @@ public class ModifierCompte extends AppCompatActivity
         /*Action à poursuivre si tous les champs sont remplis*/
         if(validator.validate()){
             //********************DEBUT***********
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // On ajoute un message à notre progress dialog
-                    progressDialog.setMessage(getString(R.string.connexionserver));
-                    // On donne un titre à notre progress dialog
-                    progressDialog.setTitle(getString(R.string.attenteReponseServer));
-                    // On spécifie le style
-                    //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    // On affiche notre message
-                    progressDialog.show();
-                    //build.setPositiveButton("ok", new View.OnClickListener()
-                }
-            });
+            dialog2 = new ACProgressPie.Builder(this)
+                    .ringColor(Color.WHITE)
+                    .pieColor(Color.WHITE)
+                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                    .build();
+            dialog2.show();
             //*******************FIN*****
             modifierCompteSmopaye(modifTel, ancienPass, nouveauPass, "");
         }
@@ -210,20 +205,20 @@ public class ModifierCompte extends AppCompatActivity
     private void modifierCompteSmopaye(String modifTel, String ancienPass, String nouveauPass, String id_card) {
 
 
-        call = service.update_account(Integer.parseInt(modifTel), nouveauPass, ancienPass);
-        call.enqueue(new Callback<AccessToken>() {
+        call = service.update_account(nouveauPass, ancienPass);
+        call.enqueue(new Callback<AllMyResponse>() {
             @Override
-            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+            public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
 
-                progressDialog.dismiss();
+                dialog2.dismiss();
 
                 if(response.isSuccessful()){
 
                     if(response.body().isSuccess()){
-                        tokenManager.saveToken(response.body());
-                        successResponse(id_card, "");
+                        //tokenManager.saveToken(response.body());
+                        successResponse(id_card, response.body().getMessage());
                     } else {
-                        errorResponse(id_card, "");
+                        errorResponse(id_card, response.message());
                     }
 
                 } else{
@@ -235,7 +230,7 @@ public class ModifierCompte extends AppCompatActivity
                         ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
                         Toast.makeText(ModifierCompte.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
                     } else{
-                        errorResponse(id_card, "");
+                        errorResponse(id_card, response.message());
                     }
 
                 }
@@ -243,9 +238,9 @@ public class ModifierCompte extends AppCompatActivity
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
+            public void onFailure(Call<AllMyResponse> call, Throwable t) {
 
-                progressDialog.dismiss();
+                dialog2.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
 
                 /*Vérification si la connexion internet accessible*/

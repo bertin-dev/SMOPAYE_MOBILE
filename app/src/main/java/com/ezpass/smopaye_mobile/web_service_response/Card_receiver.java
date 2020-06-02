@@ -38,6 +38,9 @@ public class Card_receiver {
     @SerializedName("card_state")
     @Expose
     private String card_state;
+    @SerializedName("user_created")
+    @Expose
+    private String user_created;
     @SerializedName("created_at")
     @Expose
     private String created_at;
@@ -134,6 +137,14 @@ public class Card_receiver {
 
     public void setCard_state(String card_state) {
         this.card_state = card_state;
+    }
+
+    public String getUser_created() {
+        return user_created;
+    }
+
+    public void setUser_created(String user_created) {
+        this.user_created = user_created;
     }
 
     public String getCreated_at() {

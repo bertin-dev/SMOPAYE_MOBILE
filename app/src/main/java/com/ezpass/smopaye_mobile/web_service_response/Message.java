@@ -14,12 +14,6 @@ public class Message {
     @SerializedName("status")
     @Expose
     private String status;
-    @SerializedName("msg")
-    @Expose
-    private String msg;
-    @SerializedName("success")
-    @Expose
-    private boolean success;
 
     public Card_Sender getCard_sender() {
         return card_sender;
@@ -43,21 +37,5 @@ public class Message {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
     }
 }

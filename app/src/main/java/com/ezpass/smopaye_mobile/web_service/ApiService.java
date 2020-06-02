@@ -5,6 +5,8 @@ import com.ezpass.smopaye_mobile.Profil_user.Card;
 import com.ezpass.smopaye_mobile.Profil_user.Categorie;
 import com.ezpass.smopaye_mobile.Profil_user.DataUser;
 import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
+import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
+import com.ezpass.smopaye_mobile.web_service_response.HomeResponse;
 
 import java.util.List;
 
@@ -21,23 +23,37 @@ public interface ApiService {
 
     /*----------------------------------------------------------SMOPAYE MOBILE-------------------------------------------------------*/
     /* Register */
-    @POST("api/register")
+    @POST("api/auth/register")
     @FormUrlEncoded
     Call<AccessToken> register(@Field("lastname") String lastname,
                                @Field("firstname") String firstname,
-                               @Field("phone") String phone,
-                               @Field("cni") String cni,
-                               @Field("address") String address,
                                @Field("gender") String gender,
-                               @Field("role_id") String role_id,
+                               @Field("phone") String phone,
+                               @Field("address") String address,
                                @Field("category_id") String category_id,
+                               @Field("role_id") String role_id,
+                               @Field("cni") String cni,
+                               @Field("card_number") String card_number);
+
+
+    /* Update Profil */
+    @PUT("api/user/{id}")
+    @FormUrlEncoded
+    Call<AllMyResponse> update_profil(@Field("lastname") String lastname,
+                               @Field("firstname") String firstname,
+                               @Field("gender") String gender,
+                               @Field("phone") String phone,
+                               @Field("address") String address,
+                               @Field("category_id") String category_id,
+                               @Field("role_id") String role_id,
+                               @Field("cni") String cni,
                                @Field("card_number") String card_number,
-                               @Field("abonnement") String abonnement);
+                               @Path("id") String id);
 
     /*auto register */
-    @POST("api/autoregister")
+    @POST("api/auth/autoregister")
     @FormUrlEncoded
-    Call<AccessToken> autoregister(@Field("firstname") String firstname,
+    Call<AllMyResponse> autoregister(@Field("firstname") String firstname,
                                    @Field("lastname") String lastname,
                                    @Field("gender") String gender,
                                    @Field("address") String address,
@@ -50,22 +66,23 @@ public interface ApiService {
                                    @Field("nom_img_verso") String nom_img_verso);
 
     /* Login */
-    @POST("oauth/token")
+    @POST("api/auth/login")
     @FormUrlEncoded
-    Call<AccessToken> login(@Field("grant_type") String grant_type,
-                            @Field("client_id") String client_id,
-                            @Field("client_secret") String client_secret,
-                            @Field("username") String username,
+    Call<AccessToken> login(@Field("phone") String phone,
                             @Field("password") String password,
-                            @Field("scope") String scope);
+                            @Field("secret") String secret);
 
 
     /* Update Account */
-    @PUT("api/update/{phone_number}")
+    /*@PUT("api/update/{phone_number}")
     @FormUrlEncoded
-    Call<AccessToken> update_account(@Path("phone_number") int phone_number,
+    Call<AllMyResponse> update_account(@Path("phone_number") int phone_number,
                                      @Field("password") String password,
-                                     @Field("ancien_password") String ancien_password);
+                                     @Field("ancien_password") String ancien_password);*/
+    @POST("api/resetPassword")
+    @FormUrlEncoded
+    Call<AllMyResponse> update_account(@Field("oldPassword") String oldPassword,
+                                     @Field("newPassword") String newPassword);
 
 
     /* Refresh Token*/
@@ -75,56 +92,61 @@ public interface ApiService {
 
 
     /* profil user for MainActivity*/
-    @GET("api/userprofile/{phone_number}")
+    @GET("api/user/profile/{phone_number}")
     Call<DataUser> profil(@Path("phone_number") String phone_number);
 
 
     /* Reinitialiser mot de passe*/
-    @POST("api/reset_password")
+    @POST("api/renitializePassword")
     @FormUrlEncoded
-    Call<AccessToken> reset_password(@Field("telephone") String telephone,
-                                     @Field("piece_justificative") String pj);
+    Call<AllMyResponse> reset_password(@Field("phone") String phone,
+                                       @Field("cni") String cni);
 
 
-    /* Transfert, Payer Facture, QR CODE*/
-    @POST("api/transaction/payment")
+    /* Transfert, Payer Facture, QR CODE, RETRAIT_SMOPAYE*/
+    @POST("api/card/transaction/payment")
     @FormUrlEncoded
-    Call<AccessToken> transaction(@Field("amount") int amount,
-                                  @Field("transaction_type") String transaction_type,
-                                  @Field("code_number_sender") String code_number_sender,
-                                  @Field("code_number_receiver") String code_number_receiver);
+    Call<HomeResponse> transaction(@Field("amount") float amount,
+                                   @Field("code_number_sender") String code_number_sender,
+                                   @Field("code_number_receiver") String code_number_receiver,
+                                   @Field("transaction_type") String transaction_type);
 
 
     /* Abonnement*/
     @POST("api/takeSubscription/{card_id}")
     @FormUrlEncoded
-    Call<AccessToken> abonnement(@Path("card_id") int card_id,
+    Call<AllMyResponse> abonnement(@Path("card_id") int card_id,
                                  @Field("type") String type);
 
 
     /* Retrait Smopaye*/
     @POST("api/card/{card_id}/retrait")
     @FormUrlEncoded
-    Call<AccessToken> retrait_smopaye(@Field("withDrawalAmount") int withDrawalAmount,
-                                      @Path("card_id") String card_id,
-                                      @Field("phoneNumber") String phoneNumber);
+    Call<AccessToken> retrait_accepteur(@Field("withDrawalAmount") int withDrawalAmount,
+                                        @Field("phoneNumber") String phoneNumber,
+                                        @Path("card_id") String card_id);
+
+
+    /* Recharge*/
+    @POST("api/card/{card_id}/recharge")
+    @FormUrlEncoded
+    Call<AccessToken> recharge(@Field("amountRecharge") int rechargeAmount,
+                               @Field("phoneNumber") String phoneNumber,
+                               @Path("card_id") String card_id);
 
 
     /* Retrait Accepteur*/
-    @POST("api/retrait_accepteur")
+    /*@POST("api/card/{card_id}/retrait")
     @FormUrlEncoded
-    Call<AccessToken> retrait_accepteur(@Field("card_number") String card_number,
-                                        @Field("amount") String amount,
-                                        @Field("phone") String phone);
+    Call<AccessToken> retrait_accepteur(@Field("withDrawalAmount") String withDrawalAmount,
+                                        @Field("phoneNumber") String phoneNumber,
+                                        @Field("phone") String phone);*/
 
 
     /* Consult Account */
-    @POST("api/card/{card_id}/toggleUnityDeposit")
-    @FormUrlEncoded
-    Call<AccessToken> consult_account(@Path("card_id") String card_id,
-                                      @Field("password") String password,
-                                      @Field("typeSolde") String typeSolde,
-                                      @Field("phone") String phone);
+    @GET("api/card/{card_id}/{typeSolde}")
+    Call<AllMyResponse> consult_account(@Path("card_id") String card_id,
+                                        @Path("typeSolde") String typeSolde);
 
     /* Telecollecte  */
     @POST("api/transaction/remote")
@@ -141,13 +163,6 @@ public interface ApiService {
                                  @Field("code_number_sender") String code_number_sender,
                                  @Field("serial_number_device") String serial_number_device);
 
-    /* Recharge*/
-    @POST("api/card/{card_id}/recharge")
-    @FormUrlEncoded
-    Call<AccessToken> recharge(@Path("card_id") String card_id,
-                               @Field("rechargeAmount") int rechargeAmount,
-                               @Field("phoneNumber") String phoneNumber);
-
 
     /* Details Card */
     @GET("api/card/{id}")
@@ -162,7 +177,7 @@ public interface ApiService {
 
 
     /* Categories  */
-    @GET("api/categorie")
+    @GET("api/categorierole")
     Call<List<Categorie>> getAllCategories();
     /*----------------------------------------------------------END SMOPAYE MOBILE-------------------------------------------------------*/
 
@@ -172,7 +187,7 @@ public interface ApiService {
     /* Create Card */
     @POST("api/card")
     @FormUrlEncoded
-    Call<AccessToken> createCard(@Field("code_number") String code_number,
+    Call<AllMyResponse> createCard(@Field("code_number") String code_number,
                                    @Field("serial_number") String serial_number,
                                    @Field("end_date") String end_date,
                                    @Field("user_created") int user_created);
@@ -185,7 +200,7 @@ public interface ApiService {
     /* update Card */
     @PUT("api/card/{card_id}")
     @FormUrlEncoded
-    Call<AccessToken> updateCard(@Path("card_id") int card_id,
+    Call<AllMyResponse> updateCard(@Path("card_id") int card_id,
                                   @Field("code_number") String code_number,
                                   @Field("serial_number") String serial_number,
                                   @Field("end_date") String end_date,
@@ -194,7 +209,7 @@ public interface ApiService {
 
     /* delete Card */
     @DELETE("api/card/{card_id}")
-    Call<AccessToken> deleteCard(@Path("card_id") int card_id);
+    Call<AllMyResponse> deleteCard(@Path("card_id") int card_id);
 
 
     /*----------------------------------------------------------END CARD SMOPAYE-------------------------------------------------------*/

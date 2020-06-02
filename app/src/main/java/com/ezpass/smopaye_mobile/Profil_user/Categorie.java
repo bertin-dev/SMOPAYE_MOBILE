@@ -8,13 +8,13 @@ public class Categorie {
 
     @SerializedName("id")
     @Expose
-    private int id;
+    private String id;
     @SerializedName("name")
     @Expose
     private String name;
     @SerializedName("role_id")
     @Expose
-    private int role_id;
+    private String role_id;
 
     @SerializedName("role")
     @Expose
@@ -27,11 +27,11 @@ public class Categorie {
     @Expose
     private String updated_at;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -43,11 +43,11 @@ public class Categorie {
         this.name = name;
     }
 
-    public int getRole_id() {
+    public String getRole_id() {
         return role_id;
     }
 
-    public void setRole_id(int role_id) {
+    public void setRole_id(String role_id) {
         this.role_id = role_id;
     }
 

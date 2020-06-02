@@ -6,6 +6,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
@@ -56,6 +57,7 @@ import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
+import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -89,6 +91,8 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressPie;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -100,8 +104,9 @@ public class Login extends AppCompatActivity
         implements ModalDialog_PasswordForgot.ExampleDialogListener, ConnectivityReceiver.ConnectivityReceiverListener{
 
     private static final String TAG = "Login";
-    private ProgressDialog progressDialog, dialog;
+    private ProgressDialog dialog;
     private AlertDialog.Builder build_error;
+    private ACProgressPie dialog2;
     String currentLanguage = (Locale.getDefault().getLanguage().contentEquals("fr")) ? "fr" : "en", currentLang;
 
 
@@ -110,6 +115,7 @@ public class Login extends AppCompatActivity
     private TokenManager tokenManager;
     private AwesomeValidation validator;
     private Call<AccessToken> call;
+    private Call<AllMyResponse> call2;
 
 
     /*Déclaration des objets du service Google Firebase*/
@@ -171,7 +177,7 @@ public class Login extends AppCompatActivity
      * @Copyright 2019-2020
      * @param savedInstanceState Callback method onCreate() she using for the started activity
      * @since 2019
-     * @version 1.2.6
+     * @version 1.2.7
      * */
 
     @Override
@@ -187,7 +193,6 @@ public class Login extends AppCompatActivity
         service = RetrofitBuilder.createService(ApiService.class);
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         validator = new AwesomeValidation(ValidationStyle.TEXT_INPUT_LAYOUT);
-        progressDialog = new ProgressDialog(Login.this);
         build_error = new AlertDialog.Builder(Login.this);
 
         /*Appels de toutes les méthodes qui seront utilisées*/
@@ -223,22 +228,13 @@ public class Login extends AppCompatActivity
         /*Action à poursuivre si tous les champs sont remplis*/
         if(validator.validate()){
 
-            //********************DEBUT***********
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // On ajoute un message à notre progress dialog
-                    progressDialog.setMessage(getString(R.string.connexionserver));
-                    // On donne un titre à notre progress dialog
-                    progressDialog.setTitle(getString(R.string.attenteReponseServer));
-                    // On spécifie le style
-                    //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    // On affiche notre message
-                    progressDialog.show();
-                    //build.setPositiveButton("ok", new View.OnClickListener()
-                }
-            });
-            //*******************FIN*****
+            dialog2 = new ACProgressPie.Builder(this)
+                    .ringColor(Color.WHITE)
+                    .pieColor(Color.WHITE)
+                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                    .build();
+            dialog2.show();
+
             submitDataInSmopayeServer(numero, psw);
         }
 
@@ -276,7 +272,7 @@ public class Login extends AppCompatActivity
             }, 2000); // 2000 milliseconds delay
 
         } else{
-            progressDialog.dismiss();
+            dialog.dismiss();
             authWindows.setVisibility(View.GONE);
             internetIndisponible.setVisibility(View.VISIBLE);
             Toast.makeText(Login.this, getString(R.string.connexionIntrouvable), Toast.LENGTH_SHORT).show();
@@ -378,7 +374,7 @@ public class Login extends AppCompatActivity
 
     @Override
     public void applyTexts(String getTel, String getPJ) {
-        Toast.makeText(this, getTel + "---" + getPJ, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, getTel + "---" + getPJ, Toast.LENGTH_SHORT).show();
         //envoi de la requete
         sendRequestResetPassword(getTel, getPJ);
     }
@@ -386,54 +382,49 @@ public class Login extends AppCompatActivity
     private void sendRequestResetPassword(String tel, String pj) {
 
         //********************DEBUT***********
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // On ajoute un message à notre progress dialog
-                progressDialog.setMessage(getString(R.string.connexionserver));
-                // On donne un titre à notre progress dialog
-                progressDialog.setTitle(getString(R.string.attenteReponseServer));
-                // On spécifie le style
-                //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                // On affiche notre message
-                progressDialog.show();
-                //build.setPositiveButton("ok", new View.OnClickListener()
-            }
-        });
+        dialog2 = new ACProgressPie.Builder(this)
+                .ringColor(Color.WHITE)
+                .pieColor(Color.WHITE)
+                .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                .build();
+        dialog2.show();
         //*******************FIN*****
 
-
-        call = service.reset_password(tel, pj);
-        call.enqueue(new Callback<AccessToken>() {
+        call2 = service.reset_password(tel, pj);
+        call2.enqueue(new Callback<AllMyResponse>() {
             @Override
-            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
-                progressDialog.dismiss();
+            public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
+                dialog2.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onResponse " +response);
 
-                if(response.isSuccessful()){
-                    tokenManager.saveToken(response.body());
-                    successResponse("", response.message()); //ID CARTE A RECUPERER DANS LE WEB SERVICE
-                } else{
-
+                if(response.isSuccessful()) {
+                    //tokenManager.saveToken(response.body());
+                    assert response.body() != null;
+                    if(response.body().isSuccess()){
+                        successResponse(tel, response.body().getMessage()); //ID CARTE A RECUPERER DANS LE WEB SERVICE
+                    } else{
+                        errorResponse(response.body().getMessage());
+                    }
+                }
+                else{
                     if(response.code() == 422){
                         handleErrors(response.errorBody());
                         //errorResponse(response.message());
                     }
-                    else {
+                    else if(response.code() == 401) {
                         ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
                         Toast.makeText(Login.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
                         errorResponse(apiError.getMessage());
+                    } else{
+                        errorResponse(response.message());
                     }
                     //errorResponse(response.message());
-
                 }
-
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
-
-                progressDialog.dismiss();
+            public void onFailure(Call<AllMyResponse> call, Throwable t) {
+                dialog2.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
 
                 /*Vérification si la connexion internet accessible*/
@@ -466,16 +457,17 @@ public class Login extends AppCompatActivity
      * */
     private void submitDataInSmopayeServer(String numero1, String psw1) {
 
-        call = service.login("password", "6", "AjZARlOj8RjIubR6QHJ5AecfBgwlejB8grEuwqfp", numero1, psw1, "*");
+        call = service.login(numero1, psw1, "Cnqactz7vnCGKBB7E12yN+17a+2Q/+d7PTkv1jOgcus=");
         call.enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
-                progressDialog.dismiss();
+                dialog2.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onResponse " +response);
 
                 if(response.isSuccessful()){
 
                     writeTempNumberInFile();
+                    assert response.body() != null;
                     tokenManager.saveToken(response.body());
 
                     if(firebaseUser != null){
@@ -496,19 +488,20 @@ public class Login extends AppCompatActivity
                     if(response.code() == 422){
                         handleErrors(response.errorBody());
                     }
-                    else {
-                        ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
-                        Toast.makeText(Login.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
-                        errorResponse(apiError.getMessage());
+                    else if(response.code() == 401) {
+                        //ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                        //Toast.makeText(Login.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        errorResponse(response.message());
+                    } else{
+                        errorResponse(response.message());
                     }
                 }
-
             }
 
             @Override
             public void onFailure(Call<AccessToken> call, Throwable t) {
 
-                progressDialog.dismiss();
+                dialog2.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
 
                 /*Vérification si la connexion internet accessible*/
@@ -547,15 +540,14 @@ public class Login extends AppCompatActivity
         build_error.show();
     }
 
-    private void successResponse(String id_card, String response) {
+    private void successResponse(String telephone, String response) {
 
         /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
         //SERVICE GOOGLE FIREBASE
-        final String id_carte_sm = id_card;
 
         Query query = FirebaseDatabase.getInstance().getReference("Users")
-                .orderByChild("id_carte")
-                .equalTo(id_carte_sm);
+                .orderByChild("tel")
+                .equalTo(telephone);
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -564,7 +556,7 @@ public class Login extends AppCompatActivity
                 if(dataSnapshot.exists()){
                     for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                         User user = userSnapshot.getValue(User.class);
-                        if (user.getId_carte().equals(id_carte_sm)) {
+                        if (user.getTel().equals(telephone)) {
                             RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.mdp), response, "success");
                             //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                         } else {
@@ -602,7 +594,14 @@ public class Login extends AppCompatActivity
         title.setText(getString(R.string.information));
         imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
         statutOperation.setText(response);
-        build_error.setPositiveButton("OK", null);
+        build_error.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Login.this, Demarrage.class);
+                 startActivity(intent);
+                 finish();
+            }
+        });
         build_error.setCancelable(false);
         build_error.setView(view);
         build_error.show();
@@ -724,7 +723,7 @@ public class Login extends AppCompatActivity
         ApiError apiError = Utils_manageError.convertErrors(responseBody);
         for(Map.Entry<String, List<String>> error: apiError.getErrors().entrySet()){
 
-            if(error.getKey().equals("username")){
+            if(error.getKey().equals("phone")){
                 til_telephone.setError(error.getValue().get(0));
             }
 
@@ -802,6 +801,11 @@ public class Login extends AppCompatActivity
         if(call != null){
             call.cancel();
             call = null;
+        }
+
+        if(call2 != null){
+            call2.cancel();
+            call2 = null;
         }
     }
 

@@ -7,10 +7,11 @@
     android:id="@+id/detailCard"
     android:layout_gravity="center">
 
-<LinearLayout
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:id="@+id/headAccount"
     android:background="#f3f2f2">
 
     <LinearLayout
@@ -25,9 +26,9 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:layout_gravity="center"
+            android:layout_marginTop="55dp"
             android:orientation="vertical"
             android:background="#ddccb5"
-            android:layout_marginTop="50dp"
             android:foregroundGravity="center_vertical|center_horizontal">
 
             <!--<LinearLayout
@@ -57,159 +58,171 @@
                 app:error_image="@drawable/error"
                 app:placeholder="@drawable/carte_smopaye"/>
 
-
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:elevation="10dp"
                 android:layout_gravity="center"
-                android:weightSum="100"
-                android:background="@color/white"
-                android:foregroundGravity="center_vertical|center_horizontal">
-
-                <!--<LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:background="@drawable/border_right">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:textSize="15sp"
-                        android:textColor="#000"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="20dp"
-                        android:padding="12dp"
-                        android:textAlignment="center"
-                        android:text="@string/consultSoldeDeLaCarte"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="15dp"
-                        android:padding="1dp"
-                        android:src="@drawable/ic_lock_outline_black_64dp"/>
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:background="@color/white"
-                        android:textAlignment="center"
-                        android:layout_gravity="center"
-                        android:textColor="#000"
-                        android:textSize="15sp"
-                        android:text="@string/utiliserAutreCarte"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>-->
+                app:cardCornerRadius="4dp"
+                app:elevation="10dp"
+                app:cardElevation="10dp">
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="30"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:weightSum="100"
                     android:orientation="horizontal"
-                    android:background="@drawable/border_right">
+                    android:layout_gravity="center"
+                    android:weightSum="100"
+                    android:background="@color/white"
+                    android:foregroundGravity="center_vertical|center_horizontal">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="80dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/pub_ezpass"
-                        android:id="@+id/pub_ezpass"/>
-
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="70"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:paddingStart="10dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingRight="10dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/type_abon"
-                        android:layout_width="match_parent"
+                    <!--<LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
                         android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/textColorBlack"
-                        android:text="Mon Abonnement"/>
+                        android:padding="5dp"
+                        android:background="@drawable/border_right">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:textSize="15sp"
+                            android:textColor="#000"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="20dp"
+                            android:padding="12dp"
+                            android:textAlignment="center"
+                            android:text="@string/consultSoldeDeLaCarte"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="15dp"
+                            android:padding="1dp"
+                            android:src="@drawable/ic_lock_outline_black_64dp"/>
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:background="@color/white"
+                            android:textAlignment="center"
+                            android:layout_gravity="center"
+                            android:textColor="#000"
+                            android:textSize="15sp"
+                            android:text="@string/utiliserAutreCarte"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>-->
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="30"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:weightSum="100"
+                        android:orientation="horizontal"
+                        android:background="@drawable/border_right">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/pub_ezpass"
+                            android:id="@+id/pub_ezpass"/>
+
+                    </LinearLayout>
 
                     <RelativeLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
+                        android:layout_weight="70"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/type_abon">
+                        android:paddingLeft="10dp"
+                        android:paddingStart="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingRight="10dp"
+                        android:orientation="vertical">
 
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/type_abon"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="100">
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/textColorBlack"
+                            android:text="Mon Abonnement"/>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/type_abon">
 
                             <LinearLayout
-                                android:layout_width="0dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="60"
-                                android:orientation="vertical">
-                                <TextView
-                                    android:id="@+id/tAbonnement"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/bgColorStandard"
-                                    android:text="Service"/>
+                                android:orientation="horizontal"
+                                android:weightSum="100">
 
-                                <TextView
-                                    android:id="@+id/tel"
-                                    android:layout_width="match_parent"
+                                <LinearLayout
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:textSize="13sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/bgColorStandard"
-                                    android:text="+237 694048925"/>
+                                    android:layout_weight="60"
+                                    android:orientation="vertical">
+                                    <TextView
+                                        android:id="@+id/tAbonnement"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="18sp"
+                                        android:textStyle="bold"
+                                        android:textColor="@color/bgColorStandard"
+                                        android:text="Service"/>
+
+                                    <TextView
+                                        android:id="@+id/tel"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="13sp"
+                                        android:textStyle="bold"
+                                        android:textColor="@color/bgColorStandard"
+                                        android:text="+237 694048925"/>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="50dp"
+                                    android:layout_weight="40"
+                                    android:padding="10dp"
+                                    android:orientation="vertical">
+
+                                    <Button
+                                        android:id="@+id/btnDetails"
+                                        android:layout_height="match_parent"
+                                        android:layout_width="wrap_content"
+                                        android:textColor="@color/white"
+                                        android:textStyle="bold"
+                                        android:padding="5dp"
+                                        android:background="@color/bgColorStandard"
+                                        android:text="détail" />
+
+                                </LinearLayout>
+
+
                             </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="50dp"
-                            android:layout_weight="40"
-                            android:padding="10dp"
-                            android:orientation="vertical">
-
-                            <Button
-                                android:id="@+id/btnDetails"
-                                android:layout_height="match_parent"
-                                android:layout_width="wrap_content"
-                                android:textColor="@color/white"
-                                android:textStyle="bold"
-                                android:padding="5dp"
-                                android:background="@color/bgColorStandard"
-                                android:text="détail" />
-
-                        </LinearLayout>
-
-
-                        </LinearLayout>
+                        </RelativeLayout>
 
                     </RelativeLayout>
 
-                </RelativeLayout>
+                </LinearLayout>
 
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+
 
         </LinearLayout>
 
@@ -224,6 +237,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/updateDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/textColorBlack"
@@ -241,6 +255,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="30dp"
+            android:clickable="true"
+            android:focusable="true"
             android:paddingStart="30dp"
             android:paddingEnd="30dp"
             android:paddingRight="30dp"
@@ -261,21 +277,30 @@
                     android:textColor="#000"
                     android:textStyle="bold"
                     android:textSize="20sp"
-                    android:text="@string/libelleCarteAbonement"/>
+                    android:text="@string/numCarte"/>
                 <TextView
                     android:layout_below="@+id/abc"
-                    android:id="@+id/CarteNumber"
+                    android:id="@+id/AccountNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#262626"
                     android:textSize="15sp"
-                    android:text="@string/numCarteAbonement"/>
+                    android:text=""/>
             </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_below="@+id/detailCompte"
+                android:layout_height="1dp"
+                android:background="@color/colorDivider"/>
 
             <RelativeLayout
                 android:id="@+id/detailsCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
                 android:layout_marginTop="20dp"
                 android:layout_below="@+id/detailCompte"
                 android:orientation="vertical">
@@ -286,21 +311,30 @@
                     android:textColor="#000"
                     android:textStyle="bold"
                     android:textSize="20sp"
-                    android:text="@string/typeCarte"/>
+                    android:text="@string/numCard"/>
                 <TextView
-                    android:id="@+id/tVtypeCarte"
+                    android:id="@+id/AccountCard"
                     android:layout_below="@+id/typCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#262626"
                     android:textSize="15sp"
-                    android:text="@string/valeurCarte"/>
+                    android:text=""/>
             </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_below="@+id/detailsCard"
+                android:layout_height="1dp"
+                android:background="@color/colorDivider"/>
 
             <RelativeLayout
                 android:id="@+id/detailsExpiration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
                 android:layout_below="@+id/detailsCard"
                 android:layout_marginTop="20dp"
                 android:orientation="vertical">
@@ -312,20 +346,30 @@
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:text="@string/dateExp"/>
+
                 <TextView
                     android:id="@+id/tVdateExpirationCarte"
-                    android:layout_below="@+id/expiration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/expiration"
+                    android:text="@string/DateExpLongFormat"
                     android:textColor="#262626"
-                    android:textSize="15sp"
-                    android:text="@string/DateExpLongFormat"/>
+                    android:textSize="15sp" />
             </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_below="@+id/detailsExpiration"
+                android:layout_height="1dp"
+                android:background="@color/colorDivider"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
                 android:layout_below="@+id/detailsExpiration"
                 android:layout_marginBottom="100dp"
                 android:orientation="vertical">
@@ -443,7 +487,7 @@
     </LinearLayout>
 
 
-</LinearLayout>
+</RelativeLayout>
 
 
 

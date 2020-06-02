@@ -62,9 +62,9 @@
 
             <ImageView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
                 android:layout_weight="30"
-                android:src="@drawable/ezpass"/>
+                android:src="@drawable/pub_ezpass"/>
 
         </LinearLayout>
 
@@ -114,9 +114,9 @@
             <ImageView
                 android:layout_width="0dp"
                 android:layout_marginTop="10dp"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
                 android:layout_weight="30"
-                android:src="@drawable/ezpass"/>
+                android:src="@drawable/pub_parasol"/>
 
         </LinearLayout>
 
@@ -164,10 +164,10 @@
 
             <ImageView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
                 android:layout_weight="30"
                 android:layout_marginTop="35dp"
-                android:src="@drawable/ezpass"/>
+                android:src="@drawable/pub_kiosk"/>
 
         </LinearLayout>
 
