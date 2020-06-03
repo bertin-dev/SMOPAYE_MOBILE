@@ -373,7 +373,7 @@
     <string name="soa">SOA</string>
     <string name="camair">CAMAIR</string>
     <string name="omnisport">OMNISPORT</string>
-    <string name="details">Details</string>
+    <string name="details">Détail</string>
     <string name="numeroIndisponible">Numéro indisponible pour le moment.</string>
     <string name="entrerNumero">Entrez votre Numéro</string>
     <string name="permissionRefuse">Permission Refusé</string>
@@ -541,7 +541,7 @@
     <string name="etape1EnvoiDesDonnees">Etape 1: Envoi des Données</string>
     <string name="etape2Finale">Etape 2 - Finale</string>
     <string name="souscrire">Souscription</string>
-    <string name="getPasswordForgot">Récupérer votre mot de passe</string>
+    <string name="getPasswordForgot">Reinitialiser votre mot de passe</string>
 
     <string name="numPJCourt">Votre numéro de Pièce est court</string>
     <string name="insererNumPJ">Veuillez inserer votre numéro de Pièce</string>
@@ -636,5 +636,8 @@
     <string name="serial">N° Série Associé</string>
     <string name="etatCarte">Etat Carte</string>
     <string name="editProfil">Editer Profil</string>
+    <string name="MonAbonnement">Mon Abonnement</string>
+    <string name="attenteValidation">Recharge en attente de validation</string>
+    <string name="attenteValidationMsg">S\'il vous plait veuillez validez la recharge de votre Compte Smopaye N°123456789 en Tapant le #150*50# du service Orange Money.</string>
 
 </resources>

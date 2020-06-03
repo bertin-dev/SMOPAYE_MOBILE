@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity
     private String tmp_card_number = "tmp_card_number";
     private String telephone1 = "";
     private String tmp_card_id = "tmp_card_id";
+    private String tmp_account = "tmp_account";
 
     //web service
     private ApiService service;
@@ -281,6 +282,7 @@ public class MainActivity extends AppCompatActivity
 
                     writeTempCardNumberInFile(myCompte);
                     writeTempCardIDInFile(myId_card);
+                    writeTempAccountInFile(myPersonalAccountNumber);
 
                     /************************************************DEBUT**************/
 
@@ -798,6 +800,20 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
     }
+
+    private void writeTempAccountInFile(String fileContents){
+        try{
+            //ecrire de l'ID CARD
+            FileOutputStream fOut = openFileOutput(tmp_account, MODE_PRIVATE);
+            fOut.write(fileContents.getBytes());
+            fOut.close();
+            File fileDir = new File(getFilesDir(), tmp_account);
+            //Toast.makeText(getBaseContext(), "File Saved at " + fileDir, Toast.LENGTH_LONG).show();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
 
     /**

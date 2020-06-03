@@ -180,8 +180,14 @@ public class RetraitChezSmopaye extends AppCompatActivity
 
         //initialisation des objets qui seront manipulés
         ButterKnife.bind(this);
-        service = RetrofitBuilder.createService(ApiService.class);
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        if(tokenManager.getToken() == null){
+            startActivity(new Intent(this, Login.class));
+            finish();
+        }
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
+        //service = RetrofitBuilder.createService(ApiService.class);
+        //tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         validator = new AwesomeValidation(ValidationStyle.TEXT_INPUT_LAYOUT);
         progressDialog = new ProgressDialog(RetraitChezSmopaye.this);
         build_error = new AlertDialog.Builder(RetraitChezSmopaye.this);

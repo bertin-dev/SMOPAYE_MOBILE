@@ -49,6 +49,7 @@ import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
+import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.NotifApp;
 import com.ezpass.smopaye_mobile.NotifReceiver;
 import com.ezpass.smopaye_mobile.R;
@@ -191,8 +192,14 @@ public class DebitCarte extends AppCompatActivity
 
         //initialisation des objets qui seront manipulés
         ButterKnife.bind(this);
-        service = RetrofitBuilder.createService(ApiService.class);
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        if(tokenManager.getToken() == null){
+            startActivity(new Intent(this, Login.class));
+            finish();
+        }
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
+        //service = RetrofitBuilder.createService(ApiService.class);
+        //tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         validator = new AwesomeValidation(ValidationStyle.TEXT_INPUT_LAYOUT);
         progressDialog = new ProgressDialog(DebitCarte.this);
         build_error = new AlertDialog.Builder(DebitCarte.this);
@@ -616,7 +623,7 @@ public class DebitCarte extends AppCompatActivity
         call.enqueue(new Callback<HomeResponse>() {
             @Override
             public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {
-
+                Log.w(TAG, "SMOPAYE SERVER onResponse: " + response );
                 progressDialog.dismiss();
 
                 if(response.isSuccessful()){

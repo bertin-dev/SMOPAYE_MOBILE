@@ -132,7 +132,7 @@
     <string name="debitCarte">Debit Account</string>
     <string name="deconnexion">Sign Out</string>
     <string name="descriptionImgAlertDialog">Success</string>
-    <string name="details">Details</string>
+    <string name="details">Detail</string>
     <string name="dev">Bertin Mounok</string>
     <string name="devCardNumber">ABCDEFGH</string>
     <string name="devNumber">694048925</string>
@@ -459,7 +459,7 @@
     <string name="etape1EnvoiDesDonnees">Step 1: Sending the Data</string>
     <string name="etape2Finale">Step 2 - Final</string>
     <string name="souscrire">Suscribe</string>
-    <string name="getPasswordForgot">Recover your password</string>
+    <string name="getPasswordForgot">Reset your password</string>
 
     <string name="numPJCourt">Your Part number is short</string>
     <string name="insererNumPJ">Please insert your Part number</string>
@@ -556,6 +556,10 @@
     <string name="serial">serial number associate</string>
     <string name="etatCarte">Card status</string>
     <string name="editProfil">Edit Profile</string>
+    <string name="MonAbonnement">My subscription</string>
+    <string name="attenteValidation">Recharge pending validation</string>
+    <string name="attenteValidationMsg">Please confirm the recharge of your Smopaye Account N ° 123456789 by typing # 150 * 50 # from the Orange Money service.</string>
+
 
 
 </resources>

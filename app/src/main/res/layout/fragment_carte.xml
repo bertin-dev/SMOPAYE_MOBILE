@@ -53,8 +53,10 @@
                 android:layout_height="200dp"
                 app:auto_cycle="true"
                 app:corner_radius="20"
-                app:period="1000"
+                app:period="5000"
                 app:delay="0"
+                app:selected_dot="@drawable/default_selected_dot"
+                app:unselected_dot="@drawable/default_unselected_dot"
                 app:error_image="@drawable/error"
                 app:placeholder="@drawable/carte_smopaye"/>
 
@@ -155,7 +157,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             android:textColor="@color/textColorBlack"
-                            android:text="Mon Abonnement"/>
+                            android:text="@string/MonAbonnement"/>
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -180,7 +182,7 @@
                                         android:textSize="18sp"
                                         android:textStyle="bold"
                                         android:textColor="@color/bgColorStandard"
-                                        android:text="Service"/>
+                                        android:text=""/>
 
                                     <TextView
                                         android:id="@+id/tel"
@@ -189,7 +191,7 @@
                                         android:textSize="13sp"
                                         android:textStyle="bold"
                                         android:textColor="@color/bgColorStandard"
-                                        android:text="+237 694048925"/>
+                                        android:text=""/>
                                 </LinearLayout>
 
                                 <LinearLayout
@@ -207,7 +209,7 @@
                                         android:textStyle="bold"
                                         android:padding="5dp"
                                         android:background="@color/bgColorStandard"
-                                        android:text="détail" />
+                                        android:text="@string/details" />
 
                                 </LinearLayout>
 
@@ -245,7 +247,7 @@
                 android:gravity="right"
                 android:layout_marginBottom="10dp"
                 android:textSize="15sp"
-                android:text="Mise à jour le 26/05/2020 à 16:15"/>
+                android:text=""/>
 
 
         </LinearLayout>
@@ -352,7 +354,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/expiration"
-                    android:text="@string/DateExpLongFormat"
+                    android:text=""
                     android:textColor="#262626"
                     android:textSize="15sp" />
             </RelativeLayout>

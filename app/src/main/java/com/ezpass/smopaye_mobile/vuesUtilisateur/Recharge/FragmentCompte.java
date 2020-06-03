@@ -1,4 +1,4 @@
-package com.ezpass.smopaye_mobile.vuesUtilisateur;
+package com.ezpass.smopaye_mobile.vuesUtilisateur.Recharge;
 
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -19,16 +19,14 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -40,7 +38,6 @@ import android.widget.Toast;
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
-import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Login;
@@ -54,14 +51,13 @@ import com.ezpass.smopaye_mobile.RemoteNotifications.Data;
 import com.ezpass.smopaye_mobile.RemoteNotifications.MyResponse;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Sender;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
-import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
-import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
 import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
+import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 import com.ezpass.smopaye_mobile.web_service_response.Recharge.RechargeResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -76,7 +72,6 @@ import com.telpo.tps550.api.nfc.Nfc;
 import com.telpo.tps550.api.util.StringUtil;
 
 import java.io.FileInputStream;
-import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
@@ -87,21 +82,29 @@ import java.util.Timer;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressPie;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
-public class RechargePropreCompte extends AppCompatActivity
-                                  implements ConnectivityReceiver.ConnectivityReceiverListener{
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class FragmentCompte extends Fragment
+                            implements ConnectivityReceiver.ConnectivityReceiverListener,
+                                        ModalDialog_ValidateRecharge.ExampleDialogListener {
 
-    private static final String TAG = "RechargePropreCompte";
+    private static final String TAG = "FragmentCompte";
     private   AlertDialog.Builder build_error;
     private ProgressDialog progressDialog;
     /*NOTIFICATION*/
     private NotificationManagerCompat notificationManager;
+    private ACProgressPie dialog2;
 
     //BD LOCALE
     private DbHandler dbHandler;
@@ -121,7 +124,7 @@ public class RechargePropreCompte extends AppCompatActivity
     private final byte B_CPU = 3;
     private final byte A_CPU = 1;
     private final byte A_M1 = 2;
-    private Nfc nfc = new Nfc(this);
+    private Nfc nfc = new Nfc(getContext());
 
     //SERVICES GOOGLE FIREBASE
     private APIService apiService;
@@ -132,13 +135,14 @@ public class RechargePropreCompte extends AppCompatActivity
     private TokenManager tokenManager;
     private AwesomeValidation validator;
     private Call<RechargeResponse> call;
+    private Call<AllMyResponse> call2;
 
-    @BindView(R.id.til_numCartePropreCompte)
-    TextInputLayout til_numCartePropreCompte;
-    @BindView(R.id.tie_numCartePropreCompte)
-    TextInputEditText tie_numCartePropreCompte;
-    @BindView(R.id.til_montant)
-    TextInputLayout til_montant;
+    @BindView(R.id.til_numCartePropreCompte1)
+    TextInputLayout til_numCartePropreCompte1;
+    @BindView(R.id.tie_numCartePropreCompte1)
+    TextInputEditText tie_numCartePropreCompte1;
+    @BindView(R.id.til_montant1)
+    TextInputLayout til_montant1;
 
     @BindView(R.id.btnOpenNFC)
     Button btnOpenNFC;
@@ -165,48 +169,51 @@ public class RechargePropreCompte extends AppCompatActivity
     private String file3 = "tmp_card_id";
     private String temp_card_id = "";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recharge_propre_compte);
+    private String payment;
 
-        Toolbar toolbar = findViewById(R.id.myToolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.rechargeCompte));
-        toolbar.setSubtitle(getString(R.string.ezpass));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    public FragmentCompte() {
+        // Required empty public constructor
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_compte, container, false);
+
+
 
         //initialisation des objets qui seront manipulés
-        ButterKnife.bind(this);
-        tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        ButterKnife.bind(this, view);
+        tokenManager = TokenManager.getInstance(getActivity().getSharedPreferences("prefs", MODE_PRIVATE));
         if(tokenManager.getToken() == null){
-            startActivity(new Intent(this, Login.class));
-            finish();
+            startActivity(new Intent(getContext(), Login.class));
+            getActivity().finish();
         }
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
         //service = RetrofitBuilder.createService(ApiService.class);
         //tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         validator = new AwesomeValidation(ValidationStyle.TEXT_INPUT_LAYOUT);
-        progressDialog = new ProgressDialog(this);
-        build_error = new AlertDialog.Builder(this);
+        progressDialog = new ProgressDialog(getActivity());
+        build_error = new AlertDialog.Builder(getActivity());
         //service google firebase
         apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
 
         ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
-        dbHandler = new DbHandler(this);
+        dbHandler = new DbHandler(getActivity());
         aujourdhui = new Date();
         shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
         //////////////////////////////////NOTIFICATIONS////////////////////////////////
-        notificationManager = NotificationManagerCompat.from(this);
+        notificationManager = NotificationManagerCompat.from(getContext());
 
-        Intent idCarteTelecollecte = getIntent();
+        Intent idCarteTelecollecte = getActivity().getIntent();
         if(idCarteTelecollecte.getStringExtra("id_carte") != null){
-            til_numCartePropreCompte.getEditText().setText(idCarteTelecollecte.getStringExtra("id_carte"));
-            til_numCartePropreCompte.setEnabled(false);
+            til_numCartePropreCompte1.getEditText().setText(idCarteTelecollecte.getStringExtra("id_carte"));
+            til_numCartePropreCompte1.setEnabled(false);
             btnOpenNFC.setEnabled(false);
         }
 
@@ -217,14 +224,17 @@ public class RechargePropreCompte extends AppCompatActivity
         readTempIDCARDInFile();
         readTempCardInFile();
 
-        tie_numCartePropreCompte.setText(temp_account);
+        tie_numCartePropreCompte1.setText(temp_account);
 
+        return view;
     }
+
+
 
     private void readTempIDCARDInFile() {
         /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
         try{
-            FileInputStream fIn = getApplication().openFileInput(file3);
+            FileInputStream fIn = getActivity().getApplication().openFileInput(file3);
             while ((c = fIn.read()) != -1){
                 temp_card_id = temp_card_id + Character.toString((char)c);
             }
@@ -237,7 +247,7 @@ public class RechargePropreCompte extends AppCompatActivity
     private void readTempCardInFile() {
         /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
         try{
-            FileInputStream fIn = getApplication().openFileInput(file2);
+            FileInputStream fIn = getActivity().getApplication().openFileInput(file2);
             while ((c = fIn.read()) != -1){
                 temp_account = temp_account + Character.toString((char)c);
             }
@@ -254,18 +264,18 @@ public class RechargePropreCompte extends AppCompatActivity
      * */
     @OnClick(R.id.btnRecharge)
     void recharge(){
-        if(!validateCompte(til_numCartePropreCompte) | !validateMontant(til_montant)){
+        if(!validateCompte(til_numCartePropreCompte1) | !validateMontant(til_montant1)){
             return;
         }
 
-        String id_card = til_numCartePropreCompte.getEditText().getText().toString();
-        String montant = til_montant.getEditText().getText().toString();
+        String id_card = til_numCartePropreCompte1.getEditText().getText().toString();
+        String montant = til_montant1.getEditText().getText().toString();
         validator.clear();
 
         /*Action à poursuivre si tous les champs sont remplis*/
         if(validator.validate()){
             //********************DEBUT***********
-            runOnUiThread(new Runnable() {
+            getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     // On ajoute un message à notre progress dialog
@@ -280,11 +290,11 @@ public class RechargePropreCompte extends AppCompatActivity
                 }
             });
             //*******************FIN*****
-            rechargeInSmopayeServer(temp_account, montant, temp_number);
+            recharge_step1(temp_account, montant, temp_number);
         }
     }
 
-    private void rechargeInSmopayeServer(String account_number, String montant, String telephone) {
+    private void recharge_step1(String account_number, String montant, String telephone) {
 
         call = service.recharge_step1(account_number, Float.parseFloat(montant), telephone);
         call.enqueue(new Callback<RechargeResponse>() {
@@ -298,8 +308,11 @@ public class RechargePropreCompte extends AppCompatActivity
                     assert response.body() != null;
 
                     if(response.body().isSuccess()){
-                      String payment = response.body().getMessage().getPaymentId();
-                        Toast.makeText(RechargePropreCompte.this, payment, Toast.LENGTH_SHORT).show();
+                         payment = response.body().getMessage().getPaymentId();
+                        if(!payment.equalsIgnoreCase("")){
+                            ModalDialog_ValidateRecharge validateRecharge = new ModalDialog_ValidateRecharge();
+                            validateRecharge.show(getFragmentManager(), "example dialog");
+                        }
                     }
                     //tokenManager.saveToken(response.body());
 
@@ -319,7 +332,7 @@ public class RechargePropreCompte extends AppCompatActivity
                     }
                     else if(response.code() == 401){
                         ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
-                        Toast.makeText(RechargePropreCompte.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
                     } else{
                         errorResponse("", response.message());
                     }
@@ -334,12 +347,12 @@ public class RechargePropreCompte extends AppCompatActivity
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
 
                 /*Vérification si la connexion internet accessible*/
-                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
                 if(!(activeInfo != null && activeInfo.isConnected())){
                     authWindows.setVisibility(View.GONE);
                     internetIndisponible.setVisibility(View.VISIBLE);
-                    Toast.makeText(RechargePropreCompte.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
                 }
                 /*Vérification si le serveur est inaccessible*/
                 else{
@@ -348,11 +361,73 @@ public class RechargePropreCompte extends AppCompatActivity
                     conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
                     titleNetworkLimited.setText(getString(R.string.connexionLimite));
                     //msgNetworkLimited.setText();
-                    Toast.makeText(RechargePropreCompte.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
+    }
+
+    private void recharge_step2(String account_number, String paymentID) {
+
+        call2 = service.recharge_step2(account_number, paymentID);
+        call2.enqueue(new Callback<AllMyResponse>() {
+            @Override
+            public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
+                Log.w(TAG, "SMOPAYE SERVER onResponse: " + response );
+                progressDialog.dismiss();
+
+                if(response.isSuccessful()){
+
+                    assert response.body() != null;
+                    if(response.body().isSuccess()){
+                       successResponse("", response.body().getMessage());
+                    }
+
+                } else{
+                    errorResponse("", response.message());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<AllMyResponse> call, Throwable t) {
+
+                progressDialog.dismiss();
+                Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
+
+                /*Vérification si la connexion internet accessible*/
+                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
+                if(!(activeInfo != null && activeInfo.isConnected())){
+                    authWindows.setVisibility(View.GONE);
+                    internetIndisponible.setVisibility(View.VISIBLE);
+                    Toast.makeText(getActivity(), getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
+                }
+                /*Vérification si le serveur est inaccessible*/
+                else{
+                    authWindows.setVisibility(View.GONE);
+                    internetIndisponible.setVisibility(View.VISIBLE);
+                    conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
+                    titleNetworkLimited.setText(getString(R.string.connexionLimite));
+                    //msgNetworkLimited.setText();
+                    Toast.makeText(getActivity(), getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
+
+    @Override
+    public void applyTexts(int numero) {
+        dialog2 = new ACProgressPie.Builder(getContext())
+                .ringColor(Color.WHITE)
+                .pieColor(Color.WHITE)
+                .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                .build();
+        dialog2.show();
+        recharge_step2(temp_account, payment);
+
     }
 
     private void successResponse(String id_card, String response) {
@@ -376,12 +451,12 @@ public class RechargePropreCompte extends AppCompatActivity
                             RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.recharge), response, "success");
                             //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(RechargePropreCompte.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
                 else{
-                    Toast.makeText(RechargePropreCompte.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -397,13 +472,13 @@ public class RechargePropreCompte extends AppCompatActivity
         LocalNotification(getString(R.string.recharge), response);
 
         ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
-        dbHandler = new DbHandler(getApplicationContext());
+        dbHandler = new DbHandler(getContext());
         aujourdhui = new Date();
         shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
         dbHandler.insertUserDetails(getString(R.string.recharge), response, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
 
-        View view = LayoutInflater.from(RechargePropreCompte.this).inflate(R.layout.alert_dialog_success, null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.alert_dialog_success, null);
         TextView title = (TextView) view.findViewById(R.id.title);
         TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
         ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
@@ -436,12 +511,12 @@ public class RechargePropreCompte extends AppCompatActivity
                             RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.recharge), response, "error");
                             //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(RechargePropreCompte.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
                 else{
-                    Toast.makeText(RechargePropreCompte.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -457,12 +532,12 @@ public class RechargePropreCompte extends AppCompatActivity
         LocalNotification(getString(R.string.recharge), response);
 
         ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
-        dbHandler = new DbHandler(getApplicationContext());
+        dbHandler = new DbHandler(getContext());
         aujourdhui = new Date();
         shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
         dbHandler.insertUserDetails(getString(R.string.recharge), response, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
 
-        View view = LayoutInflater.from(RechargePropreCompte.this).inflate(R.layout.alert_dialog_success, null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.alert_dialog_success, null);
         TextView title = (TextView) view.findViewById(R.id.title);
         TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
         ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
@@ -487,11 +562,11 @@ public class RechargePropreCompte extends AppCompatActivity
         for(Map.Entry<String, List<String>> error: apiError.getErrors().entrySet()){
 
             if(error.getKey().equals("card_number")){
-                til_numCartePropreCompte.setError(error.getValue().get(0));
+                til_numCartePropreCompte1.setError(error.getValue().get(0));
             }
 
             if(error.getKey().equals("amount")){
-                til_montant.setError(error.getValue().get(0));
+                til_montant1.setError(error.getValue().get(0));
             }
         }
 
@@ -502,10 +577,10 @@ public class RechargePropreCompte extends AppCompatActivity
      * @since 2019
      * */
     @OnClick(R.id.btnOpenNFC)
-     void openNFC(){
+    void openNFC(){
         try {
             nfc.open();
-            runOnUiThread(new Runnable() {
+            getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
 
@@ -524,7 +599,7 @@ public class RechargePropreCompte extends AppCompatActivity
         } catch (TelpoException e) {
             e.printStackTrace();
         }
-        readThread = new RechargePropreCompte.ReadThread();
+        readThread = new ReadThread();
         readThread.start();
     }
 
@@ -534,7 +609,7 @@ public class RechargePropreCompte extends AppCompatActivity
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case CHECK_NFC_TIMEOUT: {
-                        Toast.makeText(getApplicationContext(), "Check card time out!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Check card time out!", Toast.LENGTH_LONG).show();
                        /* open_btn.setEnabled(true);
                         close_btn.setEnabled(false);
                         check_btn.setEnabled(false);*/
@@ -559,7 +634,7 @@ public class RechargePropreCompte extends AppCompatActivity
                                 type = "unknow";
                             }
 
-                            new AlertDialog.Builder(RechargePropreCompte.this)
+                            new AlertDialog.Builder(getActivity())
                                     .setMessage(getString(R.string.card_type) + getString(R.string.type_b) + " " + type +
                                             "\r\n" + getString(R.string.atqb_data) + StringUtil.toHexString(atqb) +
                                             "\r\n" + getString(R.string.pupi_data) + StringUtil.toHexString(pupi))
@@ -641,16 +716,16 @@ public class RechargePropreCompte extends AppCompatActivity
     }
 
     private void changeActivity() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
         if(activeInfo != null && activeInfo.isConnected()){
-            progressDialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
+            progressDialog = ProgressDialog.show(getContext(), getString(R.string.connexion), getString(R.string.encours), true);
             progressDialog.show();
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {
                     progressDialog.dismiss();
-                    recreate();
+                    getActivity().recreate();
                 }
             }, 2000); // 2000 milliseconds delay
 
@@ -658,7 +733,7 @@ public class RechargePropreCompte extends AppCompatActivity
             progressDialog.dismiss();
             authWindows.setVisibility(View.GONE);
             internetIndisponible.setVisibility(View.VISIBLE);
-            Toast.makeText(this, getString(R.string.connexionIntrouvable), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.connexionIntrouvable), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -670,7 +745,8 @@ public class RechargePropreCompte extends AppCompatActivity
 
         if(isConnected){
             message = getString(R.string.networkOnline);
-            snackbar = Snackbar.make(findViewById(R.id.recharge), message, Snackbar.LENGTH_LONG);
+
+            snackbar = Snackbar.make(getActivity().findViewById(R.id.fragment_compte), message, Snackbar.LENGTH_LONG);
             view = snackbar.getView();
             TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(color);
@@ -681,7 +757,7 @@ public class RechargePropreCompte extends AppCompatActivity
             }
         } else{
             message = getString(R.string.networkOffline);
-            snackbar = Snackbar.make(findViewById(R.id.recharge), message, Snackbar.LENGTH_INDEFINITE);
+            snackbar = Snackbar.make(getActivity().findViewById(R.id.fragment_compte), message, Snackbar.LENGTH_INDEFINITE);
             view = snackbar.getView();
             TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(color);
@@ -702,14 +778,14 @@ public class RechargePropreCompte extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
         //register intent filter
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
-        registerReceiver(connectivityReceiver, intentFilter);
+        getActivity().registerReceiver(connectivityReceiver, intentFilter);
 
         //register connection status listener
         NotifApp.getInstance().setConnectivityListener(this);
@@ -722,12 +798,17 @@ public class RechargePropreCompte extends AppCompatActivity
      * @since 2020
      */
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
 
         if(call != null){
             call.cancel();
             call = null;
+        }
+
+        if(call2 != null){
+            call2.cancel();
+            call2 = null;
         }
     }
 
@@ -775,16 +856,16 @@ public class RechargePropreCompte extends AppCompatActivity
     private void setupRulesValidatForm(){
 
         //coloration des champs lorsqu'il y a erreur
-        til_numCartePropreCompte.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
-        til_montant.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+        til_numCartePropreCompte1.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+        til_montant1.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
 
-        validator.addValidation(this, R.id.til_numCartePropreCompte, RegexTemplate.NOT_EMPTY, R.string.insererCompte);
-        validator.addValidation(this, R.id.til_montant, RegexTemplate.NOT_EMPTY, R.string.insererMontant);
+        validator.addValidation(getActivity(), R.id.til_numCartePropreCompte, RegexTemplate.NOT_EMPTY, R.string.insererCompte);
+        validator.addValidation(getActivity(), R.id.til_montant, RegexTemplate.NOT_EMPTY, R.string.insererMontant);
     }
     private void readTempNumberInFile() {
         /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
         try{
-            FileInputStream fIn = getApplicationContext().openFileInput(file);
+            FileInputStream fIn = getActivity().openFileInput(file);
             while ((c = fIn.read()) != -1){
                 temp_number = temp_number + Character.toString((char)c);
             }
@@ -799,13 +880,13 @@ public class RechargePropreCompte extends AppCompatActivity
 
         ///////////////DEBUT NOTIFICATIONS///////////////////////////////
         //NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        RemoteViews collapsedView = new RemoteViews(getPackageName(),
+        RemoteViews collapsedView = new RemoteViews(getActivity().getPackageName(),
                 R.layout.notif_collapsed);
-        RemoteViews expandedView = new RemoteViews(getPackageName(),
+        RemoteViews expandedView = new RemoteViews(getActivity().getPackageName(),
                 R.layout.notif_expanded);
 
-        Intent clickIntent = new Intent(getApplicationContext(), NotifReceiver.class);
-        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
+        Intent clickIntent = new Intent(getContext(), NotifReceiver.class);
+        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(getContext(),
                 0, clickIntent, 0);
 
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
@@ -814,7 +895,7 @@ public class RechargePropreCompte extends AppCompatActivity
         expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
-        Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+        Notification notification = new NotificationCompat.Builder(getContext(), CHANNEL_ID)
                 .setSmallIcon(R.mipmap.logo_official)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
@@ -875,7 +956,7 @@ public class RechargePropreCompte extends AppCompatActivity
             //OwriteValueData();
             readValueDataCourt();
         } else {
-            Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
             Log.d(TAG, "m1CardAuthenticate fail!");
         }
     }
@@ -891,62 +972,12 @@ public class RechargePropreCompte extends AppCompatActivity
 
         if (null == data) {
             Log.e(TAG, "readValueBtn fail!");
-            Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
         } else {
-            til_numCartePropreCompte.getEditText().setText(StringUtil.toHexString(data));
+            til_numCartePropreCompte1.getEditText().setText(StringUtil.toHexString(data));
         }
     }
 
-    /*                    GESTION DU MENU DROIT                  */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.apropos) {
-            Intent intent = new Intent(getApplicationContext(), Apropos.class);
-            startActivity(intent);
-        }
-
-        if (id == R.id.tuto) {
-            Intent intent = new Intent(getApplicationContext(), TutorielUtilise.class);
-            startActivity(intent);
-        }
-
-        if(id == R.id.modifierCompte){
-            Intent intent = new Intent(getApplicationContext(), ModifierCompte.class);
-            startActivity(intent);
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    /* Returns true if url is valid */
-    private static boolean isValidUrl(String url)
-    {
-        /* Try creating a valid URL */
-        try {
-            new URL(url).toURI();
-            return true;
-        }
-
-        // If there was an Exception
-        // while creating URL object
-        catch (Exception e) {
-            return false;
-        }
-    }
 
 
     private void RemoteNotification(final String receiver, final String username, final String title, final String message, final String statut_notif){
@@ -967,7 +998,7 @@ public class RechargePropreCompte extends AppCompatActivity
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     if(response.code() == 200){
                                         if(response.body().success != 1){
-                                            Toast.makeText(RechargePropreCompte.this, "Failed", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
@@ -991,15 +1022,15 @@ public class RechargePropreCompte extends AppCompatActivity
     private void LocalNotification(String titles, String subtitles){
 
         ///////////////DEBUT NOTIFICATIONS///////////////////////////////
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
 
-        RemoteViews collapsedView = new RemoteViews(getPackageName(),
+        RemoteViews collapsedView = new RemoteViews(getActivity().getPackageName(),
                 R.layout.notif_collapsed);
-        RemoteViews expandedView = new RemoteViews(getPackageName(),
+        RemoteViews expandedView = new RemoteViews(getActivity().getPackageName(),
                 R.layout.notif_expanded);
 
-        Intent clickIntent = new Intent(getApplicationContext(), NotifReceiver.class);
-        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
+        Intent clickIntent = new Intent(getContext(), NotifReceiver.class);
+        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(getContext(),
                 0, clickIntent, 0);
 
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
@@ -1008,7 +1039,7 @@ public class RechargePropreCompte extends AppCompatActivity
         expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
-        Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+        Notification notification = new NotificationCompat.Builder(getContext(), CHANNEL_ID)
                 .setSmallIcon(R.mipmap.logo_official)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
@@ -1019,14 +1050,15 @@ public class RechargePropreCompte extends AppCompatActivity
         ////////////////////////////////////FIN NOTIFICATIONS/////////////////////
     }
 
-    /**
-     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
-     * @param newBase
-     * @since 2020
-     */
     @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    public void onPause() {
+        super.onPause();
+        Toast.makeText(getContext(), "en pause", Toast.LENGTH_SHORT).show();
     }
 
+    /*@Override
+    public void onStart() {
+        super.onStart();
+        Toast.makeText(getContext(), "retour de pause", Toast.LENGTH_SHORT).show();
+    }*/
 }

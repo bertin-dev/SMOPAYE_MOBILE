@@ -42,6 +42,7 @@ import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
+import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.NotifApp;
 import com.ezpass.smopaye_mobile.NotifReceiver;
 import com.ezpass.smopaye_mobile.R;
@@ -58,10 +59,10 @@ import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
-import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
+import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -132,7 +133,7 @@ public class RetraitAccepteur extends AppCompatActivity
     private ApiService service;
     private TokenManager tokenManager;
     private AwesomeValidation validator;
-    private Call<AccessToken> call;
+    private Call<AllMyResponse> call;
 
     @BindView(R.id.til_numCarteAccepteur)
     TextInputLayout til_numCarteAccepteur;
@@ -181,8 +182,14 @@ public class RetraitAccepteur extends AppCompatActivity
 
         //initialisation des objets qui seront manipulés
         ButterKnife.bind(this);
-        service = RetrofitBuilder.createService(ApiService.class);
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        if(tokenManager.getToken() == null){
+            startActivity(new Intent(this, Login.class));
+            finish();
+        }
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
+        //service = RetrofitBuilder.createService(ApiService.class);
+        //tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         validator = new AwesomeValidation(ValidationStyle.TEXT_INPUT_LAYOUT);
         progressDialog = new ProgressDialog(RetraitAccepteur.this);
         build_error = new AlertDialog.Builder(RetraitAccepteur.this);
@@ -547,27 +554,24 @@ public class RetraitAccepteur extends AppCompatActivity
     private void RetraitAccepteurInSmopayeServer(String id_card, String montant, String telephone) {
 
 
-        call = service.retrait_accepteur(Integer.parseInt(montant), telephone, id_card);
-        call.enqueue(new Callback<AccessToken>() {
+        call = service.retrait_accepteur(Float.parseFloat(montant), telephone, id_card);
+        call.enqueue(new Callback<AllMyResponse>() {
             @Override
-            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+            public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
 
                 progressDialog.dismiss();
 
                 if(response.isSuccessful()){
 
                     assert response.body() != null;
-                    tokenManager.saveToken(response.body());
+                    //tokenManager.saveToken(response.body());
 
-                    /*if(response.body().isSuccess()){
-                        tokenManager.saveToken(response.body());
-                        successResponse(id_card, "");
+                    if(response.body().isSuccess()){
+                        //tokenManager.saveToken(response.body());
+                        successResponse(id_card, response.body().getMessage());
                     } else {
-                        errorResponse(id_card, "");
-                    }*/
-
-                    successResponse(id_card, response.message());
-
+                        errorResponse(id_card, response.body().getMessage());
+                    }
                 } else{
 
                     if(response.code() == 422){
@@ -583,7 +587,7 @@ public class RetraitAccepteur extends AppCompatActivity
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
+            public void onFailure(Call<AllMyResponse> call, Throwable t) {
 
                 progressDialog.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());

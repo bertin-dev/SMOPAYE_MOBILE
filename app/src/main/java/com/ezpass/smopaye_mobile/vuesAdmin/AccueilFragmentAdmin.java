@@ -20,7 +20,7 @@ import com.ezpass.smopaye_mobile.PayerFacture;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.vuesAccepteur.ConsulterSolde;
 import com.ezpass.smopaye_mobile.vuesAccepteur.VerifierNumCarte;
-import com.ezpass.smopaye_mobile.vuesUtilisateur.RechargePropreCompte;
+import com.ezpass.smopaye_mobile.vuesUtilisateur.Recharge.HomeRecharge;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.Souscription;
 
 import java.text.DateFormat;
@@ -126,7 +126,7 @@ public class AccueilFragmentAdmin  extends Fragment {
         RechargeAvecCashAdmin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), RechargePropreCompte.class);
+                Intent intent = new Intent(getActivity(), HomeRecharge.class);
                 startActivity(intent);
             }
         });

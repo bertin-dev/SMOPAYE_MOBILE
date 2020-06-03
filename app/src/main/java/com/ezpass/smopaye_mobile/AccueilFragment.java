@@ -19,7 +19,7 @@ import com.ezpass.smopaye_mobile.vuesAccepteur.ConsulterSolde;
 import com.ezpass.smopaye_mobile.vuesAccepteur.DebitCarte;
 import com.ezpass.smopaye_mobile.vuesAccepteur.MenuRetraitTelecollecte;
 import com.ezpass.smopaye_mobile.vuesAccepteur.VerifierNumCarte;
-import com.ezpass.smopaye_mobile.vuesUtilisateur.RechargePropreCompte;
+import com.ezpass.smopaye_mobile.vuesUtilisateur.Recharge.HomeRecharge;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -137,7 +137,8 @@ public class AccueilFragment extends Fragment {
         RechargeAvecCashChauffeur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), RechargePropreCompte.class));
+                Intent intent = new Intent(getActivity(), HomeRecharge.class);
+                startActivity(intent);
             }
         });
 

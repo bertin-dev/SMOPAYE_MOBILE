@@ -20,6 +20,7 @@ import com.ezpass.smopaye_mobile.MenuRetraitOperateur;
 import com.ezpass.smopaye_mobile.PayerFacture;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.vuesAccepteur.ConsulterSolde;
+import com.ezpass.smopaye_mobile.vuesUtilisateur.Recharge.HomeRecharge;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -102,7 +103,7 @@ public class AccueilFragmentUser extends Fragment {
         btnRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), RechargePropreCompte.class);
+                Intent intent = new Intent(getActivity(), HomeRecharge.class);
                 startActivity(intent);
             }
         });

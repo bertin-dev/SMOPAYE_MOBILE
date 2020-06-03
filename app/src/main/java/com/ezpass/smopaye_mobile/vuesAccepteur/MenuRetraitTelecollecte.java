@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
+import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.NotifApp;
 import com.ezpass.smopaye_mobile.NotifReceiver;
 import com.ezpass.smopaye_mobile.R;
@@ -169,8 +170,14 @@ public class MenuRetraitTelecollecte extends AppCompatActivity
 
         //initialisation des objets qui seront manipulés
         ButterKnife.bind(this);
-        service = RetrofitBuilder.createService(ApiService.class);
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        if(tokenManager.getToken() == null){
+            startActivity(new Intent(this, Login.class));
+            finish();
+        }
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
+        //service = RetrofitBuilder.createService(ApiService.class);
+        //tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         progressDialog = new ProgressDialog(MenuRetraitTelecollecte.this);
         build_error = new AlertDialog.Builder(MenuRetraitTelecollecte.this);
         //service google firebase

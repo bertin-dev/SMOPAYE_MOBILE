@@ -7,6 +7,7 @@ import com.ezpass.smopaye_mobile.Profil_user.DataUser;
 import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 import com.ezpass.smopaye_mobile.web_service_response.HomeResponse;
+import com.ezpass.smopaye_mobile.web_service_response.Recharge.RechargeResponse;
 
 import java.util.List;
 
@@ -122,18 +123,23 @@ public interface ApiService {
     /* Retrait Smopaye*/
     @POST("api/card/{card_id}/retrait")
     @FormUrlEncoded
-    Call<AccessToken> retrait_accepteur(@Field("withDrawalAmount") int withDrawalAmount,
+    Call<AllMyResponse> retrait_accepteur(@Field("withDrawalAmount") Float withDrawalAmount,
                                         @Field("phoneNumber") String phoneNumber,
                                         @Path("card_id") String card_id);
 
 
-    /* Recharge*/
-    @POST("api/card/{card_id}/recharge")
+    /* Recharge step 1*/
+    @POST("api/account/{account_number}/recharge")
     @FormUrlEncoded
-    Call<AccessToken> recharge(@Field("amountRecharge") int rechargeAmount,
-                               @Field("phoneNumber") String phoneNumber,
-                               @Path("card_id") String card_id);
+    Call<RechargeResponse> recharge_step1(@Path("account_number") String account_number,
+                                          @Field("amount") Float amount,
+                                          @Field("phoneNumber") String phoneNumber);
 
+    /* Recharge step 2*/
+    @POST("api/account/{account_number}/checkpayment")
+    @FormUrlEncoded
+    Call<AllMyResponse> recharge_step2(@Path("account_number") String account_number,
+                                          @Field("paymentId") String paymentId);
 
     /* Retrait Accepteur*/
     /*@POST("api/card/{card_id}/retrait")

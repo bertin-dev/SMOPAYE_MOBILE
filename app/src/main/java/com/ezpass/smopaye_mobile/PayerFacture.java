@@ -169,8 +169,14 @@ public class PayerFacture extends AppCompatActivity
 
         //initialisation des objets qui seront manipulés
         ButterKnife.bind(this);
-        service = RetrofitBuilder.createService(ApiService.class);
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        if(tokenManager.getToken() == null){
+            startActivity(new Intent(this, Login.class));
+            finish();
+        }
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
+        //service = RetrofitBuilder.createService(ApiService.class);
+        //tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         validator = new AwesomeValidation(ValidationStyle.TEXT_INPUT_LAYOUT);
         progressDialog = new ProgressDialog(PayerFacture.this);
         build_error = new AlertDialog.Builder(PayerFacture.this);
@@ -273,24 +279,23 @@ public class PayerFacture extends AppCompatActivity
                     String msgReceiver = response.body().getMessage().getCard_receiver().getNotif();
                     String msgSender = response.body().getMessage().getCard_sender().getNotif();
 
-                    /*if(response.body().getMessage().isSuccess()){
-                        tokenManager.saveToken(response.body());
+                    if(response.body().isSuccess()){
                         successResponse(id_cardBeneficiaire1, msgReceiver, id_cardDonataire1, msgSender);
                     } else{
                         errorResponse(id_cardBeneficiaire1, msgReceiver);
-                    }*/
+                    }
                 } else{
 
                     if(response.code() == 422){
                         handleErrors(response.errorBody());
                     }
-                    else{
+                    else if (response.code() == 401){
                         ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
                         Toast.makeText(PayerFacture.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
                         errorResponse(id_cardBeneficiaire1, apiError.getMessage());
-                    } /*else{
-                        errorResponse(id_cardBeneficiaire1, response.errorBody());
-                    }*/
+                    } else{
+                        errorResponse(id_cardBeneficiaire1, response.message());
+                    }
                 }
             }
 

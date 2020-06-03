@@ -248,7 +248,7 @@ public class CarteFragment extends Fragment
         slideModels.add(new SlideModel(R.drawable.pub_kiosk, "Distributeur Smopaye"));
         slideModels.add(new SlideModel(R.drawable.pub_parasol, "Parasole Smopaye"));
         imageSlider.setImageList(slideModels, true);
-
+        imageSlider.startSliding(5000);
 
 
         detailsCard(myId_card);

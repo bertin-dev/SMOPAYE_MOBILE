@@ -152,8 +152,14 @@ public class ModifierCompte extends AppCompatActivity
 
         //initialisation des objets qui seront manipulés
         ButterKnife.bind(this);
-        service = RetrofitBuilder.createService(ApiService.class);
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        if(tokenManager.getToken() == null){
+            startActivity(new Intent(this, Login.class));
+            finish();
+        }
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
+        //service = RetrofitBuilder.createService(ApiService.class);
+        //tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         validator = new AwesomeValidation(ValidationStyle.TEXT_INPUT_LAYOUT);
         build_error = new AlertDialog.Builder(ModifierCompte.this);
         //service google firebase
@@ -205,7 +211,7 @@ public class ModifierCompte extends AppCompatActivity
     private void modifierCompteSmopaye(String modifTel, String ancienPass, String nouveauPass, String id_card) {
 
 
-        call = service.update_account(nouveauPass, ancienPass);
+        call = service.update_account(ancienPass, nouveauPass);
         call.enqueue(new Callback<AllMyResponse>() {
             @Override
             public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
@@ -218,7 +224,7 @@ public class ModifierCompte extends AppCompatActivity
                         //tokenManager.saveToken(response.body());
                         successResponse(id_card, response.body().getMessage());
                     } else {
-                        errorResponse(id_card, response.message());
+                        errorResponse(id_card, response.body().getMessage());
                     }
 
                 } else{

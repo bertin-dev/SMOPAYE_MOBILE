@@ -130,8 +130,14 @@ public class MenuQRCode extends AppCompatActivity
 
         //initialisation des objets qui seront manipulés
         ButterKnife.bind(this);
-        service = RetrofitBuilder.createService(ApiService.class);
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        if(tokenManager.getToken() == null){
+            startActivity(new Intent(this, Login.class));
+            finish();
+        }
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
+        //service = RetrofitBuilder.createService(ApiService.class);
+        //tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         progressDialog = new ProgressDialog(this);
         build_error = new AlertDialog.Builder(this);
         //service google firebase
@@ -362,7 +368,7 @@ public class MenuQRCode extends AppCompatActivity
                 } else{
                     /*ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
                     Toast.makeText(MenuQRCode.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();*/
-                    errorResponse(beneficiaireCard, "Une erreur est survenue");
+                    errorResponse(beneficiaireCard, response.message());
                 }
 
             }

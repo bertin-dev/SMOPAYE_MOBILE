@@ -14,7 +14,7 @@
         android:gravity="center"
         android:padding="15dp"
         android:textColor="@color/bgColorStandard"
-        android:text="Voir le détail"
+        android:text="@string/voirDetails"
         android:textSize="18sp"
         android:textStyle="bold"/>
 
