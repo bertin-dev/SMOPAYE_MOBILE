@@ -116,9 +116,6 @@
             android:name=".vuesUtilisateur.ModifierCompte"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".vuesAgent.MenuRechargeCompteAgent"
-            android:parentActivityName=".MainActivity" />
-        <activity
             android:name=".MenuHistoriqueTransaction"
             android:parentActivityName=".MainActivity" />
         <activity
