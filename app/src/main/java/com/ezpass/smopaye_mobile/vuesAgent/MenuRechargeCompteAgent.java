@@ -15,8 +15,6 @@ import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
-import com.ezpass.smopaye_mobile.vuesUtilisateur.RechargeAutreCompte;
-import com.ezpass.smopaye_mobile.vuesUtilisateur.RechargePropreCompte;
 
 public class MenuRechargeCompteAgent extends AppCompatActivity {
 

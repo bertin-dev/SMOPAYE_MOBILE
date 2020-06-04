@@ -119,20 +119,11 @@
             android:name=".vuesAgent.MenuRechargeCompteAgent"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".vuesAgent.RechargeAgent"
-            android:parentActivityName=".vuesAgent.MenuRechargeCompteAgent" />
-        <activity
             android:name=".MenuHistoriqueTransaction"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".HistoriqueTransactions"
             android:parentActivityName=".MenuHistoriqueTransaction" />
-        <activity
-            android:name=".vuesUtilisateur.RechargeAutreCompte"
-            android:parentActivityName=".vuesUtilisateur.MenuRechargeCompte" />
-        <activity
-            android:name=".vuesUtilisateur.RechargePropreCompte"
-            android:parentActivityName=".vuesUtilisateur.MenuRechargeCompte" />
         <activity
             android:name=".vuesAdmin.Menu_GestionComptes"
             android:parentActivityName=".MainActivity" />
@@ -149,9 +140,6 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".vuesAccepteur.VerifierNumCarte"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".vuesUtilisateur.MenuRechargeCompte"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".vuesAccepteur.ConsulterRecette"

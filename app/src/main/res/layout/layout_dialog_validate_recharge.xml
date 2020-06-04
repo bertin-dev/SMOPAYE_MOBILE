@@ -9,7 +9,6 @@
         android:id="@+id/titleRecharge"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginBottom="20dp"
         android:background="@color/colorPrimary"
         android:gravity="center_horizontal|center_vertical"
         android:paddingLeft="10dp"
@@ -28,7 +27,7 @@
         <TextView
             android:id="@+id/msgValidateRecharge"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:gravity="center_horizontal|center_vertical"
             android:paddingLeft="10dp"
@@ -40,8 +39,7 @@
         <TextView
             android:id="@+id/timerRecharge"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_height="wrap_content"
             android:gravity="right"
             android:foregroundGravity="right"
             android:layout_below="@+id/msgValidateRecharge"

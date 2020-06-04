@@ -83,7 +83,7 @@ public interface ApiService {
     @POST("api/resetPassword")
     @FormUrlEncoded
     Call<AllMyResponse> update_account(@Field("oldPassword") String oldPassword,
-                                     @Field("newPassword") String newPassword);
+                                       @Field("newPassword") String newPassword);
 
 
     /* Refresh Token*/
@@ -136,7 +136,7 @@ public interface ApiService {
                                           @Field("phoneNumber") String phoneNumber);
 
     /* Recharge step 2*/
-    @POST("api/account/{account_number}/checkpayment")
+    @PUT("api/account/{account_number}/checkpayment")
     @FormUrlEncoded
     Call<AllMyResponse> recharge_step2(@Path("account_number") String account_number,
                                           @Field("paymentId") String paymentId);

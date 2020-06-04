@@ -1,10 +1,12 @@
 package com.ezpass.smopaye_mobile.vuesUtilisateur.Recharge;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
@@ -96,8 +98,7 @@ import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
  * A simple {@link Fragment} subclass.
  */
 public class FragmentCompte extends Fragment
-                            implements ConnectivityReceiver.ConnectivityReceiverListener,
-                                        ModalDialog_ValidateRecharge.ExampleDialogListener {
+                            implements ConnectivityReceiver.ConnectivityReceiverListener{
 
     private static final String TAG = "FragmentCompte";
     private   AlertDialog.Builder build_error;
@@ -298,6 +299,7 @@ public class FragmentCompte extends Fragment
 
         call = service.recharge_step1(account_number, Float.parseFloat(montant), telephone);
         call.enqueue(new Callback<RechargeResponse>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(Call<RechargeResponse> call, Response<RechargeResponse> response) {
                 Log.w(TAG, "SMOPAYE SERVER onResponse: " + response );
@@ -310,8 +312,34 @@ public class FragmentCompte extends Fragment
                     if(response.body().isSuccess()){
                          payment = response.body().getMessage().getPaymentId();
                         if(!payment.equalsIgnoreCase("")){
-                            ModalDialog_ValidateRecharge validateRecharge = new ModalDialog_ValidateRecharge();
-                            validateRecharge.show(getFragmentManager(), "example dialog");
+                            /*ModalDialog_ValidateRecharge validateRecharge = new ModalDialog_ValidateRecharge();
+                            validateRecharge.show(getFragmentManager(), "example dialog");*/
+
+                            View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_dialog_validate_recharge, null);
+                            TextView titleRecharge = (TextView) view.findViewById(R.id.titleRecharge);
+                            TextView msgValidateRecharge = (TextView) view.findViewById(R.id.msgValidateRecharge);
+                            TextView timerRecharge = (TextView) view.findViewById(R.id.timerRecharge);
+                            timerRecharge.setText("60");
+                            Button btnValidateRecharge = (Button) view.findViewById(R.id.btnValidateRecharge);
+                            titleRecharge.setText(getString(R.string.attenteValidation));
+                            btnValidateRecharge.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    dialog2 = new ACProgressPie.Builder(getContext())
+                                            .ringColor(Color.WHITE)
+                                            .pieColor(Color.WHITE)
+                                            .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                                            .build();
+                                    dialog2.show();
+                                    recharge_step2(temp_account, payment);
+
+                                }
+                            });
+                            msgValidateRecharge.setText("S\'il vous plait veuillez validez la recharge de votre Compte " + response.body().getData().getCompany() +" N°"+ response.body().getData().getAccount_number() + " en Tapant " + response.body().getMessage().getChannel_ussd() + " du service " + response.body().getMessage().getChannel_name());
+                            build_error.setCancelable(true);
+                            build_error.setView(view);
+                            build_error.show();
                         }
                     }
                     //tokenManager.saveToken(response.body());
@@ -375,7 +403,7 @@ public class FragmentCompte extends Fragment
             @Override
             public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
                 Log.w(TAG, "SMOPAYE SERVER onResponse: " + response );
-                progressDialog.dismiss();
+                dialog2.dismiss();
 
                 if(response.isSuccessful()){
 
@@ -393,7 +421,7 @@ public class FragmentCompte extends Fragment
             @Override
             public void onFailure(Call<AllMyResponse> call, Throwable t) {
 
-                progressDialog.dismiss();
+                dialog2.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
 
                 /*Vérification si la connexion internet accessible*/
@@ -416,18 +444,6 @@ public class FragmentCompte extends Fragment
 
             }
         });
-    }
-
-    @Override
-    public void applyTexts(int numero) {
-        dialog2 = new ACProgressPie.Builder(getContext())
-                .ringColor(Color.WHITE)
-                .pieColor(Color.WHITE)
-                .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
-                .build();
-        dialog2.show();
-        recharge_step2(temp_account, payment);
-
     }
 
     private void successResponse(String id_card, String response) {
@@ -485,7 +501,13 @@ public class FragmentCompte extends Fragment
         title.setText(getString(R.string.information));
         imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
         statutOperation.setText(response);
-        build_error.setPositiveButton("OK", null);
+        build_error.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                getActivity().recreate();
+            }
+        });
         build_error.setCancelable(false);
         build_error.setView(view);
         build_error.show();
