@@ -505,6 +505,7 @@ public class FragmentCompte extends Fragment
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+                til_montant1.getEditText().setText("");
                 getActivity().recreate();
             }
         });
@@ -881,8 +882,8 @@ public class FragmentCompte extends Fragment
         til_numCartePropreCompte1.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
         til_montant1.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
 
-        validator.addValidation(getActivity(), R.id.til_numCartePropreCompte, RegexTemplate.NOT_EMPTY, R.string.insererCompte);
-        validator.addValidation(getActivity(), R.id.til_montant, RegexTemplate.NOT_EMPTY, R.string.insererMontant);
+        validator.addValidation(getActivity(), R.id.til_numCartePropreCompte1, RegexTemplate.NOT_EMPTY, R.string.insererCompte);
+        validator.addValidation(getActivity(), R.id.til_montant1, RegexTemplate.NOT_EMPTY, R.string.insererMontant);
     }
     private void readTempNumberInFile() {
         /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
