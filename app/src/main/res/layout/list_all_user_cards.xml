@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="top"
+        app:cardCornerRadius="4dp"
+        app:elevation="10dp"
+        app:cardElevation="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="100"
+                android:background="@drawable/border_bottom_gray">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_weight="50"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="30"
+                        android:text="Nom: "/>
+
+
+                    <TextView
+                        android:id="@+id/username"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Bertin Mounok"
+                        android:textStyle="normal"
+                        android:textSize="12sp"
+                        android:gravity="start"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:layout_weight="70"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeStepGranularity="2sp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_weight="50"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="25"
+                        android:text="Créee: "/>
+
+                    <TextView
+                        android:id="@+id/created_at"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="15/05/2020"
+                        android:textStyle="normal"
+                        android:textSize="12sp"
+                        android:gravity="end"
+                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:layout_weight="75"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeStepGranularity="2sp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
+                    android:layout_weight="30"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:src="@drawable/card"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
+                    android:layout_weight="30"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/code_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ABCDEFGH"
+                        android:textStyle="bold"
+                        android:textColor="@color/textColorBlack"
+                        android:textSize="15sp"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeStepGranularity="2sp"
+                        />
+                    <TextView
+                        android:id="@+id/telUserCard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tel: 694048925"
+                        android:textStyle="italic"
+                        android:textSize="13sp"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeStepGranularity="2sp"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="30"
+                    android:paddingRight="1dp"
+                    android:background="@drawable/border_right_slim_gray"
+                    android:orientation="vertical"
+                    android:paddingEnd="1dp">
+
+                    <TextView
+                        android:id="@+id/serial_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="A000298"
+                        android:textStyle="bold"
+                        android:textColor="@color/textColorBlack"
+                        android:textSize="15sp"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeStepGranularity="2sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="100">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="30"
+                            android:layout_height="wrap_content"
+                            android:text="Etat: "
+                            android:textStyle="italic"
+                            android:textSize="13sp"
+                            android:autoSizeTextType="uniform"
+                            android:autoSizeStepGranularity="2sp" />
+
+                        <TextView
+                            android:id="@+id/cardState"
+                            android:layout_width="0dp"
+                            android:layout_weight="70"
+                            android:layout_height="wrap_content"
+                            android:text="Activer"
+                            android:textStyle="italic"
+                            android:textSize="13sp"
+                            android:autoSizeTextType="uniform"
+                            android:autoSizeStepGranularity="2sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="10"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/cardSelected"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/bgColorStandard"
+                        android:textStyle="bold|italic"
+                        android:theme="@style/BlueCheck" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

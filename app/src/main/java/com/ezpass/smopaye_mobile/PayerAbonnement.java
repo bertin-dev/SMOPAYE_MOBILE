@@ -134,6 +134,8 @@ public class PayerAbonnement extends AppCompatActivity
     CheckBox AbonnementMensuel;
     @BindView(R.id.AbonnementHebdomadaire)
     CheckBox AbonnementHebdomadaire;
+    @BindView(R.id.AbonnementService)
+    CheckBox AbonnementService;
 
     @BindView(R.id.authWindows)
     LinearLayout authWindows;
@@ -151,6 +153,7 @@ public class PayerAbonnement extends AppCompatActivity
     private int c;
     private String temp_number = "";
     private String myId_card;
+    private String myPersonalAccountId;
 
 
     @Override
@@ -185,7 +188,22 @@ public class PayerAbonnement extends AppCompatActivity
 
         Intent intent = getIntent();
         myId_card = intent.getStringExtra("myId_card");
-        Toast.makeText(this, myId_card, Toast.LENGTH_SHORT).show();
+        abonnement = intent.getStringExtra("myAbon");
+        myPersonalAccountId = intent.getStringExtra("myPersonalAccountId");
+
+        if(abonnement.equalsIgnoreCase("semaine")){
+            AbonnementHebdomadaire.setChecked(true);
+            AbonnementMensuel.setChecked(false);
+            AbonnementService.setChecked(false);
+        } else if(abonnement.equalsIgnoreCase("mensuel")){
+            AbonnementMensuel.setChecked(true);
+            AbonnementHebdomadaire.setChecked(false);
+            AbonnementService.setChecked(false);
+        } else {
+            AbonnementService.setChecked(true);
+            AbonnementHebdomadaire.setChecked(false);
+            AbonnementMensuel.setChecked(false);
+        }
 
 
         /*Appels de toutes les méthodes qui seront utilisées*/
@@ -531,44 +549,6 @@ public class PayerAbonnement extends AppCompatActivity
     }
 
 
-    //gestion des abonnements
-    public void onCheckboxClicked(View view) {
-        // Is the view now checked?
-        final boolean checked = ((CheckBox) view).isChecked();
-
-        // Check which checkbox was clicked
-        switch(view.getId()) {
-            case R.id.AbonnementMensuel:
-                if (checked)
-                {
-                    Toast.makeText(this, AbonnementMensuel.getText().toString(), Toast.LENGTH_SHORT).show();
-                    AbonnementHebdomadaire.setChecked(false);
-                    //AbonnementMensuel.setBackgroundColor(Color.parseColor("#039BE5"));
-                    abonnement = "mensuel";
-                }
-                else{
-                    AbonnementMensuel.setChecked(true);
-                    AbonnementHebdomadaire.setChecked(false);
-                    abonnement = "mensuel";
-                }
-                break;
-            case R.id.AbonnementHebdomadaire:
-                if (checked)
-                {
-                    Toast.makeText(this, AbonnementHebdomadaire.getText().toString(), Toast.LENGTH_SHORT).show();
-                    AbonnementMensuel.setChecked(false);
-                    abonnement = "semaine";
-                }
-                else{
-                    AbonnementHebdomadaire.setChecked(true);
-                    AbonnementMensuel.setChecked(false);
-                    abonnement = "semaine";
-                }
-                break;
-        }
-    }
-
-
     private class ReadThread extends Thread {
         byte[] nfcData = null;
 
@@ -658,7 +638,7 @@ public class PayerAbonnement extends AppCompatActivity
             }
         });
         //*******************FIN*****
-        PaiementInSmopayeServer(numCarte, typeAbonnement, pass, temp_number);
+        PaiementInSmopayeServer(numCarte, typeAbonnement, myPersonalAccountId, pass, temp_number);
 
         /*validator.clear();
         //Action à poursuivre si tous les champs sont remplis
@@ -684,10 +664,10 @@ public class PayerAbonnement extends AppCompatActivity
         }*/
     }
 
-    private void PaiementInSmopayeServer(String numCarte, String typeAbonnement, String pass, String telephone) {
+    private void PaiementInSmopayeServer(String numCarte, String typeAbonnement, String accountId, String pass, String telephone) {
 
         //Integer.parseInt(myId_card)
-        call = service.abonnement(10, typeAbonnement);
+        call = service.abonnement(Integer.parseInt(accountId), typeAbonnement);
         call.enqueue(new Callback<AllMyResponse>() {
             @Override
             public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
@@ -695,10 +675,9 @@ public class PayerAbonnement extends AppCompatActivity
                 progressDialog.dismiss();
                 if(response.isSuccessful()){
                     if(response.body().isSuccess()){
-                        //tokenManager.saveToken(response.body());
-                        successResponse(numCarte, "");
+                        successResponse(numCarte, response.body().getMessage());
                     } else {
-                        errorResponse(numCarte, "");
+                        errorResponse(numCarte, response.body().getMessage());
                     }
                 } else{
                     if(response.code() == 422){
@@ -707,8 +686,9 @@ public class PayerAbonnement extends AppCompatActivity
                     else if(response.code() == 401){
                         ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
                         Toast.makeText(PayerAbonnement.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        errorResponse(numCarte, apiError.getMessage());
                     } else{
-                        errorResponse(numCarte, "");
+                        errorResponse(numCarte, response.message());
                     }
                 }
             }
@@ -743,6 +723,58 @@ public class PayerAbonnement extends AppCompatActivity
     }
 
 
+    //gestion des abonnements
+    public void onCheckboxClickedAbon(View view) {
+        // Is the view now checked?
+        final boolean checked = ((CheckBox) view).isChecked();
+
+        // Check which checkbox was clicked
+        switch(view.getId()) {
+            case R.id.AbonnementMensuel:
+                if (checked)
+                {
+                    Toast.makeText(this, AbonnementMensuel.getText().toString(), Toast.LENGTH_SHORT).show();
+                    AbonnementHebdomadaire.setChecked(false);
+                    AbonnementService.setChecked(false);
+                    //AbonnementMensuel.setBackgroundColor(Color.parseColor("#039BE5"));
+                    abonnement = "mensuel";
+                }
+                else{
+                    AbonnementMensuel.setChecked(true);
+                    AbonnementHebdomadaire.setChecked(false);
+                    AbonnementService.setChecked(false);
+                    abonnement = "mensuel";
+                }
+                break;
+            case R.id.AbonnementHebdomadaire:
+                if (checked)
+                {
+                    Toast.makeText(this, AbonnementHebdomadaire.getText().toString(), Toast.LENGTH_SHORT).show();
+                    AbonnementMensuel.setChecked(false);
+                    AbonnementService.setChecked(false);
+                    abonnement = "semaine";
+                }
+                else{
+                    AbonnementHebdomadaire.setChecked(true);
+                    AbonnementMensuel.setChecked(false);
+                    AbonnementService.setChecked(false);
+                    abonnement = "semaine";
+                }
+                break;
+            case R.id.AbonnementService:
+                if(checked){
+                    Toast.makeText(this, AbonnementService.getText().toString(), Toast.LENGTH_SHORT).show();
+                    AbonnementMensuel.setChecked(false);
+                    AbonnementHebdomadaire.setChecked(false);
+                    abonnement = "service";
+                } else{
+                    AbonnementService.setChecked(true);
+                    AbonnementMensuel.setChecked(false);
+                    AbonnementService.setChecked(false);
+                    abonnement = "service";
+                }
+        }
+    }
 
 
     private void successResponse(String id_card, String response) {

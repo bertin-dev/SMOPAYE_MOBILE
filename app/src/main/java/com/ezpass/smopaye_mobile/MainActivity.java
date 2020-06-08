@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity
     private String myPersonalAccountNumber = "";
     private String myPersonalAccountState = "";
     private String myPersonalAccountAmount = "";
+    private String myPersonalAccountId = "";
     /*Déclaration des objets qui permettent d'écrire sur le fichier*/
     private String tmp_card_number = "tmp_card_number";
     private String telephone1 = "";
@@ -265,12 +266,17 @@ public class MainActivity extends AppCompatActivity
                     myCompte = dataUserCards.get(0).getCode_number();
                     myId_card = dataUserCards.get(0).getId();
                     myCategorie = categorie.getName();
-                    myAbon = abonnement.get(0).getSubscription_type();
+
+                    for(int i=0; i<abonnement.size(); i++){
+                        myAbon = abonnement.get(abonnement.size() - 1).getSubscription_type();
+                        //myAbon = abonnement.get(i).getSubscription_type();
+                    }
 
                     //infos sur le compte personnel
                     myPersonalAccountNumber = compte.getAccount_number();
                     myPersonalAccountState = compte.getAccount_state();
                     myPersonalAccountAmount = compte.getAmount();
+                    myPersonalAccountId = compte.getId();
 
                     //update account
                     nom = particulier.get(0).getLastname();
@@ -624,6 +630,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_abonnement){
             Intent intent = new Intent(getApplicationContext(), PayerAbonnement.class);
             intent.putExtra("myId_card", myId_card);
+            intent.putExtra("myAbon", myAbon);
+            intent.putExtra("myPersonalAccountId", myPersonalAccountId);
             startActivity(intent);
         }
 

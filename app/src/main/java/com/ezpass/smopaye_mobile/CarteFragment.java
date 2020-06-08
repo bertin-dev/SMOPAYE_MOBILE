@@ -52,10 +52,10 @@ import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
 import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
-import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
+import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -96,7 +96,7 @@ public class CarteFragment extends Fragment
 
     private ApiService service;
     private TokenManager tokenManager;
-    private Call<AccessToken> call;
+    private Call<AllMyResponse> call;
     private Call<Card> cardCall;
 
     //BD LOCALE
@@ -162,24 +162,6 @@ public class CarteFragment extends Fragment
     @BindView(R.id.msgNetworkLimited)
     TextView msgNetworkLimited;
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        if(etatCart.equalsIgnoreCase("desactive")) {
-            Toast.makeText(getActivity(), "1------DESACTIVE++++++++++" + etatCart, Toast.LENGTH_SHORT).show();
-            sWtVerouillerCarte.setChecked(true);
-            //verouillerCarte.setEnabled(false);
-            etatDelaCarte.setText(getString(R.string.votreCarteVerouille));
-        }
-        else if (etatCart.equalsIgnoreCase("active")){
-            Toast.makeText(getActivity(), "2------ACTIVE//////////" + etatCart, Toast.LENGTH_SHORT).show();
-            sWtVerouillerCarte.setChecked(false);
-            //verouillerCarte.setEnabled(true);
-        }
-
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -254,35 +236,6 @@ public class CarteFragment extends Fragment
         detailsCard(myId_card);
 
 
-        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
-        /*try{
-            FileInputStream fIn = getActivity().openFileInput(file);
-            while ((c = fIn.read()) != -1){
-                temp_number = temp_number + Character.toString((char)c);
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
-        if(etatCart.equalsIgnoreCase("deactive") && temp_number.equalsIgnoreCase("")) {
-            sWtVerouillerCarte.setChecked(true);
-            //verouillerCarte.setEnabled(false);
-            etatDelaCarte.setText(getString(R.string.votreCarteVerouille));
-        }
-        else if (etatCart.equalsIgnoreCase("activate") && temp_number.equalsIgnoreCase("") ){
-            sWtVerouillerCarte.setChecked(false);
-            //verouillerCarte.setEnabled(true);
-        }
-        else if (temp_number.equalsIgnoreCase("1")) {
-            sWtVerouillerCarte.setChecked(true);
-            etatDelaCarte.setText(getString(R.string.votreCarteVerouille));
-        }
-        else if(temp_number.equalsIgnoreCase("2")){
-            sWtVerouillerCarte.setChecked(false);
-        }*/
-
-
         sWtVerouillerCarte.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton v, boolean isChecked) {
@@ -291,12 +244,12 @@ public class CarteFragment extends Fragment
 
                 if(switchChecked){
                     Toast.makeText(getActivity(), getString(R.string.votreCarteVerouille), Toast.LENGTH_SHORT).show();
-                    checkStateCarte(card_id, "deactive");
+                    checkStateCarte(card_id, "desactiver");
                     //i = "1";
                     etatDelaCarte.setText(getString(R.string.votreCarteVerouille));
                 } else{
                     Toast.makeText(getActivity(), getString(R.string.votreCarteDeverouille), Toast.LENGTH_SHORT).show();
-                    checkStateCarte(card_id, "active");
+                    checkStateCarte(card_id, "activer");
                     //i = "2";
                     etatDelaCarte.setText(getString(R.string.balacerBouton));
                 }
@@ -353,6 +306,18 @@ public class CarteFragment extends Fragment
 
                         tAbonnement.setText(abonnement);
                         etatCart = card.getCard_state();
+
+                        if (etatCart.equalsIgnoreCase("activer")){
+                            sWtVerouillerCarte.setChecked(false);
+                            //verouillerCarte.setEnabled(true);
+                        }
+                        else {
+                            sWtVerouillerCarte.setChecked(true);
+                            //verouillerCarte.setEnabled(false);
+                            etatDelaCarte.setText(getString(R.string.votreCarteVerouille));
+                        }
+
+
 
                         //TRAITEMENT DE LA DATE D'EXPIRATION
                         String[] parts = card.getCreated_at().split("-");
@@ -442,32 +407,34 @@ public class CarteFragment extends Fragment
 
     private void checkStateCardSmopayeServer(String id_card, String etat) {
 
-        call = service.etat_carte(id_card, etat);
-        call.enqueue(new Callback<AccessToken>() {
+        call = service.etat_carte(myId_card, etat);
+        call.enqueue(new Callback<AllMyResponse>() {
             @Override
-            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+            public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
                 Log.w(TAG, "SMOPAYE SERVER onResponse: " + response);
                 progressDialog.dismiss();
 
                 if(response.isSuccessful()){
-                    Toast.makeText(getActivity(), response.body().toString(), Toast.LENGTH_SHORT).show();
-                    tokenManager.saveToken(response.body());
-                    successResponse(id_card, response.message());
+                    assert response.body() != null;
 
+                    if(response.body().isSuccess()){
+                        //successResponse(id_card, response.body().getMessage());
+                        Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    } else{
+                        errorResponse(id_card, response.body().getMessage());
+                    }
                 } else{
-
                     if(response.code() == 401){
                         ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
                         Toast.makeText(getContext(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        errorResponse(id_card, apiError.getMessage());
                     }
-
                     errorResponse(id_card, response.message());
-
                 }
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
+            public void onFailure(Call<AllMyResponse> call, Throwable t) {
 
                 progressDialog.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());

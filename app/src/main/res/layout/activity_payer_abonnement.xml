@@ -148,7 +148,7 @@
                         android:id="@+id/AbonnementMensuel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="onCheckboxClicked"
+                        android:onClick="onCheckboxClickedAbon"
                         android:textColor="@color/bgColorStandard"
                         android:textStyle="bold|italic"
                         android:theme="@style/BlueCheck"
@@ -158,12 +158,22 @@
                         android:id="@+id/AbonnementHebdomadaire"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="onCheckboxClicked"
+                        android:onClick="onCheckboxClickedAbon"
                         android:textColor="@color/bgColorStandard"
                         android:textStyle="bold|italic"
                         android:theme="@style/BlueCheck"
                         android:text="@string/AbonnementHebdomadaire" />
 
+                    <CheckBox
+                        android:id="@+id/AbonnementService"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="onCheckboxClickedAbon"
+                        android:textStyle="bold|italic"
+                        android:textColor="@color/bgColorStandard"
+                        android:text="@string/AbonnementService"
+                        android:theme="@style/BlueCheck"
+                        android:checked="true"/>
 
                 </LinearLayout>
 

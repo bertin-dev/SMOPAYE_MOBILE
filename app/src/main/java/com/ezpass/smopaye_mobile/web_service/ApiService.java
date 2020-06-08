@@ -7,6 +7,7 @@ import com.ezpass.smopaye_mobile.Profil_user.DataUser;
 import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 import com.ezpass.smopaye_mobile.web_service_response.HomeResponse;
+import com.ezpass.smopaye_mobile.web_service_response.Recharge.ListAllUserCardResponse;
 import com.ezpass.smopaye_mobile.web_service_response.Recharge.RechargeResponse;
 
 import java.util.List;
@@ -114,10 +115,10 @@ public interface ApiService {
 
 
     /* Abonnement*/
-    @POST("api/takeSubscription/{card_id}")
+    @POST("api/account/{account_id}/takeSubscription")
     @FormUrlEncoded
-    Call<AllMyResponse> abonnement(@Path("card_id") int card_id,
-                                 @Field("type") String type);
+    Call<AllMyResponse> abonnement(@Path("account_id") int account_id,
+                                   @Field("type") String type);
 
 
     /* Retrait Smopaye*/
@@ -178,7 +179,7 @@ public interface ApiService {
     /* Activer et désactiver la carte */
     @POST("api/card/{card_id}/activation")
     @FormUrlEncoded
-    Call<AccessToken> etat_carte(@Path("card_id") String card_id,
+    Call<AllMyResponse> etat_carte(@Path("card_id") String card_id,
                                  @Field("card_state") String card_state);
 
 
@@ -201,6 +202,10 @@ public interface ApiService {
     /* Lister all Card */
     @GET("api/card")
     Call<Response_Status> findAllCards();
+
+    /* Lister all Card using by user */
+    @GET("api/user/{user_id}/children")
+    Call<ListAllUserCardResponse> findAllUserCards(@Path("user_id") int user_id);
 
 
     /* update Card */
