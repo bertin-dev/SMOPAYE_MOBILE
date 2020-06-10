@@ -115,7 +115,7 @@
 
     <string name="admin">Admin &#160; &#160; &#160; &#160;</string>
     <string name="statutAdmin">Détenteur du Compte</string>
-    <string name="souscription">Souscription</string>
+    <string name="souscription">Souscription </string>
     <string name="gesComptes">Gestion comptes</string>
 
     <string name="gesAccepteur">Gestion Accepteurs</string>
@@ -640,4 +640,12 @@
     <string name="attenteValidation">Recharge en attente de validation</string>
     <string name="attenteValidationMsg">S\'il vous plait veuillez validez la recharge de votre Compte Smopaye N°123456789 en Tapant le #150*50# du service Orange Money.</string>
 
+    <string name="currentSubscriptions">Abonnements encours</string>
+    <string name="MyCards">Mes Cartes</string>
+    <string name="listcurrentSubscriptions">Dans cette section, vous avez la liste des abonnements en attente auxquels vous avez souscrits.</string>
+    <string name="rechargeListCarte">Dans cette section, vous verez la liste de toutes les cartes de votre compte. Pour recharger une carte, il suffit de là cocher, entrez le montant puis valider.</string>
+    <string name="dateSubscription">Création de l\'abonnement </string>
+    <string name="expSubscriptions">Expiration de l\'abonnement </string>
+    <string name="etat">Etat: </string>
+    <string name="expiry">Expiration</string>
 </resources>

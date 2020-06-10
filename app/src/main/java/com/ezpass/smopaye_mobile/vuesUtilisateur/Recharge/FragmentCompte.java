@@ -15,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -33,6 +34,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -111,6 +113,7 @@ public class FragmentCompte extends Fragment
     private DbHandler dbHandler;
     private Date aujourdhui;
     private DateFormat shortDateFormat;
+    private CountDownTimer countDownTimer;
 
     /////////////////////////////////////////////////////////////////////////////////
     private Handler handler;
@@ -265,35 +268,79 @@ public class FragmentCompte extends Fragment
      * */
     @OnClick(R.id.btnRecharge)
     void recharge(){
-        if(!validateCompte(til_numCartePropreCompte1) | !validateMontant(til_montant1)){
-            return;
-        }
 
-        String id_card = til_numCartePropreCompte1.getEditText().getText().toString();
-        String montant = til_montant1.getEditText().getText().toString();
-        validator.clear();
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_dialog_validate_recharge, null);
+            TextView titleRecharge = (TextView) view.findViewById(R.id.titleRecharge);
+            TextView msgValidateRecharge = (TextView) view.findViewById(R.id.msgValidateRecharge);
+            msgValidateRecharge.setText("S\'il vous plait veuillez validez la recharge de votre Compte SMOPAYE N° en Tapant  du service ");
+            TextView timerRecharge = (TextView) view.findViewById(R.id.timerRecharge);
+            timerRecharge.setText("60");
+            titleRecharge.setText(getString(R.string.attenteValidation));
 
-        /*Action à poursuivre si tous les champs sont remplis*/
-        if(validator.validate()){
-            //********************DEBUT***********
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // On ajoute un message à notre progress dialog
-                    progressDialog.setMessage(getString(R.string.connexionserver));
-                    // On donne un titre à notre progress dialog
-                    progressDialog.setTitle(getString(R.string.attenteReponseServer));
-                    // On spécifie le style
-                    //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    // On affiche notre message
-                    progressDialog.show();
-                    //build.setPositiveButton("ok", new View.OnClickListener()
+            ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
+            progressBar.setVisibility(View.VISIBLE);
+            //DEBUT
+
+        countDownTimer = new CountDownTimer(60 * 1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timerRecharge.setText(String.valueOf(millisUntilFinished / 1000));
+            }
+
+            @Override
+            public void onFinish() {
+                timerRecharge.setText("Terminé.");
+            }
+        };
+
+        countDownTimer.start();
+
+          //FIN TIMER
+            build_error.setNeutralButton(getString(R.string.annuler), new DialogInterface.OnClickListener() { // define the 'Cancel' button
+            public void onClick(DialogInterface dialog, int which) {
+                //Either of the following two lines should work.
+                dialog.cancel();
+                til_montant1.getEditText().setText("");
+                //dialog.dismiss();
+            }
+             });
+            build_error.setPositiveButton(getString(R.string.valider), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                progressBar.setVisibility(View.GONE);
+                if(countDownTimer != null) {
+                    countDownTimer.cancel();
+                    countDownTimer = null;
                 }
-            });
-            //*******************FIN*****
-            recharge_step1(temp_account, montant, temp_number);
-        }
+                successResponse("", "operation effectuee");
+            }
+        });
+            build_error.setCancelable(true);
+            build_error.setView(view);
+        final AlertDialog alertDialog = build_error.create();
+        alertDialog.show();
+
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (alertDialog.isShowing()){
+                    alertDialog.dismiss();
+                    errorResponse("", "Opération échoué.");
+                }
+            }
+        }, 61000);
+
+
+
+
+
+
     }
+
+
+
 
     private void recharge_step1(String account_number, String montant, String telephone) {
 
@@ -507,6 +554,7 @@ public class FragmentCompte extends Fragment
                 dialog.dismiss();
                 til_montant1.getEditText().setText("");
                 getActivity().recreate();
+
             }
         });
         build_error.setCancelable(false);

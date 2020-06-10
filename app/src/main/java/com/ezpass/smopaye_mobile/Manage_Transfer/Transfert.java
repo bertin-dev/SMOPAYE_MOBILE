@@ -1,4 +1,4 @@
-package com.ezpass.smopaye_mobile;
+package com.ezpass.smopaye_mobile.Manage_Transfer;
 
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -41,7 +41,12 @@ import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
+import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
+import com.ezpass.smopaye_mobile.Login;
+import com.ezpass.smopaye_mobile.NotifApp;
+import com.ezpass.smopaye_mobile.NotifReceiver;
+import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.RemoteFragments.APIService;
 import com.ezpass.smopaye_mobile.RemoteModel.User;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Client;
@@ -50,6 +55,7 @@ import com.ezpass.smopaye_mobile.RemoteNotifications.MyResponse;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Sender;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
+import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
@@ -544,15 +550,12 @@ public class Transfert extends AppCompatActivity
 
                     if(response.code() == 422){
                         handleErrors(response.errorBody());
-                    }
-                    else if(response.code() == 401) {
-                        ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
-                        Toast.makeText(Transfert.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
-                        errorResponse(id_card_receiver, apiError.getMessage());
                     } else{
+                        /*ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                        Toast.makeText(Transfert.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        errorResponse(id_card_receiver, apiError.getMessage());*/
                         errorResponse(id_card_receiver, response.message());
                     }
-
                 }
 
             }

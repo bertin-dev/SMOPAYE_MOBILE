@@ -354,7 +354,7 @@
     <string name="smopaye_sarl">SMOPAYE SARL</string>
     <string name="soa">SOA</string>
     <string name="sortir">EXIT</string>
-    <string name="souscription">Subscription</string>
+    <string name="souscription">Subscription </string>
     <string name="souscriptionAbonnement">Subscription Subscription</string>
     <string name="souscriptionEtape1">Subscription - Step 1</string>
     <string name="soustitreMsg">Sub Title Message</string>
@@ -560,6 +560,14 @@
     <string name="attenteValidation">Recharge pending validation</string>
     <string name="attenteValidationMsg">Please confirm the recharge of your Smopaye Account N ° 123456789 by typing # 150 * 50 # from the Orange Money service.</string>
 
+    <string name="currentSubscriptions">Current subscriptions</string>
+    <string name="MyCards">My Cards</string>
+    <string name="listcurrentSubscriptions">In this section you have the list of pending subscriptions to which you have subscribed.</string>
+    <string name="rechargeListCarte">In this section, you will see the list of all cards in your account. To reload a card, simply check there, enter the amount and confirm.</string>
+    <string name="dateSubscription">Subscription creation </string>
+    <string name="expSubscriptions">Subscription expiration </string>
+    <string name="etat">State: </string>
+    <string name="expiry">Expiry</string>
 
 
 </resources>

@@ -68,7 +68,7 @@
         <activity
             android:name=".vuesAdmin.ListeUserAndAgents"
             android:parentActivityName=".vuesAdmin.GestionAccepteur" />
-        <activity android:name=".PayerAbonnement" />
+        <activity android:name=".Manage_subscriptions.Home_Subscriptions" />
         <activity
             android:name=".Assistance.HomeAssistanceOnline"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -95,7 +95,7 @@
         <activity android:name=".Apropos.Apropos" />
         <activity android:name=".DemarrageOffreSmopaye" />
         <activity
-            android:name=".Transfert"
+            android:name=".Manage_Transfer.Transfert"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".WebViewMonetbil"

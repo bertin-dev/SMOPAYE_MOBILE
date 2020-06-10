@@ -1,4 +1,4 @@
-package com.ezpass.smopaye_mobile;
+package com.ezpass.smopaye_mobile.Manage_subscriptions;
 
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -19,16 +19,14 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -40,8 +38,13 @@ import android.widget.Toast;
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
-import com.ezpass.smopaye_mobile.Apropos.Apropos;
+import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
+import com.ezpass.smopaye_mobile.Login;
+import com.ezpass.smopaye_mobile.NotifApp;
+import com.ezpass.smopaye_mobile.NotifReceiver;
+import com.ezpass.smopaye_mobile.PasswordModalDialog;
+import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.RemoteFragments.APIService;
 import com.ezpass.smopaye_mobile.RemoteModel.User;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Client;
@@ -49,9 +52,7 @@ import com.ezpass.smopaye_mobile.RemoteNotifications.Data;
 import com.ezpass.smopaye_mobile.RemoteNotifications.MyResponse;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Sender;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
-import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
-import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
 import com.ezpass.smopaye_mobile.web_service_access.ApiError;
@@ -86,12 +87,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
-public class PayerAbonnement extends AppCompatActivity
-                             implements PasswordModalDialog.ExampleDialogListener, ConnectivityReceiver.ConnectivityReceiverListener{
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class Fragment_Subscriptions extends Fragment
+                                    implements PasswordModalDialog.ExampleDialogListener, ConnectivityReceiver.ConnectivityReceiverListener{
 
-    private static final String TAG = "PayerAbonnement";
+    private static final String TAG = "Fragment_Subscriptions";
     private String abonnement = "";
     private AlertDialog.Builder build_error;
     private ProgressDialog progressDialog;
@@ -108,7 +113,7 @@ public class PayerAbonnement extends AppCompatActivity
     private final byte B_CPU = 3;
     private final byte A_CPU = 1;
     private final byte A_M1 = 2;
-    private Nfc nfc = new Nfc(this);
+    private Nfc nfc = new Nfc(getContext());
     //////////////////////////////////////////////////////////////////////////////////////
     //BD LOCALE
     private DbHandler dbHandler;
@@ -130,13 +135,6 @@ public class PayerAbonnement extends AppCompatActivity
     @BindView(R.id.tie_numCarteBeneficiaire)
     TextInputEditText tie_numCarteBeneficiaire;
 
-    @BindView(R.id.AbonnementMensuel)
-    CheckBox AbonnementMensuel;
-    @BindView(R.id.AbonnementHebdomadaire)
-    CheckBox AbonnementHebdomadaire;
-    @BindView(R.id.AbonnementService)
-    CheckBox AbonnementService;
-
     @BindView(R.id.authWindows)
     LinearLayout authWindows;
     @BindView(R.id.internetIndisponible)
@@ -156,37 +154,43 @@ public class PayerAbonnement extends AppCompatActivity
     private String myPersonalAccountId;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payer_abonnement);
+    private CheckBox AbonnementMensuel;
+    private CheckBox AbonnementHebdomadaire;
 
-        Toolbar toolbar = findViewById(R.id.myToolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.RenouvelerAbonnement));
-        toolbar.setSubtitle(getString(R.string.ezpass));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    public Fragment_Subscriptions() {
+        // Required empty public constructor
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_subscriptions, container, false);
+
 
         //initialisation des objets qui seront manipulés
-        ButterKnife.bind(this);
-        tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        ButterKnife.bind(this, view);
+        tokenManager = TokenManager.getInstance(getActivity().getSharedPreferences("prefs", MODE_PRIVATE));
         if(tokenManager.getToken() == null){
-            startActivity(new Intent(this, Login.class));
-            finish();
+            startActivity(new Intent(getActivity(), Login.class));
+            getActivity().finish();
         }
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
         //service = RetrofitBuilder.createService(ApiService.class);
         //tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         validator = new AwesomeValidation(ValidationStyle.TEXT_INPUT_LAYOUT);
-        progressDialog = new ProgressDialog(PayerAbonnement.this);
-        build_error = new AlertDialog.Builder(PayerAbonnement.this);
+        progressDialog = new ProgressDialog(getActivity());
+        build_error = new AlertDialog.Builder(getActivity());
         //service google firebase
         apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
+        AbonnementMensuel=(CheckBox)view.findViewById(R.id.AbonnementMensuel);
+        AbonnementHebdomadaire=(CheckBox)view.findViewById(R.id.AbonnementHebdomadaire);
 
-        Intent intent = getIntent();
+
+        Intent intent = getActivity().getIntent();
         myId_card = intent.getStringExtra("myId_card");
         abonnement = intent.getStringExtra("myAbon");
         myPersonalAccountId = intent.getStringExtra("myPersonalAccountId");
@@ -194,15 +198,9 @@ public class PayerAbonnement extends AppCompatActivity
         if(abonnement.equalsIgnoreCase("semaine")){
             AbonnementHebdomadaire.setChecked(true);
             AbonnementMensuel.setChecked(false);
-            AbonnementService.setChecked(false);
-        } else if(abonnement.equalsIgnoreCase("mensuel")){
+        } else {
             AbonnementMensuel.setChecked(true);
             AbonnementHebdomadaire.setChecked(false);
-            AbonnementService.setChecked(false);
-        } else {
-            AbonnementService.setChecked(true);
-            AbonnementHebdomadaire.setChecked(false);
-            AbonnementMensuel.setChecked(false);
         }
 
 
@@ -210,7 +208,51 @@ public class PayerAbonnement extends AppCompatActivity
         setupRulesValidatForm();
         callHandlerMethod();
         readTempNumberInFile();
+
+
+        AbonnementMensuel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final boolean checked = ((CheckBox) v).isChecked();
+                if (checked)
+                {
+                    Toast.makeText(getActivity(), AbonnementMensuel.getText().toString(), Toast.LENGTH_SHORT).show();
+                    AbonnementHebdomadaire.setChecked(false);
+                    abonnement = "mensuel";
+                } else {
+                    AbonnementMensuel.setChecked(true);
+                    AbonnementHebdomadaire.setChecked(false);
+                    abonnement = "mensuel";
+                }
+            }
+        });
+
+        AbonnementHebdomadaire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Is the view now checked?
+                final boolean checked = ((CheckBox) v).isChecked();
+                if (checked)
+                {
+                    Toast.makeText(getActivity(), AbonnementHebdomadaire.getText().toString(), Toast.LENGTH_SHORT).show();
+                    AbonnementMensuel.setChecked(false);
+                    abonnement = "semaine";
+                }
+                else{
+                    AbonnementHebdomadaire.setChecked(true);
+                    AbonnementMensuel.setChecked(false);
+                    abonnement = "semaine";
+                }
+
+            }
+        });
+
+
+
+        return view;
     }
+
 
 
     /**
@@ -222,7 +264,7 @@ public class PayerAbonnement extends AppCompatActivity
     private void readTempNumberInFile() {
         /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
         try{
-            FileInputStream fIn = openFileInput(file);
+            FileInputStream fIn = getActivity().openFileInput(file);
             while ((c = fIn.read()) != -1){
                 temp_number = temp_number + Character.toString((char)c);
             }
@@ -241,7 +283,7 @@ public class PayerAbonnement extends AppCompatActivity
     void OpenNFC(){
         try {
             nfc.open();
-            runOnUiThread(new Runnable() {
+            getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
 
@@ -265,7 +307,7 @@ public class PayerAbonnement extends AppCompatActivity
 
 
     /**
-     * PayerAbonnement() méthode permettant de démarrer l'opération de Renouvelement des abonnements
+     * Home_Subscriptions() méthode permettant de démarrer l'opération de Renouvelement des abonnements
      * @since 2019
      * */
     @OnClick(R.id.btnPayerAbonnment)
@@ -274,7 +316,7 @@ public class PayerAbonnement extends AppCompatActivity
             return;
         }
         if(abonnement.equalsIgnoreCase("")){
-            Toast.makeText(PayerAbonnement.this, getString(R.string.cocherAbonnement), Toast.LENGTH_SHORT).show();
+            Toast.makeText(Home_Subscriptions.this, getString(R.string.cocherAbonnement), Toast.LENGTH_SHORT).show();
             return;
         }*/
         //openDialog();
@@ -298,16 +340,16 @@ public class PayerAbonnement extends AppCompatActivity
     }
 
     private void changeActivity() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
         if(activeInfo != null && activeInfo.isConnected()){
-            progressDialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
+            progressDialog = ProgressDialog.show(getContext(), getString(R.string.connexion), getString(R.string.encours), true);
             progressDialog.show();
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {
                     progressDialog.dismiss();
-                    recreate();
+                    getActivity().recreate();
                 }
             }, 2000); // 2000 milliseconds delay
 
@@ -315,7 +357,7 @@ public class PayerAbonnement extends AppCompatActivity
             progressDialog.dismiss();
             authWindows.setVisibility(View.GONE);
             internetIndisponible.setVisibility(View.VISIBLE);
-            Toast.makeText(this, getString(R.string.connexionIntrouvable), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.connexionIntrouvable), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -327,7 +369,7 @@ public class PayerAbonnement extends AppCompatActivity
 
         if(isConnected){
             message = getString(R.string.networkOnline);
-            snackbar = Snackbar.make(findViewById(R.id.payerAbonnement), message, Snackbar.LENGTH_LONG);
+            snackbar = Snackbar.make(getActivity().findViewById(R.id.fragment_subscriptions), message, Snackbar.LENGTH_LONG);
             view = snackbar.getView();
             TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(color);
@@ -338,7 +380,7 @@ public class PayerAbonnement extends AppCompatActivity
             }
         } else{
             message = getString(R.string.networkOffline);
-            snackbar = Snackbar.make(findViewById(R.id.payerAbonnement), message, Snackbar.LENGTH_INDEFINITE);
+            snackbar = Snackbar.make(getActivity().findViewById(R.id.fragment_subscriptions), message, Snackbar.LENGTH_INDEFINITE);
             view = snackbar.getView();
             TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(color);
@@ -359,14 +401,14 @@ public class PayerAbonnement extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
         //register intent filter
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
-        registerReceiver(connectivityReceiver, intentFilter);
+        getActivity().registerReceiver(connectivityReceiver, intentFilter);
 
         //register connection status listener
         NotifApp.getInstance().setConnectivityListener(this);
@@ -377,7 +419,7 @@ public class PayerAbonnement extends AppCompatActivity
      * @since 2020
      */
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
 
         if(call != null){
@@ -414,7 +456,7 @@ public class PayerAbonnement extends AppCompatActivity
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case CHECK_NFC_TIMEOUT: {
-                        Toast.makeText(getApplicationContext(), "Check card time out!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Check card time out!", Toast.LENGTH_LONG).show();
                        /* open_btn.setEnabled(true);
                         close_btn.setEnabled(false);
                         check_btn.setEnabled(false);*/
@@ -439,7 +481,7 @@ public class PayerAbonnement extends AppCompatActivity
                                 type = "unknow";
                             }
 
-                            new AlertDialog.Builder(PayerAbonnement.this)
+                            new AlertDialog.Builder(getActivity())
                                     .setMessage(getString(R.string.card_type) + getString(R.string.type_b) + " " + type +
                                             "\r\n" + getString(R.string.atqb_data) + StringUtil.toHexString(atqb) +
                                             "\r\n" + getString(R.string.pupi_data) + StringUtil.toHexString(pupi))
@@ -505,47 +547,7 @@ public class PayerAbonnement extends AppCompatActivity
     private void setupRulesValidatForm() {
         //coloration des champs lorsqu'il y a erreur
         til_numCarteBeneficiaire.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
-        validator.addValidation(this, R.id.til_numCarteBeneficiaire, RegexTemplate.NOT_EMPTY, R.string.verifierNumero);
-    }
-
-
-    /*                    GESTION DU MENU DROIT                  */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.apropos) {
-            Intent intent = new Intent(getApplicationContext(), Apropos.class);
-            startActivity(intent);
-        }
-
-        if (id == R.id.tuto) {
-            Intent intent = new Intent(getApplicationContext(), TutorielUtilise.class);
-            startActivity(intent);
-        }
-
-        if(id == R.id.modifierCompte){
-            Intent intent = new Intent(getApplicationContext(), ModifierCompte.class);
-            startActivity(intent);
-        }
-
-        if (id == android.R.id.home) {
-            super.onBackPressed();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        validator.addValidation(getActivity(), R.id.til_numCarteBeneficiaire, RegexTemplate.NOT_EMPTY, R.string.verifierNumero);
     }
 
 
@@ -597,7 +599,7 @@ public class PayerAbonnement extends AppCompatActivity
             //OwriteValueData();
             readValueDataCourt();
         } else {
-            Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
             Log.d(TAG, "m1CardAuthenticate fail!");
         }
     }
@@ -613,7 +615,7 @@ public class PayerAbonnement extends AppCompatActivity
 
         if (null == data) {
             Log.e(TAG, "readValueBtn fail!");
-            Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
         } else {
             til_numCarteBeneficiaire.getEditText().setText(StringUtil.toHexString(data));
         }
@@ -623,7 +625,7 @@ public class PayerAbonnement extends AppCompatActivity
     private void paiement(final String numCarte, final String typeAbonnement, String pass){
 
         //********************DEBUT***********
-        runOnUiThread(new Runnable() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 // On ajoute un message à notre progress dialog
@@ -685,7 +687,7 @@ public class PayerAbonnement extends AppCompatActivity
                     }
                     else if(response.code() == 401){
                         ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
-                        Toast.makeText(PayerAbonnement.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
                         errorResponse(numCarte, apiError.getMessage());
                     } else{
                         errorResponse(numCarte, response.message());
@@ -700,12 +702,12 @@ public class PayerAbonnement extends AppCompatActivity
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
 
                 /*Vérification si la connexion internet accessible*/
-                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
                 if(!(activeInfo != null && activeInfo.isConnected())){
                     authWindows.setVisibility(View.GONE);
                     internetIndisponible.setVisibility(View.VISIBLE);
-                    Toast.makeText(PayerAbonnement.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
                 }
                 /*Vérification si le serveur est inaccessible*/
                 else{
@@ -714,66 +716,12 @@ public class PayerAbonnement extends AppCompatActivity
                     conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
                     titleNetworkLimited.setText(getString(R.string.connexionLimite));
                     //msgNetworkLimited.setText();
-                    Toast.makeText(PayerAbonnement.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
 
-    }
-
-
-    //gestion des abonnements
-    public void onCheckboxClickedAbon(View view) {
-        // Is the view now checked?
-        final boolean checked = ((CheckBox) view).isChecked();
-
-        // Check which checkbox was clicked
-        switch(view.getId()) {
-            case R.id.AbonnementMensuel:
-                if (checked)
-                {
-                    Toast.makeText(this, AbonnementMensuel.getText().toString(), Toast.LENGTH_SHORT).show();
-                    AbonnementHebdomadaire.setChecked(false);
-                    AbonnementService.setChecked(false);
-                    //AbonnementMensuel.setBackgroundColor(Color.parseColor("#039BE5"));
-                    abonnement = "mensuel";
-                }
-                else{
-                    AbonnementMensuel.setChecked(true);
-                    AbonnementHebdomadaire.setChecked(false);
-                    AbonnementService.setChecked(false);
-                    abonnement = "mensuel";
-                }
-                break;
-            case R.id.AbonnementHebdomadaire:
-                if (checked)
-                {
-                    Toast.makeText(this, AbonnementHebdomadaire.getText().toString(), Toast.LENGTH_SHORT).show();
-                    AbonnementMensuel.setChecked(false);
-                    AbonnementService.setChecked(false);
-                    abonnement = "semaine";
-                }
-                else{
-                    AbonnementHebdomadaire.setChecked(true);
-                    AbonnementMensuel.setChecked(false);
-                    AbonnementService.setChecked(false);
-                    abonnement = "semaine";
-                }
-                break;
-            case R.id.AbonnementService:
-                if(checked){
-                    Toast.makeText(this, AbonnementService.getText().toString(), Toast.LENGTH_SHORT).show();
-                    AbonnementMensuel.setChecked(false);
-                    AbonnementHebdomadaire.setChecked(false);
-                    abonnement = "service";
-                } else{
-                    AbonnementService.setChecked(true);
-                    AbonnementMensuel.setChecked(false);
-                    AbonnementService.setChecked(false);
-                    abonnement = "service";
-                }
-        }
     }
 
 
@@ -798,12 +746,12 @@ public class PayerAbonnement extends AppCompatActivity
                             RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.souscriptionAbonnement), response, "success");
                             //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(PayerAbonnement.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
                 else{
-                    Toast.makeText(PayerAbonnement.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -819,13 +767,13 @@ public class PayerAbonnement extends AppCompatActivity
         LocalNotification(getString(R.string.souscriptionAbonnement), response);
 
         ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
-        dbHandler = new DbHandler(getApplicationContext());
+        dbHandler = new DbHandler(getContext());
         aujourdhui = new Date();
         shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
         dbHandler.insertUserDetails(getString(R.string.souscriptionAbonnement), response, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
 
-        View view = LayoutInflater.from(PayerAbonnement.this).inflate(R.layout.alert_dialog_success, null);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_success, null);
         TextView title = (TextView) view.findViewById(R.id.title);
         TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
         ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
@@ -859,12 +807,12 @@ public class PayerAbonnement extends AppCompatActivity
                             RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.souscriptionAbonnement), response, "error");
                             //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(PayerAbonnement.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
                 else{
-                    Toast.makeText(PayerAbonnement.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -880,12 +828,12 @@ public class PayerAbonnement extends AppCompatActivity
         LocalNotification(getString(R.string.souscriptionAbonnement), response);
 
         ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
-        dbHandler = new DbHandler(getApplicationContext());
+        dbHandler = new DbHandler(getContext());
         aujourdhui = new Date();
         shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
         dbHandler.insertUserDetails(getString(R.string.souscriptionAbonnement), response, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
 
-        View view = LayoutInflater.from(PayerAbonnement.this).inflate(R.layout.alert_dialog_success, null);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_success, null);
         TextView title = (TextView) view.findViewById(R.id.title);
         TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
         ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
@@ -934,7 +882,7 @@ public class PayerAbonnement extends AppCompatActivity
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     if(response.code() == 200){
                                         if(response.body().success != 1){
-                                            Toast.makeText(PayerAbonnement.this, getString(R.string.echoue), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), getString(R.string.echoue), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
@@ -958,15 +906,15 @@ public class PayerAbonnement extends AppCompatActivity
     public void LocalNotification(String titles, String subtitles){
 
         ///////////////DEBUT NOTIFICATIONS///////////////////////////////
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
 
-        RemoteViews collapsedView = new RemoteViews(getPackageName(),
+        RemoteViews collapsedView = new RemoteViews(getActivity().getPackageName(),
                 R.layout.notif_collapsed);
-        RemoteViews expandedView = new RemoteViews(getPackageName(),
+        RemoteViews expandedView = new RemoteViews(getActivity().getPackageName(),
                 R.layout.notif_expanded);
 
-        Intent clickIntent = new Intent(getApplicationContext(), NotifReceiver.class);
-        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
+        Intent clickIntent = new Intent(getContext(), NotifReceiver.class);
+        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(getContext(),
                 0, clickIntent, 0);
 
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
@@ -975,7 +923,7 @@ public class PayerAbonnement extends AppCompatActivity
         expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
-        Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+        Notification notification = new NotificationCompat.Builder(getContext(), CHANNEL_ID)
                 .setSmallIcon(R.mipmap.logo_official)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
@@ -989,22 +937,12 @@ public class PayerAbonnement extends AppCompatActivity
 
     public void openDialog() {
         PasswordModalDialog exampleDialog = new PasswordModalDialog();
-        exampleDialog.show(getSupportFragmentManager(), "ask password");
+        exampleDialog.show(getActivity().getSupportFragmentManager(), "ask password");
     }
 
     @Override
     public void applyTexts(String pass) {
         paiement(til_numCarteBeneficiaire.getEditText().getText().toString().trim(), abonnement, pass);
-    }
-
-    /**
-     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
-     * @param newBase
-     * @since 2020
-     */
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleHelper.onAttach(newBase));
     }
 
 }

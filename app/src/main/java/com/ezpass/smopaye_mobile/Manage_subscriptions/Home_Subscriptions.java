@@ -1,4 +1,4 @@
-package com.ezpass.smopaye_mobile.vuesUtilisateur.Recharge;
+package com.ezpass.smopaye_mobile.Manage_subscriptions;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,52 +11,50 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
+import com.ezpass.smopaye_mobile.Manage_subscriptions.Adapter.ViewPagerAdapter;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.TutorielUtilise;
 import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
-import com.ezpass.smopaye_mobile.vuesUtilisateur.Recharge.adapter.ViewPagerAdapter;
 
-public class HomeRecharge extends AppCompatActivity {
+public class Home_Subscriptions extends AppCompatActivity {
 
+    private static final String TAG = "Home_Subscriptions";
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private int[] tabIcons = {
-            R.drawable.ic_account_balance_black_24dp,
-            R.drawable.ic_credit_card};
+    private String myPhone;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_recharge);
+        setContentView(R.layout.activity_home_subscriptions);
 
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.recharge));
+        getSupportActionBar().setTitle(getString(R.string.abonnement));
         toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+
+        Intent intent = getIntent();
+        myPhone = intent.getStringExtra("myPhone");
 
         viewPager = findViewById(R.id.viewPager);
 
         addTabs(viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager( viewPager );
-        setupTabIcons();
     }
 
     private void addTabs(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new FragmentCompte(), getString(R.string.maCarteSmopaye));
-        adapter.addFrag(new FragmentCartes(), getString(R.string.MyCards));
+        adapter.addFrag(new FragmentListSubscriptions().newInstance(myPhone), getString(R.string.currentSubscriptions));
+        adapter.addFrag(new Fragment_Subscriptions(), getString(R.string.RenouvelerAbonnement));
         viewPager.setAdapter(adapter);
     }
 
-    private void setupTabIcons() {
-        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-    }
 
 
     /**
@@ -68,7 +66,6 @@ public class HomeRecharge extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase));
     }
-
 
 
     /*                    GESTION DU MENU DROIT                  */
@@ -109,4 +106,5 @@ public class HomeRecharge extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

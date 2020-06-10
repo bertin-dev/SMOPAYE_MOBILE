@@ -36,6 +36,8 @@ import android.widget.Toast;
 import com.ezpass.smopaye_mobile.Apropos.Apropos;
 import com.ezpass.smopaye_mobile.Assistance.HomeAssistanceOnline;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
+import com.ezpass.smopaye_mobile.Manage_Transfer.Transfert;
+import com.ezpass.smopaye_mobile.Manage_subscriptions.Home_Subscriptions;
 import com.ezpass.smopaye_mobile.Profil_user.Abonnement;
 import com.ezpass.smopaye_mobile.Profil_user.CategoryUser;
 import com.ezpass.smopaye_mobile.Profil_user.Compte;
@@ -628,9 +630,10 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra("compte", myCompte);
             startActivity(intent);
         } else if (id == R.id.nav_abonnement){
-            Intent intent = new Intent(getApplicationContext(), PayerAbonnement.class);
+            Intent intent = new Intent(getApplicationContext(), Home_Subscriptions.class);
             intent.putExtra("myId_card", myId_card);
             intent.putExtra("myAbon", myAbon);
+            intent.putExtra("myPhone", myPhone);
             intent.putExtra("myPersonalAccountId", myPersonalAccountId);
             startActivity(intent);
         }

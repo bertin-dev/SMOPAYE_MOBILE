@@ -121,7 +121,7 @@ public interface ApiService {
                                    @Field("type") String type);
 
 
-    /* Retrait Smopaye*/
+    /* Retrait Opérateur*/
     @POST("api/card/{card_id}/retrait")
     @FormUrlEncoded
     Call<AllMyResponse> retrait_accepteur(@Field("withDrawalAmount") Float withDrawalAmount,
