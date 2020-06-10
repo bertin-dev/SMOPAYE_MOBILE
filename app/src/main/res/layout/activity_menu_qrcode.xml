@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:id="@+id/menu_qrcode"
     android:orientation="vertical"
-    tools:context=".MenuQRCode">
+    tools:context=".Manage_Transactions.Manage_Payments.Manage_QRCode.MenuQRCode">
 
 
 

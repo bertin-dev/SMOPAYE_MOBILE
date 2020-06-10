@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:id="@+id/edit_profil"
     android:background="@color/white"
-    tools:context=".Setting.EditProfil">
+    tools:context=".Manage_Settings.EditProfil">
 
     <LinearLayout
         android:layout_width="match_parent"

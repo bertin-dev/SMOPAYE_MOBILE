@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".HistoriqueTransactions">
+    tools:context=".Manage_Transactions_Story.HistoriqueTransactions">
 
     <LinearLayout
         android:layout_width="match_parent"

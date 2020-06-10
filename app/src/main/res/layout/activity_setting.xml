@@ -8,7 +8,7 @@
     android:layout_centerHorizontal="true"
     android:layout_centerVertical="true"
     android:layout_centerInParent="true"
-    tools:context=".Setting.Setting">
+    tools:context=".Manage_Settings.Setting">
 
 
 

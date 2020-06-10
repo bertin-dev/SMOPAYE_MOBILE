@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-import com.ezpass.smopaye_mobile.Assistance.MessageActivity;
+import com.ezpass.smopaye_mobile.Manage_Assistance.MessageActivity;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.RemoteModel.Chat;
 import com.ezpass.smopaye_mobile.RemoteModel.User;

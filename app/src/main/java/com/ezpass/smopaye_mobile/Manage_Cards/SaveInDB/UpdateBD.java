@@ -19,11 +19,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ezpass.smopaye_mobile.Apropos.Apropos;
+import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
+import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
-import com.ezpass.smopaye_mobile.TutorielUtilise;
-import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
+import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
@@ -311,7 +311,7 @@ public class UpdateBD extends AppCompatActivity {
         }
 
         if(id == R.id.modifierCompte){
-            Intent intent = new Intent(getApplicationContext(), ModifierCompte.class);
+            Intent intent = new Intent(getApplicationContext(), UpdatePassword.class);
             startActivity(intent);
         }
 

@@ -33,11 +33,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ezpass.smopaye_mobile.Apropos.Apropos;
-import com.ezpass.smopaye_mobile.Assistance.HomeAssistanceOnline;
+import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
+import com.ezpass.smopaye_mobile.Manage_Assistance.HomeAssistanceOnline;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
-import com.ezpass.smopaye_mobile.Manage_Transfer.Transfert;
-import com.ezpass.smopaye_mobile.Manage_subscriptions.Home_Subscriptions;
+import com.ezpass.smopaye_mobile.Manage_HomePage.CarteFragment;
+import com.ezpass.smopaye_mobile.Manage_HomePage.NotificationsFragment;
+import com.ezpass.smopaye_mobile.Manage_HomePage.PointSmopayeFragment;
+import com.ezpass.smopaye_mobile.Manage_Transactions.Manage_Payments.Manage_Transfer.Transfert;
+import com.ezpass.smopaye_mobile.Manage_Subscriptions.Home_Subscriptions;
+import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
+import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 import com.ezpass.smopaye_mobile.Profil_user.Abonnement;
 import com.ezpass.smopaye_mobile.Profil_user.CategoryUser;
 import com.ezpass.smopaye_mobile.Profil_user.Compte;
@@ -46,15 +51,15 @@ import com.ezpass.smopaye_mobile.Profil_user.DataUserCard;
 import com.ezpass.smopaye_mobile.Profil_user.Particulier;
 import com.ezpass.smopaye_mobile.Profil_user.Role;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
-import com.ezpass.smopaye_mobile.Setting.Setting;
+import com.ezpass.smopaye_mobile.Manage_Settings.Setting;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
-import com.ezpass.smopaye_mobile.drawerNavigation.Accueil_OffreSmopaye;
-import com.ezpass.smopaye_mobile.drawerNavigation.WebSite;
-import com.ezpass.smopaye_mobile.vuesAdmin.AccueilFragmentAdmin;
-import com.ezpass.smopaye_mobile.vuesAgent.AccueilFragmentAgent;
-import com.ezpass.smopaye_mobile.vuesUtilisateur.AccueilFragmentUser;
-import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
+import com.ezpass.smopaye_mobile.Manage_Url_Website.Accueil_OffreSmopaye;
+import com.ezpass.smopaye_mobile.Manage_Url_Website.WebSite;
+import com.ezpass.smopaye_mobile.Manage_HomePage.AccueilFragment;
+import com.ezpass.smopaye_mobile.Manage_Administrator.AccueilFragmentAdmin;
+import com.ezpass.smopaye_mobile.Manage_HomePage.AccueilFragmentAgent;
+import com.ezpass.smopaye_mobile.Manage_HomePage.AccueilFragmentUser;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
@@ -595,7 +600,7 @@ public class MainActivity extends AppCompatActivity
 
         if(id == R.id.modifierCompte){
             //Toast.makeText(this, telephone, Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(getApplicationContext(), ModifierCompte.class);
+            Intent intent = new Intent(getApplicationContext(), UpdatePassword.class);
             intent.putExtra("telephone", myPhone);
             startActivity(intent);
         }

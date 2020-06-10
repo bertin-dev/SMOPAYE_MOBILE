@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/menu_gestionCompte"
     android:background="@color/white"
-    tools:context=".vuesAdmin.Menu_GestionComptes">
+    tools:context=".Manage_Administrator.Menu_GestionComptes">
 
 
     <LinearLayout

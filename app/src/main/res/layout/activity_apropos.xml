@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/apropos"
     android:background="@color/textColorGray1"
-    tools:context=".Apropos.Apropos">
+    tools:context=".Manage_Apropos.Apropos">
 
     <RelativeLayout
         android:layout_width="match_parent"

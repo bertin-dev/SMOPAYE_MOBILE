@@ -11,11 +11,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.ezpass.smopaye_mobile.Apropos.Apropos;
+import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
-import com.ezpass.smopaye_mobile.TutorielUtilise;
-import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
+import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
+import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 
 public class OfflineActivity extends AppCompatActivity {
 
@@ -75,7 +75,7 @@ public class OfflineActivity extends AppCompatActivity {
         }
 
         if(id == R.id.modifierCompte){
-            Intent intent = new Intent(getApplicationContext(), ModifierCompte.class);
+            Intent intent = new Intent(getApplicationContext(), UpdatePassword.class);
             //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             //intent.putExtra("telephone", temp_number);
             startActivity(intent);

@@ -10,11 +10,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.ezpass.smopaye_mobile.Apropos.Apropos;
+import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
+import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
-import com.ezpass.smopaye_mobile.TutorielUtilise;
-import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
+import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 
 public class Menu_Write extends AppCompatActivity {
     private Button write;
@@ -92,7 +92,7 @@ public class Menu_Write extends AppCompatActivity {
         }
 
         if(id == R.id.modifierCompte){
-            Intent intent = new Intent(getApplicationContext(), ModifierCompte.class);
+            Intent intent = new Intent(getApplicationContext(), UpdatePassword.class);
             startActivity(intent);
         }
 

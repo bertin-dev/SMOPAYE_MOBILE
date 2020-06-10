@@ -7,7 +7,7 @@
     android:id="@+id/home_subcriptions"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".Manage_subscriptions.Home_Subscriptions">
+    tools:context=".Manage_Subscriptions.Home_Subscriptions">
 
 
     <include

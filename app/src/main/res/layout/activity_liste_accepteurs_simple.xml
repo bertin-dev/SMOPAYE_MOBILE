@@ -9,7 +9,7 @@
     android:id="@+id/liste_accepteurs_simple"
     android:focusableInTouchMode="true"
     android:background="@color/white"
-    tools:context=".vuesAdmin.ListeAccepteursSimple">
+    tools:context=".Manage_Administrator.ListeAccepteursSimple">
 
     <include
         android:id="@+id/myToolbar"

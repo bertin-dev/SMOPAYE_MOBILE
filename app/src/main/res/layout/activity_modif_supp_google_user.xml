@@ -7,7 +7,7 @@
     android:gravity="center"
     android:id="@+id/modif_supp_GoogleUser"
     android:background="@color/white"
-    tools:context=".vuesAdmin.ModifSuppGoogleUser">
+    tools:context=".Manage_Administrator.ModifSuppGoogleUser">
 
     <LinearLayout
         android:layout_width="match_parent"

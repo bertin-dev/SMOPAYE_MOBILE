@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".Assistance.HomeAssistanceOnline">
+    tools:context=".Manage_Assistance.HomeAssistanceOnline">
 
 
     <android.support.design.widget.AppBarLayout

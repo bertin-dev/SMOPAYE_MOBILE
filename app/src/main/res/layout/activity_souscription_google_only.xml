@@ -7,7 +7,7 @@
     android:gravity="center"
     android:id="@+id/souscription"
     android:background="@color/white"
-    tools:context=".vuesAdmin.SouscriptionGoogleOnly">
+    tools:context=".Manage_Administrator.SouscriptionGoogleOnly">
 
     <LinearLayout
         android:layout_width="match_parent"

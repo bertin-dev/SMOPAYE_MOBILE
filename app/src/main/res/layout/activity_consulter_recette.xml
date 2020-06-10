@@ -8,7 +8,7 @@
     android:gravity="center"
     android:background="@color/white"
     android:id="@+id/consulterRecette"
-    tools:context=".vuesAccepteur.ConsulterRecette">
+    tools:context=".Manage_Consult.ConsulterRecette">
 
 
 <ScrollView

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/menuRetraitTelecollecte"
     android:background="@color/white"
-    tools:context=".vuesAccepteur.MenuRetraitTelecollecte">
+    tools:context=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.MenuRetraitTelecollecte">
 
 
     <LinearLayout

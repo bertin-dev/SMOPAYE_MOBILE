@@ -8,7 +8,7 @@
     android:gravity="center"
     android:id="@+id/auto_souscription"
     android:background="@color/white"
-    tools:context=".vuesUtilisateur.Souscription_User_AutoEnreg">
+    tools:context=".Manage_Register.Souscription_User_AutoEnreg">
 
 
     <LinearLayout

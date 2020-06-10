@@ -17,11 +17,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.ezpass.smopaye_mobile.Apropos.Apropos;
+import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
+import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
-import com.ezpass.smopaye_mobile.TutorielUtilise;
-import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
+import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 import com.telpo.tps550.api.TelpoException;
 import com.telpo.tps550.api.nfc.Nfc;
 import com.telpo.tps550.api.util.StringUtil;
@@ -250,7 +250,7 @@ public class WriteInCard extends AppCompatActivity {
                                 type = "unknow";
                             }
 
-                          /*  new AlertDialog.Builder(Recharge.this)
+                          /*  new AlertDialog.Builder(Manage_Recharge.this)
                                    .setMessage(getString(R.string.card_type) + getString(R.string.type_a) + " " + type +
                                             "\r\n" + getString(R.string.atqa_data) + StringUtil.toHexString(atqa) +
                                             "\r\n" + getString(R.string.sak_data) + StringUtil.toHexString(sak) +
@@ -542,7 +542,7 @@ public class WriteInCard extends AppCompatActivity {
         }
 
         if(id == R.id.modifierCompte){
-            Intent intent = new Intent(getApplicationContext(), ModifierCompte.class);
+            Intent intent = new Intent(getApplicationContext(), UpdatePassword.class);
             startActivity(intent);
         }
 

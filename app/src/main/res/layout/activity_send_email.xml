@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:id="@+id/send_email"
     android:background="@color/white"
-    tools:context=".Setting.SendEmail">
+    tools:context=".Manage_Settings.SendEmail">
 
 
     <LinearLayout

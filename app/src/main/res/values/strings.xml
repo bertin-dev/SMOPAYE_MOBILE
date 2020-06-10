@@ -648,4 +648,8 @@
     <string name="expSubscriptions">Expiration de l\'abonnement </string>
     <string name="etat">Etat: </string>
     <string name="expiry">Expiration</string>
+
+    <string name="defaultLanguage">Langue par défaut</string>
+    <string name="french">Français</string>
+    <string name="english">Anglais</string>
 </resources>

@@ -9,7 +9,7 @@
     android:focusable="true"
     android:id="@+id/fragment_cartes"
     android:focusableInTouchMode="true"
-    tools:context=".Manage_subscriptions.FragmentListSubscriptions">
+    tools:context=".Manage_Subscriptions.FragmentListSubscriptions">
 
 
     <RelativeLayout

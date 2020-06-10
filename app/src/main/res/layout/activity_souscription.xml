@@ -8,7 +8,7 @@
     android:gravity="center"
     android:id="@+id/souscription"
     android:background="@color/white"
-    tools:context=".vuesUtilisateur.Souscription">
+    tools:context=".Manage_Register.Souscription">
 
 
 

@@ -568,6 +568,8 @@
     <string name="expSubscriptions">Subscription expiration </string>
     <string name="etat">State: </string>
     <string name="expiry">Expiry</string>
-
+    <string name="defaultLanguage">Default Language</string>
+    <string name="french">French</string>
+    <string name="english">English</string>
 
 </resources>

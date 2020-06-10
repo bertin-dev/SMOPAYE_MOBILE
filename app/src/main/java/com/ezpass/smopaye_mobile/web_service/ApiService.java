@@ -129,14 +129,14 @@ public interface ApiService {
                                         @Path("card_id") String card_id);
 
 
-    /* Recharge step 1*/
+    /* Manage_Recharge step 1*/
     @POST("api/account/{account_number}/recharge")
     @FormUrlEncoded
     Call<RechargeResponse> recharge_step1(@Path("account_number") String account_number,
                                           @Field("amount") Float amount,
                                           @Field("phoneNumber") String phoneNumber);
 
-    /* Recharge step 2*/
+    /* Manage_Recharge step 2*/
     @PUT("api/account/{account_number}/checkpayment")
     @FormUrlEncoded
     Call<AllMyResponse> recharge_step2(@Path("account_number") String account_number,

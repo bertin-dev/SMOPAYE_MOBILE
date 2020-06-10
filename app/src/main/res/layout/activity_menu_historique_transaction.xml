@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/menuHistoriqueTransaction"
     android:background="@color/white"
-    tools:context=".MenuHistoriqueTransaction">
+    tools:context=".Manage_Transactions_Story.MenuHistoriqueTransaction">
 
 
     <LinearLayout

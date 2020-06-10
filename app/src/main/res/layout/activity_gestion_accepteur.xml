@@ -8,7 +8,7 @@
     android:gravity="center"
     android:background="@color/white"
     android:id="@+id/gestionAccepteur"
-    tools:context=".vuesAdmin.GestionAccepteur">
+    tools:context=".Manage_Administrator.GestionAccepteur">
 
 
     <LinearLayout

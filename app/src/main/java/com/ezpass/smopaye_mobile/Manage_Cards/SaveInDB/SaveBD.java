@@ -20,11 +20,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ezpass.smopaye_mobile.Apropos.Apropos;
+import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
+import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
-import com.ezpass.smopaye_mobile.TutorielUtilise;
-import com.ezpass.smopaye_mobile.vuesUtilisateur.ModifierCompte;
+import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
@@ -164,7 +164,7 @@ public class SaveBD extends AppCompatActivity {
                                 type = "unknow";
                             }
 
-                          /*  new AlertDialog.Builder(Recharge.this)
+                          /*  new AlertDialog.Builder(Manage_Recharge.this)
                                    .setMessage(getString(R.string.card_type) + getString(R.string.type_a) + " " + type +
                                             "\r\n" + getString(R.string.atqa_data) + StringUtil.toHexString(atqa) +
                                             "\r\n" + getString(R.string.sak_data) + StringUtil.toHexString(sak) +
@@ -560,7 +560,7 @@ public class SaveBD extends AppCompatActivity {
         }
 
         if(id == R.id.modifierCompte){
-            Intent intent = new Intent(getApplicationContext(), ModifierCompte.class);
+            Intent intent = new Intent(getApplicationContext(), UpdatePassword.class);
             startActivity(intent);
         }
 

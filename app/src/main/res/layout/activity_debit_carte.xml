@@ -8,7 +8,7 @@
     android:gravity="center"
     android:id="@+id/debitCarte"
     android:background="@color/white"
-    tools:context=".vuesAccepteur.DebitCarte">
+    tools:context=".Manage_Transactions.Manage_Payments.Manage_DebitCards.DebitCarte">
 
 
 

@@ -9,7 +9,7 @@
     android:focusable="true"
     android:id="@+id/fragment_cartes"
     android:focusableInTouchMode="true"
-    tools:context=".vuesUtilisateur.Recharge.FragmentCartes">
+    tools:context=".Manage_Transactions.Manage_Recharge.FragmentCartes">
 
     <RelativeLayout
         android:layout_width="match_parent"

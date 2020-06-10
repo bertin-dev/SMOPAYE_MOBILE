@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     android:gravity="center"
     android:background="@color/white"
-    tools:context=".QRCodeShow">
+    tools:context=".Manage_Transactions.Manage_Payments.Manage_QRCode.QRCodeShow">
 
 
     <LinearLayout

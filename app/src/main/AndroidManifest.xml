@@ -32,11 +32,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".vuesUtilisateur.Recharge.HomeRecharge"></activity>
-        <activity android:name=".Setting.SendEmail" />
-        <activity android:name=".Setting.EditProfil" />
-        <activity android:name=".Setting.MyAccount" />
-        <activity android:name=".Setting.Setting" />
+        <activity android:name=".Manage_Transactions.Manage_Recharge.HomeRecharge"></activity>
+        <activity android:name=".Manage_Settings.SendEmail" />
+        <activity android:name=".Manage_Settings.EditProfil" />
+        <activity android:name=".Manage_Settings.MyAccount" />
+        <activity android:name=".Manage_Settings.Setting" />
         <activity android:name=".Manage_Cards.SaveInDB.Menu_Save" />
         <activity android:name=".Manage_Cards.WriteInCard.Menu_Write" />
         <activity android:name=".Manage_Cards.SaveInDB.UpdateBD" />
@@ -47,108 +47,108 @@
         <activity android:name=".Manage_Cards.WriteInCard.Reset" />
         <activity android:name=".Manage_Cards.Accueil_Carte" />
         <activity android:name=".checkInternetDynamically.OfflineActivity" />
-        <activity android:name=".vuesUtilisateur.Souscription_User_AutoEnreg" />
+        <activity android:name=".Manage_Register.Souscription_User_AutoEnreg" />
         <activity
-            android:name=".vuesUtilisateur.SouscriptionUploadIMGidCard"
+            android:name=".Manage_Register.SouscriptionUploadIMGidCard"
             android:screenOrientation="fullSensor" />
-        <activity android:name=".RetraitChezSmopaye" />
-        <activity android:name=".MenuRetraitOperateur" />
-        <activity android:name=".AffichageQRCode" />
-        <activity android:name=".MenuQRCode" />
-        <activity android:name=".QRCodeShow" />
-        <activity android:name=".PayerFacture" />
-        <activity android:name=".vuesAdmin.AccueilEnvoiNotifGoogleUser" />
-        <activity android:name=".vuesAdmin.ModifSuppGoogleUser" />
-        <activity android:name=".vuesAdmin.AccueilUserGoogle" />
-        <activity android:name=".vuesAdmin.ListUserGoogle" />
-        <activity android:name=".vuesAdmin.ListUserAndAgentEdited" />
-        <activity android:name=".vuesAdmin.SouscriptionGoogleOnly" />
-        <activity android:name=".ServicesIndisponible" />
-        <activity android:name=".vuesAdmin.ModifListUserAndAgents" />
+        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.RetraitChezSmopaye" />
+        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.MenuRetraitOperateur" />
+        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_QRCode.AffichageQRCode" />
+        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_QRCode.MenuQRCode" />
+        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_QRCode.QRCodeShow" />
+        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_Factures.PayerFacture" />
+        <activity android:name=".Manage_Administrator.AccueilEnvoiNotifGoogleUser" />
+        <activity android:name=".Manage_Administrator.ModifSuppGoogleUser" />
+        <activity android:name=".Manage_Administrator.AccueilUserGoogle" />
+        <activity android:name=".Manage_Administrator.ListUserGoogle" />
+        <activity android:name=".Manage_Administrator.ListUserAndAgentEdited" />
+        <activity android:name=".Manage_Administrator.SouscriptionGoogleOnly" />
+        <activity android:name=".service_indisponible.ServicesIndisponible" />
+        <activity android:name=".Manage_Administrator.ModifListUserAndAgents" />
         <activity
-            android:name=".vuesAdmin.ListeUserAndAgents"
-            android:parentActivityName=".vuesAdmin.GestionAccepteur" />
-        <activity android:name=".Manage_subscriptions.Home_Subscriptions" />
+            android:name=".Manage_Administrator.ListeUserAndAgents"
+            android:parentActivityName=".Manage_Administrator.GestionAccepteur" />
+        <activity android:name=".Manage_Subscriptions.Home_Subscriptions" />
         <activity
-            android:name=".Assistance.HomeAssistanceOnline"
+            android:name=".Manage_Assistance.HomeAssistanceOnline"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Assistance.MessageActivity"
+            android:name=".Manage_Assistance.MessageActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Assistance.DetailsAgenceSmopaye"
-            android:parentActivityName=".Assistance.AgenceSmopaye" />
+            android:name=".Manage_Assistance.DetailsAgenceSmopaye"
+            android:parentActivityName=".Manage_Assistance.AgenceSmopaye" />
         <activity
-            android:name=".Assistance.AgenceSmopaye"
-            android:parentActivityName=".Assistance.BoutiqueSmopaye" />
+            android:name=".Manage_Assistance.AgenceSmopaye"
+            android:parentActivityName=".Manage_Assistance.BoutiqueSmopaye" />
         <activity
-            android:name=".Assistance.GrandPublic"
-            android:parentActivityName=".Assistance.ServiceClientSmopaye" />
-        <activity android:name=".TutorielUtilise" />
+            android:name=".Manage_Assistance.GrandPublic"
+            android:parentActivityName=".Manage_Assistance.ServiceClientSmopaye" />
+        <activity android:name=".Manage_Tutoriel.TutorielUtilise" />
         <activity
-            android:name=".Assistance.BoutiqueSmopaye"
-            android:parentActivityName=".Assistance.Menu_Assistance" />
-        <activity android:name=".Assistance.ServiceClientSmopaye" />
-        <activity android:name=".Assistance.Menu_Assistance" />
-        <activity android:name=".Apropos.LogicielsTiers" />
-        <activity android:name=".Apropos.InformationLegales" />
-        <activity android:name=".Apropos.Apropos" />
-        <activity android:name=".DemarrageOffreSmopaye" />
+            android:name=".Manage_Assistance.BoutiqueSmopaye"
+            android:parentActivityName=".Manage_Assistance.Menu_Assistance" />
+        <activity android:name=".Manage_Assistance.ServiceClientSmopaye" />
+        <activity android:name=".Manage_Assistance.Menu_Assistance" />
+        <activity android:name=".Manage_Apropos.LogicielsTiers" />
+        <activity android:name=".Manage_Apropos.InformationLegales" />
+        <activity android:name=".Manage_Apropos.Apropos" />
+        <activity android:name=".Manage_Offre_Smopaye.DemarrageOffreSmopaye" />
         <activity
-            android:name=".Manage_Transfer.Transfert"
+            android:name=".Manage_Transactions.Manage_Payments.Manage_Transfer.Transfert"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".WebViewMonetbil"
+            android:name=".Manage_Url_Website.WebViewMonetbil"
             android:parentActivityName=".vuesUtilisateur.RechargePropreCompte" /> <!-- tools:replace="android:appComponentFactory" -->
         <activity
-            android:name=".vuesAccepteur.RetraitAccepteur"
-            android:parentActivityName=".vuesAccepteur.MenuRetraitTelecollecte" />
+            android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.RetraitAccepteur"
+            android:parentActivityName=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.MenuRetraitTelecollecte" />
         <activity
-            android:name=".vuesAdmin.ListeAccepteursSimple"
-            android:parentActivityName=".vuesAdmin.GestionAccepteur" />
-        <activity android:name=".vuesAdmin.Modification" />
+            android:name=".Manage_Administrator.ListeAccepteursSimple"
+            android:parentActivityName=".Manage_Administrator.GestionAccepteur" />
+        <activity android:name=".Manage_Administrator.Modification" />
         <activity
-            android:name=".vuesAdmin.ListeAccepteurs"
-            android:parentActivityName=".vuesAdmin.GestionAccepteur" />
-        <activity android:name=".drawerNavigation.WebSite" />
-        <activity android:name=".Tutoriel" />
+            android:name=".Manage_Administrator.ListeAccepteurs"
+            android:parentActivityName=".Manage_Administrator.GestionAccepteur" />
+        <activity android:name=".Manage_Url_Website.WebSite" />
+        <activity android:name=".Manage_Tutoriel.Tutoriel" />
         <activity
-            android:name=".vuesUtilisateur.ModifierCompte"
+            android:name=".Manage_Update_ProfilUser.UpdatePassword"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".MenuHistoriqueTransaction"
+            android:name=".Manage_Transactions_Story.MenuHistoriqueTransaction"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".HistoriqueTransactions"
-            android:parentActivityName=".MenuHistoriqueTransaction" />
+            android:name=".Manage_Transactions_Story.HistoriqueTransactions"
+            android:parentActivityName=".Manage_Transactions_Story.MenuHistoriqueTransaction" />
         <activity
-            android:name=".vuesAdmin.Menu_GestionComptes"
+            android:name=".Manage_Administrator.Menu_GestionComptes"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".vuesUtilisateur.Souscription" />
+        <activity android:name=".Manage_Register.Souscription" />
         <activity
-            android:name=".vuesAdmin.GestionUtilisateursAgents"
-            android:parentActivityName=".vuesAdmin.Menu_GestionComptes" />
+            android:name=".Manage_Administrator.GestionUtilisateursAgents"
+            android:parentActivityName=".Manage_Administrator.Menu_GestionComptes" />
         <activity
-            android:name=".vuesAdmin.GestionAccepteur"
-            android:parentActivityName=".vuesAdmin.Menu_GestionComptes" />
-        <activity android:name=".drawerNavigation.Accueil_OffreSmopaye" />
+            android:name=".Manage_Administrator.GestionAccepteur"
+            android:parentActivityName=".Manage_Administrator.Menu_GestionComptes" />
+        <activity android:name=".Manage_Url_Website.Accueil_OffreSmopaye" />
         <activity
-            android:name=".vuesAccepteur.ConsulterSolde"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".vuesAccepteur.VerifierNumCarte"
+            android:name=".Manage_Consult.ConsulterSolde"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".vuesAccepteur.ConsulterRecette"
+            android:name=".Manage_Consult.VerifierNumCarte"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".vuesAccepteur.MenuRetraitTelecollecte"
+            android:name=".Manage_Consult.ConsulterRecette"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".vuesAccepteur.DebitCarte"
+            android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.MenuRetraitTelecollecte"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".Manage_Transactions.Manage_Payments.Manage_DebitCards.DebitCarte"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".Login" />
-        <activity android:name=".Demarrage">
+        <activity android:name=".Manage_Offre_Smopaye.Demarrage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

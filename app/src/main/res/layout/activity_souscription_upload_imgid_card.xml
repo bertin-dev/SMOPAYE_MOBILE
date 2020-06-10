@@ -9,7 +9,7 @@
     android:focusable="true"
     android:id="@+id/souscription_upload_img"
     android:focusableInTouchMode="true"
-    tools:context=".vuesUtilisateur.SouscriptionUploadIMGidCard">
+    tools:context=".Manage_Register.SouscriptionUploadIMGidCard">
 
     <ScrollView
         android:layout_width="fill_parent"

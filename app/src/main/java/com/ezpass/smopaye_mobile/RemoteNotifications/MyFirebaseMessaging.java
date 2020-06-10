@@ -15,14 +15,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.util.Log;
 
-import com.ezpass.smopaye_mobile.Assistance.MessageActivity;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbUser;
 import com.ezpass.smopaye_mobile.Login;
-import com.ezpass.smopaye_mobile.NotifReceiver;
 import com.ezpass.smopaye_mobile.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,8 +27,6 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.text.DateFormat;
 import java.util.Date;
-
-import static android.support.constraint.Constraints.TAG;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
 
