@@ -94,7 +94,7 @@ import retrofit2.Response;
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
 public class Transfert extends AppCompatActivity
-                       implements ConnectivityReceiver.ConnectivityReceiverListener{
+        implements ConnectivityReceiver.ConnectivityReceiverListener{
 
     private static final String TAG = "Transfert";
     private ProgressDialog progressDialog;
@@ -542,8 +542,8 @@ public class Transfert extends AppCompatActivity
                     String msgReceiver = response.body().getMessage().getCard_receiver().getNotif();
                     String msgSender = response.body().getMessage().getCard_sender().getNotif();
 
-                        //tokenManager.saveToken(response.body());
-                        successResponse(id_card_receiver, msgReceiver, id_card_sender, msgSender);
+                    //tokenManager.saveToken(response.body());
+                    successResponse(id_card_receiver, msgReceiver, id_card_sender, msgSender);
 
                 }
                 else{

@@ -94,7 +94,7 @@ import retrofit2.Response;
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
 public class RetraitChezSmopaye extends AppCompatActivity
-                                implements ConnectivityReceiver.ConnectivityReceiverListener{
+        implements ConnectivityReceiver.ConnectivityReceiverListener{
 
     private static final String TAG = "RetraitChezSmopaye";
     private ProgressDialog progressDialog;
@@ -955,3 +955,4 @@ public class RetraitChezSmopaye extends AppCompatActivity
     }
 
 }
+

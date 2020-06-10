@@ -95,7 +95,7 @@ import retrofit2.Response;
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
 public class PayerFacture extends AppCompatActivity
-                          implements ConnectivityReceiver.ConnectivityReceiverListener{
+        implements ConnectivityReceiver.ConnectivityReceiverListener{
 
     private static final String TAG = "PayerFacture";
     private String tel, code_number_sender;
@@ -1014,3 +1014,4 @@ public class PayerFacture extends AppCompatActivity
     }
 
 }
+

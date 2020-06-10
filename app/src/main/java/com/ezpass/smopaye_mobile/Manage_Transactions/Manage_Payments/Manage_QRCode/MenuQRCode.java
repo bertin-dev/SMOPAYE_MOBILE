@@ -82,8 +82,8 @@ import retrofit2.Response;
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
 public class MenuQRCode extends AppCompatActivity
-                        implements QRCodeModalDialog.ExampleDialogListener,
-                                   ConnectivityReceiver.ConnectivityReceiverListener{
+        implements QRCodeModalDialog.ExampleDialogListener,
+        ConnectivityReceiver.ConnectivityReceiverListener{
 
     private static final String TAG = "MenuQRCode";
     private ProgressDialog progressDialog;
@@ -123,7 +123,7 @@ public class MenuQRCode extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu_qrcode);
+        setContentView(R.layout.activity_menu_q_r_code);
 
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
@@ -149,25 +149,25 @@ public class MenuQRCode extends AppCompatActivity
         //service google firebase
         apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
-       }
+    }
 
-       @OnClick(R.id.btn_scan)
-       void scanQRCode(){
-           IntentIntegrator intentIntegrator = new IntentIntegrator(MenuQRCode.this);
-           intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
-           intentIntegrator.setCameraId(0);
-           intentIntegrator.setOrientationLocked(false);
-           intentIntegrator.setPrompt(getString(R.string.ezpassScan));
-           intentIntegrator.setBeepEnabled(true);
-           intentIntegrator.setBarcodeImageEnabled(true);
-           intentIntegrator.initiateScan();
-       }
+    @OnClick(R.id.btn_scan)
+    void scanQRCode(){
+        IntentIntegrator intentIntegrator = new IntentIntegrator(MenuQRCode.this);
+        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        intentIntegrator.setCameraId(0);
+        intentIntegrator.setOrientationLocked(false);
+        intentIntegrator.setPrompt(getString(R.string.ezpassScan));
+        intentIntegrator.setBeepEnabled(true);
+        intentIntegrator.setBarcodeImageEnabled(true);
+        intentIntegrator.initiateScan();
+    }
 
-       @OnClick(R.id.btn_readLecture)
-       void readQRCode(){
-           Intent intent = new Intent(getApplicationContext(), AffichageQRCode.class);
-           startActivity(intent);
-       }
+    @OnClick(R.id.btn_readLecture)
+    void readQRCode(){
+        Intent intent = new Intent(getApplicationContext(), AffichageQRCode.class);
+        startActivity(intent);
+    }
 
 
     @Override
@@ -177,7 +177,7 @@ public class MenuQRCode extends AppCompatActivity
 
         IntentResult scanResult = IntentIntegrator.parseActivityResult(
                 requestCode, resultCode, intent);
-          // handle scan result
+        // handle scan result
 
         if(scanResult != null && scanResult.getContents() != null){
 
@@ -368,8 +368,8 @@ public class MenuQRCode extends AppCompatActivity
                     String msgSender = response.body().getMessage().getCard_sender().getNotif();
 
 
-                        //tokenManager.saveToken(response.body());
-                        successResponse(beneficiaireCard, msgReceiver, donataireCard, msgSender);
+                    //tokenManager.saveToken(response.body());
+                    successResponse(beneficiaireCard, msgReceiver, donataireCard, msgSender);
 
                 } else{
                     /*ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
@@ -695,3 +695,4 @@ public class MenuQRCode extends AppCompatActivity
     }
 
 }
+

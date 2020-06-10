@@ -39,6 +39,7 @@ public class MenuRetraitOperateur extends AppCompatActivity {
         getSupportActionBar().setTitle(getString(R.string.menuRetrait));
         toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         lnRetraitSmopaye = (LinearLayout) findViewById(R.id.lnRetraitSmopaye);
         lnRetraitOperateur = (LinearLayout) findViewById(R.id.lnRetraitOperateur);
@@ -105,8 +106,8 @@ public class MenuRetraitOperateur extends AppCompatActivity {
         }
 
         if (id == android.R.id.home) {
-            super.onBackPressed();
-            return true;
+            onBackPressed();
+            finish(); // close this activity and return to preview activity (if there is any)
         }
 
         return super.onOptionsItemSelected(item);
@@ -123,3 +124,4 @@ public class MenuRetraitOperateur extends AppCompatActivity {
     }
 
 }
+

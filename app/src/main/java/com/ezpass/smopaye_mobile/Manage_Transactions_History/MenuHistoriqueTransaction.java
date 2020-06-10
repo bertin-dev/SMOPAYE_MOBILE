@@ -1,4 +1,4 @@
-package com.ezpass.smopaye_mobile.Manage_Transactions_Story;
+package com.ezpass.smopaye_mobile.Manage_Transactions_History;
 
 import android.content.Context;
 import android.content.Intent;

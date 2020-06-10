@@ -112,6 +112,7 @@ public class WebSite extends AppCompatActivity {
         }
 
         if (id == android.R.id.home) {
+            onBackPressed();
             finish();
         }
 

@@ -32,7 +32,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Manage_Transactions.Manage_Recharge.HomeRecharge"></activity>
+        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_QRCode.AffichageQRCode"></activity>
+        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.MenuRetraitOperateur" />
+        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.RetraitChezSmopaye" />
+        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_Factures.PayerFacture" />
+        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_QRCode.MenuQRCode" />
+        <activity android:name=".Manage_Transactions.Manage_Recharge.HomeRecharge" />
+        <activity
+            android:name=".Manage_Transactions.Manage_Payments.Manage_Transfer.Transfert"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".Manage_Settings.SendEmail" />
         <activity android:name=".Manage_Settings.EditProfil" />
         <activity android:name=".Manage_Settings.MyAccount" />
@@ -51,12 +59,7 @@
         <activity
             android:name=".Manage_Register.SouscriptionUploadIMGidCard"
             android:screenOrientation="fullSensor" />
-        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.RetraitChezSmopaye" />
-        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.MenuRetraitOperateur" />
-        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_QRCode.AffichageQRCode" />
-        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_QRCode.MenuQRCode" />
         <activity android:name=".Manage_Transactions.Manage_Payments.Manage_QRCode.QRCodeShow" />
-        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_Factures.PayerFacture" />
         <activity android:name=".Manage_Administrator.AccueilEnvoiNotifGoogleUser" />
         <activity android:name=".Manage_Administrator.ModifSuppGoogleUser" />
         <activity android:name=".Manage_Administrator.AccueilUserGoogle" />
@@ -95,14 +98,9 @@
         <activity android:name=".Manage_Apropos.Apropos" />
         <activity android:name=".Manage_Offre_Smopaye.DemarrageOffreSmopaye" />
         <activity
-            android:name=".Manage_Transactions.Manage_Payments.Manage_Transfer.Transfert"
-            android:parentActivityName=".MainActivity" />
+            android:name=".Manage_Url_Website.WebViewMonetbil" /> <!-- tools:replace="android:appComponentFactory" -->
         <activity
-            android:name=".Manage_Url_Website.WebViewMonetbil"
-            android:parentActivityName=".vuesUtilisateur.RechargePropreCompte" /> <!-- tools:replace="android:appComponentFactory" -->
-        <activity
-            android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.RetraitAccepteur"
-            android:parentActivityName=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.MenuRetraitTelecollecte" />
+            android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.RetraitAccepteur"/>
         <activity
             android:name=".Manage_Administrator.ListeAccepteursSimple"
             android:parentActivityName=".Manage_Administrator.GestionAccepteur" />
@@ -110,17 +108,17 @@
         <activity
             android:name=".Manage_Administrator.ListeAccepteurs"
             android:parentActivityName=".Manage_Administrator.GestionAccepteur" />
-        <activity android:name=".Manage_Url_Website.WebSite" />
+        <activity android:name=".Manage_Url_Website.WebSite"  />
         <activity android:name=".Manage_Tutoriel.Tutoriel" />
         <activity
             android:name=".Manage_Update_ProfilUser.UpdatePassword"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".Manage_Transactions_Story.MenuHistoriqueTransaction"
+            android:name=".Manage_Transactions_History.MenuHistoriqueTransaction"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".Manage_Transactions_Story.HistoriqueTransactions"
-            android:parentActivityName=".Manage_Transactions_Story.MenuHistoriqueTransaction" />
+            android:name=".Manage_Transactions_History.HistoriqueTransactions"
+            android:parentActivityName=".Manage_Transactions_History.MenuHistoriqueTransaction" />
         <activity
             android:name=".Manage_Administrator.Menu_GestionComptes"
             android:parentActivityName=".MainActivity" />
@@ -142,8 +140,7 @@
             android:name=".Manage_Consult.ConsulterRecette"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.MenuRetraitTelecollecte"
-            android:parentActivityName=".MainActivity" />
+            android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.MenuRetraitTelecollecte" />
         <activity
             android:name=".Manage_Transactions.Manage_Payments.Manage_DebitCards.DebitCarte"
             android:parentActivityName=".MainActivity" />

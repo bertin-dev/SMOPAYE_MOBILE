@@ -8,6 +8,7 @@
     android:id="@+id/payerFacture"
     tools:context=".Manage_Transactions.Manage_Payments.Manage_Factures.PayerFacture">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -267,5 +268,6 @@
         </LinearLayout>
 
     </LinearLayout>
+
 
 </ScrollView>

@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/menuRetraitTelecollecte"
+    android:id="@+id/menu_retrait_operateur"
     android:background="@color/white"
-    tools:context=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.MenuRetraitTelecollecte">
+    tools:context=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.MenuRetraitOperateur">
 
 
     <LinearLayout
