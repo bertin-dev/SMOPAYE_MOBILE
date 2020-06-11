@@ -652,4 +652,6 @@
     <string name="defaultLanguage">Langue par défaut</string>
     <string name="french">Français</string>
     <string name="english">Anglais</string>
+    <string name="currentSubscription">Votre abonnement actuel est au service.</string>
+    <string name="listCard">Vous ne possedez pas de cartes.</string>
 </resources>

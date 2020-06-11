@@ -86,6 +86,8 @@ import java.util.Timer;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressPie;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -100,6 +102,7 @@ public class Transfert extends AppCompatActivity
     private ProgressDialog progressDialog;
     private String tel, code_number_sender;
     private AlertDialog.Builder build_error;
+    private ACProgressPie dialog2;
     /////////////////////////////////////////////////////////////////////////////////
     private Handler handler;
     private Runnable runnable;
@@ -363,20 +366,12 @@ public class Transfert extends AppCompatActivity
         if(validator.validate()){
 
             //********************DEBUT***********
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // On ajoute un message à notre progress dialog
-                    progressDialog.setMessage(getString(R.string.connexionserver));
-                    // On donne un titre à notre progress dialog
-                    progressDialog.setTitle(getString(R.string.attenteReponseServer));
-                    // On spécifie le style
-                    //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    // On affiche notre message
-                    progressDialog.show();
-                    //build.setPositiveButton("ok", new View.OnClickListener()
-                }
-            });
+            dialog2 = new ACProgressPie.Builder(this)
+                    .ringColor(Color.WHITE)
+                    .pieColor(Color.WHITE)
+                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                    .build();
+            dialog2.show();
             //*******************FIN*****
             transfertDataInSmopayeServer(montant, code_number_sender,  id_card);
         }
@@ -535,7 +530,7 @@ public class Transfert extends AppCompatActivity
             @Override
             public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {
                 Log.w(TAG, "SMOPAYE_SERVER onResponse: " + response);
-                progressDialog.dismiss();
+                dialog2.dismiss();
 
                 assert response.body() != null;
                 if(response.isSuccessful()){
@@ -551,10 +546,9 @@ public class Transfert extends AppCompatActivity
                     if(response.code() == 422){
                         handleErrors(response.errorBody());
                     } else{
-                        /*ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                        ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
                         Toast.makeText(Transfert.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
-                        errorResponse(id_card_receiver, apiError.getMessage());*/
-                        errorResponse(id_card_receiver, response.message());
+                        errorResponse(id_card_receiver, apiError.getMessage());
                     }
                 }
 
@@ -563,7 +557,7 @@ public class Transfert extends AppCompatActivity
             @Override
             public void onFailure(Call<HomeResponse> call, Throwable t) {
 
-                progressDialog.dismiss();
+                dialog2.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
 
                 /*Vérification si la connexion internet accessible*/

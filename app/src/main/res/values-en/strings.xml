@@ -571,5 +571,7 @@
     <string name="defaultLanguage">Default Language</string>
     <string name="french">French</string>
     <string name="english">English</string>
+    <string name="currentSubscription">Your current subscription is in service.</string>
+    <string name="listCard">You do not have cards.</string>
 
 </resources>

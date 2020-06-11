@@ -37,6 +37,7 @@ public class AccueilFragmentUser extends Fragment {
     private String telephone;
     private String categorie;
     private String myState;
+    private String code_number_sender;
 
 
 
@@ -65,6 +66,7 @@ public class AccueilFragmentUser extends Fragment {
         telephone = getArguments().getString("telephone");
         categorie = getArguments().getString("categorie");
         myState = getArguments().getString("etat");
+        code_number_sender = getArguments().getString("compte");
 
 
 
@@ -154,6 +156,7 @@ public class AccueilFragmentUser extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PayerFacture.class);
+                intent.putExtra("compte", code_number_sender);
                 intent.putExtra("telephone", telephone);
                 startActivity(intent);
             }

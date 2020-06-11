@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -37,13 +38,13 @@ public class FragmentListSubscriptions extends Fragment {
     private static final String TAG = "FragmentListSubscriptio";
     private ListView listView;
     private ProgressBar progressBar;
-    private EditText search;
     private DataUser myResponse;
 
     private ApiService service;
     private TokenManager tokenManager;
     private Call<DataUser> cardCall;
     private String myPhone;
+    private LinearLayout historiqueVide;
 
     public FragmentListSubscriptions() {
         // Required empty public constructor
@@ -73,7 +74,7 @@ public class FragmentListSubscriptions extends Fragment {
 
         listView = (ListView) view.findViewById(R.id.listViewContent);
         progressBar = (ProgressBar)view.findViewById(R.id.progressBar);
-        search = (EditText)view.findViewById(R.id.search);
+        historiqueVide = (LinearLayout)view.findViewById(R.id.historiqueVide);
 
 
         return view;
@@ -96,7 +97,14 @@ public class FragmentListSubscriptions extends Fragment {
 
                         //Toast.makeText(ListAllCardSaved.this, myResponse.getMessage(), Toast.LENGTH_SHORT).show();
                         List<Abonnement> allUserSubscription = abonnement;
-                        listView.setAdapter(new AdapterUserSubscriptionList(getContext(), allUserSubscription));
+
+                        if(allUserSubscription.isEmpty()){
+                            historiqueVide.setVisibility(View.VISIBLE);
+                            listView.setVisibility(View.GONE);
+                        } else {
+                            historiqueVide.setVisibility(View.GONE);
+                            listView.setAdapter(new AdapterUserSubscriptionList(getContext(), allUserSubscription));
+                        }
 
                     }
                 else{

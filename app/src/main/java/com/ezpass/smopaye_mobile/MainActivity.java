@@ -408,7 +408,7 @@ public class MainActivity extends AppCompatActivity
                                     //selectedFragment = new AccueilFragment();
                                     if(session.toLowerCase().equalsIgnoreCase("administrateur"))
                                     {
-                                        if(etat.toLowerCase().equalsIgnoreCase("actif")) {
+                                        if(etat.toLowerCase().equalsIgnoreCase("activer")) {
                                             bundle.putString("telephone", myPhone);
                                             bundle.putString("compte", myCompte);
                                             bundle.putString("role", session);
@@ -448,7 +448,7 @@ public class MainActivity extends AppCompatActivity
                                     }
                                     else //accepteur
                                     {
-                                        if(etat.toLowerCase().equalsIgnoreCase("actif")) {
+                                        if(etat.toLowerCase().equalsIgnoreCase("activer")) {
                                             bundle.putString("telephone", myPhone);
                                             bundle.putString("compte", myCompte);
                                             bundle.putString("role", session);

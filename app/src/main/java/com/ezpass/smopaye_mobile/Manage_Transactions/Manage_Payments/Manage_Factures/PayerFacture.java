@@ -87,6 +87,8 @@ import java.util.Timer;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressPie;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -100,6 +102,7 @@ public class PayerFacture extends AppCompatActivity
     private static final String TAG = "PayerFacture";
     private String tel, code_number_sender;
     private ProgressDialog progressDialog;
+    private ACProgressPie dialog2;
     private AlertDialog.Builder build_error;
     /////////////////////////////////////////////////////////////////////////////////
     private Handler handler;
@@ -198,6 +201,7 @@ public class PayerFacture extends AppCompatActivity
         Intent intent = getIntent();
         tel = intent.getStringExtra("telephone");
         code_number_sender = intent.getStringExtra("compte");
+        Toast.makeText(this, code_number_sender, Toast.LENGTH_SHORT).show();
         if(tel != null)
             numTelDonataire.setText(tel);
     }
@@ -251,56 +255,40 @@ public class PayerFacture extends AppCompatActivity
         /*Action à poursuivre si tous les champs sont remplis*/
         if(validator.validate()){
             //********************DEBUT***********
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // On ajoute un message à notre progress dialog
-                    progressDialog.setMessage(getString(R.string.connexionserver));
-                    // On donne un titre à notre progress dialog
-                    progressDialog.setTitle(getString(R.string.attenteReponseServer));
-                    // On spécifie le style
-                    //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    // On affiche notre message
-                    progressDialog.show();
-                    //build.setPositiveButton("ok", new View.OnClickListener()
-                }
-            });
-            //*******************FIN*****
-            payementInSmopayeServer(montantBeneficiaire, "payer facture'",  code_number_sender, id_cardBeneficiaire);
+            dialog2 = new ACProgressPie.Builder(this)
+                    .ringColor(Color.WHITE)
+                    .pieColor(Color.WHITE)
+                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                    .build();
+            dialog2.show();
+            payementInSmopayeServer(montantBeneficiaire, "facture'",  code_number_sender, id_cardBeneficiaire);
         }
 
     }
 
     private void payementInSmopayeServer(String montantBeneficiaire1, String typeTransaction1, String id_cardDonataire1, String id_cardBeneficiaire1) {
 
-        call = service.transaction(Integer.parseInt(montantBeneficiaire1), typeTransaction1, id_cardDonataire1, id_cardBeneficiaire1);
+        call = service.transaction(Float.parseFloat(montantBeneficiaire1), typeTransaction1, id_cardDonataire1, id_cardBeneficiaire1);
         call.enqueue(new Callback<HomeResponse>() {
             @Override
             public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {
                 Log.w(TAG, "SMOPAYE_SERVER onResponse: " + response);
-                progressDialog.dismiss();
+                dialog2.dismiss();
 
                 assert response.body() != null;
                 if(response.isSuccessful()){
                     String msgReceiver = response.body().getMessage().getCard_receiver().getNotif();
                     String msgSender = response.body().getMessage().getCard_sender().getNotif();
-
-                    if(response.body().isSuccess()){
-                        successResponse(id_cardBeneficiaire1, msgReceiver, id_cardDonataire1, msgSender);
-                    } else{
-                        errorResponse(id_cardBeneficiaire1, msgReceiver);
-                    }
+                    successResponse(id_cardBeneficiaire1, msgReceiver, id_cardDonataire1, msgSender);
                 } else{
 
                     if(response.code() == 422){
                         handleErrors(response.errorBody());
                     }
-                    else if (response.code() == 401){
+                    else {
                         ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
                         Toast.makeText(PayerFacture.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
-                        errorResponse(id_cardBeneficiaire1, apiError.getMessage());
-                    } else{
-                        errorResponse(id_cardBeneficiaire1, response.message());
+                        errorResponse(id_cardDonataire1, apiError.getMessage());
                     }
                 }
             }
@@ -308,7 +296,7 @@ public class PayerFacture extends AppCompatActivity
             @Override
             public void onFailure(Call<HomeResponse> call, Throwable t) {
 
-                progressDialog.dismiss();
+                dialog2.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
 
                 /*Vérification si la connexion internet accessible*/
