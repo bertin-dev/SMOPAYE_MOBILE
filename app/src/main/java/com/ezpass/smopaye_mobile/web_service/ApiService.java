@@ -125,8 +125,8 @@ public interface ApiService {
     @POST("api/card/{card_id}/retrait")
     @FormUrlEncoded
     Call<AllMyResponse> retrait_accepteur(@Field("withDrawalAmount") Float withDrawalAmount,
-                                        @Field("phoneNumber") String phoneNumber,
-                                        @Path("card_id") String card_id);
+                                          @Field("phoneNumber") String phoneNumber,
+                                          @Path("card_id") String card_id);
 
 
     /* Manage_Recharge step 1*/
@@ -206,6 +206,14 @@ public interface ApiService {
     /* Lister all Card using by user */
     @GET("api/user/{user_id}/children")
     Call<ListAllUserCardResponse> findAllUserCards(@Path("user_id") int user_id);
+
+
+
+    /* Recharge Card by User */
+    @GET("api/account/{accound_number}/rechargecarte")
+    Call<ListAllUserCardResponse> rechargeCards(@Field("withDrawalAmount") Float withDrawalAmount,
+                                                @Field("phoneNumber") String phoneNumber,
+                                                @Path("accound_number") String accound_number);
 
 
     /* update Card */

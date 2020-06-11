@@ -573,5 +573,7 @@
     <string name="english">English</string>
     <string name="currentSubscription">Your current subscription is in service.</string>
     <string name="listCard">You do not have cards.</string>
+    <string name="rechargeCard">You are about to recharge the card N°</string>
+    <string name="amountPlease">Enter the amount please</string>
 
 </resources>

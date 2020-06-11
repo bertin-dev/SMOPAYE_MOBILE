@@ -1,7 +1,9 @@
 package com.ezpass.smopaye_mobile.Manage_Transactions.Manage_Recharge;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -51,8 +54,9 @@ public class FragmentCartes extends Fragment {
     private TokenManager tokenManager;
     private Call<ListAllUserCardResponse> cardCall;
     private LinearLayout listCards;
-    private AdapterUserCardList1 adapterUserCardList;
+    private AdapterUserCardList adapterUserCardList;
     private AlertDialog.Builder build_error;
+    private Call<ListAllUserCardResponse> call;
 
     public FragmentCartes() {
         // Required empty public constructor
@@ -102,7 +106,7 @@ public class FragmentCartes extends Fragment {
                             listView.setVisibility(View.GONE);
                         } else{
                             listCards.setVisibility(View.GONE);
-                            adapterUserCardList = new AdapterUserCardList1(getContext(), allUserCard);
+                            adapterUserCardList = new AdapterUserCardList(getContext(), allUserCard);
                             listView.setAdapter(adapterUserCardList);
                         }
                     } else{
@@ -132,17 +136,21 @@ public class FragmentCartes extends Fragment {
             cardCall.cancel();
             cardCall = null;
         }
+
+        if(call != null){
+            call.cancel();
+            call = null;
+        }
     }
 
 
-    /***************************************************************************/
-    public class AdapterUserCardList1 extends ArrayAdapter<DataAllUserCard> {
+    /**************************************CLASSE EXTEND ARRAYADAPTER*************************************/
+    public class AdapterUserCardList extends ArrayAdapter<DataAllUserCard> {
 
         private Context context;
         private List<DataAllUserCard> myAllUserCard;
-        private static final String TAG = "AdapterUserCardList";
 
-        public AdapterUserCardList1(Context context, List<DataAllUserCard> myAllUserCard){
+        public AdapterUserCardList(Context context, List<DataAllUserCard> myAllUserCard){
             super(context, R.layout.list_all_user_cards, myAllUserCard);
             this.context = context;
             this.myAllUserCard = myAllUserCard;
@@ -154,7 +162,6 @@ public class FragmentCartes extends Fragment {
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(context);
             convertView = layoutInflater.inflate(R.layout.list_all_user_cards, parent, false);
-
 
             //telephone du détenteur de carte
             TextView txtV_cardType = (TextView) convertView.findViewById(R.id.telUserCard);
@@ -183,23 +190,33 @@ public class FragmentCartes extends Fragment {
                 CheckBox chk_State = (CheckBox) convertView.findViewById(R.id.cardSelected);
                 int finalI = i;
                 chk_State.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if(isChecked){
                             chk_State.setChecked(false);
-                            Toast.makeText(context, card.get(finalI).getId(), Toast.LENGTH_SHORT).show();
-                            //openDialog();
+                            //Toast.makeText(context, card.get(finalI).getId(), Toast.LENGTH_SHORT).show();
 
-                            View view = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_success, null);
+                            View view = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_recharge_carte, null);
                             TextView title = (TextView) view.findViewById(R.id.title);
                             TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                            ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                            title.setText(getString(R.string.information));
-                            imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
-                            statutOperation.setText()card.get(finalI).getId();
-                            build_error.setNeutralButton("CANCEL", Compo)
-                            build_error.setPositiveButton("OK", null);
-                            build_error.setCancelable(false);
+                            statutOperation.setText(getString(R.string.rechargeCard) + card.get(finalI).getSerial_number() + " " + getString(R.string.amountPlease));
+                            EditText montant = (EditText) view.findViewById(R.id.edit_montant);
+                            title.setText(getString(R.string.recharge));
+                            build_error.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    rechargeYourCarte(Float.parseFloat(montant.getText().toString()), "", "");
+                                }
+                            });
+                            build_error.setNeutralButton(getString(R.string.annuler), new DialogInterface.OnClickListener() { // define the 'Cancel' button
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Either of the following two lines should work.
+                                    dialog.cancel();
+                                    //dialog.dismiss();
+                                }
+                            });
+                            build_error.setCancelable(true);
                             build_error.setView(view);
                             build_error.show();
 
@@ -220,6 +237,37 @@ public class FragmentCartes extends Fragment {
 
             return convertView;
         }
+
+
+
+
+        private void rechargeYourCarte(Float amount, String number, String account_number){
+            call = service.rechargeCards(amount, number, account_number);
+            call.enqueue(new Callback<ListAllUserCardResponse>() {
+                @Override
+                public void onResponse(Call<ListAllUserCardResponse> call, Response<ListAllUserCardResponse> response) {
+                    Log.w(TAG, "SMOPAYE SERVER onResponse: "+ response);
+                    if(response.isSuccessful()){
+
+
+                    }
+                    else{
+                        tokenManager.deleteToken();
+                        startActivity(new Intent(getActivity(), Login.class));
+                        getActivity().finish();
+                    }
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onFailure(Call<ListAllUserCardResponse> call, Throwable t) {
+                    progressBar.setVisibility(View.GONE);
+                    Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
+                }
+            });
+        }
+
+
 
     }
 

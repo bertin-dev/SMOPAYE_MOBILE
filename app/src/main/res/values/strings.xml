@@ -654,4 +654,6 @@
     <string name="english">Anglais</string>
     <string name="currentSubscription">Votre abonnement actuel est au service.</string>
     <string name="listCard">Vous ne possedez pas de cartes.</string>
+    <string name="rechargeCard">Vous êtes sur le point de recharger la carte N°</string>
+    <string name="amountPlease">Entrez le montant s\'il vous plait</string>
 </resources>
