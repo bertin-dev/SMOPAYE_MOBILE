@@ -5,9 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/edit_profil"
+    android:gravity="center"
+    android:id="@+id/sub_souscription"
     android:background="@color/white"
-    tools:context=".Manage_Settings.EditProfil">
+    tools:context=".Manage_Register.SubSouscription">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -122,7 +123,6 @@
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
                 android:padding="7dp"
-                android:visibility="gone"
                 android:textStyle="bold|italic"
                 android:gravity="center"
                 android:layout_gravity="center_horizontal|center_vertical"
@@ -162,7 +162,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
-                android:visibility="gone"
                 android:layout_marginLeft="20dp"
                 app:errorEnabled="true">
 
@@ -263,7 +262,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:padding="7dp"
-                android:visibility="gone"
                 android:drawablePadding="7dp"
                 android:imeOptions="actionNext"
                 android:gravity="center"
@@ -286,7 +284,6 @@
                 <android.support.v7.widget.AppCompatSpinner
                     android:id="@+id/statut"
                     android:layout_weight="75"
-                    android:enabled="false"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -305,7 +302,6 @@
                 android:layout_marginBottom="20dp"
                 android:imeOptions="actionNext"
                 android:padding="7dp"
-                android:visibility="gone"
                 android:drawablePadding="7dp"
                 android:gravity="center"
                 android:layout_gravity="center_horizontal|center_vertical"
@@ -330,7 +326,6 @@
                 <android.support.v7.widget.AppCompatSpinner
                     android:id="@+id/typeChauffeur"
                     android:layout_weight="75"
-                    android:enabled="false"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -364,7 +359,6 @@
                     android:layout_gravity="center"
                     android:imeOptions="actionDone"
                     android:padding="7dp"
-                    android:enabled="false"
                     android:drawablePadding="7dp"
                     android:maxLines="1"
                     android:maxLength="8"
@@ -378,71 +372,6 @@
 
             </android.support.design.widget.TextInputLayout>
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:padding="10dp"
-                android:visibility="gone"
-                android:gravity="center"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:weightSum="100"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="40"
-                    android:layout_height="wrap_content"
-                    android:text="@string/abonnement"
-                    android:textSize="17sp"
-                    android:textStyle="bold|italic"
-                    android:textColorHint="@color/bgColorStandard"
-                    android:textColor="@color/bgColorStandard"
-                    />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="60"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <CheckBox
-                        android:id="@+id/AbonnementMensuel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="onCheckboxClicked1"
-                        android:textColor="@color/bgColorStandard"
-                        android:textStyle="bold|italic"
-                        android:theme="@style/BlueCheck"
-                        android:text="@string/AbonnementMensuel" />
-
-                    <CheckBox
-                        android:id="@+id/AbonnementHebdomadaire"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="onCheckboxClicked1"
-                        android:textColor="@color/bgColorStandard"
-                        android:textStyle="bold|italic"
-                        android:theme="@style/BlueCheck"
-                        android:text="@string/AbonnementHebdomadaire" />
-
-                    <CheckBox
-                        android:id="@+id/AbonnementService"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="onCheckboxClicked1"
-                        android:textStyle="bold|italic"
-                        android:textColor="@color/bgColorStandard"
-                        android:text="@string/AbonnementService"
-                        android:theme="@style/BlueCheck"
-                        android:checked="true"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
 
             <TextView
                 android:textColor="@color/bgColorStandard"
@@ -482,7 +411,7 @@
                     android:textAllCaps="false"
                     android:shadowDx="@android:integer/config_longAnimTime"
                     android:background="@drawable/btn_rounded"
-                    android:text="@string/modifier" />
+                    android:text="@string/souscrire" />
                 <Button
                     android:id="@+id/btnOpenNFC"
                     android:visibility="gone"
@@ -571,6 +500,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
 
 </ScrollView>

@@ -309,12 +309,12 @@
     <string name="payerFacture">Payer vos Factures</string>
     <string name="HistoriqueVides">Historique Transactions vides</string>
 
-    <string name="qrcode">QR Code</string>
+    <string name="qrcode">Code QR</string>
     <string name="imprimer">Imprimer</string>
-    <string name="authentificationQRCode">Authentification QR CODE</string>
+    <string name="authentificationQRCode">Authentification CODE QR</string>
     <string name="partager">Partager</string>
-    <string name="scanQRCode">Scanner QR Code</string>
-    <string name="affichageQRCode">Accepter Paiement QR Code</string>
+    <string name="scanQRCode">Scanner Code QR</string>
+    <string name="affichageQRCode">Accepter Paiement Code QR</string>
     <string name="montantApayer">Montant A Payer</string>
     <string name="erreurQRcode">Impossible de Scanner le code QR.
  Assurez-vous que vous êtes sur E-ZPASS by SMOPAYE et tentez de scanner à nouveau.</string>
@@ -457,8 +457,8 @@
     <string name="modificationCompte">"Modification du compte"</string>
     <string name="champsinValide">Un ou plusieurs champs invalid</string>
     <string name="modifSuppGoogleUser">Modif et Supp Google User</string>
-    <string name="lecteurQRCode">Lecteur QR Code</string>
-    <string name="smopayePartarge">Smopaye Partage QR Code</string>
+    <string name="lecteurQRCode">Lecteur Code QR</string>
+    <string name="smopayePartarge">Smopaye Partage Code QR</string>
     <string name="smopayePartargeEZPASS">E-ZPASS Partage via</string>
     <string name="maCarteSmopaye">Mon Compte</string>
     <string name="carteMag">Carte magnétique</string>
@@ -474,9 +474,9 @@
     <string name="notifications">Notifications</string>
     <string name="questionFrequentes">Questions Fréquentes</string>
     <string name="historiqueTransaction">Historique de transactions</string>
-    <string name="AccueilQRCode">Accueil QR Code</string>
+    <string name="AccueilQRCode">Accueil Code QR</string>
     <string name="ezpassScan">E-ZPASS SCAN…</string>
-    <string name="paiementQRCode">Paiement Par QR Code</string>
+    <string name="paiementQRCode">Paiement Par Code QR</string>
     <string name="numeroInexistant">Ce numéro de compte n\'existe pas"</string>
     <string name="userNonReconnu">Impossible d\'envoyer votre notification utilisateur non reconnu.</string>
     <string name="menuRetrait">Menu Retrait</string>
@@ -571,7 +571,7 @@
     <string name="operationDone">Opération terminé</string>
 
     <string name="slide_4_title">Code QR E-ZPASS</string>
-    <string name="slide_4_desc">E-Zpass is a reliable way to send and receive money using our payment platform. It is done easily using a QR code. E-zpass encourages users to use the QR code in the payment process.</string>
+    <string name="slide_4_desc"> E-Zpass est un moyen fiable d’envoyer et de recevoir de l’argent en utilisant notre plateforme de paiement. Il est fait facilement en utilisant un code QR. E-zpass encourage les utilisateurs à utiliser le code QR dans les processus de paiement.</string>
     <string name="cmdQRCodeEZPASS">effectuer votre Payement</string>
 
     <!--gestion des cartes-->
@@ -656,4 +656,13 @@
     <string name="listCard">Vous ne possedez pas de cartes.</string>
     <string name="rechargeCard">Vous êtes sur le point de recharger la carte N°</string>
     <string name="amountPlease">Entrez le montant s\'il vous plait</string>
+    <string name="create">Créée : </string>
+    <string name="expire">Expire: </string>
+    <string name="rechargeCarte">Recharge Carte</string>
+    <string name="notifRechargeCard">Votre solde dépot a été crédité d\'un montant de </string>
+    <string name="notif2RechargeCard">Votre nouveau solde est de </string>
+    <string name="addSubAccount">Ajouter un compte</string>
+    <string name="msg_paiementqrcode">Vous êtes sur le point de débiter votre compte et créditer le compte de </string>
+    <string name="gesCartes">Gestion Cartes</string>
+
 </resources>

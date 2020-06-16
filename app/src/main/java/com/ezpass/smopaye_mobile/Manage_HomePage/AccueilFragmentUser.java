@@ -38,6 +38,7 @@ public class AccueilFragmentUser extends Fragment {
     private String categorie;
     private String myState;
     private String code_number_sender;
+    private String idUser;
 
 
 
@@ -67,6 +68,7 @@ public class AccueilFragmentUser extends Fragment {
         categorie = getArguments().getString("categorie");
         myState = getArguments().getString("etat");
         code_number_sender = getArguments().getString("compte");
+        idUser = getArguments().getString("idUser");
 
 
 
@@ -106,6 +108,8 @@ public class AccueilFragmentUser extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), HomeRecharge.class);
+                intent.putExtra("idUser", idUser);
+                intent.putExtra("compte", code_number_sender);
                 startActivity(intent);
             }
         });

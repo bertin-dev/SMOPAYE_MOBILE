@@ -70,9 +70,11 @@ public class AgenceSmopayeAdapter extends BaseAdapter {
             case AGENCE_SMOPAYE_MODEL:
                 TextView ville = (TextView) view.findViewById(R.id.lv_list_item);
                 TextView quartier = (TextView) view.findViewById(R.id.lv_list_item_sub);
+                TextView current_distance = (TextView) view.findViewById(R.id.current_distance);
 
                 ville.setText(((AgenceSmopayeModel)list.get(position)).getVille());
                 quartier.setText(((AgenceSmopayeModel)list.get(position)).getQuartier());
+                current_distance.setText(((AgenceSmopayeModel)list.get(position)).getDistance());
                 break;
 
             case HEADER:

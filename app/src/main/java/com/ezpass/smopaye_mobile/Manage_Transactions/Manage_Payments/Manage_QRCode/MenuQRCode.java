@@ -33,12 +33,14 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ezpass.smopaye_mobile.MainActivity;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.NotifApp;
 import com.ezpass.smopaye_mobile.NotifReceiver;
+import com.ezpass.smopaye_mobile.Profil_user.DataUser;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.RemoteFragments.APIService;
 import com.ezpass.smopaye_mobile.RemoteModel.User;
@@ -53,8 +55,11 @@ import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
+import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
+import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
 import com.ezpass.smopaye_mobile.web_service_response.HomeResponse;
+import com.ezpass.smopaye_mobile.web_service_response.ResponsePaiementQRCodeReceiver;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -104,6 +109,8 @@ public class MenuQRCode extends AppCompatActivity
     private ApiService service;
     private TokenManager tokenManager;
     private Call<HomeResponse> call;
+    private Call<ResponsePaiementQRCodeReceiver> call2;
+    private String nom_prenom_beneficiaire = "";
 
 
     @BindView(R.id.authWindows)
@@ -183,6 +190,15 @@ public class MenuQRCode extends AppCompatActivity
 
             int pos = scanResult.getContents().indexOf("E-ZPASS");
             if (pos >= 0) {
+
+                dialog = new ACProgressFlower.Builder(this)
+                        .direction(ACProgressConstant.PIE_AUTO_UPDATE)
+                        .themeColor(Color.WHITE)
+                        .text(getString(R.string.loading))
+                        .fadeColor(Color.DKGRAY).build();
+                dialog.show();
+
+
                 String carteNumber = scanResult.getContents().substring(7, 15).toUpperCase();
                 openDialog(carteNumber);
             } else{
@@ -192,8 +208,39 @@ public class MenuQRCode extends AppCompatActivity
     }
 
     public void openDialog(String numcard_beneficiaire) {
-        QRCodeModalDialog exampleDialog = new QRCodeModalDialog().newInstanceCode(numcard_beneficiaire);
-        exampleDialog.show(getSupportFragmentManager(), "example dialog");
+
+        //chargement des identifiants de celui qui possède le qr code
+        call2 = service.profil_userQRCode(numcard_beneficiaire);
+        call2.enqueue(new Callback<ResponsePaiementQRCodeReceiver>() {
+            @Override
+            public void onResponse(Call<ResponsePaiementQRCodeReceiver> call, Response<ResponsePaiementQRCodeReceiver> response) {
+                Log.w(TAG, "SMOPAYE_SERVER onResponse: " + response);
+                dialog.dismiss();
+
+                assert response.body() != null;
+                if(response.isSuccessful()){
+
+                    nom_prenom_beneficiaire = response.body().getData().get(0).getUser().getParticulier().get(0).getLastname() + " " + response.body().getData().get(0).getUser().getParticulier().get(0).getFirstname();
+                    String message = getString(R.string.msg_paiementqrcode) + " " + nom_prenom_beneficiaire + "." + getString(R.string.entrez_le_montant);
+
+
+                    QRCodeModalDialog exampleDialog = new QRCodeModalDialog().newInstanceCode(numcard_beneficiaire, message);
+                    exampleDialog.show(getSupportFragmentManager(), "example dialog");
+
+                } else{
+                    tokenManager.deleteToken();
+                    startActivity(new Intent(MenuQRCode.this, Login.class));
+                    finish();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponsePaiementQRCodeReceiver> call, Throwable t) {
+                dialog.dismiss();
+                Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
+            }
+        });
     }
 
     @Override
@@ -311,6 +358,11 @@ public class MenuQRCode extends AppCompatActivity
             call.cancel();
             call = null;
         }
+
+        if(call2 != null){
+            call2.cancel();
+            call2 = null;
+        }
     }
 
     private class GetHttpResponse extends AsyncTask<Void, Void, Void> {
@@ -346,7 +398,7 @@ public class MenuQRCode extends AppCompatActivity
     private void paiementQrCodeInServerSmopaye(String beneficiaireCard, String donataireCard, String montant) {
 
         dialog = new ACProgressFlower.Builder(this)
-                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .direction(ACProgressConstant.PIE_AUTO_UPDATE)
                 .themeColor(Color.WHITE)
                 .text(getString(R.string.loading))
                 .fadeColor(Color.DKGRAY).build();
@@ -367,14 +419,12 @@ public class MenuQRCode extends AppCompatActivity
                     String msgReceiver = response.body().getMessage().getCard_receiver().getNotif();
                     String msgSender = response.body().getMessage().getCard_sender().getNotif();
 
-
-                    //tokenManager.saveToken(response.body());
                     successResponse(beneficiaireCard, msgReceiver, donataireCard, msgSender);
 
                 } else{
-                    /*ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
-                    Toast.makeText(MenuQRCode.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();*/
-                    errorResponse(beneficiaireCard, response.message());
+                    ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                    Toast.makeText(MenuQRCode.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                    errorResponse(beneficiaireCard, apiError.getMessage());
                 }
 
             }

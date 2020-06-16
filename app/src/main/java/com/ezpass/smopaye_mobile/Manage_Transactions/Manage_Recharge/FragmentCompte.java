@@ -45,6 +45,7 @@ import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Login;
+import com.ezpass.smopaye_mobile.Manage_Register.SubSouscription;
 import com.ezpass.smopaye_mobile.NotifApp;
 import com.ezpass.smopaye_mobile.NotifReceiver;
 import com.ezpass.smopaye_mobile.R;
@@ -228,7 +229,7 @@ public class FragmentCompte extends Fragment
         readTempIDCARDInFile();
         readTempCardInFile();
 
-        tie_numCartePropreCompte1.setText(temp_account);
+        tie_numCartePropreCompte1.setText(temp_number);
 
         return view;
     }
@@ -268,6 +269,24 @@ public class FragmentCompte extends Fragment
      * */
     @OnClick(R.id.btnRecharge)
     void recharge(){
+        if(!validateCompte(til_numCartePropreCompte1) | !validateMontant(til_montant1)){
+            return;
+        }
+
+        String telephone = til_numCartePropreCompte1.getEditText().getText().toString();
+        String montant = til_montant1.getEditText().getText().toString();
+        validator.clear();
+
+        /*Action à poursuivre si tous les champs sont remplis*/
+        /*if(validator.validate()){
+            dialog2 = new ACProgressPie.Builder(getContext())
+                    .ringColor(Color.WHITE)
+                    .pieColor(Color.WHITE)
+                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                    .build();
+            dialog2.show();
+            recharge_step1(temp_account, montant, telephone);
+        }*/
 
             View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_dialog_validate_recharge, null);
             TextView titleRecharge = (TextView) view.findViewById(R.id.titleRecharge);
@@ -313,14 +332,37 @@ public class FragmentCompte extends Fragment
                     countDownTimer.cancel();
                     countDownTimer = null;
                 }
-                successResponse("", "operation effectuee");
+                AlertDialog build_error1 = new AlertDialog.Builder(getActivity())
+                        .setTitle(getString(R.string.information))
+                        .setMessage("response")
+                        .setPositiveButton("OK", null)
+                        .setNegativeButton("CANCEL", null)
+                        .show();
+
+                Button positiveButton = build_error1.getButton(AlertDialog.BUTTON_POSITIVE);
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getContext(), "Not closing", Toast.LENGTH_SHORT).show();
+                        build_error1.dismiss();
+                    }
+                });
+                positiveButton.setBackgroundDrawable(getResources()
+                        .getDrawable(R.drawable.ic_account_balance_black_24dp));
+
+
+
+
+
+                build_error1.setCancelable(false);
+                build_error1.setView(view);
+                build_error1.show();
             }
         });
             build_error.setCancelable(true);
             build_error.setView(view);
         final AlertDialog alertDialog = build_error.create();
         alertDialog.show();
-
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -334,14 +376,7 @@ public class FragmentCompte extends Fragment
 
 
 
-
-
-
     }
-
-
-
-
     private void recharge_step1(String account_number, String montant, String telephone) {
 
         call = service.recharge_step1(account_number, Float.parseFloat(montant), telephone);
@@ -350,7 +385,7 @@ public class FragmentCompte extends Fragment
             @Override
             public void onResponse(Call<RechargeResponse> call, Response<RechargeResponse> response) {
                 Log.w(TAG, "SMOPAYE SERVER onResponse: " + response );
-                progressDialog.dismiss();
+                dialog2.dismiss();
 
                 if(response.isSuccessful()){
 
@@ -365,14 +400,47 @@ public class FragmentCompte extends Fragment
                             View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_dialog_validate_recharge, null);
                             TextView titleRecharge = (TextView) view.findViewById(R.id.titleRecharge);
                             TextView msgValidateRecharge = (TextView) view.findViewById(R.id.msgValidateRecharge);
+                            msgValidateRecharge.setText("S\'il vous plait veuillez validez la recharge de votre Compte " + response.body().getData().getCompany() +" N°"+ response.body().getData().getAccount_number() + " en Tapant " + response.body().getMessage().getChannel_ussd() + " du service " + response.body().getMessage().getChannel_name());
                             TextView timerRecharge = (TextView) view.findViewById(R.id.timerRecharge);
-                            timerRecharge.setText("60");
-                            Button btnValidateRecharge = (Button) view.findViewById(R.id.btnValidateRecharge);
+                            timerRecharge.setText("59");
                             titleRecharge.setText(getString(R.string.attenteValidation));
-                            btnValidateRecharge.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
 
+                            ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
+                            progressBar.setVisibility(View.VISIBLE);
+                            //DEBUT
+
+                            countDownTimer = new CountDownTimer(59 * 1000, 1000) {
+                                @Override
+                                public void onTick(long millisUntilFinished) {
+                                    timerRecharge.setText(String.valueOf(millisUntilFinished / 1000));
+                                }
+
+                                @Override
+                                public void onFinish() {
+                                    timerRecharge.setText("Terminé.");
+                                }
+                            };
+
+                            countDownTimer.start();
+
+                            //FIN TIMER
+                            build_error.setNeutralButton(getString(R.string.annuler), new DialogInterface.OnClickListener() { // define the 'Cancel' button
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Either of the following two lines should work.
+                                    dialog.cancel();
+                                    til_montant1.getEditText().setText("");
+                                    //dialog.dismiss();
+                                }
+                            });
+                            build_error.setPositiveButton(getString(R.string.valider), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    progressBar.setVisibility(View.GONE);
+                                    if(countDownTimer != null) {
+                                        countDownTimer.cancel();
+                                        countDownTimer = null;
+                                    }
                                     dialog2 = new ACProgressPie.Builder(getContext())
                                             .ringColor(Color.WHITE)
                                             .pieColor(Color.WHITE)
@@ -380,36 +448,38 @@ public class FragmentCompte extends Fragment
                                             .build();
                                     dialog2.show();
                                     recharge_step2(temp_account, payment);
-
                                 }
                             });
-                            msgValidateRecharge.setText("S\'il vous plait veuillez validez la recharge de votre Compte " + response.body().getData().getCompany() +" N°"+ response.body().getData().getAccount_number() + " en Tapant " + response.body().getMessage().getChannel_ussd() + " du service " + response.body().getMessage().getChannel_name());
                             build_error.setCancelable(true);
                             build_error.setView(view);
-                            build_error.show();
+                            final AlertDialog alertDialog = build_error.create();
+                            alertDialog.show();
+
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (alertDialog.isShowing()){
+                                        alertDialog.dismiss();
+                                        errorResponse("", "Opération échoué.");
+                                    }
+                                }
+                            }, 60000);
                         }
                     }
-                    //tokenManager.saveToken(response.body());
-
-                        /*if(isValidUrl(response.toString())){
-                            Intent intent = new Intent(getApplicationContext(), WebViewMonetbil.class);
-                            intent.putExtra("urlMonetbil", response.toString()); //A REVOIR
-                            startActivity(intent);
-                        } else{
-                            Toast.makeText(RechargePropreCompte.this, "Un problème est survenu lors de la redirection.", Toast.LENGTH_SHORT).show();
-                        }*/
-
 
                 } else{
 
                     if(response.code() == 422){
                         handleErrors(response.errorBody());
                     }
-                    else if(response.code() == 401){
+                    /*else if(response.code() == 401){
                         ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
                         Toast.makeText(getContext(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
-                    } else{
-                        errorResponse("", response.message());
+                    }*/ else{
+                        ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                        Toast.makeText(getContext(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        errorResponse("", apiError.getMessage());
                     }
                 }
 
@@ -418,7 +488,7 @@ public class FragmentCompte extends Fragment
             @Override
             public void onFailure(Call<RechargeResponse> call, Throwable t) {
 
-                progressDialog.dismiss();
+                dialog2.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
 
                 /*Vérification si la connexion internet accessible*/
@@ -460,7 +530,9 @@ public class FragmentCompte extends Fragment
                     }
 
                 } else{
-                    errorResponse("", response.message());
+                    ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                    Toast.makeText(getContext(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                    errorResponse("", apiError.getMessage());
                 }
 
             }
@@ -894,7 +966,7 @@ public class FragmentCompte extends Fragment
         if(my_numCompte.isEmpty()){
             til_num_compte1.setError(getString(R.string.insererCompte));
             return false;
-        } else if(my_numCompte.length() < 8){
+        } else if(my_numCompte.length() < 9){
             til_num_compte1.setError(getString(R.string.compteCourt));
             return false;
         } else {
@@ -1119,12 +1191,6 @@ public class FragmentCompte extends Fragment
 
         notificationManager.notify(new Random().nextInt(), notification);
         ////////////////////////////////////FIN NOTIFICATIONS/////////////////////
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Toast.makeText(getContext(), "en pause", Toast.LENGTH_SHORT).show();
     }
 
     /*@Override

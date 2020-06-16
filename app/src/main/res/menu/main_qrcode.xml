@@ -49,6 +49,7 @@
         android:orderInCategory="100"
         android:icon="@drawable/ic_description_black_24dp"
         app:showAsAction="never"
+        android:visible="false"
         android:title="@string/monCompte"/>
 
 

@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.R;
@@ -24,11 +25,13 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
     private int c;
     private String file2 = "tmp_card_number";
     private String temp_card = "";
+    private TextView statutOperation;
 
 
-    public QRCodeModalDialog newInstanceCode(String numCarteBeneficiaire) {
+    public QRCodeModalDialog newInstanceCode(String numCarteBeneficiaire, String message) {
         Bundle args = new Bundle();
         args.putString("numCarteBeneficiaire", numCarteBeneficiaire);
+        args.putString("message", message);
         QRCodeModalDialog frag = new QRCodeModalDialog();
         frag.setArguments(args);
         return frag;
@@ -44,6 +47,8 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
 
         editTextMontant = view.findViewById(R.id.edit_montant);
         edit_num_carte = view.findViewById(R.id.edit_num_carte);
+        statutOperation = view.findViewById(R.id.statutOperation);
+        statutOperation.setText((String) getArguments().getString("message"));
 
         /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
         readTempCardInFile();
@@ -51,11 +56,11 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
         edit_num_carte.setText(temp_card);
 
         builder.setView(view)
-                .setTitle(getString(R.string.insererMontant))
+                //.setTitle(getString(R.string.insererMontant))
                 .setNegativeButton(getString(R.string.sortir), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        dialogInterface.dismiss();
                     }
                 })
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {

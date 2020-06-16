@@ -33,7 +33,7 @@ public class AccueilFragmentAgent extends Fragment {
     private LinearLayout RechargeAvecCashAgent, ConsultSoldeAgent, CheckCardNumberAgent, btnPayerFacture, btnQrCode, btnRetraitOperateur;
     private FloatingActionButton InscriptionUserByAgent;
     private Button consulterHistoriqueAgent;
-    private String statut1, telephone, code_number_sender, mycategorie;
+    private String statut1, telephone, code_number_sender, mycategorie, idUser;
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         View view =  inflater.inflate(R.layout.fragment_accueil_agent, container, false);
@@ -63,6 +63,7 @@ public class AccueilFragmentAgent extends Fragment {
         statut1 = getArguments().getString("role");
         code_number_sender = getArguments().getString("compte");
         mycategorie = getArguments().getString("categorie");
+        idUser = getArguments().getString("idUser");
 
         categorie.setText(mycategorie); // chauffeur, moto_taxi, bus, cargo   A GERER DANS LE NOUVEAU WEB SERVICE
         session.setText(statut1); //Administrateur, Utilisateur etc...
@@ -103,6 +104,8 @@ public class AccueilFragmentAgent extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), HomeRecharge.class);
+                intent.putExtra("idUser", idUser);
+                intent.putExtra("compte", code_number_sender);
                 startActivity(intent);
             }
         });

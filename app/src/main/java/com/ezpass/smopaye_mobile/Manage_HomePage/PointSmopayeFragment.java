@@ -33,9 +33,9 @@ public class PointSmopayeFragment extends Fragment {
 
         ArrayList<Object> list = new ArrayList<>();
         list.add(new String("CENTRE"));
-        list.add(new AgenceSmopayeModel("YAOUNDE", "CAMAIR"));
-        list.add(new AgenceSmopayeModel("YAOUNDE", "OMNISPORT"));
-        list.add(new AgenceSmopayeModel("YAOUNDE", "SOA"));
+        list.add(new AgenceSmopayeModel("YAOUNDE", "CAMAIR", "900 m"));
+        list.add(new AgenceSmopayeModel("YAOUNDE", "OMNISPORT", "20 km"));
+        list.add(new AgenceSmopayeModel("YAOUNDE", "SOA", "150 km"));
 
       /*  list.add(new String("LITTORAL"));
         list.add(new AgenceSmopayeModel("DOUALA", "Akwa"));

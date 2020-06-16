@@ -491,7 +491,7 @@
     <string name="operationDone">Operation Done</string>
 
     <string name="slide_4_title">QR Code E-ZPASS</string>
-    <string name="slide_4_desc">E-Zpass est un moyen fiable d’envoyer et de recevoir de l’argent en utilisant notre plateforme de paiement. Il est fait facilement en utilisant un code QR. E-zpass encourage les utilisateurs à utiliser le code QR dans les processus de paiement.</string>
+    <string name="slide_4_desc">E-Zpass is a reliable way to send and receive money using our payment platform. It is done easily using a QR code. E-zpass encourages users to use the QR code in the payment process.</string>
     <string name="cmdQRCodeEZPASS">Make your Payment</string>
 
     <!--gestion des cartes-->
@@ -575,5 +575,14 @@
     <string name="listCard">You do not have cards.</string>
     <string name="rechargeCard">You are about to recharge the card N°</string>
     <string name="amountPlease">Enter the amount please</string>
+    <string name="create">Create : </string>
+    <string name="expire">Expired: </string>
+    <string name="rechargeCarte">Card Refill</string>
+
+    <string name="notifRechargeCard">Your deposit balance has been credited with</string>
+    <string name="notif2RechargeCard">Your new balance is</string>
+    <string name="addSubAccount">Add an account</string>
+    <string name="msg_paiementqrcode">You are about to debit your account and credit the account of </string>
+    <string name="gesCartes">Card Management</string>
 
 </resources>

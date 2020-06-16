@@ -43,13 +43,15 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="25"
-                        android:text="Créee: "/>
+                        android:gravity="center"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:text="@string/create"/>
 
                     <TextView
                         android:id="@+id/created_at"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="15/05/2020"
+                        android:text=""
                         android:textStyle="normal"
                         android:textSize="12sp"
                         android:gravity="start"
@@ -73,14 +75,16 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="30"
-                        android:text="Expire: "/>
+                        android:gravity="center"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:text="@string/expire"/>
 
 
                     <TextView
                         android:id="@+id/exp_date"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="30/11/2021"
+                        android:text=""
                         android:textStyle="normal"
                         android:textSize="12sp"
                         android:gravity="end"
@@ -115,7 +119,7 @@
                         android:id="@+id/code_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ABCDEFGH"
+                        android:text=""
                         android:textStyle="bold"
                         android:textColor="@color/textColorBlack"
                         android:textSize="18sp"
@@ -126,7 +130,7 @@
                         android:id="@+id/cardType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Type: A M1"
+                        android:text=""
                         android:textStyle="italic"
                         android:textSize="15sp"
                         android:autoSizeTextType="uniform"
@@ -169,7 +173,7 @@
                         android:id="@+id/serial_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="A000298"
+                        android:text=""
                         android:textStyle="bold"
                         android:textColor="@color/textColorBlack"
                         android:textSize="18sp"
@@ -186,7 +190,7 @@
                             android:layout_width="0dp"
                             android:layout_weight="27"
                             android:layout_height="wrap_content"
-                            android:text="Etat: "
+                            android:text="@string/etat"
                             android:textStyle="italic"
                             android:textSize="15sp"
                             android:autoSizeTextType="uniform"
@@ -197,7 +201,7 @@
                             android:layout_width="0dp"
                             android:layout_weight="73"
                             android:layout_height="wrap_content"
-                            android:text="Activer"
+                            android:text=""
                             android:textStyle="italic"
                             android:textSize="15sp"
                             android:autoSizeTextType="uniform"

@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
@@ -24,6 +25,8 @@ public class HomeRecharge extends AppCompatActivity {
     private int[] tabIcons = {
             R.drawable.ic_account_balance_black_24dp,
             R.drawable.ic_credit_card};
+    private String idUser;
+    private String compte;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,10 @@ public class HomeRecharge extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
+        Intent intent = getIntent();
+        idUser = intent.getStringExtra("idUser");
+        compte = intent.getStringExtra("compte");
+
         viewPager = findViewById(R.id.viewPager);
 
         addTabs(viewPager);
@@ -49,7 +56,7 @@ public class HomeRecharge extends AppCompatActivity {
     private void addTabs(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new FragmentCompte(), getString(R.string.maCarteSmopaye));
-        adapter.addFrag(new FragmentCartes(), getString(R.string.MyCards));
+        adapter.addFrag(new FragmentCartes().newInstance(idUser, compte), getString(R.string.MyCards));
         viewPager.setAdapter(adapter);
     }
 

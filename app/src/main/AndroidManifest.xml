@@ -32,7 +32,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_QRCode.AffichageQRCode"></activity>
+        <activity android:name=".Manage_Register.SubSouscription"></activity>
+        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_QRCode.AffichageQRCode" />
         <activity android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.MenuRetraitOperateur" />
         <activity android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.RetraitChezSmopaye" />
         <activity android:name=".Manage_Transactions.Manage_Payments.Manage_Factures.PayerFacture" />
@@ -97,10 +98,8 @@
         <activity android:name=".Manage_Apropos.InformationLegales" />
         <activity android:name=".Manage_Apropos.Apropos" />
         <activity android:name=".Manage_Offre_Smopaye.DemarrageOffreSmopaye" />
-        <activity
-            android:name=".Manage_Url_Website.WebViewMonetbil" /> <!-- tools:replace="android:appComponentFactory" -->
-        <activity
-            android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.RetraitAccepteur"/>
+        <activity android:name=".Manage_Url_Website.WebViewMonetbil" /> <!-- tools:replace="android:appComponentFactory" -->
+        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.RetraitAccepteur" />
         <activity
             android:name=".Manage_Administrator.ListeAccepteursSimple"
             android:parentActivityName=".Manage_Administrator.GestionAccepteur" />
@@ -108,7 +107,7 @@
         <activity
             android:name=".Manage_Administrator.ListeAccepteurs"
             android:parentActivityName=".Manage_Administrator.GestionAccepteur" />
-        <activity android:name=".Manage_Url_Website.WebSite"  />
+        <activity android:name=".Manage_Url_Website.WebSite" />
         <activity android:name=".Manage_Tutoriel.Tutoriel" />
         <activity
             android:name=".Manage_Update_ProfilUser.UpdatePassword"
@@ -139,8 +138,7 @@
         <activity
             android:name=".Manage_Consult.ConsulterRecette"
             android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.MenuRetraitTelecollecte" />
+        <activity android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.MenuRetraitTelecollecte" />
         <activity
             android:name=".Manage_Transactions.Manage_Payments.Manage_DebitCards.DebitCarte"
             android:parentActivityName=".MainActivity" />

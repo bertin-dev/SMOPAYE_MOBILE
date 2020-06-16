@@ -86,11 +86,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:hint="@string/numdeCarte"
+                android:hint="@string/numero"
                 android:textColorHint="@color/bgColorStandard"
                 app:errorEnabled="true"
                 app:counterEnabled="true"
-                app:counterMaxLength="8">
+                app:counterMaxLength="9">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/tie_numCartePropreCompte1"
@@ -100,7 +100,7 @@
                     android:textStyle="bold|italic"
                     android:imeOptions="actionNext"
                     android:padding="10dp"
-                    android:maxLength="8"
+                    android:maxLength="9"
                     android:inputType="text"
                     android:background="@drawable/edittextborder"
                     android:layout_width="match_parent"
@@ -127,6 +127,7 @@
                     android:textStyle="bold|italic"
                     android:imeOptions="actionDone"
                     android:padding="10dp"
+                    android:maxLength="7"
                     android:inputType="number"
                     android:background="@drawable/edittextborder"
                     android:layout_width="match_parent"

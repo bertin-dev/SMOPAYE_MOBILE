@@ -422,7 +422,7 @@
                         android:textColor="#262626"
                         android:textStyle="bold"
                         android:textAlignment="center"
-                        android:text="@string/consulterSolde"
+                        android:text="@string/gesCartes"
                         android:gravity="center_horizontal" />
                 </LinearLayout>
 

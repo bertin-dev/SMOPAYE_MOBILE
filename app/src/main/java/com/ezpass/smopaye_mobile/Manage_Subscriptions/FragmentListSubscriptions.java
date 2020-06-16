@@ -96,14 +96,13 @@ public class FragmentListSubscriptions extends Fragment {
                     List<Abonnement> abonnement = compte.getCompte_subscriptions();
 
                         //Toast.makeText(ListAllCardSaved.this, myResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                        List<Abonnement> allUserSubscription = abonnement;
 
-                        if(allUserSubscription.isEmpty()){
+                    if(abonnement.isEmpty()){
                             historiqueVide.setVisibility(View.VISIBLE);
                             listView.setVisibility(View.GONE);
                         } else {
                             historiqueVide.setVisibility(View.GONE);
-                            listView.setAdapter(new AdapterUserSubscriptionList(getContext(), allUserSubscription));
+                            listView.setAdapter(new AdapterUserSubscriptionList(getContext(), abonnement));
                         }
 
                     }

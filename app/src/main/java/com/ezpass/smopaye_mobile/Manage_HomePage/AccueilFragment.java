@@ -36,7 +36,7 @@ public class AccueilFragment extends Fragment {
     private Button consulterHistoriqueAccepteur;
     private FloatingActionButton assistanceOnline;
 
-    private String code_number_sender, telephone, role, categorie;
+    private String code_number_sender, telephone, role, categorie, idUser;
 
     public AccueilFragment() {
         // Required empty public constructor
@@ -79,6 +79,7 @@ public class AccueilFragment extends Fragment {
          telephone = getArguments().getString("telephone");
          categorie = getArguments().getString("categorie");
          role = getArguments().getString("role");
+         idUser = getArguments().getString("idUser");
 
         myRole.setText(role);
         myCategorie.setText(categorie);
@@ -142,6 +143,8 @@ public class AccueilFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), HomeRecharge.class);
+                intent.putExtra("idUser", idUser);
+                intent.putExtra("compte", code_number_sender);
                 startActivity(intent);
             }
         });

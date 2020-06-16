@@ -39,6 +39,7 @@ import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Manage_HomePage.CarteFragment;
 import com.ezpass.smopaye_mobile.Manage_HomePage.NotificationsFragment;
 import com.ezpass.smopaye_mobile.Manage_HomePage.PointSmopayeFragment;
+import com.ezpass.smopaye_mobile.Manage_Register.SubSouscription;
 import com.ezpass.smopaye_mobile.Manage_Subscriptions.Home_Subscriptions;
 import com.ezpass.smopaye_mobile.Manage_Transactions.Manage_Payments.Manage_Transfer.Transfert;
 import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
@@ -312,6 +313,7 @@ public class MainActivity extends AppCompatActivity
                             bundle1.putString("compte", myCompte);
                             bundle1.putString("role", session);
                             bundle1.putString("categorie", myCategorie);
+                            bundle1.putString("idUser", idUser);
                             selectedFragment1 = new AccueilFragmentAdmin();
                             selectedFragment1.setArguments(bundle1);
                         }
@@ -321,6 +323,7 @@ public class MainActivity extends AppCompatActivity
                             bundle1.putString("role", session);
                             bundle1.putString("categorie", myCategorie);
                             bundle1.putString("etat", etat);
+                            bundle1.putString("idUser", idUser);
                             selectedFragment1 = new AccueilFragmentUser();
                             selectedFragment1.setArguments(bundle1);
                             txt_role.setText(getString(R.string.utilisateur));
@@ -332,6 +335,7 @@ public class MainActivity extends AppCompatActivity
                         bundle1.putString("role", session);
                         bundle1.putString("categorie", myCategorie);
                         bundle1.putString("etat", etat);
+                        bundle1.putString("idUser", idUser);
                         selectedFragment1 = new AccueilFragmentUser();
                         selectedFragment1.setArguments(bundle1);
                     }
@@ -343,6 +347,7 @@ public class MainActivity extends AppCompatActivity
                             bundle1.putString("compte", myCompte);
                             bundle1.putString("role", session);
                             bundle1.putString("categorie", myCategorie);
+                            bundle1.putString("idUser", idUser);
                             selectedFragment1 = new AccueilFragmentAgent();
                             selectedFragment1.setArguments(bundle1);
                         }
@@ -352,6 +357,7 @@ public class MainActivity extends AppCompatActivity
                             bundle1.putString("role", session);
                             bundle1.putString("categorie", myCategorie);
                             bundle1.putString("etat", etat);
+                            bundle1.putString("idUser", idUser);
                             selectedFragment1 = new AccueilFragmentUser();
                             selectedFragment1.setArguments(bundle1);
                             txt_role.setText(getString(R.string.utilisateur));
@@ -364,6 +370,7 @@ public class MainActivity extends AppCompatActivity
                             bundle1.putString("compte", myCompte);
                             bundle1.putString("role", session);
                             bundle1.putString("categorie", myCategorie);
+                            bundle1.putString("idUser", idUser);
                             selectedFragment1 = new AccueilFragment();
                             selectedFragment1.setArguments(bundle1);
                         }
@@ -373,6 +380,7 @@ public class MainActivity extends AppCompatActivity
                             bundle1.putString("role", session);
                             bundle1.putString("categorie", myCategorie);
                             bundle1.putString("etat", etat);
+                            bundle1.putString("idUser", idUser);
                             selectedFragment1 = new AccueilFragmentUser();
                             selectedFragment1.setArguments(bundle1);
                             txt_role.setText(getString(R.string.utilisateur));
@@ -413,6 +421,7 @@ public class MainActivity extends AppCompatActivity
                                             bundle.putString("compte", myCompte);
                                             bundle.putString("role", session);
                                             bundle.putString("categorie", myCategorie);
+                                            bundle.putString("idUser", idUser);
                                             selectedFragment = new AccueilFragmentAdmin();
                                             selectedFragment.setArguments(bundle);
                                         }
@@ -422,6 +431,7 @@ public class MainActivity extends AppCompatActivity
                                             bundle.putString("role", session);
                                             bundle.putString("categorie", myCategorie);
                                             bundle.putString("etat", etat);
+                                            bundle.putString("idUser", idUser);
                                             selectedFragment = new AccueilFragmentUser();
                                             selectedFragment.setArguments(bundle);
                                         }
@@ -433,6 +443,7 @@ public class MainActivity extends AppCompatActivity
                                         bundle.putString("role", session);
                                         bundle.putString("categorie", myCategorie); //mini-bus cargo, petit-commerce
                                         bundle.putString("etat", etat);
+                                        bundle.putString("idUser", idUser);
                                         selectedFragment = new AccueilFragmentUser();
                                         selectedFragment.setArguments(bundle);
                                     }
@@ -443,6 +454,7 @@ public class MainActivity extends AppCompatActivity
                                         bundle.putString("compte", myCompte);
                                         bundle.putString("role", session);
                                         bundle.putString("categorie", myCategorie);
+                                        bundle.putString("idUser", idUser);
                                         selectedFragment = new AccueilFragmentAgent();
                                         selectedFragment.setArguments(bundle);
                                     }
@@ -453,6 +465,7 @@ public class MainActivity extends AppCompatActivity
                                             bundle.putString("compte", myCompte);
                                             bundle.putString("role", session);
                                             bundle.putString("categorie", myCategorie);
+                                            bundle.putString("idUser", idUser);
                                             selectedFragment = new AccueilFragment();
                                             selectedFragment.setArguments(bundle);
                                         }
@@ -462,6 +475,7 @@ public class MainActivity extends AppCompatActivity
                                             bundle.putString("role", session);
                                             bundle.putString("categorie", myCategorie);
                                             bundle.putString("etat", etat);
+                                            bundle.putString("idUser", idUser);
                                             selectedFragment = new AccueilFragmentUser();
                                             selectedFragment.setArguments(bundle);
                                         }
@@ -613,6 +627,11 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
+        if (id == R.id.nav_addSubAccount) {
+            Intent intent = new Intent(getApplicationContext(), SubSouscription.class);
+            startActivity(intent);
+        }
 
         if (id == R.id.nav_offreSmopaye) {
             // Handle the camera action

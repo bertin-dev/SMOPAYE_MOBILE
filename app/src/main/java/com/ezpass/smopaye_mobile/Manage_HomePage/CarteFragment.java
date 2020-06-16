@@ -619,8 +619,8 @@ public class CarteFragment extends Fragment
         String current = new SimpleDateFormat("dd/MM/yyyy à HH:mm:ss", Locale.getDefault()).format(new Date());
         updateDateDialog.setText("Mise à jour le " + current);
 
-        soldeCompte.setText("Compte: " + myPersonalAccountAmount + " Fcfa");
-        soldeUnite.setText("Unité: " + unity + " Fcfa");
+        soldeCompte.setText("Compte: " + myPersonalAccountAmount.substring(0, 10) + " Fcfa");
+        soldeUnite.setText("Unité: " + unity.substring(0, 10) + " Fcfa");
         soldeDepot.setText("Dépot: " + deposit.substring(0, 10) + " Fcfa");
 
         //compte

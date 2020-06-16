@@ -48,9 +48,9 @@ public class AgenceSmopaye extends AppCompatActivity {
 
         ArrayList<Object> list = new ArrayList<>();
         list.add(new String("CENTRE"));
-        list.add(new AgenceSmopayeModel(getString(R.string.yaounde), getString(R.string.camair)));
-        list.add(new AgenceSmopayeModel(getString(R.string.yaounde), getString(R.string.omnisport)));
-        list.add(new AgenceSmopayeModel(getString(R.string.yaounde), getString(R.string.soa)));
+        list.add(new AgenceSmopayeModel(getString(R.string.yaounde), getString(R.string.camair), " 900 m"));
+        list.add(new AgenceSmopayeModel(getString(R.string.yaounde), getString(R.string.omnisport), " 110 km"));
+        list.add(new AgenceSmopayeModel(getString(R.string.yaounde), getString(R.string.soa), "350 km"));
        // list.add(new AgenceSmopayeModel("YAOUNDE", "Bastos"));
 
         /*list.add(new String("LITTORAL"));

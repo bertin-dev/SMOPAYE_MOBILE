@@ -33,7 +33,7 @@ public class AccueilFragmentAdmin  extends Fragment {
     private LinearLayout GesCompt, CheckCardNumber, ConsulterSolde, RechargeAvecCashAdmin, btnPayerFacture, btnQrCode, btn_gesCartes;
     private FloatingActionButton Register;
     private Button consulterHistoriqueAdmin;
-    private String code_number_sender, telephone, role, categorie;
+    private String code_number_sender, telephone, role, categorie, idUser;
 
 
 
@@ -61,6 +61,7 @@ public class AccueilFragmentAdmin  extends Fragment {
         telephone = getArguments().getString("telephone");
         categorie = getArguments().getString("categorie");
         role = getArguments().getString("role");
+        idUser = getArguments().getString("idUser");
 
         myCategorie.setText(categorie);
         myRole.setText(role);
@@ -127,6 +128,8 @@ public class AccueilFragmentAdmin  extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), HomeRecharge.class);
+                intent.putExtra("idUser", idUser);
+                intent.putExtra("compte", code_number_sender);
                 startActivity(intent);
             }
         });

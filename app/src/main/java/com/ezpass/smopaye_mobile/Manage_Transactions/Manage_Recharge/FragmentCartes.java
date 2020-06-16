@@ -2,13 +2,18 @@ package com.ezpass.smopaye_mobile.Manage_Transactions.Manage_Recharge;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,24 +26,57 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.ezpass.smopaye_mobile.ChaineConnexion;
+import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Login;
+import com.ezpass.smopaye_mobile.NotifReceiver;
 import com.ezpass.smopaye_mobile.Profil_user.DataUserCard;
+import com.ezpass.smopaye_mobile.Profil_user.Particulier;
 import com.ezpass.smopaye_mobile.R;
+import com.ezpass.smopaye_mobile.RemoteFragments.APIService;
+import com.ezpass.smopaye_mobile.RemoteModel.User;
+import com.ezpass.smopaye_mobile.RemoteNotifications.Client;
+import com.ezpass.smopaye_mobile.RemoteNotifications.Data;
+import com.ezpass.smopaye_mobile.RemoteNotifications.MyResponse;
+import com.ezpass.smopaye_mobile.RemoteNotifications.Sender;
+import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
+import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
+import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
+import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
+import com.ezpass.smopaye_mobile.web_service_response.HomeResponse;
 import com.ezpass.smopaye_mobile.web_service_response.Recharge.DataAllUserCard;
 import com.ezpass.smopaye_mobile.web_service_response.Recharge.ListAllUserCardResponse;
+import com.ezpass.smopaye_mobile.web_service_response.Recharge.MessageRechargeCardByAccount;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
+import java.io.FileInputStream;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressPie;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,6 +87,7 @@ public class FragmentCartes extends Fragment {
     private ListView listView;
     private ProgressBar progressBar;
     private ListAllUserCardResponse myResponse;
+    private ACProgressPie dialog2;
 
     private ApiService service;
     private TokenManager tokenManager;
@@ -56,7 +95,24 @@ public class FragmentCartes extends Fragment {
     private LinearLayout listCards;
     private AdapterUserCardList adapterUserCardList;
     private AlertDialog.Builder build_error;
-    private Call<ListAllUserCardResponse> call;
+    private Call<MessageRechargeCardByAccount> call;
+
+    //SERVICES GOOGLE FIREBASE
+    private APIService apiService;
+    private FirebaseUser fuser;
+
+    private String file2 = "tmp_account";
+    private String temp_account = "";
+    private int c;
+    private String idUser;
+    private String myCardNumber;
+
+
+    //BD LOCALE
+    private DbHandler dbHandler;
+    private Date aujourdhui;
+    private DateFormat shortDateFormat;
+
 
     public FragmentCartes() {
         // Required empty public constructor
@@ -80,9 +136,15 @@ public class FragmentCartes extends Fragment {
         }
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
 
-        build_error = new AlertDialog.Builder(getContext());
+        apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
 
-        showAllUserCards(14);
+        build_error = new AlertDialog.Builder(getContext());
+        idUser = getArguments().getString("idUser", "");
+        myCardNumber =  getArguments().getString("compte", "");
+        readTempAccountInFile();
+
+        showAllUserCards(Integer.parseInt(idUser));
 
         return view;
     }
@@ -143,6 +205,15 @@ public class FragmentCartes extends Fragment {
         }
     }
 
+    public Fragment newInstance(String idUsers, String card_number) {
+        FragmentCartes myFragment = new FragmentCartes();
+        Bundle args = new Bundle();
+        args.putString("idUser", idUsers);
+        args.putString("compte", card_number);
+        myFragment.setArguments(args);
+        return myFragment;
+    }
+
 
     /**************************************CLASSE EXTEND ARRAYADAPTER*************************************/
     public class AdapterUserCardList extends ArrayAdapter<DataAllUserCard> {
@@ -157,32 +228,33 @@ public class FragmentCartes extends Fragment {
         }
 
 
+        @SuppressLint("SetTextI18n")
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(context);
             convertView = layoutInflater.inflate(R.layout.list_all_user_cards, parent, false);
 
-            //telephone du détenteur de carte
-            TextView txtV_cardType = (TextView) convertView.findViewById(R.id.telUserCard);
-            txtV_cardType.setText(myAllUserCard.get(0).getPhone());
-
             //info sur la carte
             List<DataUserCard> card = myAllUserCard.get(position).getCards();
-
             for(int i=0; i<card.size();i++) {
+
+                //telephone du détenteur de carte
+                TextView txtV_telUserCard = (TextView) convertView.findViewById(R.id.telUserCard);
+                txtV_telUserCard.setText("Tel: " + myAllUserCard.get(position).getPhone());
+
                 //date de creation de la carte
                 TextView txtV_create_at = (TextView) convertView.findViewById(R.id.created_at);
-                txtV_create_at.setText(card.get(i).getCreated_at());
+                txtV_create_at.setText(getString(R.string.create) + card.get(i).getCreated_at().substring(0,10));
                 //numéro de carte
                 TextView txtV_codeNumber = (TextView) convertView.findViewById(R.id.code_number);
-                txtV_codeNumber.setText(card.get(i).getCode_number());
+                txtV_codeNumber.setText("N°"+card.get(i).getCode_number());
                 //numéro de série
                 TextView txtV_serialNumber = (TextView) convertView.findViewById(R.id.serial_number);
                 txtV_serialNumber.setText(card.get(i).getSerial_number());
                 //etat de la carte
                 TextView txtV_cardState = (TextView) convertView.findViewById(R.id.cardState);
-                txtV_cardState.setText(card.get(i).getCard_state());
+                txtV_cardState.setText(getString(R.string.etat) + card.get(i).getCard_state());
                 //nom et prenom
                 //TextView txtV_exp_at = (TextView) convertView.findViewById(R.id.username);
                 //txtV_exp_at.setText(card.getEnd_date());
@@ -200,13 +272,19 @@ public class FragmentCartes extends Fragment {
                             View view = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_recharge_carte, null);
                             TextView title = (TextView) view.findViewById(R.id.title);
                             TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                            statutOperation.setText(getString(R.string.rechargeCard) + card.get(finalI).getSerial_number() + " " + getString(R.string.amountPlease));
+                            statutOperation.setText(getString(R.string.rechargeCard) + card.get(finalI).getCode_number() + " " + getString(R.string.amountPlease));
                             EditText montant = (EditText) view.findViewById(R.id.edit_montant);
                             title.setText(getString(R.string.recharge));
                             build_error.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    rechargeYourCarte(Float.parseFloat(montant.getText().toString()), "", "");
+
+                                    if(!montant.getText().toString().equalsIgnoreCase("")){
+                                        rechargeYourCarte(card.get(finalI).getCode_number(), Float.parseFloat(montant.getText().toString()), temp_account);
+                                    } else{
+                                        Toast.makeText(context, getString(R.string.veuillezInsererMontant), Toast.LENGTH_SHORT).show();
+                                    }
+
                                 }
                             });
                             build_error.setNeutralButton(getString(R.string.annuler), new DialogInterface.OnClickListener() { // define the 'Cancel' button
@@ -216,13 +294,23 @@ public class FragmentCartes extends Fragment {
                                     //dialog.dismiss();
                                 }
                             });
-                            build_error.setCancelable(true);
+                            build_error.setCancelable(false);
                             build_error.setView(view);
                             build_error.show();
 
                         }
                     }
                 });
+            }
+
+
+
+            /**********************************************************************/
+            List<Particulier> particuliers = myAllUserCard.get(position).getParticulier();
+            for(int j=0; j<particuliers.size();j++){
+                //nom et prenom
+                TextView txtV_username = (TextView) convertView.findViewById(R.id.username);
+                txtV_username.setText(particuliers.get(j).getFirstname() + " " + particuliers.get(j).getLastname());
             }
 
 
@@ -241,27 +329,46 @@ public class FragmentCartes extends Fragment {
 
 
 
-        private void rechargeYourCarte(Float amount, String number, String account_number){
-            call = service.rechargeCards(amount, number, account_number);
-            call.enqueue(new Callback<ListAllUserCardResponse>() {
+        private void rechargeYourCarte(String card_id, Float amount, String account_number){
+
+            //********************DEBUT***********
+            dialog2 = new ACProgressPie.Builder(getContext())
+                    .ringColor(Color.WHITE)
+                    .pieColor(Color.WHITE)
+                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                    .build();
+            dialog2.show();
+            //*******************FIN*****
+
+            call = service.rechargeCards(card_id, amount, account_number);
+            call.enqueue(new Callback<MessageRechargeCardByAccount>() {
                 @Override
-                public void onResponse(Call<ListAllUserCardResponse> call, Response<ListAllUserCardResponse> response) {
+                public void onResponse(Call<MessageRechargeCardByAccount> call, Response<MessageRechargeCardByAccount> response) {
                     Log.w(TAG, "SMOPAYE SERVER onResponse: "+ response);
+                    dialog2.dismiss();
                     if(response.isSuccessful()){
 
+                        assert response.body() != null;
+
+                        String card_sender = myCardNumber;
+                        String msg_sender = response.body().getMessage().getNotif();
+
+                        String card_receiver = response.body().getMessage().getCode_number();
+                        String msg_receiver = getString(R.string.notifRechargeCard) + " " + amount + " FCFA " + getString(R.string.notif2RechargeCard) + response.body().getMessage().getDeposit() + " FCFA";
+
+                        successResponse(card_receiver, msg_receiver, card_sender, msg_sender);
 
                     }
                     else{
-                        tokenManager.deleteToken();
-                        startActivity(new Intent(getActivity(), Login.class));
-                        getActivity().finish();
+                        ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                        Toast.makeText(getActivity(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        errorResponse(myCardNumber, apiError.getMessage());
                     }
-                    progressBar.setVisibility(View.GONE);
                 }
 
                 @Override
-                public void onFailure(Call<ListAllUserCardResponse> call, Throwable t) {
-                    progressBar.setVisibility(View.GONE);
+                public void onFailure(Call<MessageRechargeCardByAccount> call, Throwable t) {
+                    dialog2.dismiss();
                     Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
                 }
             });
@@ -269,6 +376,245 @@ public class FragmentCartes extends Fragment {
 
 
 
+    }
+
+    private void errorResponse(String id_card, String response){
+
+        /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
+        //SERVICE GOOGLE FIREBASE
+        final String id_carte_sm = id_card;
+
+        Query query = FirebaseDatabase.getInstance().getReference("Users")
+                .orderByChild("id_carte")
+                .equalTo(id_carte_sm);
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        User user = userSnapshot.getValue(User.class);
+                        if (user.getId_carte().equals(id_carte_sm)) {
+                            RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.rechargeCarte), response, "error");
+                            //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                else{
+                    Toast.makeText(getContext(), getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
+        LocalNotification(getString(R.string.rechargeCarte), response);
+
+        ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
+        dbHandler = new DbHandler(getContext());
+        aujourdhui = new Date();
+        shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+        dbHandler.insertUserDetails(getString(R.string.rechargeCarte), response, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
+
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_success, null);
+        TextView title = (TextView) view.findViewById(R.id.title);
+        TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+        ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+        title.setText(getString(R.string.information));
+        imageButton.setImageResource(R.drawable.ic_cancel_black_24dp);
+        statutOperation.setText(response);
+        build_error.setPositiveButton("OK", null);
+        build_error.setCancelable(false);
+        build_error.setView(view);
+        build_error.show();
+    }
+
+    private void successResponse(String id_cardReceiver, String msgReceiver, String id_cardSender, String msgSender) {
+
+        /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
+        //SERVICE GOOGLE FIREBASE
+
+        /*****************************************************RECEIVER MESSAGE******************************/
+        Query queryReceiver = FirebaseDatabase.getInstance().getReference("Users")
+                .orderByChild("id_carte")
+                .equalTo(id_cardReceiver);
+
+        queryReceiver.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        User user = userSnapshot.getValue(User.class);
+                        if (user.getId_carte().equals(id_cardReceiver)) {
+                            RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.rechargeCarte), msgReceiver, "success");
+                            //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                else{
+                    Toast.makeText(getContext(), getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+/*****************************************************SENDER MESSAGE******************************/
+        Query querySender = FirebaseDatabase.getInstance().getReference("Users")
+                .orderByChild("id_carte")
+                .equalTo(id_cardSender);
+
+        querySender.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        User user = userSnapshot.getValue(User.class);
+                        if (user.getId_carte().equals(id_cardSender)) {
+                            RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.rechargeCarte), id_cardSender, "success");
+                            //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                else{
+                    Toast.makeText(getContext(), getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
+        LocalNotification(getString(R.string.rechargeCarte), msgSender);
+
+        ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
+        dbHandler = new DbHandler(getContext());
+        aujourdhui = new Date();
+        shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+        dbHandler.insertUserDetails(getString(R.string.rechargeCarte), msgSender, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+
+
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_success, null);
+        TextView title = (TextView) view.findViewById(R.id.title);
+        TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+        ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+        title.setText(getString(R.string.information));
+        imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
+        statutOperation.setText(msgSender);
+        build_error.setPositiveButton("OK", null);
+        build_error.setCancelable(false);
+        build_error.setView(view);
+        build_error.show();
+    }
+
+
+    private void readTempAccountInFile() {
+        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
+        try{
+            FileInputStream fIn = getActivity().getApplication().openFileInput(file2);
+            while ((c = fIn.read()) != -1){
+                temp_account = temp_account + Character.toString((char)c);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    private void RemoteNotification(final String receiver, final String username, final String title, final String message, final String statut_notif){
+
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = tokens.orderByKey().equalTo(receiver);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Token token = snapshot.getValue(Token.class);
+
+                    Data data = new Data(fuser.getUid(), R.mipmap.logo_official, username + ": " + message, title, receiver, statut_notif);
+                    Sender sender = new Sender(data, token.getToken());
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    if(response.code() == 200){
+                                        if(response.body().success != 1){
+                                            Toast.makeText(getActivity(), getString(R.string.echoue), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    private void LocalNotification(String titles, String subtitles){
+
+        ///////////////DEBUT NOTIFICATIONS///////////////////////////////
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
+
+        RemoteViews collapsedView = new RemoteViews(getActivity().getPackageName(),
+                R.layout.notif_collapsed);
+        RemoteViews expandedView = new RemoteViews(getActivity().getPackageName(),
+                R.layout.notif_expanded);
+
+        Intent clickIntent = new Intent(getContext(), NotifReceiver.class);
+        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(getContext(),
+                0, clickIntent, 0);
+
+        collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
+        collapsedView.setTextViewText(R.id.text_view_collapsed_2, subtitles);
+
+        expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
+        expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
+
+        Notification notification = new NotificationCompat.Builder(getContext(), CHANNEL_ID)
+                .setSmallIcon(R.mipmap.logo_official)
+                .setCustomContentView(collapsedView)
+                .setCustomBigContentView(expandedView)
+                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                .build();
+
+        notificationManager.notify(new Random().nextInt(), notification);
+        ////////////////////////////////////FIN NOTIFICATIONS/////////////////////
     }
 
 }

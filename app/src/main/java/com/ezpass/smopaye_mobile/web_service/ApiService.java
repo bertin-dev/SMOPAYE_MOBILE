@@ -8,7 +8,9 @@ import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 import com.ezpass.smopaye_mobile.web_service_response.HomeResponse;
 import com.ezpass.smopaye_mobile.web_service_response.Recharge.ListAllUserCardResponse;
+import com.ezpass.smopaye_mobile.web_service_response.Recharge.MessageRechargeCardByAccount;
 import com.ezpass.smopaye_mobile.web_service_response.Recharge.RechargeResponse;
+import com.ezpass.smopaye_mobile.web_service_response.ResponsePaiementQRCodeReceiver;
 
 import java.util.List;
 
@@ -36,6 +38,20 @@ public interface ApiService {
                                @Field("role_id") String role_id,
                                @Field("cni") String cni,
                                @Field("card_number") String card_number);
+
+
+    /* Register Sub-Account*/
+    @POST("api/subuser")
+    @FormUrlEncoded
+    Call<AllMyResponse> register_sub_account(@Field("firstname") String firstname,
+                                           @Field("lastname") String lastname,
+                                           @Field("gender") String gender,
+                                           @Field("phone") String phone1,
+                                           @Field("address") String address,
+                                           @Field("category_id") String category_id,
+                                           @Field("cni") String cni,
+                                           @Field("role_id") String role_id,
+                                           @Field("card_number") String card_number);
 
 
     /* Update Profil */
@@ -96,6 +112,10 @@ public interface ApiService {
     /* profil user for MainActivity*/
     @GET("api/user/profile/{phone_number}")
     Call<DataUser> profil(@Path("phone_number") String phone_number);
+
+
+    @GET("api/card/{card_number}/UserCard")
+    Call<ResponsePaiementQRCodeReceiver> profil_userQRCode(@Path("card_number") String card_number);
 
 
     /* Reinitialiser mot de passe*/
@@ -210,10 +230,11 @@ public interface ApiService {
 
 
     /* Recharge Card by User */
-    @GET("api/account/{accound_number}/rechargecarte")
-    Call<ListAllUserCardResponse> rechargeCards(@Field("withDrawalAmount") Float withDrawalAmount,
-                                                @Field("phoneNumber") String phoneNumber,
-                                                @Path("accound_number") String accound_number);
+    @POST("api/account/{account_number}/rechargecarte")
+    @FormUrlEncoded
+    Call<MessageRechargeCardByAccount> rechargeCards(@Field("code_number") String code_number,
+                                                     @Field("withDrawalAmount") Float withDrawalAmount,
+                                                     @Path("account_number") String account_number);
 
 
     /* update Card */
