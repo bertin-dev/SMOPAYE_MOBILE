@@ -16,7 +16,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.ezpass.smopaye_mobile.Manage_Assistance.Menu_Assistance;
 import com.ezpass.smopaye_mobile.BuildConfig;
 import com.ezpass.smopaye_mobile.R;
@@ -27,7 +29,7 @@ public class Apropos extends AppCompatActivity {
     private ListView listView;
     //String [] typeAide = {"Informations légales", "Logiciels tiers", "Badge de confiance"};
     String [] typeAide = {"Informations légales"};
-    private String retourBD, telephone;
+    private String telephone, role;
     private TextView versionName;
 
     @Override
@@ -45,7 +47,7 @@ public class Apropos extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         Intent intent = getIntent();
-        retourBD = intent.getStringExtra("resultatBD");
+        role = intent.getStringExtra("role");
         telephone = intent.getStringExtra("telephone");
 
         listView=(ListView)findViewById(R.id.listAide);
@@ -96,6 +98,7 @@ public class Apropos extends AppCompatActivity {
                 if (listView.getItemAtPosition(position).toString().equalsIgnoreCase("Informations légales")){
                     Intent intent = new Intent(Apropos.this, InformationLegales.class);
                     startActivity(intent);
+                    Animatoo.animateSplit(Apropos.this);  //fire the zoom animation
                 }
 
                 /*else if (listView.getItemAtPosition(position).toString().equalsIgnoreCase("Logiciels tiers")){
@@ -115,6 +118,11 @@ public class Apropos extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        Animatoo.animateZoom(this); //fire the slide left animation
+    }
 
 
     /*                    GESTION DU MENU DROIT                  */
@@ -136,9 +144,10 @@ public class Apropos extends AppCompatActivity {
         if (id == R.id.help) {
             Intent intent = new Intent(getApplicationContext(), Menu_Assistance.class);
             //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("resultatBD", retourBD);
+            intent.putExtra("role", role);
             intent.putExtra("telephone", telephone);
             startActivity(intent);
+            Animatoo.animateWindmill(this);
             finish();
         }
 

@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
@@ -17,7 +19,7 @@ import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 public class TutorielUtilise extends AppCompatActivity {
 
     private int[] imageUrls = new int[]{R.raw.tutoriel_menu_slide, R.raw.recette, R.raw.debit, R.raw.historique, R.raw.localisation, R.raw.menuslide, R.raw.numero, R.raw.recharge, R.raw.retrait, R.raw.solde, R.raw.souscription, R.raw.abonnement};
-
+    private String telephone, role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,10 @@ public class TutorielUtilise extends AppCompatActivity {
         toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+        Intent intent = getIntent();
+        role = intent.getStringExtra("role");
+        telephone = intent.getStringExtra("telephone");
 
         ViewPager viewPager = findViewById(R.id.view_pager);
         TutorielUtiliseViewPagerAdapter adapter = new TutorielUtiliseViewPagerAdapter(this, imageUrls);
@@ -55,14 +61,16 @@ public class TutorielUtilise extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.apropos) {
             Intent intent = new Intent(getApplicationContext(), Apropos.class);
+            intent.putExtra("role", role);
+            intent.putExtra("telephone", telephone);
             startActivity(intent);
-            return true;
+            Animatoo.animateZoom(this);  //fire the zoom animation
         }
 
         if (id == R.id.modifierCompte) {
             Intent intent = new Intent(getApplicationContext(), UpdatePassword.class);
             startActivity(intent);
-            return true;
+            Animatoo.animateZoom(this);  //fire the zoom animation
         }
 
         if (id == android.R.id.home) {

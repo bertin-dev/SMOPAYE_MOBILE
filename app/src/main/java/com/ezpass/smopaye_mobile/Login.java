@@ -40,6 +40,7 @@ import android.widget.Toast;
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Manage_Offre_Smopaye.Demarrage;
 import com.ezpass.smopaye_mobile.RemoteFragments.APIService;
@@ -478,6 +479,7 @@ public class Login extends AppCompatActivity
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("telephone", numero1);
                         startActivity(intent);
+                        Animatoo.animateDiagonal(Login.this);
                         finish();
                     } else{
                         submitDataInGoogleFirebaseServer("sm" + numero1 + "@smopaye.cm", numero1);

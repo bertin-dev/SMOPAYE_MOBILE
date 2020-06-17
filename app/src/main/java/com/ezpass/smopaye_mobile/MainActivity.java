@@ -33,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.Manage_Assistance.HomeAssistanceOnline;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
@@ -602,14 +603,18 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.apropos) {
             Intent intent = new Intent(getApplicationContext(), Apropos.class);
-            intent.putExtra("resultatBD", "resultat_bd");
+            intent.putExtra("role", session);
             intent.putExtra("telephone", myPhone);
             startActivity(intent);
+            Animatoo.animateZoom(this);  //fire the zoom animation
         }
 
         if (id == R.id.tuto) {
             Intent intent = new Intent(getApplicationContext(), TutorielUtilise.class);
+            intent.putExtra("role", session);
+            intent.putExtra("telephone", myPhone);
             startActivity(intent);
+            Animatoo.animateZoom(this);  //fire the zoom animation
         }
 
         if(id == R.id.modifierCompte){
@@ -617,6 +622,7 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), UpdatePassword.class);
             intent.putExtra("telephone", myPhone);
             startActivity(intent);
+            Animatoo.animateZoom(this);  //fire the zoom animation
         }
 
         return super.onOptionsItemSelected(item);
@@ -631,11 +637,13 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_addSubAccount) {
             Intent intent = new Intent(getApplicationContext(), SubSouscription.class);
             startActivity(intent);
+            Animatoo.animateFade(this);  //fire the zoom animation
         }
 
         if (id == R.id.nav_offreSmopaye) {
             // Handle the camera action
             startActivity(new Intent(getApplicationContext(), Accueil_OffreSmopaye.class));
+            Animatoo.animateFade(this);  //fire the zoom animation
         } else if (id == R.id.nav_siteWeb) {
             // Toast.makeText(this, "Site Web", Toast.LENGTH_SHORT).show();
             //Methode permettant l'ouverture d'une page web via un navigateur
@@ -645,6 +653,7 @@ public class MainActivity extends AppCompatActivity
 
             Intent intent = new Intent(getApplicationContext(), WebSite.class);
             startActivity(intent);
+            Animatoo.animateFade(this);  //fire the zoom animation
 
             //startActivity(new Intent(getApplicationContext(), WebSite.class));
 
@@ -653,6 +662,7 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra("telephone", myPhone);
             intent.putExtra("compte", myCompte);
             startActivity(intent);
+            Animatoo.animateFade(this);  //fire the zoom animation
         } else if (id == R.id.nav_abonnement){
             Intent intent = new Intent(getApplicationContext(), Home_Subscriptions.class);
             intent.putExtra("myId_card", myId_card);
@@ -660,6 +670,7 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra("myPhone", myPhone);
             intent.putExtra("myPersonalAccountId", myPersonalAccountId);
             startActivity(intent);
+            Animatoo.animateFade(this);  //fire the zoom animation
         }
 
         /*else if (id == R.id.nav_Payer_Facture){
@@ -674,6 +685,7 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra("telephone", myPhone);
             intent.putExtra("role", session);
             startActivity(intent);
+            Animatoo.animateFade(this);  //fire the zoom animation
         }else if(id == R.id.nav_share){
             //partager votre lien avec unique ID
             myDialog = new Dialog(this);
@@ -754,6 +766,7 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra("numero_card", numero_card);
             intent.putExtra("idUser", idUser);
             startActivity(intent);
+            Animatoo.animateFade(this);  //fire the zoom animation
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

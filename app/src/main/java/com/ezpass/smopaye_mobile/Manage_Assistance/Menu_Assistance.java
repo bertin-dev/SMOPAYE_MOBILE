@@ -8,14 +8,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
+import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 
 public class Menu_Assistance extends AppCompatActivity {
 
     private Button assistanceEnLigne, contactezNous, boutiqueSmopaye;
-    private String retourBD, telephone;
+    private String role, telephone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +34,7 @@ public class Menu_Assistance extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        retourBD = intent.getStringExtra("resultatBD");
+        role = intent.getStringExtra("role");
         telephone = intent.getStringExtra("telephone");
 
 
@@ -44,9 +47,10 @@ public class Menu_Assistance extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(Menu_Assistance.this, HomeAssistanceOnline.class);
                 //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                //intent.putExtra("resultatBD", retourBD);
-                //intent.putExtra("telephone", telephone);
+                intent.putExtra("role", role);
+                intent.putExtra("telephone", telephone);
                 startActivity(intent);
+                Animatoo.animateSplit(Menu_Assistance.this);  //fire the zoom animation
                 //finish();
                // Toast.makeText(Menu_Assistance.this, "Service Encours de Finalisation", Toast.LENGTH_LONG).show();
 
@@ -59,6 +63,7 @@ public class Menu_Assistance extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), ServiceClientSmopaye.class));
+                Animatoo.animateSplit(Menu_Assistance.this);  //fire the zoom animation
             }
         });
 
@@ -67,12 +72,14 @@ public class Menu_Assistance extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), BoutiqueSmopaye.class));
+                Animatoo.animateSplit(Menu_Assistance.this);  //fire the zoom animation
             }
         });
+    }
 
-
-
-
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
     }
 
 
