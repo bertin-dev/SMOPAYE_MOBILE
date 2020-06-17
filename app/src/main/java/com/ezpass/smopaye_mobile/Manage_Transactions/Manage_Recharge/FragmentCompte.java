@@ -163,6 +163,13 @@ public class FragmentCompte extends Fragment
     @BindView(R.id.msgNetworkLimited)
     TextView msgNetworkLimited;
 
+
+    private TextView msgValidateRecharge;
+    private TextView timerRecharge;
+    private TextView titleRecharge;
+    private ProgressBar progressBar;
+    AlertDialog alertDialog1;
+
     /////////////////////////////////LIRE CONTENU DES FICHIERS////////////////////
     private String file = "tmp_number";
     private int c;
@@ -277,8 +284,8 @@ public class FragmentCompte extends Fragment
         String montant = til_montant1.getEditText().getText().toString();
         validator.clear();
 
-        /*Action à poursuivre si tous les champs sont remplis*/
-        /*if(validator.validate()){
+        //Action à poursuivre si tous les champs sont remplis
+        if(validator.validate()){
             dialog2 = new ACProgressPie.Builder(getContext())
                     .ringColor(Color.WHITE)
                     .pieColor(Color.WHITE)
@@ -286,97 +293,84 @@ public class FragmentCompte extends Fragment
                     .build();
             dialog2.show();
             recharge_step1(temp_account, montant, telephone);
-        }*/
+        }
 
-            View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_dialog_validate_recharge, null);
-            TextView titleRecharge = (TextView) view.findViewById(R.id.titleRecharge);
-            TextView msgValidateRecharge = (TextView) view.findViewById(R.id.msgValidateRecharge);
-            msgValidateRecharge.setText("S\'il vous plait veuillez validez la recharge de votre Compte SMOPAYE N° en Tapant  du service ");
-            TextView timerRecharge = (TextView) view.findViewById(R.id.timerRecharge);
-            timerRecharge.setText("60");
-            titleRecharge.setText(getString(R.string.attenteValidation));
+    }
 
-            ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
-            progressBar.setVisibility(View.VISIBLE);
-            //DEBUT
 
-        countDownTimer = new CountDownTimer(60 * 1000, 1000) {
+    private void validateRecharge(String message) {
+        //before inflating the custom alert dialog layout, we will get the current activity viewgroup
+        ViewGroup viewGroup = getActivity().findViewById(android.R.id.content);
+
+        //then we will inflate the custom alert dialog xml that we created
+        final View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.layout_dialog_validate_recharge, viewGroup, false);
+
+
+        //Now we need an AlertDialog.Builder object
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        //setting the view of the builder to our custom view that we already inflated
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+
+        //finally creating the alert dialog and displaying it
+        final AlertDialog alertDialog = builder.create();
+
+        msgValidateRecharge = dialogView.findViewById(R.id.msgValidateRecharge);
+        msgValidateRecharge.setText(message);
+        timerRecharge = (TextView) dialogView.findViewById(R.id.timerRecharge);
+        timerRecharge.setText("59");
+        titleRecharge = (TextView) dialogView.findViewById(R.id.titleRecharge);
+        titleRecharge.setText(getString(R.string.attenteValidation));
+         progressBar = (ProgressBar) dialogView.findViewById(R.id.progressbar);
+        progressBar.setVisibility(View.VISIBLE);
+
+        countDownTimer = new CountDownTimer(59 * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 timerRecharge.setText(String.valueOf(millisUntilFinished / 1000));
             }
-
             @Override
             public void onFinish() {
                 timerRecharge.setText("Terminé.");
             }
         };
-
         countDownTimer.start();
 
-          //FIN TIMER
-            build_error.setNeutralButton(getString(R.string.annuler), new DialogInterface.OnClickListener() { // define the 'Cancel' button
-            public void onClick(DialogInterface dialog, int which) {
-                //Either of the following two lines should work.
-                dialog.cancel();
-                til_montant1.getEditText().setText("");
-                //dialog.dismiss();
-            }
-             });
-            build_error.setPositiveButton(getString(R.string.valider), new DialogInterface.OnClickListener() {
+        Button btnValidateRecharge = dialogView.findViewById(R.id.btnValidateRecharge);
+        btnValidateRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
 
-                progressBar.setVisibility(View.GONE);
+                /*progressBar.setVisibility(View.GONE);
                 if(countDownTimer != null) {
                     countDownTimer.cancel();
                     countDownTimer = null;
-                }
-                AlertDialog build_error1 = new AlertDialog.Builder(getActivity())
-                        .setTitle(getString(R.string.information))
-                        .setMessage("response")
-                        .setPositiveButton("OK", null)
-                        .setNegativeButton("CANCEL", null)
-                        .show();
-
-                Button positiveButton = build_error1.getButton(AlertDialog.BUTTON_POSITIVE);
-                positiveButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getContext(), "Not closing", Toast.LENGTH_SHORT).show();
-                        build_error1.dismiss();
-                    }
-                });
-                positiveButton.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.ic_account_balance_black_24dp));
-
-
-
-
-
-                build_error1.setCancelable(false);
-                build_error1.setView(view);
-                build_error1.show();
+                }*/
+                dialog2 = new ACProgressPie.Builder(getContext())
+                        .ringColor(Color.WHITE)
+                        .pieColor(Color.WHITE)
+                        .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                        .build();
+                dialog2.show();
+                recharge_step2(temp_account, payment);
             }
         });
-            build_error.setCancelable(true);
-            build_error.setView(view);
-        final AlertDialog alertDialog = build_error.create();
-        alertDialog.show();
+
+        alertDialog1 = builder.create();
+        alertDialog1.show();
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (alertDialog.isShowing()){
-                    alertDialog.dismiss();
-                    errorResponse("", "Opération échoué.");
+                if (alertDialog1.isShowing()){
+                    alertDialog1.dismiss();
+                    errorResponse(til_numCartePropreCompte1.getEditText().getText().toString(), getString(R.string.operation_fail));
                 }
             }
-        }, 61000);
-
-
-
+        }, 60000);
     }
+
     private void recharge_step1(String account_number, String montant, String telephone) {
 
         call = service.recharge_step1(account_number, Float.parseFloat(montant), telephone);
@@ -394,77 +388,7 @@ public class FragmentCompte extends Fragment
                     if(response.body().isSuccess()){
                          payment = response.body().getMessage().getPaymentId();
                         if(!payment.equalsIgnoreCase("")){
-                            /*ModalDialog_ValidateRecharge validateRecharge = new ModalDialog_ValidateRecharge();
-                            validateRecharge.show(getFragmentManager(), "example dialog");*/
-
-                            View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_dialog_validate_recharge, null);
-                            TextView titleRecharge = (TextView) view.findViewById(R.id.titleRecharge);
-                            TextView msgValidateRecharge = (TextView) view.findViewById(R.id.msgValidateRecharge);
-                            msgValidateRecharge.setText("S\'il vous plait veuillez validez la recharge de votre Compte " + response.body().getData().getCompany() +" N°"+ response.body().getData().getAccount_number() + " en Tapant " + response.body().getMessage().getChannel_ussd() + " du service " + response.body().getMessage().getChannel_name());
-                            TextView timerRecharge = (TextView) view.findViewById(R.id.timerRecharge);
-                            timerRecharge.setText("59");
-                            titleRecharge.setText(getString(R.string.attenteValidation));
-
-                            ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
-                            progressBar.setVisibility(View.VISIBLE);
-                            //DEBUT
-
-                            countDownTimer = new CountDownTimer(59 * 1000, 1000) {
-                                @Override
-                                public void onTick(long millisUntilFinished) {
-                                    timerRecharge.setText(String.valueOf(millisUntilFinished / 1000));
-                                }
-
-                                @Override
-                                public void onFinish() {
-                                    timerRecharge.setText("Terminé.");
-                                }
-                            };
-
-                            countDownTimer.start();
-
-                            //FIN TIMER
-                            build_error.setNeutralButton(getString(R.string.annuler), new DialogInterface.OnClickListener() { // define the 'Cancel' button
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //Either of the following two lines should work.
-                                    dialog.cancel();
-                                    til_montant1.getEditText().setText("");
-                                    //dialog.dismiss();
-                                }
-                            });
-                            build_error.setPositiveButton(getString(R.string.valider), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    progressBar.setVisibility(View.GONE);
-                                    if(countDownTimer != null) {
-                                        countDownTimer.cancel();
-                                        countDownTimer = null;
-                                    }
-                                    dialog2 = new ACProgressPie.Builder(getContext())
-                                            .ringColor(Color.WHITE)
-                                            .pieColor(Color.WHITE)
-                                            .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
-                                            .build();
-                                    dialog2.show();
-                                    recharge_step2(temp_account, payment);
-                                }
-                            });
-                            build_error.setCancelable(true);
-                            build_error.setView(view);
-                            final AlertDialog alertDialog = build_error.create();
-                            alertDialog.show();
-
-
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (alertDialog.isShowing()){
-                                        alertDialog.dismiss();
-                                        errorResponse("", "Opération échoué.");
-                                    }
-                                }
-                            }, 60000);
+                            validateRecharge(getString(R.string.pleaseConfirm1) + " " + response.body().getData().getCompany() +" N°"+ response.body().getData().getAccount_number() + " " + getString(R.string.pleaseConfirm2) + response.body().getMessage().getChannel_ussd() + " " + getString(R.string.pleaseConfirm3) + response.body().getMessage().getChannel_name());
                         }
                     }
 
@@ -519,20 +443,30 @@ public class FragmentCompte extends Fragment
         call2.enqueue(new Callback<AllMyResponse>() {
             @Override
             public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
-                Log.w(TAG, "SMOPAYE SERVER onResponse: " + response );
+                Log.w(TAG, "SMOPAYE SERVER onResponse: " + response);
                 dialog2.dismiss();
 
                 if(response.isSuccessful()){
 
                     assert response.body() != null;
                     if(response.body().isSuccess()){
-                       successResponse("", response.body().getMessage());
+                            successResponse(til_numCartePropreCompte1.getEditText().getText().toString(), response.body().getMessage());
                     }
 
                 } else{
+
                     ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
                     Toast.makeText(getContext(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
-                    errorResponse("", apiError.getMessage());
+
+                    if(apiError.getMessage().toLowerCase().contains("payment pending")){
+                        msgValidateRecharge.setText(getString(R.string.operationEncours));
+                    } else {
+
+                        if (alertDialog1.isShowing()){
+                            alertDialog1.dismiss();
+                            errorResponse(til_numCartePropreCompte1.getEditText().getText().toString(), apiError.getMessage());
+                        }
+                    }
                 }
 
             }
@@ -565,14 +499,14 @@ public class FragmentCompte extends Fragment
         });
     }
 
-    private void successResponse(String id_card, String response) {
+    private void successResponse(String telephone, String response) {
 
         /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
         //SERVICE GOOGLE FIREBASE
-        final String id_carte_sm = id_card;
+        final String id_carte_sm = telephone;
 
         Query query = FirebaseDatabase.getInstance().getReference("Users")
-                .orderByChild("id_carte")
+                .orderByChild("tel")
                 .equalTo(id_carte_sm);
 
         query.addValueEventListener(new ValueEventListener() {
@@ -582,7 +516,7 @@ public class FragmentCompte extends Fragment
                 if(dataSnapshot.exists()){
                     for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                         User user = userSnapshot.getValue(User.class);
-                        if (user.getId_carte().equals(id_carte_sm)) {
+                        if (user.getTel().equals(id_carte_sm)) {
                             RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.recharge), response, "success");
                             //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                         } else {
@@ -613,34 +547,46 @@ public class FragmentCompte extends Fragment
         dbHandler.insertUserDetails(getString(R.string.recharge), response, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
 
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.alert_dialog_success, null);
-        TextView title = (TextView) view.findViewById(R.id.title);
-        TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-        ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-        title.setText(getString(R.string.information));
-        imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
-        statutOperation.setText(response);
-        build_error.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                til_montant1.getEditText().setText("");
-                getActivity().recreate();
 
+
+        //before inflating the custom alert dialog layout, we will get the current activity viewgroup
+        ViewGroup viewGroup = getActivity().findViewById(android.R.id.content);
+
+        //then we will inflate the custom alert dialog xml that we created
+        final View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.my_dialog_success, viewGroup, false);
+
+
+        //Now we need an AlertDialog.Builder object
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        //setting the view of the builder to our custom view that we already inflated
+        builder.setView(dialogView);
+
+        //finally creating the alert dialog and displaying it
+        final AlertDialog alertDialog = builder.create();
+
+        TextView titleSuccess = dialogView.findViewById(R.id.titleSuccess);
+        titleSuccess.setText(response);
+
+        Button button = dialogView.findViewById(R.id.buttonOk);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                til_montant1.getEditText().setText("");
             }
         });
-        build_error.setCancelable(false);
-        build_error.setView(view);
-        build_error.show();
+
+        alertDialog.show();
     }
-    private void errorResponse(String id_card, String response){
+    private void errorResponse(String telephone, String response){
 
         /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
         //SERVICE GOOGLE FIREBASE
-        final String id_carte_sm = id_card;
+        final String id_carte_sm = telephone;
 
         Query query = FirebaseDatabase.getInstance().getReference("Users")
-                .orderByChild("id_carte")
+                .orderByChild("tel")
                 .equalTo(id_carte_sm);
 
         query.addValueEventListener(new ValueEventListener() {
@@ -650,7 +596,7 @@ public class FragmentCompte extends Fragment
                 if(dataSnapshot.exists()){
                     for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                         User user = userSnapshot.getValue(User.class);
-                        if (user.getId_carte().equals(id_carte_sm)) {
+                        if (user.getTel().equals(id_carte_sm)) {
                             RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.recharge), response, "error");
                             //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                         } else {

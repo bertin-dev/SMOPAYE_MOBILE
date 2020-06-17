@@ -57,7 +57,7 @@
             android:layout_below="@+id/timerRecharge"
             android:indeterminateTint="@color/colorPrimary"/>
 
-        <!--<LinearLayout
+        <LinearLayout
             android:gravity="center"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
@@ -71,7 +71,6 @@
             android:layout_width="match_parent"
             android:textColor="#ffffff"
             android:padding="8dp"
-            android:visibility="gone"
             android:layout_marginLeft="70dp"
             android:layout_marginRight="70dp"
             android:textStyle="bold"
@@ -79,7 +78,7 @@
             android:background="@drawable/btn_rounded"
             android:text="@string/valider" />
 
-        </LinearLayout>-->
+        </LinearLayout>
 
     </RelativeLayout>
 

@@ -664,5 +664,8 @@
     <string name="addSubAccount">Ajouter un compte</string>
     <string name="msg_paiementqrcode">Vous êtes sur le point de débiter votre compte et créditer le compte de </string>
     <string name="gesCartes">Gestion Cartes</string>
+    <string name="pleaseConfirm1">S\'il vous plait veuillez valider la recharge de votre Compte</string>
+    <string name="pleaseConfirm2">en tapant</string>
+    <string name="pleaseConfirm3">du service</string>
 
 </resources>
