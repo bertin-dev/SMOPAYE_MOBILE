@@ -450,6 +450,13 @@ public class FragmentCompte extends Fragment
 
                     assert response.body() != null;
                     if(response.body().isSuccess()){
+
+                        progressBar.setVisibility(View.GONE);
+                        if(countDownTimer != null) {
+                            countDownTimer.cancel();
+                            countDownTimer = null;
+                        }
+
                             successResponse(til_numCartePropreCompte1.getEditText().getText().toString(), response.body().getMessage());
                     }
 
@@ -461,6 +468,12 @@ public class FragmentCompte extends Fragment
                     if(apiError.getMessage().toLowerCase().contains("payment pending")){
                         msgValidateRecharge.setText(getString(R.string.operationEncours));
                     } else {
+
+                        progressBar.setVisibility(View.GONE);
+                        if(countDownTimer != null) {
+                            countDownTimer.cancel();
+                            countDownTimer = null;
+                        }
 
                         if (alertDialog1.isShowing()){
                             alertDialog1.dismiss();
