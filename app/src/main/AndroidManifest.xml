@@ -23,6 +23,11 @@
     <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!--service google map-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+
     <application
         android:name=".NotifApp"
         android:allowBackup="true"
@@ -32,7 +37,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Manage_Register.SubSouscription"></activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity android:name=".Manage_Geolocalisation.HomeGoogleMap"></activity>
+        <activity android:name=".Manage_Register.SubSouscription" />
         <activity android:name=".Manage_Transactions.Manage_Payments.Manage_QRCode.AffichageQRCode" />
         <activity android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.MenuRetraitOperateur" />
         <activity android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.RetraitChezSmopaye" />

@@ -50,87 +50,97 @@ dependencies {
     implementation files('libs/core-3.1.0.jar')
 
 
-    //Library pour slide avec les images en GIF
+    //service permettant de gerer les slides avec les images en GIF
     implementation 'com.github.bumptech.glide:glide:4.9.0'
-    //library pour mettre les photos de profil ovale
+    //service permettant de gerer les photos de profil ovale
     implementation 'de.hdodenhof:circleimageview:3.0.1'
 
     //Library pour slide avec les images en JPEG ET PNG
     // implementation 'com.squareup.picasso:picasso:2.71828'
 
 
-    //library pour la gestion des bordures
+    //service permettant de gerer les bordures
     implementation 'jp.wasabeef:glide-transformations:3.3.0'
-    // If you want to use the GPU Filters
+    // service permettant de gerer les images( If you want to use the GPU Filters)
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
 
-    //BOTTOM BAR AVEC BADGE NOTIFICATION
+    //service permettant de gerer bottom bar avec Badge de notification
     implementation 'com.roughike:bottom-bar:2.3.1'
 
 
     def Firebase_Auth_Version = "16.1.0"
     def Firebase_Messaging_Version = "17.3.4"
 
+    //service google permettant de gerer la BD google, les notifications, l'authentification
     implementation "com.google.firebase:firebase-auth:$Firebase_Auth_Version"
     implementation 'com.google.firebase:firebase-database:16.0.6'
     implementation 'com.google.firebase:firebase-storage:16.0.5'
     implementation 'com.google.firebase:firebase-core:16.0.6'
     implementation "com.google.firebase:firebase-messaging:$Firebase_Messaging_Version"
 
-    //permet de gerer les REST APIs et système notification
+    //service permettant de gerer les REST APIs et système notification
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
     implementation 'com.squareup.retrofit2:converter-moshi:2.8.1'
 
+    //service permettant de gerer le design
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
 
 
-    //Badget de notification sur l'icon d'accueil
+    //service permettant de gerer le Badget de notification sur l'icon d'accueil des téléphones(HTC, SAMSUNG et SONY)
     implementation 'com.github.arturogutierrez:badges:1.0.5@aar'
 
-    //QR code
+    //service permettant de gerer le QR code
     //implementation 'com.google.zxing:core:3.2.1' //deja intégré dans la bibliotheque Core 3.1.0
     implementation 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
     //implementation('com.journeyapps:zxing-android-embedded:4.1.0') { transitive = false }
     //implementation 'com.google.zxing:core:3.3.0'
 
-    //library de validation
+    //service permettant de gerer la validation des champs de saisies
     implementation 'com.basgeekball:awesome-validation:4.2'
 
-    //utilise minimum api 24 (Nous permet de voir les reponses aux requêtes directement dans google chrome)
+    //service permettant de gerer l'interception des requêtes http sur google chrome. il utilise minimum api 24 (Nous permet de voir les reponses aux requêtes directement dans google chrome)
     implementation 'com.facebook.stetho:stetho:1.5.1'
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
 
+    //service permettant de gerer les fuites de mémoire en mode debuggage
     testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
 
 
-    //utilise minimum api 24 (la gestion des vues)
+    //service permettant de gerer le binding entre xml et java (utilise minimum api 24 (la gestion des vues))
     implementation 'com.jakewharton:butterknife:9.0.0-rc2'
     annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc2'
 
 
-    //permet de gerer toutes les erreurs produites par les nouvelles library intégrés
+    //service permettant de gerer permettant de gerer toutes les erreurs produites par les nouvelles library intégrées just au dessus
     implementation 'com.android.support:multidex:1.0.3'
 
 
-    //library pour la nouvelle progress Lite
+    //service permettant de gerer la nouvelle progress Lite
     implementation 'cc.cloudist.acplibrary:library:1.2.1'
 
-    //slide d'images (caroussel)
+    //service permettant de gerer  les slides d'images (caroussel)
     implementation 'com.github.denzcoskun:ImageSlideshow:0.0.6'
 
-    //animation entre deux activity
+    //service permettant de gerer  l'animation entre deux activity
     implementation 'com.github.mohammadatif:Animatoo:master'
 
-    //boite de dialogue permettant d'évaluer les étoiles a l'appliction sur playstore
+    //service permettant de gerer  la boite de dialogue qui évalue les étoiles de l'application sur playstore
     implementation 'com.github.hotchemi:android-rate:1.0.1'
 
-    //Add those line in dependencies
+    //service permettant de gerer l'envoi d'email via l'application ou alors un service externe
     implementation files('libs/activation.jar')
     implementation files('libs/additionnal.jar')
     implementation files('libs/mail.jar')
+
+    //service google pour la gestion de la geolocalisation
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    implementation 'com.google.android.gms:play-services-location:15.0.1'
+
+    //service permettant de gerer les animations du loading
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
 
 }
