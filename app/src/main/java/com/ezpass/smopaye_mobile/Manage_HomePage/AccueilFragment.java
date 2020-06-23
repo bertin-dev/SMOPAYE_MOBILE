@@ -113,6 +113,7 @@ public class AccueilFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent2 = new Intent(getActivity(), DebitCarte.class);
                 intent2.putExtra("telephone", telephone);
+                intent2.putExtra("compte", code_number_sender);
                 startActivity(intent2);
             }
         });

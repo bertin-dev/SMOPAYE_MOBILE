@@ -121,6 +121,7 @@ public class MyAccount extends AppCompatActivity {
                         break;
                     case 1:
                         Intent intent1 = new Intent(MyAccount.this, UpdatePassword.class);
+                        intent1.putExtra("numeroTel", numeroTel);
                         startActivity(intent1);
                         break;
 

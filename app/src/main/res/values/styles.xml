@@ -28,7 +28,7 @@
     </style>
 
     <style name="blueTextInputLayout" parent="@android:style/TextAppearance">
-        <item name="android:textColor">@color/bgColorStandard</item>
+        <item name="android:textColor">@color/colorAccent</item>
     </style>
 
     <!--bottom sheet background -->

@@ -50,6 +50,7 @@ import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Login;
+import com.ezpass.smopaye_mobile.Manage_Transactions.Manage_Payments.Manage_Factures.PayerFacture;
 import com.ezpass.smopaye_mobile.NotifApp;
 import com.ezpass.smopaye_mobile.NotifReceiver;
 import com.ezpass.smopaye_mobile.R;
@@ -174,6 +175,7 @@ public class DebitCarte extends AppCompatActivity
     private String file = "tmp_number";
     private int c;
     private String temp_number = "";
+    private String code_number_receiver;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -209,6 +211,10 @@ public class DebitCarte extends AppCompatActivity
         databaseManager = new DatabaseManager(this);
         FAILplayer = MediaPlayer.create(DebitCarte.this, R.raw.fail1);
         telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+
+        Intent in = getIntent();
+        telephone = in.getStringExtra("telephone");
+        code_number_receiver = in.getStringExtra("compte");
 
 
         readTempNumberInFile();
@@ -614,12 +620,12 @@ public class DebitCarte extends AppCompatActivity
 
     private void debitCardInSmopayeServer(){
 
-        String id_card = numCarteCache.getText().toString().trim();
+        String id_cardSender = numCarteCache.getText().toString().trim();
         String montant = til_debitmontant.getEditText().getText().toString();
         //Intent in = getIntent();
         //telephone = in.getStringExtra("telephone");
 
-        call = service.transaction(Integer.parseInt(montant), id_card, getSerialNumber(), "DEBIT");
+        call = service.debit(Float.parseFloat(montant), id_cardSender, code_number_receiver, "DEBIT", getSerialNumber());
         call.enqueue(new Callback<HomeResponse>() {
             @Override
             public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {
@@ -627,32 +633,32 @@ public class DebitCarte extends AppCompatActivity
                 progressDialog.dismiss();
 
                 if(response.isSuccessful()){
-
-                    if(response.body().isSuccess()){
-                        //tokenManager.saveToken(response.body());
                         //INSERTION DU MONTANT DEBITE DANS LA BASE DE DONNEES
-                        databaseManager.insertScore(id_card, Integer.parseInt(montant));
+                        databaseManager.insertScore(id_cardSender, Integer.parseInt(montant));
                         final List<ScoreData> scores = databaseManager.readTop10();
                         for (ScoreData score : scores) {
                             // carte.append(score.getMontant() + " ");
                         }
                         MediaPlayer OKplayer = MediaPlayer.create(DebitCarte.this, R.raw.success1);
                         OKplayer.start();
-                        successResponse(id_card, "");
-                    } else {
-                        errorResponse(id_card, "");
-                    }
+
+                    String msgReceiver = response.body().getMessage().getCard_receiver().getNotif();
+                    String msgSender = response.body().getMessage().getCard_sender().getNotif();
+                    //successResponse(id_cardBeneficiaire1, msgReceiver, id_cardDonataire1, msgSender);
+
+                        successResponse(code_number_receiver, msgReceiver, id_cardSender, msgSender);
+
                 } else{
 
                     if(response.code() == 422){
                         handleErrors(response.errorBody());
                     }
-                    else if(response.code() == 401){
+                    else{
                         ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
                         Toast.makeText(DebitCarte.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
-                    } else{
-                        errorResponse(id_card, "");
+                        errorResponse(id_cardSender, apiError.getMessage());
                     }
+
                 }
 
             }
@@ -686,25 +692,58 @@ public class DebitCarte extends AppCompatActivity
     }
 
 
-    private void successResponse(String id_card, String response) {
+    private void successResponse(String id_cardReceiver, String msgReceiver, String id_cardSender, String msgSender) {
 
         /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
         //SERVICE GOOGLE FIREBASE
-        final String id_carte_sm = id_card;
 
-        Query query = FirebaseDatabase.getInstance().getReference("Users")
+        /*****************************************************RECEIVER MESSAGE******************************/
+        Query queryReceiver = FirebaseDatabase.getInstance().getReference("Users")
                 .orderByChild("id_carte")
-                .equalTo(id_carte_sm);
+                .equalTo(id_cardReceiver);
 
-        query.addValueEventListener(new ValueEventListener() {
+        queryReceiver.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 if(dataSnapshot.exists()){
                     for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                         User user = userSnapshot.getValue(User.class);
-                        if (user.getId_carte().equals(id_carte_sm)) {
-                            RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.debitCarte), response, "success");
+                        if (user.getId_carte().equals(id_cardReceiver)) {
+                            RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.debitCarte), msgReceiver, "success");
+                            //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(DebitCarte.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                else{
+                    Toast.makeText(DebitCarte.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+/*****************************************************SENDER MESSAGE******************************/
+        Query querySender = FirebaseDatabase.getInstance().getReference("Users")
+                .orderByChild("id_carte")
+                .equalTo(id_cardSender);
+
+        querySender.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        User user = userSnapshot.getValue(User.class);
+                        if (user.getId_carte().equals(id_cardSender)) {
+                            RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.debitCarte), id_cardSender, "success");
                             //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(DebitCarte.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
@@ -725,13 +764,13 @@ public class DebitCarte extends AppCompatActivity
 
 
         //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-        LocalNotification(getString(R.string.debitCarte), response);
+        LocalNotification(getString(R.string.debitCarte), msgSender);
 
         ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
         dbHandler = new DbHandler(getApplicationContext());
         aujourdhui = new Date();
         shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-        dbHandler.insertUserDetails(getString(R.string.debitCarte), response, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
+        dbHandler.insertUserDetails(getString(R.string.debitCarte), msgSender, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
 
         View view = LayoutInflater.from(DebitCarte.this).inflate(R.layout.alert_dialog_success, null);
@@ -740,11 +779,14 @@ public class DebitCarte extends AppCompatActivity
         ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
         title.setText(getString(R.string.information));
         imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
-        statutOperation.setText(response);
+        statutOperation.setText(msgReceiver);
         build_error.setPositiveButton("OK", null);
         build_error.setCancelable(false);
         build_error.setView(view);
         build_error.show();
+
+        //supression des champs de saisis
+        //tie_montantBeneficiaire.setText("");
     }
 
     private void errorResponse(String id_card, String response){

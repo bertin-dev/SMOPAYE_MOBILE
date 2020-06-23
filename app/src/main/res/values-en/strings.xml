@@ -587,5 +587,13 @@
     <string name="pleaseConfirm1">Please confirm the recharge of your Account</string>
     <string name="pleaseConfirm2">by typing</string>
     <string name="pleaseConfirm3">from the service</string>
+    <string name="updateTo">Updated on</string>
+    <string name="compte">Account</string>
+    <string name="unite">Unity</string>
+    <string name="depot">Deposit</string>
+    <string name="fermeture">Closing</string>
+    <string name="monCode">MY CODE</string>
+    <string name="scanner">TO SCAN</string>
+    <string name="centre">CENTER</string>
 
 </resources>

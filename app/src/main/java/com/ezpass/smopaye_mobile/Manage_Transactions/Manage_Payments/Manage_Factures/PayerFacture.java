@@ -261,14 +261,14 @@ public class PayerFacture extends AppCompatActivity
                     .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
                     .build();
             dialog2.show();
-            payementInSmopayeServer(montantBeneficiaire, "facture'",  code_number_sender, id_cardBeneficiaire);
+            payementInSmopayeServer(montantBeneficiaire, code_number_sender, id_cardBeneficiaire, "FACTURE");
         }
 
     }
 
-    private void payementInSmopayeServer(String montantBeneficiaire1, String typeTransaction1, String id_cardDonataire1, String id_cardBeneficiaire1) {
+    private void payementInSmopayeServer(String montantBeneficiaire1, String id_cardDonataire1, String id_cardBeneficiaire1, String typeTransaction1) {
 
-        call = service.transaction(Float.parseFloat(montantBeneficiaire1), typeTransaction1, id_cardDonataire1, id_cardBeneficiaire1);
+        call = service.transaction(Float.parseFloat(montantBeneficiaire1), id_cardDonataire1, id_cardBeneficiaire1, typeTransaction1);
         call.enqueue(new Callback<HomeResponse>() {
             @Override
             public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {

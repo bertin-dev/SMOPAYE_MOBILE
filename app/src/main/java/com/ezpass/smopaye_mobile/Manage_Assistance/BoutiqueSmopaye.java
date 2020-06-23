@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
+import com.ezpass.smopaye_mobile.Manage_Geolocalisation.HomeGoogleMap;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.service_indisponible.ServicesIndisponible;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
@@ -34,6 +36,7 @@ public class BoutiqueSmopaye extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), AgenceSmopaye.class);
                 startActivity(intent);
+                Animatoo.animateZoom(BoutiqueSmopaye.this);  //fire the zoom animation
             }
         });
 
@@ -41,8 +44,9 @@ public class BoutiqueSmopaye extends AppCompatActivity {
         proximite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ServicesIndisponible.class);
+                Intent intent = new Intent(getApplicationContext(), HomeGoogleMap.class);
                 startActivity(intent);
+                Animatoo.animateZoom(BoutiqueSmopaye.this);  //fire the zoom animation
             }
         });
 

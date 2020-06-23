@@ -375,7 +375,7 @@ public class MenuRetraitTelecollecte extends AppCompatActivity
 
     private void telecollecteInSmopayeServer(String id_card, String montant, String serial_number, String telephone) {
 
-        call = service.transaction(Integer.parseInt(montant), id_card, serial_number, "");
+        call = service.transaction(Float.parseFloat(montant), id_card,"", "telecollecte");
         call.enqueue(new Callback<HomeResponse>() {
             @Override
             public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {

@@ -54,6 +54,7 @@ import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.checkInternetDynamically.OfflineActivity;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
+import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
@@ -62,6 +63,7 @@ import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -81,6 +83,9 @@ import javax.net.ssl.HttpsURLConnection;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -128,7 +133,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
     /* Déclaration des objets liés à la communication avec le web service*/
     private ApiService service;
     private TokenManager tokenManager;
-    private Call<AllMyResponse> call;
+    private Call<AccessToken> call;
 
 
 
@@ -225,8 +230,11 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
                 GetImageNameFromRectoIdCard = nom + "_" + prenom + "_Recto_" + parts[0];
                 GetImageNameFromVersoIdCard = nom + "_" + prenom + "_Verso_" + parts[0];
 
-                new AsyncTaskUploadImg().execute();
+                //new AsyncTaskUploadImg().execute();
                 //UploadImageToServer();
+
+
+                auto_register(prenom, nom, genre.toUpperCase(), adresse, idcategorie, sessioncompte, cni, tel, "", "", GetImageNameFromRectoIdCard + ".jpg", GetImageNameFromVersoIdCard + ".jpg" );
 
             }
         });
@@ -238,6 +246,71 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
             }
         }
 
+    }
+
+    private void auto_register(String prenom, String nom, String genre, String adresse, String idcategorie, String sessioncompte, String cni, String tel, String imgName_recto, String imgName_verso, String imgRecto, String imgVerso) {
+
+        InitImage();
+        RequestBody prenom1 = RequestBody.create(MediaType.parse("multipart/form-data"), prenom);
+        RequestBody nom1 = RequestBody.create(MediaType.parse("multipart/form-data"), nom);
+        RequestBody genre1 = RequestBody.create(MediaType.parse("multipart/form-data"), genre);
+        RequestBody adresse1 = RequestBody.create(MediaType.parse("multipart/form-data"), adresse);
+        RequestBody idcategorie1 = RequestBody.create(MediaType.parse("multipart/form-data"), idcategorie);
+        RequestBody sessioncompte1 = RequestBody.create(MediaType.parse("multipart/form-data"), sessioncompte);
+        RequestBody cni1 = RequestBody.create(MediaType.parse("multipart/form-data"), cni);
+        RequestBody tel1 = RequestBody.create(MediaType.parse("multipart/form-data"), tel);
+        RequestBody imgName_recto1 = RequestBody.create(MediaType.parse("multipart/form-data"), imgName_recto);
+        RequestBody imgName_verso1 = RequestBody.create(MediaType.parse("multipart/form-data"), imgName_verso);
+
+        RequestBody imgRectoFile1 = RequestBody.create(MediaType.parse("multipart/form-data"), byteArray1);
+        MultipartBody.Part request1 =MultipartBody.Part.createFormData("image", "");
+        RequestBody imgRectoFile2 = RequestBody.create(MediaType.parse("multipart/form-data"), byteArray2);
+
+
+       /* call = service.autoregister(prenom, nom, genre, adresse, idcategorie, sessioncompte, cni.toLowerCase(), tel, imgName_recto, imgName_verso);
+        call.enqueue(new Callback<AccessToken>() {
+            @Override
+            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+
+                progressDialog.dismiss();
+
+                if(response.isSuccessful()){
+                    tokenManager.saveToken(response.body());
+                    successResponse("Enregistrement éffectué avec succès");
+
+                } else{
+                    ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                    Toast.makeText(SouscriptionUploadIMGidCard.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                    errorResponse(apiError.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<AccessToken> call, Throwable t) {
+                progressDialog.dismiss();
+                Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
+
+                //Vérification si la connexion internet accessible
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
+                if(!(activeInfo != null && activeInfo.isConnected())){
+                    authWindows.setVisibility(View.GONE);
+                    internetIndisponible.setVisibility(View.VISIBLE);
+                    Toast.makeText(SouscriptionUploadIMGidCard.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
+                }
+                //Vérification si le serveur est inaccessible
+                else{
+                    authWindows.setVisibility(View.GONE);
+                    internetIndisponible.setVisibility(View.VISIBLE);
+                    conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
+                    titleNetworkLimited.setText(getString(R.string.connexionLimite));
+                    //msgNetworkLimited.setText();
+                    Toast.makeText(SouscriptionUploadIMGidCard.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });*/
     }
 
 
@@ -571,35 +644,26 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
     private void auto_registerInSmopayeServer(String prenom, String nom, String genre, String adresse, String idcategorie, String created_by, String sessioncompte, String cni, String tel, String imgName_recto, String imgName_verso) {
 
         call = service.autoregister(prenom, nom, genre, adresse, idcategorie, created_by, sessioncompte, cni.toLowerCase(), tel, imgName_recto, imgName_verso);
-        call.enqueue(new Callback<AllMyResponse>() {
+        call.enqueue(new Callback<AccessToken>() {
             @Override
-            public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
+            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
 
                 progressDialog.dismiss();
 
                 if(response.isSuccessful()){
-
-                    if(response.body().isSuccess()){
-                        //tokenManager.saveToken(response.body());
-                        successResponse("");
-                    } else {
-                        errorResponse("");
-                    }
+                        tokenManager.saveToken(response.body());
+                        successResponse("Enregistrement éffectué avec succès");
 
                 } else{
-
-                    if(response.code() == 401){
                         ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
                         Toast.makeText(SouscriptionUploadIMGidCard.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
-                    } else {
-                        errorResponse("");
-                    }
+                        errorResponse(apiError.getMessage());
                 }
 
             }
 
             @Override
-            public void onFailure(Call<AllMyResponse> call, Throwable t) {
+            public void onFailure(Call<AccessToken> call, Throwable t) {
                 progressDialog.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
 

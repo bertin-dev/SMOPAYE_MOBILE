@@ -138,6 +138,8 @@ dependencies {
     //service google pour la gestion de la geolocalisation
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
+    // Utilities for Maps SDK for Android
+    implementation 'com.google.maps.android:android-maps-utils:2.0.0'
 
     //service permettant de gerer les animations du loading
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'

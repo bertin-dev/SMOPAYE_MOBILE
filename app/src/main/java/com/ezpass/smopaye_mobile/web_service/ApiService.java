@@ -14,13 +14,18 @@ import com.ezpass.smopaye_mobile.web_service_response.ResponsePaiementQRCodeRece
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface ApiService {
@@ -29,7 +34,7 @@ public interface ApiService {
     /* Register */
     @POST("api/auth/register")
     @FormUrlEncoded
-    Call<AccessToken> register(@Field("lastname") String lastname,
+    Call<AllMyResponse> register(@Field("lastname") String lastname,
                                @Field("firstname") String firstname,
                                @Field("gender") String gender,
                                @Field("phone") String phone,
@@ -71,7 +76,7 @@ public interface ApiService {
     /*auto register */
     @POST("api/auth/autoregister")
     @FormUrlEncoded
-    Call<AllMyResponse> autoregister(@Field("firstname") String firstname,
+    Call<AccessToken> autoregister(@Field("firstname") String firstname,
                                    @Field("lastname") String lastname,
                                    @Field("gender") String gender,
                                    @Field("address") String address,
@@ -82,6 +87,22 @@ public interface ApiService {
                                    @Field("phone") String phone,
                                    @Field("nom_img_recto") String nom_img_recto,
                                    @Field("nom_img_verso") String nom_img_verso);
+
+    /*auto register */
+    @Multipart
+    @POST("user/photo")
+    Call<ResponseBody> autoregister(@Part("firstname") RequestBody firstname,
+                                    @Part("lastname") RequestBody lastname,
+                                    @Part("gender") RequestBody gender,
+                                    @Part("address") RequestBody address,
+                                    @Part("category_id") RequestBody category_id,
+                                    @Part("role_id") RequestBody role_id,
+                                    @Part("cni") RequestBody cni,
+                                    @Part("phone") RequestBody phone,
+                                    @Part("nom_img_recto") RequestBody nom_img_recto,
+                                    @Part("nom_img_verso") RequestBody nom_img_verso,
+                                    @Part("piece_recto") MultipartBody.Part piece_recto,
+                                    @Part("piece_verso") MultipartBody.Part piece_verso);
 
     /* Login */
     @POST("api/auth/login")
@@ -132,6 +153,15 @@ public interface ApiService {
                                    @Field("code_number_sender") String code_number_sender,
                                    @Field("code_number_receiver") String code_number_receiver,
                                    @Field("transaction_type") String transaction_type);
+
+    /* Debit */
+    @POST("api/card/transaction/payment")
+    @FormUrlEncoded
+    Call<HomeResponse> debit(@Field("amount") float amount,
+                                   @Field("code_number_sender") String code_number_sender,
+                                   @Field("code_number_receiver") String code_number_receiver,
+                                   @Field("transaction_type") String transaction_type,
+                                   @Field("serial_number_device") String serial_number_device);
 
 
     /* Abonnement*/

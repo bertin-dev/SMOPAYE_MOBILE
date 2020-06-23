@@ -529,22 +529,20 @@ public class RetraitChezSmopaye extends AppCompatActivity
 
                 if(response.isSuccessful()){
 
-                    //tokenManager.saveToken(response.body());
-                    successResponse(id_card, response.message());
+                    String msgReceiver = response.body().getMessage().getCard_receiver().getNotif();
+                    String msgSender = response.body().getMessage().getCard_sender().getNotif();
+
+                    successResponse(id_card, msgReceiver);
                 } else{
+
+                    ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                    Toast.makeText(RetraitChezSmopaye.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
 
                     if(response.code() == 422){
                         handleErrors(response.errorBody());
-                    }
-                    else if(response.code() == 401){
-                        ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
-                        Toast.makeText(RetraitChezSmopaye.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        errorResponse(id_card, response.message());
+                        errorResponse(id_card, apiError.getMessage());
                     }
-
-                    //errorResponse(id_card, response.message());
-
                 }
 
             }

@@ -71,6 +71,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -151,6 +152,7 @@ public class CarteFragment extends Fragment
     private String serial_number;
     private String typeCard;
     private String cardState;
+    DecimalFormat df = new DecimalFormat("0.00"); // import java.text.DecimalFormat;
 
 
 
@@ -617,11 +619,11 @@ public class CarteFragment extends Fragment
         TextView card_type = bottomSheetView.findViewById(R.id.card_type);
 
         String current = new SimpleDateFormat("dd/MM/yyyy à HH:mm:ss", Locale.getDefault()).format(new Date());
-        updateDateDialog.setText("Mise à jour le " + current);
+        updateDateDialog.setText(getString(R.string.updateTo) + " " + current);
 
-        soldeCompte.setText("Compte: " + myPersonalAccountAmount.substring(0, 10) + " Fcfa");
-        soldeUnite.setText("Unité: " + unity.substring(0, 10) + " Fcfa");
-        soldeDepot.setText("Dépot: " + deposit.substring(0, 10) + " Fcfa");
+        soldeCompte.setText(getString(R.string.compte) +": " + df.format(Float.parseFloat(myPersonalAccountAmount)) + " Fcfa");
+        soldeUnite.setText(getString(R.string.unite) +": " + df.format(Float.parseFloat(unity)) + " Fcfa");
+        soldeDepot.setText(getString(R.string.depot) +": " + df.format(Float.parseFloat(deposit)) + " Fcfa");
 
         //compte
         account_number.setText(myPersonalAccountNumber);
@@ -636,7 +638,7 @@ public class CarteFragment extends Fragment
         bottomSheetView.findViewById(R.id.btnClose).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "fermeture", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.fermeture), Toast.LENGTH_SHORT).show();
                 bottomSheetDialog.dismiss();
             }
         });

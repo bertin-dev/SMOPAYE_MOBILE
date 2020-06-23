@@ -667,5 +667,13 @@
     <string name="pleaseConfirm1">S\'il vous plait veuillez valider la recharge de votre Compte</string>
     <string name="pleaseConfirm2">en tapant</string>
     <string name="pleaseConfirm3">du service</string>
+    <string name="updateTo">Mise à jour le</string>
+    <string name="compte">Compte</string>
+    <string name="unite">Unité</string>
+    <string name="depot">Dépot</string>
+    <string name="fermeture">Fermeture</string>
+    <string name="monCode">MON CODE</string>
+    <string name="scanner">SCANNER</string>
+    <string name="centre">CENTRE</string>
 
 </resources>

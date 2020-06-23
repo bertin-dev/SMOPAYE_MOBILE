@@ -168,7 +168,7 @@ public class UpdatePassword extends AppCompatActivity
 
 
         Intent intent = getIntent();
-        telephone1 = intent.getStringExtra("telephone");
+        telephone1 = intent.getStringExtra("numeroTel");
         if(telephone1 != null)
             til_modifTel.getEditText().setText(telephone1);
 

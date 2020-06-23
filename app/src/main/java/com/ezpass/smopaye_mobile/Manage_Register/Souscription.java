@@ -47,6 +47,7 @@ import android.widget.Toast;
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
@@ -71,10 +72,10 @@ import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
-import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
+import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -152,7 +153,7 @@ public class Souscription extends AppCompatActivity
 
     /* Déclaration des objets liés à la communication avec le web service*/
     private ApiService service;
-    private Call<AccessToken> call;
+    private Call<AllMyResponse> call;
     private Call<List<Categorie>> call2;
     private AwesomeValidation validator;
     private TokenManager tokenManager;
@@ -1178,32 +1179,29 @@ public class Souscription extends AppCompatActivity
 
 
         call = service.register(nom1, prenom1, sexe1.toLowerCase(), telephone1, adresse1, num_categorie, num_statut, cni1.toLowerCase(), num_carte1);
-        call.enqueue(new Callback<AccessToken>() {
+        call.enqueue(new Callback<AllMyResponse>() {
             @Override
-            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+            public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
 
                 progressDialog.dismiss();
-                Log.w(TAG, "SMOPAYE_SERVER onResponse: " + response);
-
+                Log.w(TAG, "SMOPAYE_SERVER SUCCESS onResponse: " + response);
 
                 if(response.isSuccessful()){
-                    Log.w(TAG, "SMOPAYE_SERVER SUCCESS onResponse: " + response.body() );
-                          /*sauvegarde du token retourné par l'api si la reponse est bonne
-                         nous utiliserons la classe TokenManager pour cela
-                        */
+
                     assert response.body() != null;
-                    tokenManager.saveToken(response.body());
-                        /*new AsyncTaskRegisterDataInGoogleFirebaseServer(nom1, prenom1, sexe1, telephone1, typePJ1,
+                    //step 2 enregistrement dans google firebase
+                        new AsyncTaskRegisterDataInGoogleFirebaseServer(nom1, prenom1, sexe1, telephone1, typePJ1,
                                 cni1, session1, adresse1, num_carte1, typeUser1,
-                                status1, abonnement1, response.toString()).execute();*/
-                    Toast.makeText(Souscription.this, "enregistrement éffectué", Toast.LENGTH_SHORT).show();
+                                status1, abonnement1, response.body().getMessage()).execute();
 
                 } else{
 
                     if(response.code() == 422){
                         handleErrors(response.errorBody());
                     } else{
-                        errorResponse(response.message());
+                        ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                        Toast.makeText(Souscription.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        errorResponse(apiError.getMessage());
                     }
 
                 }
@@ -1211,7 +1209,7 @@ public class Souscription extends AppCompatActivity
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
+            public void onFailure(Call<AllMyResponse> call, Throwable t) {
 
                 //si on a une erreur de type 500 alors cela viendra ici
                 progressDialog.dismiss();
@@ -1545,6 +1543,7 @@ public class Souscription extends AppCompatActivity
                                             intent.putExtra("id_carte", "E-ZPASS" +num_carte + getsecurity_keys());
                                             intent.putExtra("nom_prenom", nom1 + " " + prenom1);
                                             startActivity(intent);
+                                            Animatoo.animateDiagonal(Souscription.this);
                                         }
                                     });
                                     build_error.setCancelable(false);

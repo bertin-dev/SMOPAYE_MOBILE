@@ -121,17 +121,6 @@ public class FragmentReadQRCode extends Fragment implements QRCodeModalDialog.Ex
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_read_q_r_code, container, false);
 
-
-        //initialisation du QR Code
-        IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
-        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
-        intentIntegrator.setCameraId(0);
-        intentIntegrator.setOrientationLocked(false);
-        intentIntegrator.setPrompt(getString(R.string.ezpassScan));
-        intentIntegrator.setBeepEnabled(true);
-        intentIntegrator.setBarcodeImageEnabled(true);
-        intentIntegrator.initiateScan();
-
         //initialisation des objets qui seront manipulés
         ButterKnife.bind(this, view);
         tokenManager = TokenManager.getInstance(getActivity().getSharedPreferences("prefs", MODE_PRIVATE));
@@ -241,7 +230,6 @@ public class FragmentReadQRCode extends Fragment implements QRCodeModalDialog.Ex
             call2 = null;
         }
     }
-
 
 
     private class GetHttpResponse extends AsyncTask<Void, Void, Void> {

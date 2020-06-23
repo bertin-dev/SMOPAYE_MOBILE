@@ -41,7 +41,19 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".Manage_Geolocalisation.HomeGoogleMap"></activity>
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="fullSensor"
+            tools:replace="screenOrientation"
+            android:stateNotNeeded="true"
+            android:theme="@style/zxing_CaptureTheme"
+            android:windowSoftInputMode="stateAlwaysHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ezpass.smopaye_mobile.MainActivity" />
+        </activity>
+
+        <activity android:name=".Manage_Geolocalisation.HomeGoogleMap"/>
         <activity android:name=".Manage_Register.SubSouscription" />
         <activity android:name=".Manage_Transactions.Manage_Payments.Manage_QRCode.AffichageQRCode" />
         <activity android:name=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.MenuRetraitOperateur" />
