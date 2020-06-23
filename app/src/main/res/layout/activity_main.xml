@@ -77,7 +77,7 @@
             android:padding="10dp"
             android:shadowDx="@android:integer/config_longAnimTime"
             android:text="@string/reessayer"
-            android:textColor="#ffffff"
+            android:textColor="@color/white"
             android:textStyle="bold" />
 
 
@@ -103,7 +103,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
-            app:bb_activeTabColor="#ffae03"
+            app:bb_activeTabColor="@color/colorPrimary"
             app:bb_tabXmlResource="@xml/bottombar_tabs_five" />
 
 

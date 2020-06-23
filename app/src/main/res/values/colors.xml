@@ -1,51 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- <color name="colorPrimary">#F8990E</color>-->
+
+    <!-- COULEURS PRINCIPALES -->
     <color name="colorPrimary">#039BE6</color>
     <color name="colorPrimaryDark">#1CABF0</color>
     <color name="colorAccent">#D81B60</color>
-
-
-
     <color name="bgColorStandard">#039BE5</color>
     <color name="textColorStandard">#262626</color>
     <color name="textColorGreen">#40d054</color>
     <color name="textColorGray">#808080</color>
     <color name="textColorBlack">#000</color>
-
     <color name="white">#FFFFFF</color>
     <color name="colorRipple">#A9A9F5</color>
     <color name="red">#f80000</color>
-
     <color name="textColorGray1">#EEEDED</color>
     <color name="yellow">#ffae03</color>
-
-
-
-
-
     <!-- dots inactive colors -->
     <color name="dot_dark_screen1">#39d1ba</color>
     <color name="dot_dark_screen2">#14a895</color>
-
     <!-- dots active colors -->
     <color name="dot_light_screen1">#8de7f9</color>
     <color name="dot_light_screen2">#8cf9eb</color>
-
     <array name="array_dot_active">
         <item>@color/dot_light_screen1</item>
         <item>@color/dot_light_screen2</item>
     </array>
-
     <array name="array_dot_inactive">
         <item>@color/dot_dark_screen1</item>
         <item>@color/dot_dark_screen2</item>
     </array>
-
     <color name="bgRowBackground">#FA315B</color>
     <color name="itemName">#535353</color>
     <color name="Description">#a9a9a9</color>
-
     <color name="colorDivider">#ECECEC</color>
+    <color name="vertClair">#05df29</color>
+    <color name="gris">#bfbfbf</color>
+    <color name="rougeFin">#fef2f2</color>
+    <color name="rougeColore">#FF5252</color>
+    <color name="grisFonce">#757575</color>
+    <color name="whit">#f3f2f2</color>
+    <color name="marron">#ddccb5</color>
+    <color name="blackFin">#262626</color>
+    <color name="grisFonce1">#E0E0E0</color>
+    <color name="gris1">#e6e6e6</color>
+    <color name="bleuFonce">#0C61AB</color>
+
+
+
+    <!--COULEURS SECONDAIRES-->
 
 </resources>

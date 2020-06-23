@@ -51,7 +51,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#000"
+                    android:textColor="@color/textColorBlack"
                     android:gravity="center"
                     android:layout_marginEnd="20dp"
                     android:layout_marginRight="20dp"
@@ -71,7 +71,7 @@
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:textAlignment="center"
                     android:background="@drawable/btn_rounded"
-                    android:textColor="#ffffff"/>
+                    android:textColor="@color/white"/>
 
             </LinearLayout>
 
@@ -102,7 +102,7 @@
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:textAlignment="center"
                     android:background="@drawable/btn_rounded_green"
-                    android:textColor="#ffffff"/>
+                    android:textColor="@color/white"/>
 
             </LinearLayout>
 
@@ -134,7 +134,7 @@
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:textAlignment="center"
                     android:background="@drawable/btn_rounded"
-                    android:textColor="#ffffff"/>
+                    android:textColor="@color/white"/>
 
             </LinearLayout>
 
@@ -165,7 +165,7 @@
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:textAlignment="center"
                     android:background="@drawable/btn_rounded_red"
-                    android:textColor="#ffffff"/>
+                    android:textColor="@color/white"/>
 
             </LinearLayout>
 

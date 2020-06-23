@@ -42,7 +42,7 @@ tools:showIn="@layout/app_bar_main"
                         android:text="@string/etatStatut"
                         android:layout_gravity="start"
                         android:textSize="20sp"
-                        android:textColor="#fff"
+                        android:textColor="@color/white"
                         android:paddingLeft="15dp"
                         android:layout_marginTop="60dp"
                         android:textStyle="bold"
@@ -54,7 +54,7 @@ tools:showIn="@layout/app_bar_main"
                         android:text="@string/typeEtatStatut"
                         android:layout_gravity="start"
                         android:textSize="12sp"
-                        android:textColor="#fff"
+                        android:textColor="@color/white"
                         android:paddingLeft="15dp"
                         android:textStyle="bold"
                         android:paddingStart="15dp" />
@@ -75,7 +75,7 @@ tools:showIn="@layout/app_bar_main"
                             android:text=""
                             android:layout_gravity="end"
                             android:textSize="100sp"
-                            android:textColor="#fff"
+                            android:textColor="@color/white"
                             android:paddingStart="15dp"
                             android:paddingLeft="15dp"
                             android:textStyle="bold"
@@ -91,7 +91,7 @@ tools:showIn="@layout/app_bar_main"
                                 android:text=""
                                 android:layout_marginTop="30dp"
                                 android:textSize="20sp"
-                                android:textColor="#fff"
+                                android:textColor="@color/white"
                                 android:textStyle="bold"
                                 />
                             <TextView
@@ -100,7 +100,7 @@ tools:showIn="@layout/app_bar_main"
                                 android:layout_height="wrap_content"
                                 android:text=""
                                 android:textSize="15sp"
-                                android:textColor="#fff"
+                                android:textColor="@color/white"
                                 android:textStyle="bold"
                                 />
                         </LinearLayout>
@@ -170,7 +170,7 @@ tools:showIn="@layout/app_bar_main"
                             android:gravity="start"
                             android:textStyle="italic"
                             android:textAlignment="gravity"
-                            android:textColor="#262626"
+                            android:textColor="@color/blackFin"
                             android:text="@string/MsgConsulterHistorique"
                             android:textSize="14sp"
                             />
@@ -183,12 +183,12 @@ tools:showIn="@layout/app_bar_main"
                             android:textSize="12sp"
                             android:gravity="center"
                             android:textAlignment="center"
-                            android:background="#039BE5"
+                            android:background="@color/colorPrimary"
                             android:layout_gravity="end"
                             android:layout_marginBottom="0dp"
                             android:layout_marginRight="0dp"
                             android:layout_marginEnd="0dp"
-                            android:textColor="#ffffff"/>
+                            android:textColor="@color/white"/>
 
 
                     </LinearLayout>
@@ -236,10 +236,11 @@ tools:showIn="@layout/app_bar_main"
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#262626"
+                            android:textColor="@color/blackFin"
                             android:textStyle="bold"
                             android:textAlignment="center"
-                            android:text="@string/telecollecte_retrait"/>
+                            android:text="@string/telecollecte_retrait"
+                            android:gravity="center_horizontal" />
 
                     </LinearLayout>
 
@@ -263,10 +264,11 @@ tools:showIn="@layout/app_bar_main"
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#262626"
+                            android:textColor="@color/blackFin"
                             android:textStyle="bold"
                             android:textAlignment="center"
-                            android:text="@string/payerFacture"/>
+                            android:text="@string/payerFacture"
+                            android:gravity="center_horizontal" />
 
                     </LinearLayout>
 
@@ -289,10 +291,11 @@ tools:showIn="@layout/app_bar_main"
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#262626"
+                            android:textColor="@color/blackFin"
                             android:textStyle="bold"
                             android:textAlignment="center"
-                            android:text="@string/verification"/>
+                            android:text="@string/verification"
+                            android:gravity="center_horizontal" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -314,10 +317,11 @@ tools:showIn="@layout/app_bar_main"
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#262626"
+                            android:textColor="@color/blackFin"
                             android:textStyle="bold"
                             android:textAlignment="center"
-                            android:text="@string/rechargeComptes"/>
+                            android:text="@string/rechargeComptes"
+                            android:gravity="center_horizontal" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -350,10 +354,11 @@ tools:showIn="@layout/app_bar_main"
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#262626"
+                            android:textColor="@color/blackFin"
                             android:textStyle="bold"
                             android:textAlignment="center"
-                            android:text="@string/debitCarte"/>
+                            android:text="@string/debitCarte"
+                            android:gravity="center_horizontal" />
 
                     </LinearLayout>
 
@@ -377,10 +382,11 @@ tools:showIn="@layout/app_bar_main"
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#262626"
+                            android:textColor="@color/blackFin"
                             android:textStyle="bold"
                             android:textAlignment="center"
-                            android:text="@string/qrcode"/>
+                            android:text="@string/qrcode"
+                            android:gravity="center_horizontal" />
 
                     </LinearLayout>
 
@@ -403,10 +409,11 @@ tools:showIn="@layout/app_bar_main"
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#262626"
+                            android:textColor="@color/blackFin"
                             android:textStyle="bold"
                             android:textAlignment="center"
-                            android:text="@string/consulterSolde"/>
+                            android:text="@string/consulterSolde"
+                            android:gravity="center_horizontal" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -428,10 +435,11 @@ tools:showIn="@layout/app_bar_main"
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#262626"
+                            android:textColor="@color/blackFin"
                             android:textStyle="bold"
                             android:textAlignment="center"
-                            android:text="@string/consulterRecettes"/>
+                            android:text="@string/consulterRecettes"
+                            android:gravity="center_horizontal" />
                     </LinearLayout>
 
 

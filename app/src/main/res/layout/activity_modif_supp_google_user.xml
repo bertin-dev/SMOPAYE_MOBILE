@@ -388,7 +388,7 @@
                     android:id="@+id/btnUpdate"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/white"
                     android:padding="10dp"
                     android:paddingStart="30dp"
                     android:paddingLeft="30dp"
@@ -406,7 +406,7 @@
                     android:id="@+id/btnDelete"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/white"
                     android:padding="10dp"
                     android:paddingStart="30dp"
                     android:paddingLeft="30dp"
@@ -425,7 +425,7 @@
                     android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/white"
                     android:padding="10dp"
                     android:paddingStart="30dp"
                     android:paddingLeft="30dp"
@@ -483,7 +483,8 @@
                 android:textColor="@color/bgColorStandard"
                 android:textSize="20sp"
                 android:layout_marginBottom="20dp"
-                android:text="@string/connexionIntrouvable" />
+                android:text="@string/connexionIntrouvable"
+                android:gravity="center_horizontal" />
 
 
             <TextView
@@ -497,14 +498,15 @@
                 android:paddingLeft="10dp"
                 android:textColor="@color/textColorStandard"
                 android:textSize="15sp"
-                android:text="@string/msgConnexionInternetIntrouvable" />
+                android:text="@string/msgConnexionInternetIntrouvable"
+                android:gravity="center_horizontal" />
 
             <Button
                 android:id="@+id/btnReessayer"
                 android:text="@string/reessayer"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:textColor="#ffffff"
+                android:textColor="@color/white"
                 android:padding="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="100dp"

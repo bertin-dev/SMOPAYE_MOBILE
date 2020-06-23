@@ -32,7 +32,7 @@
                 android:id="@+id/username"
                 android:layout_marginLeft="25dp"
                 android:text=""
-                android:textColor="#fff"
+                android:textColor="@color/white"
                 android:textStyle="bold"
                 android:layout_marginStart="25dp" />
 
@@ -43,9 +43,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/tab_layoutChat"
             android:background="@color/colorPrimaryDark"
-            app:tabSelectedTextColor="#fff"
-            app:tabTextColor="#fff"/>
-        <!--  app:tabIndicator="#fff"
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextColor="@color/white"/>
+        <!--  app:tabIndicator="@color/white"
            app:tabIndicatorHeight="8dp"
            -->
 

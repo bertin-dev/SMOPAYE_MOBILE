@@ -27,7 +27,8 @@
             android:textColor="@color/bgColorStandard"
             android:textSize="20sp"
             android:layout_marginBottom="20dp"
-            android:text="@string/NotificationsVides" />
+            android:text="@string/NotificationsVides"
+            android:gravity="center_horizontal" />
     </LinearLayout>
 
    <!-- <ListView

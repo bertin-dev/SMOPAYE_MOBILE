@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="top"
-            android:background="#FFF"
+            android:background="@color/white"
             android:foregroundGravity="center_horizontal|center_vertical"
             android:layout_gravity="top">
 
@@ -201,7 +201,7 @@
                         android:id="@+id/btndebit"
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:textColor="#ffffff"
+                        android:textColor="@color/white"
                         android:padding="10dp"
                         android:textAllCaps="false"
                         android:layout_marginLeft="100dp"
@@ -264,7 +264,7 @@
                     android:text="@string/reessayer"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/white"
                     android:padding="10dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginLeft="100dp"

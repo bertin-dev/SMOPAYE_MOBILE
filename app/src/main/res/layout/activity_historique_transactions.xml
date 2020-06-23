@@ -52,7 +52,7 @@
                         android:text="@string/subTitle"
                         android:layout_gravity="center"
                         android:textSize="25sp"
-                        android:textColor="#fff"
+                        android:textColor="@color/white"
                         />
 
                     <LinearLayout
@@ -72,7 +72,7 @@
                             android:layout_marginEnd="5dp"
                             android:layout_gravity="start"
                             android:textSize="25sp"
-                            android:textColor="#fff"
+                            android:textColor="@color/white"
                             android:textStyle="bold|italic"
                             />
 

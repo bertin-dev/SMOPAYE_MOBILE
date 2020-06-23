@@ -12,7 +12,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:id="@+id/headAccount"
-    android:background="#f3f2f2">
+    android:background="@color/whit">
 
     <LinearLayout
         android:id="@+id/authWindows"
@@ -28,7 +28,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="55dp"
             android:orientation="vertical"
-            android:background="#ddccb5"
+            android:background="@color/marron"
             android:foregroundGravity="center_vertical|center_horizontal">
 
             <!--<LinearLayout
@@ -276,7 +276,7 @@
                     android:id="@+id/abc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#000"
+                    android:textColor="@color/textColorBlack"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:text="@string/numCarte"/>
@@ -285,7 +285,7 @@
                     android:id="@+id/AccountNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#262626"
+                    android:textColor="@color/blackFin"
                     android:textSize="15sp"
                     android:text=""/>
             </RelativeLayout>
@@ -310,7 +310,7 @@
                     android:id="@+id/typCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#000"
+                    android:textColor="@color/textColorBlack"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:text="@string/numCard"/>
@@ -319,7 +319,7 @@
                     android:layout_below="@+id/typCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#262626"
+                    android:textColor="@color/blackFin"
                     android:textSize="15sp"
                     android:text=""/>
             </RelativeLayout>
@@ -344,7 +344,7 @@
                     android:id="@+id/expiration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#000"
+                    android:textColor="@color/textColorBlack"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:text="@string/dateExp"/>
@@ -355,7 +355,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/expiration"
                     android:text=""
-                    android:textColor="#262626"
+                    android:textColor="@color/blackFin"
                     android:textSize="15sp" />
             </RelativeLayout>
 
@@ -379,7 +379,7 @@
                     android:id="@+id/verouCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#000"
+                    android:textColor="@color/textColorBlack"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:text="@string/verouCarte"/>
@@ -395,7 +395,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="80"
                         android:layout_height="wrap_content"
-                        android:textColor="#262626"
+                        android:textColor="@color/blackFin"
                         android:textSize="15sp"
                         android:text="@string/balancerCarte"/>
 
@@ -476,7 +476,7 @@
             android:text="@string/reessayer"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:textColor="#ffffff"
+            android:textColor="@color/white"
             android:padding="10dp"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="100dp"

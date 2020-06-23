@@ -104,7 +104,7 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:textStyle="bold"
-                        android:textColor="#000"
+                        android:textColor="@color/textColorBlack"
                         android:layout_gravity="center_horizontal|center_vertical"
                         android:textSize="20sp"
                         android:layout_marginBottom="20dp"
@@ -125,7 +125,7 @@
                         android:gravity="center_horizontal|center_vertical"
                         android:background="@drawable/edittextbg"
                         android:layout_width="match_parent"
-                        android:textColorHint="#000"
+                        android:textColorHint="@color/textColorBlack"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
@@ -142,7 +142,7 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:textStyle="bold"
-                        android:textColor="#000"
+                        android:textColor="@color/textColorBlack"
                         android:layout_gravity="center_horizontal|center_vertical"
                         android:textSize="20sp"
                         android:layout_marginBottom="20dp"
@@ -163,7 +163,7 @@
                         android:gravity="center_horizontal|center_vertical"
                         android:background="@drawable/edittextbg"
                         android:layout_width="match_parent"
-                        android:textColorHint="#000"
+                        android:textColorHint="@color/textColorBlack"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
@@ -180,7 +180,7 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:textStyle="bold"
-                        android:textColor="#000"
+                        android:textColor="@color/textColorBlack"
                         android:layout_gravity="center_horizontal|center_vertical"
                         android:textSize="20sp"
                         android:layout_marginBottom="20dp"
@@ -201,7 +201,7 @@
                         android:gravity="center_horizontal|center_vertical"
                         android:background="@drawable/edittextbg"
                         android:layout_width="match_parent"
-                        android:textColorHint="#000"
+                        android:textColorHint="@color/textColorBlack"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
@@ -219,7 +219,7 @@
                     android:id="@+id/btnPasserCarte"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/white"
                     android:padding="15dp"
                     android:textSize="17sp"
                     android:textAllCaps="false"

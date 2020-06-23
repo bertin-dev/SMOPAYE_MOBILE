@@ -24,7 +24,7 @@
             android:layout_alignParentEnd="true"
             android:background="@drawable/background_right"
             android:text="@string/hello"
-            android:textColor="#fff"
+            android:textColor="@color/white"
             android:padding="8dp"
             android:layout_alignParentRight="true" />
 

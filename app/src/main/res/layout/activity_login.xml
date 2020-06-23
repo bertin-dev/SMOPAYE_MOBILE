@@ -121,7 +121,7 @@
                         android:maxLength="5"
                         app:drawable_hide="@drawable/ic_visibility_off_black_24dp"
                         app:drawable_show="@drawable/ic_visibility_black_24dp"
-                        app:tint_color="#039BE5"/>
+                        app:tint_color="@color/colorPrimary"/>
 
 
                 </android.support.design.widget.TextInputLayout>
@@ -138,7 +138,7 @@
                         android:id="@+id/btnlogin"
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:textColor="#ffffff"
+                        android:textColor="@color/white"
                         android:padding="10dp"
                         android:layout_marginLeft="50dp"
                         android:layout_marginRight="50dp"
@@ -152,7 +152,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:textColor="#ffffff"
+                        android:textColor="@color/white"
                         android:padding="10dp"
                         android:layout_marginLeft="50dp"
                         android:layout_marginRight="50dp"
@@ -263,7 +263,7 @@
                 android:text="@string/reessayer"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:textColor="#ffffff"
+                android:textColor="@color/white"
                 android:padding="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="100dp"
