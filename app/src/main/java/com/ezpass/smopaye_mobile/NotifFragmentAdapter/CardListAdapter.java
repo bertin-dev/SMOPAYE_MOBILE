@@ -6,6 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,16 +19,19 @@ import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.NotifFragmentModel.Item;
 import com.ezpass.smopaye_mobile.R;
 import java.util.ArrayList;
+import java.util.List;
 
-public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.MyViewHolder> {
+public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.MyViewHolder> implements Filterable {
 
 
     private Context context;
     private ArrayList<Item> list;
+    private ArrayList<Item> listFilter;
 
-    public CardListAdapter(Context context, ArrayList<Item> list) {
+    public CardListAdapter(Context context, ArrayList<Item> list, ArrayList<Item> listFilter) {
         this.context = context;
         this.list = list;
+        this.listFilter = listFilter;
     }
 
     @NonNull
@@ -40,16 +47,21 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        Item item = list.get(position);
-        holder.name.setText(item.getName());
-        holder.description.setText(item.getDescription());
-        holder.price.setText(item.getPrice());
-        holder.thumbnail.setImageResource(item.getThumbnail());
+        Item listFilter1 = listFilter.get(position);
+        //creation d'une animation
+        holder.thumbnail.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_transition_animation));
+        holder.container.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_scale_animation));
+
+
+        holder.name.setText(listFilter1.getName());
+        holder.description.setText(listFilter1.getDescription());
+        holder.price.setText(listFilter1.getPrice());
+        holder.thumbnail.setImageResource(listFilter1.getThumbnail());
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return listFilter.size();
     }
 
     public void removeItem(int position, int id, Context context){
@@ -66,16 +78,50 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.MyView
         notifyItemInserted(position);
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
 
-        public TextView name;
-        public TextView description;
-        public TextView price;
-        public ImageView thumbnail;
+                String key = constraint.toString();
+                if(key.isEmpty()){
+                    listFilter = list;
+                } else {
+                    ArrayList<Item> firstFilter = new ArrayList<>();
+                    for(Item row : list){
+                        if(row.getName().toLowerCase().contains(key.toLowerCase())){
+                            firstFilter.add(row);
+                        }
+                    }
+                    listFilter = firstFilter;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = listFilter;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+
+                listFilter = (ArrayList<Item>) results.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder{
+
+        private TextView name;
+        private TextView description;
+        private TextView price;
+        private ImageView thumbnail;
         public RelativeLayout viewBackground;
         public RelativeLayout viewForeground;
+        private RelativeLayout container;
 
-        public MyViewHolder(@NonNull View itemView) {
+        private MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
             name = itemView.findViewById(R.id.name);
@@ -84,6 +130,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.MyView
             thumbnail = itemView.findViewById(R.id.thumbnail);
             viewBackground = itemView.findViewById(R.id.view_background);
             viewForeground = itemView.findViewById(R.id.view_foreground);
+            container = itemView.findViewById(R.id.container);
         }
     }
 }

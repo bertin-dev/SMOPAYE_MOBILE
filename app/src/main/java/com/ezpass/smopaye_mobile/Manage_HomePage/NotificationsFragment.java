@@ -8,16 +8,23 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
@@ -77,11 +84,18 @@ public class NotificationsFragment extends Fragment implements RecyclerItemTouch
     private ArrayList<Item> list2;
     private CardListAdapter adapter;
     private CoordinatorLayout rootLayout;
-
-    IMenuRequest mService;
+    private IMenuRequest mService;
+    private EditText inputSearch;
+    private RelativeLayout notif_search;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
+
+        //permet de rendre une activity en plein écran
+        //getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         View view =  inflater.inflate(R.layout.fragment_notifications, container, false);
 
         getActivity().setTitle(getString(R.string.notifications));
@@ -90,6 +104,9 @@ public class NotificationsFragment extends Fragment implements RecyclerItemTouch
         btnSuppNotif = (FloatingActionButton) view.findViewById(R.id.btnSuppNotif);
         //simpleList = (ListView) view.findViewById(R.id.ListViewNotification);
         notificationsVides = (LinearLayout) view.findViewById(R.id.notificationsVides);
+        inputSearch = (EditText) view.findViewById(R.id.inputSearch);
+        notif_search = (RelativeLayout) view.findViewById(R.id.notif_search);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
 
 
 
@@ -147,16 +164,16 @@ public class NotificationsFragment extends Fragment implements RecyclerItemTouch
 
         if(list2.isEmpty()){
             notificationsVides.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
+            notif_search.setVisibility(View.GONE);
 
         } else {
-            adapter = new CardListAdapter(getContext(), list2);
+            adapter = new CardListAdapter(getContext(), list2, list2);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
             recyclerView.setAdapter(adapter);
-            ItemTouchHelper.SimpleCallback itemTouchHelperCallBack = new RecyclerItemTouchHelper(0,    ItemTouchHelper.LEFT, this);
+            ItemTouchHelper.SimpleCallback itemTouchHelperCallBack = new RecyclerItemTouchHelper(0,    ItemTouchHelper.LEFT| ItemTouchHelper.RIGHT|ItemTouchHelper.UP|ItemTouchHelper.DOWN, this);
             new ItemTouchHelper(itemTouchHelperCallBack).attachToRecyclerView(recyclerView);
         }
         //request API
@@ -172,7 +189,7 @@ public class NotificationsFragment extends Fragment implements RecyclerItemTouch
 
                 if(list2.isEmpty()){
                     notificationsVides.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
+                    notif_search.setVisibility(View.GONE);
                 } else {
                     db.DeleteAllNotifications();
 
@@ -184,14 +201,56 @@ public class NotificationsFragment extends Fragment implements RecyclerItemTouch
 
                     Toast.makeText(getContext(), getString(R.string.notifVide), Toast.LENGTH_SHORT).show();
                     notificationsVides.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
+                    notif_search.setVisibility(View.GONE);
                 }
 
             }
         });
 
+        //module de recherche
+        inputSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        //module d'actualisation
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                if(list2.isEmpty()){
+                    notificationsVides.setVisibility(View.VISIBLE);
+                    notif_search.setVisibility(View.GONE);
+
+                } else {
+                    adapter = new CardListAdapter(getContext(), list2, list2);
+                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+                    recyclerView.setLayoutManager(layoutManager);
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+                    recyclerView.setAdapter(adapter);
+                }
+                adapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         return view;
     }
+
+
 
 
     //SUPRESSION DES NOTIFICATIONS APRES GLISSEMENT
