@@ -1,11 +1,17 @@
 package com.ezpass.smopaye_mobile.Manage_Cards.WriteInCard;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,8 +21,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 import com.ezpass.smopaye_mobile.R;
@@ -46,9 +54,20 @@ public class Reset extends AppCompatActivity {
     private long time1, time2;
     private ProgressDialog progressDialog;
 
+    //changement de couleur du theme
+    private Constant constant;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences app_preferences;
+    int appTheme;
+    int themeColor;
+    int appColor;
+
+    private Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        changeTheme();
         setContentView(R.layout.activity_reset);
 
         Toolbar toolbar = findViewById(R.id.myToolbar);
@@ -197,7 +216,9 @@ public class Reset extends AppCompatActivity {
                 }
             }
         };
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget();
+        }
     }
 
 
@@ -408,6 +429,51 @@ public class Reset extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    private void changeColorWidget() {
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            toolbar.setBackground(ContextCompat.getDrawable(this, R.color.colorPrimaryDarkRed));
+
+            TextView init = (TextView) findViewById(R.id.init);
+            init.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+            init.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+
+            TextView numCarte_court = (TextView) findViewById(R.id.numCarte_court);
+            numCarte_court.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+
+            //N°CARTE COURT
+            numCartePriveAutoInit.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            numCartePriveAutoInit.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+
+            //Button
+            BtnInit.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+
+
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+        } else{
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+    }
+
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            setTheme(Constant.theme);
+        }else{
+            setTheme(appTheme);
+        }
     }
 
 }

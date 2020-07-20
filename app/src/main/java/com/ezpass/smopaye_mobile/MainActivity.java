@@ -3,21 +3,27 @@ package com.ezpass.smopaye_mobile;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -42,7 +48,7 @@ import com.ezpass.smopaye_mobile.Manage_HomePage.NotificationsFragment;
 import com.ezpass.smopaye_mobile.Manage_HomePage.PointSmopayeFragment;
 import com.ezpass.smopaye_mobile.Manage_Register.SubSouscription;
 import com.ezpass.smopaye_mobile.Manage_Subscriptions.Home_Subscriptions;
-import com.ezpass.smopaye_mobile.Manage_Transactions.Manage_Payments.Manage_Transfer.Transfert;
+import com.ezpass.smopaye_mobile.Manage_Transactions.Manage_Payments.Manage_Transfer.HomeTransfer;
 import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 import com.ezpass.smopaye_mobile.Profil_user.Abonnement;
@@ -153,6 +159,15 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.msgNetworkLimited)
     TextView msgNetworkLimited;
 
+
+    //changement de couleur du theme
+    Constant constant;
+    SharedPreferences.Editor editor;
+    SharedPreferences app_preferences;
+    int appTheme;
+    int themeColor;
+    int appColor;
+
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -186,11 +201,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        changeTheme();
         setContentView(R.layout.activity_main);
-
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        toolbar.setBackgroundColor(Constant.color);
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,6 +229,12 @@ public class MainActivity extends AppCompatActivity
         txt_role = (TextView) header.findViewById(R.id.txt_role);
         txt_profile = (TextView) header.findViewById(R.id.txt_profile);
         txt_telephone = (TextView) header.findViewById(R.id.txt_number);
+
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed))
+            header.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryRed));
+         else
+            header.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+
 
         //Instanciation de la base de données locale
         db = new DbHandler(getApplicationContext());
@@ -493,6 +517,7 @@ public class MainActivity extends AppCompatActivity
                                     bundle.putString("myPersonalAccountNumber", myPersonalAccountNumber);
                                     bundle.putString("myPersonalAccountState", myPersonalAccountState);
                                     bundle.putString("myPersonalAccountAmount", myPersonalAccountAmount);
+                                    bundle.putString("profil_complet", profil_complet);
                                     selectedFragment = new CarteFragment();
                                     selectedFragment.setArguments(bundle);
                                     break;
@@ -559,6 +584,43 @@ public class MainActivity extends AppCompatActivity
         });
 
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void changeColorWidget() {
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            //network not available ic_wifi_red
+            conStatusIv.setImageResource(R.drawable.ic_wifi_red);
+            titleNetworkLimited.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            msgNetworkLimited.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            findViewById(R.id.btnReessayer).setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+
+            //setTheme(R.style.colorPrimaryDark);
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+        } else{
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+    }
+
+    private void changeTheme() {
+            app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            appColor = app_preferences.getInt("color", 0);
+            appTheme = app_preferences.getInt("theme", 0);
+            themeColor = appColor;
+            constant.color = appColor;
+
+            if (themeColor == 0){
+                setTheme(Constant.theme);
+            }else if (appTheme == 0){
+                setTheme(Constant.theme);
+            }else{
+                setTheme(appTheme);
+            }
     }
 
 
@@ -657,10 +719,44 @@ public class MainActivity extends AppCompatActivity
 
             //startActivity(new Intent(getApplicationContext(), WebSite.class));
 
-        }else if (id == R.id.nav_transfert){
-            Intent intent = new Intent(getApplicationContext(), Transfert.class);
+        }else if(id==R.id.nav_clients){
+
+              Uri uri = Uri.parse(ChaineConnexion.getEspace_clients());
+            Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+            // To count with Play market backstack, After pressing back button,
+            // to taken back to our application, we need to add following flags to intent.
+            goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            try {
+                startActivity(goToMarket);
+            } catch (ActivityNotFoundException e) {
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(ChaineConnexion.getEspace_clients())));
+            }
+
+            /*Intent intent = new Intent(getApplicationContext(), EspaceClients.class);
+            startActivity(intent);
+            Animatoo.animateFade(this);*/
+
+            /*try {
+                Intent viewIntent =
+                        new Intent("android.intent.action.VIEW",
+                                Uri.parse(ChaineConnexion.getEspace_clients()));
+                startActivity(viewIntent);
+            }catch(Exception e) {
+                Toast.makeText(getApplicationContext(), "Unable to Connect Try Again...",
+                        Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }*/
+
+
+        } else if (id == R.id.nav_transfert){
+            Intent intent = new Intent(getApplicationContext(), HomeTransfer.class);
+            intent.putExtra("myId_card", myId_card);
             intent.putExtra("telephone", myPhone);
             intent.putExtra("compte", myCompte);
+            intent.putExtra("myPersonalAccountNumber", myPersonalAccountNumber);
             startActivity(intent);
             Animatoo.animateFade(this);  //fire the zoom animation
         } else if (id == R.id.nav_abonnement){
@@ -912,7 +1008,10 @@ public class MainActivity extends AppCompatActivity
             view = snackbar.getView();
             TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(color);
-            textView.setBackgroundColor(Color.parseColor("#039BE5"));
+            if(Constant.color == getResources().getColor(R.color.colorPrimaryRed))
+                textView.setBackgroundResource(R.color.colorPrimaryRed);
+            else
+                textView.setBackgroundColor(Color.parseColor("#039BE5"));
             textView.setGravity(Gravity.CENTER);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);

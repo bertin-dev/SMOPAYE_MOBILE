@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/transfert"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/retrait_smopaye"
     android:background="@color/white"
-    tools:context=".Manage_Transactions.Manage_Payments.Manage_Transfer.Transfert">
+    tools:context=".Manage_Transactions.Manage_Payments.Manage_Withdrawal.FragmentRetraitChezSmopaye">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,11 +14,9 @@
         android:orientation="vertical"
         android:gravity="top"
         android:background="@color/white"
+        android:foregroundGravity="center_horizontal|center_vertical"
         android:layout_gravity="top">
 
-        <include
-            android:id="@+id/myToolbar"
-            layout="@layout/bar_layout"/>
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -36,6 +34,7 @@
             app:cardElevation="10dp">
 
             <LinearLayout
+                android:id="@+id/descModule"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -52,6 +51,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
+                        android:id="@+id/descContent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
@@ -61,7 +61,7 @@
                         android:textStyle="italic|bold"
                         android:textAlignment="gravity"
                         android:textColor="@color/bgColorStandard"
-                        android:text="@string/MsgDescTransfert"
+                        android:text="@string/MsgDescRetraitChezOperateur"
                         android:textSize="14sp" />
 
 
@@ -71,53 +71,30 @@
 
         </android.support.v7.widget.CardView>
 
-
         <LinearLayout
             android:id="@+id/authWindows"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="top"
             android:focusable="true"
-            android:gravity="center_vertical|center_horizontal"
-            android:foregroundGravity="center_horizontal|center_vertical"
             android:layout_marginTop="100dp"
             android:focusableInTouchMode="true"
             android:orientation="vertical">
 
-
-            <EditText
-                android:id="@+id/numTelDonataire"
-                android:textColor="@color/bgColorStandard"
-                android:layout_gravity="center"
-                android:hint="@string/telephone"
-                android:imeOptions="actionNext"
-                android:padding="10dp"
-                android:visibility="gone"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginBottom="20dp"
-                android:inputType="text"
-                android:enabled="false"
-                android:textStyle="bold|italic"
-                android:background="@drawable/edittextborder"
-                android:layout_width="match_parent"
-                android:textColorHint="@color/bgColorStandard"
-                android:layout_height="wrap_content" />
-
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/til_numCarteBeneficiaire"
+                android:id="@+id/til_numCartSmopaye"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:hint="@string/numdeCarteBeneficiaire"
+                android:hint="@string/numdeCarte"
                 android:textColorHint="@color/bgColorStandard"
                 app:errorEnabled="true"
                 app:counterEnabled="true"
                 app:counterMaxLength="8">
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/tie_numCarteBeneficiaire"
+                    android:id="@+id/tie_numCartSmopaye"
                     android:textColor="@color/bgColorStandard"
                     android:layout_gravity="center"
                     android:maxLines="1"
@@ -133,27 +110,26 @@
 
             </android.support.design.widget.TextInputLayout>
 
+
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/til_montantBeneficiaire"
+                android:id="@+id/til_montantSmopaye"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:hint="@string/montantBeneficiaire"
+                android:hint="@string/montant"
                 android:textColorHint="@color/bgColorStandard"
-                app:counterMaxLength="7"
-                app:counterEnabled="true"
                 app:errorEnabled="true">
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/tie_montantBeneficiaire"
+                    android:id="@+id/tie_montantSmopaye"
                     android:textColor="@color/bgColorStandard"
                     android:layout_gravity="center"
                     android:maxLines="1"
+                    android:maxLength="7"
                     android:textStyle="bold|italic"
                     android:imeOptions="actionDone"
                     android:padding="10dp"
-                    android:maxLength="7"
                     android:inputType="number"
                     android:background="@drawable/edittextborder"
                     android:layout_width="match_parent"
@@ -170,10 +146,9 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:textAlignment="center"
-                android:layout_marginBottom="50dp"
                 android:layout_height="wrap_content">
                 <Button
-                    android:id="@+id/btnTransfert"
+                    android:id="@+id/btnRetraitSmopaye"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:textColor="@color/white"
@@ -209,7 +184,6 @@
                     android:text="@string/passerCarte" />
 
             </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout

@@ -1,5 +1,6 @@
 package com.ezpass.smopaye_mobile.Manage_Register;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -8,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -18,13 +20,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -48,6 +53,7 @@ import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
+import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
@@ -118,7 +124,6 @@ public class Souscription extends AppCompatActivity
                           implements ConnectivityReceiver.ConnectivityReceiverListener{
 
     private static final String TAG = "Souscription";
-    private String abonnement = "service";
     private ProgressDialog progressDialog, progressDialogGoogle;
     private AlertDialog.Builder build_error;
 
@@ -193,12 +198,15 @@ public class Souscription extends AppCompatActivity
     @BindView(R.id.tie_cni)
     TextInputEditText tie_cni;
 
-    @BindView(R.id.AbonnementMensuel)
-    CheckBox AbonnementMensuel;
-    @BindView(R.id.AbonnementHebdomadaire)
-    CheckBox AbonnementHebdomadaire;
-    @BindView(R.id.AbonnementService)
-    CheckBox AbonnementService;
+    @BindView(R.id.tie_nom)
+    TextInputEditText tie_nom;
+    @BindView(R.id.tie_prenom)
+    TextInputEditText tie_prenom;
+    @BindView(R.id.tie_numeroTel)
+    TextInputEditText tie_numeroTel;
+    @BindView(R.id.tie_adresse)
+    TextInputEditText tie_adresse;
+
     @BindView(R.id.authWindows)
     LinearLayout authWindows;
     @BindView(R.id.internetIndisponible)
@@ -218,6 +226,15 @@ public class Souscription extends AppCompatActivity
     Spinner statut;
     @BindView(R.id.typeChauffeur)
     Spinner typeChauffeur;
+
+    //changement de couleur du theme
+    private Constant constant;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences app_preferences;
+    private int appTheme;
+    private int themeColor;
+    private int appColor;
+    private Toolbar toolbar;
 
 
 
@@ -278,9 +295,15 @@ public class Souscription extends AppCompatActivity
                         itemList.add(new StringWithTag(value, key));
                     }
                     /* Set your ArrayAdapter with the StringWithTag, and when each entry is shown in the Spinner, .toString() is called. */
-                    ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(Souscription.this, R.layout.spinner_item, itemList);
-                    spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
-                    statut.setAdapter(spinnerAdapter);
+                    if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+                        ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(Souscription.this, R.layout.spinner_item_red, itemList);
+                        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_red);
+                        statut.setAdapter(spinnerAdapter);
+                    } else {
+                        ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(Souscription.this, R.layout.spinner_item, itemList);
+                        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
+                        statut.setAdapter(spinnerAdapter);
+                    }
                 }
                 else{
                     tokenManager.deleteToken();
@@ -326,10 +349,11 @@ public class Souscription extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        changeTheme();
         setContentView(R.layout.activity_souscription);
 
         /*Mise de la barre des titre dans la fenêtre souscription*/
-        Toolbar toolbar = findViewById(R.id.myToolbar);
+        toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.souscription));
         toolbar.setSubtitle(getString(R.string.ezpass));
@@ -380,18 +404,34 @@ public class Souscription extends AppCompatActivity
             };
         }
 
-        // Initializing an ArrayAdapter gender
-        ArrayAdapter<String> spinnerArrayAdapter3 = new ArrayAdapter<String>(
-                this, R.layout.spinner_item, sexe1);
-        spinnerArrayAdapter3.setDropDownViewResource(R.layout.spinner_item);
-        sexe.setAdapter(spinnerArrayAdapter3);
+
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            // Initializing an ArrayAdapter gender
+            ArrayAdapter<String> spinnerArrayAdapter3 = new ArrayAdapter<String>(
+                    this, R.layout.spinner_item_red, sexe1);
+            spinnerArrayAdapter3.setDropDownViewResource(R.layout.spinner_item_red);
+            sexe.setAdapter(spinnerArrayAdapter3);
 
 
-        // Initializing an ArrayAdapter justificatives
-        ArrayAdapter<String> spinnerArrayAdapter4 = new ArrayAdapter<String>(
-                this, R.layout.spinner_item, pieceJ);
-        spinnerArrayAdapter4.setDropDownViewResource(R.layout.spinner_item);
-        typePjustificative.setAdapter(spinnerArrayAdapter4);
+            // Initializing an ArrayAdapter justificatives
+            ArrayAdapter<String> spinnerArrayAdapter4 = new ArrayAdapter<String>(
+                    this, R.layout.spinner_item_red, pieceJ);
+            spinnerArrayAdapter4.setDropDownViewResource(R.layout.spinner_item_red);
+            typePjustificative.setAdapter(spinnerArrayAdapter4);
+        } else {
+            // Initializing an ArrayAdapter gender
+            ArrayAdapter<String> spinnerArrayAdapter3 = new ArrayAdapter<String>(
+                    this, R.layout.spinner_item, sexe1);
+            spinnerArrayAdapter3.setDropDownViewResource(R.layout.spinner_item);
+            sexe.setAdapter(spinnerArrayAdapter3);
+
+
+            // Initializing an ArrayAdapter justificatives
+            ArrayAdapter<String> spinnerArrayAdapter4 = new ArrayAdapter<String>(
+                    this, R.layout.spinner_item, pieceJ);
+            spinnerArrayAdapter4.setDropDownViewResource(R.layout.spinner_item);
+            typePjustificative.setAdapter(spinnerArrayAdapter4);
+        }
 
 
 
@@ -494,9 +534,15 @@ public class Souscription extends AppCompatActivity
                                 }
 
                                 /* Set your ArrayAdapter with the StringWithTag, and when each entry is shown in the Spinner, .toString() is called. */
-                                ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(Souscription.this, R.layout.spinner_item, itemList1);
-                                spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
-                                typeChauffeur.setAdapter(spinnerAdapter);
+                                if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+                                    ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(Souscription.this, R.layout.spinner_item_red, itemList1);
+                                    spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_red);
+                                    typeChauffeur.setAdapter(spinnerAdapter);
+                                }else {
+                                    ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(Souscription.this, R.layout.spinner_item, itemList1);
+                                    spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
+                                    typeChauffeur.setAdapter(spinnerAdapter);
+                                }
                                 //------------------------------
 
 
@@ -560,6 +606,9 @@ public class Souscription extends AppCompatActivity
             }
         });
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget();
+        }
     }
 
     private void readTempNumberInFile() {
@@ -722,7 +771,10 @@ public class Souscription extends AppCompatActivity
             view = snackbar.getView();
             TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(color);
-            textView.setBackgroundColor(Color.parseColor("#039BE5"));
+            if(Constant.color == getResources().getColor(R.color.colorPrimaryRed))
+                textView.setBackgroundResource(R.color.colorPrimaryRed);
+            else
+                textView.setBackgroundColor(Color.parseColor("#039BE5"));
             textView.setGravity(Gravity.CENTER);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
@@ -889,61 +941,6 @@ public class Souscription extends AppCompatActivity
     }
 
 
-
-    //gestion des abonnements
-    public void onCheckboxClicked1(View view) {
-        // Is the view now checked?
-        final boolean checked = ((CheckBox) view).isChecked();
-
-        // Check which checkbox was clicked
-        switch(view.getId()) {
-            case R.id.AbonnementMensuel:
-                if (checked)
-                {
-                    Toast.makeText(this, AbonnementMensuel.getText().toString(), Toast.LENGTH_SHORT).show();
-                    AbonnementHebdomadaire.setChecked(false);
-                    AbonnementService.setChecked(false);
-                    //AbonnementMensuel.setBackgroundColor(Color.parseColor("#039BE5"));
-                    abonnement = "mensuel";
-                }
-                else{
-                    AbonnementMensuel.setChecked(true);
-                    AbonnementHebdomadaire.setChecked(false);
-                    AbonnementService.setChecked(false);
-                    abonnement = "mensuel";
-                }
-                break;
-            case R.id.AbonnementHebdomadaire:
-                if (checked)
-                {
-                    Toast.makeText(this, AbonnementHebdomadaire.getText().toString(), Toast.LENGTH_SHORT).show();
-                    AbonnementMensuel.setChecked(false);
-                    AbonnementService.setChecked(false);
-                    abonnement = "hebdomadaire";
-                }
-                else{
-                    AbonnementHebdomadaire.setChecked(true);
-                    AbonnementMensuel.setChecked(false);
-                    AbonnementService.setChecked(false);
-                    abonnement = "hebdomadaire";
-                }
-                break;
-            case R.id.AbonnementService:
-                if(checked){
-                    Toast.makeText(this, AbonnementService.getText().toString(), Toast.LENGTH_SHORT).show();
-                    AbonnementMensuel.setChecked(false);
-                    AbonnementHebdomadaire.setChecked(false);
-                    abonnement = "service";
-                } else{
-                    AbonnementService.setChecked(true);
-                    AbonnementMensuel.setChecked(false);
-                    AbonnementService.setChecked(false);
-                    abonnement = "service";
-                }
-        }
-    }
-
-
     @OnClick(R.id.btnSouscription)
     void register(){
 
@@ -978,9 +975,9 @@ public class Souscription extends AppCompatActivity
 
           String genre = sexe.getSelectedItem().toString().trim().toLowerCase().equalsIgnoreCase("masculin") || sexe.getSelectedItem().toString().trim().toLowerCase().equalsIgnoreCase("male") ? "MASCULIN" : "FEMININ";
 
-           registerDataInSmopayeServer(nom, prenom, genre, telephone, typePjustificative.getSelectedItem().toString().trim(),
-                   cni, "", adresse, num_carte, "",
-                   "offline", abonnement);
+           String pj = typePjustificative.getSelectedItem().toString().trim() + "-" +til_cni.getEditText().getText().toString().trim();
+
+           registerDataInSmopayeServer(nom.toLowerCase(), prenom.toLowerCase(), genre.toLowerCase(), telephone, pj.toLowerCase(), cni.toLowerCase(), "", adresse.toLowerCase(), num_carte, "", "offline");
        }
 
     }
@@ -1167,7 +1164,6 @@ public class Souscription extends AppCompatActivity
      * @param num_carte1 soumission du numéro de compte de l'utilisateur pour enregistrement
      * @param typeUser1 soumission du type d'utilisateur pour enregistrement
      * @param status1 soumission du status de l'utilisateur pour enregistrement
-     * @param abonnement1 soumission du type d'abonement chois pour enregistrement
      * @throws t
      * @since 2020
      * */
@@ -1175,10 +1171,10 @@ public class Souscription extends AppCompatActivity
     //ETAPE 1: envoi des données vers le serveur smopaye
     private void registerDataInSmopayeServer(String nom1, String prenom1, String sexe1, String telephone1, String typePJ1,
                                              String cni1, String session1, String adresse1, String num_carte1, String typeUser1,
-                                             String status1, String abonnement1) {
+                                             String status1) {
 
 
-        call = service.register(nom1, prenom1, sexe1.toLowerCase(), telephone1, adresse1, num_categorie, num_statut, cni1.toLowerCase(), num_carte1);
+        call = service.register(nom1, prenom1, sexe1, telephone1, adresse1, num_categorie, num_statut, cni1.toLowerCase(), num_carte1.toUpperCase());
         call.enqueue(new Callback<AllMyResponse>() {
             @Override
             public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
@@ -1190,9 +1186,45 @@ public class Souscription extends AppCompatActivity
 
                     assert response.body() != null;
                     //step 2 enregistrement dans google firebase
-                        new AsyncTaskRegisterDataInGoogleFirebaseServer(nom1, prenom1, sexe1, telephone1, typePJ1,
+                        /*new AsyncTaskRegisterDataInGoogleFirebaseServer(nom1, prenom1, sexe1, telephone1, typePJ1,
                                 cni1, session1, adresse1, num_carte1, typeUser1,
-                                status1, abonnement1, response.body().getMessage()).execute();
+                                status1, "service", response.body().getMessage()).execute();*/
+
+
+                    /*registerGoogleFirebase(nom1, prenom1, sexe1, telephone1, typePJ1,
+                            cni1, statut.getSelectedItem().toString().toLowerCase(), adresse1, num_carte1, typeChauffeur.getSelectedItem().toString().toLowerCase().trim(),
+                            "sm" + telephone1 + "@smopaye.cm", "default", status1, "service", response.body().getMessage());*/
+
+
+                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    TextView title = (TextView) view.findViewById(R.id.title);
+                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
+                    title.setText(getString(R.string.information));
+                    imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
+                    statutOperation.setText(response.body().getMessage());
+                    build_error.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            Intent intent = new Intent(Souscription.this, QRCodeShow.class);
+                            intent.putExtra("id_carte", "E-ZPASS" +num_carte1 + getsecurity_keys());
+                            intent.putExtra("nom_prenom", nom1 + " " + prenom1);
+                            startActivity(intent);
+                            Animatoo.animateDiagonal(Souscription.this);
+                        }
+                    });
+                    build_error.setCancelable(false);
+                    build_error.setView(view);
+                    build_error.show();
+
+                    til_nom.getEditText().setText("");
+                    til_prenom.getEditText().setText("");
+                    til_numeroTel.getEditText().setText("");
+                    til_cni.getEditText().setText("");
+                    til_adresse.getEditText().setText("");
+                    til_numCarte.getEditText().setText("");
+
 
                 } else{
 
@@ -1280,7 +1312,7 @@ public class Souscription extends AppCompatActivity
                 til_cni.setError(error.getValue().get(0));
             }
 
-            if(error.getKey().equals("adress")){
+            if(error.getKey().equals("address")){
                 til_adresse.setError(error.getValue().get(0));
             }
 
@@ -1442,6 +1474,9 @@ public class Souscription extends AppCompatActivity
                                          String tel1, String typePJ1, String cni1, String session1,
                                          String adresse1, String id_carte1, String typeUser1,
                                         String email1, String imageURL1, String status1, String abonnement1, String response1) {
+
+        progressDialogGoogle = ProgressDialog.show(Souscription.this, getString(R.string.etape2EnvoiDesDonnees), getString(R.string.connexionServeurSmopaye),true,true);
+
         auth.createUserWithEmailAndPassword(email1, tel1)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -1526,8 +1561,11 @@ public class Souscription extends AppCompatActivity
                                             "default", "offline" , abonnement1, shortDateFormat.format(aujourdhui));
 
 
-                                    String num_carte = id_carte1;
 
+                                    progressDialogGoogle.dismiss();
+
+
+                                    String num_carte = id_carte1;
                                     View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
                                     TextView title = (TextView) view.findViewById(R.id.title);
                                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
@@ -1560,7 +1598,7 @@ public class Souscription extends AppCompatActivity
                             });
                         }
                         else{
-
+                            progressDialogGoogle.dismiss();
                             ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                             dbHandler = new DbHandler(getApplicationContext());
                             aujourdhui = new Date();
@@ -1686,5 +1724,63 @@ public class Souscription extends AppCompatActivity
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    private void changeColorWidget() {
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            //Nom
+            tie_nom.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            tie_nom.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //prenom
+            tie_prenom.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            tie_prenom.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //telephone
+            tie_numeroTel.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            tie_numeroTel.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //cni
+            tie_cni.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            tie_cni.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //adresse
+            tie_adresse.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            tie_adresse.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //numero de carte
+            tie_numCarte.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            tie_numCarte.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //Button
+            findViewById(R.id.btnSouscription).setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+            findViewById(R.id.btnOpenNFC).setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+
+            //network not available ic_wifi_red
+            conStatusIv.setImageResource(R.drawable.ic_wifi_red);
+            titleNetworkLimited.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            msgNetworkLimited.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            findViewById(R.id.btnReessayer).setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+
+            //setTheme(R.style.colorPrimaryDark);
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+        } else{
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+    }
+
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            setTheme(Constant.theme);
+        }else{
+            setTheme(appTheme);
+        }
     }
 }

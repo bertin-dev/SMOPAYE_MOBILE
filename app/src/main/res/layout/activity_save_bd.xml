@@ -23,6 +23,7 @@
             layout="@layout/bar_layout"/>
 
         <TextView
+            android:id="@+id/automatique"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textAlignment="center"
@@ -42,6 +43,7 @@
             android:layout_marginLeft="20dp"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/num_serie_auto"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
@@ -76,6 +78,7 @@
             android:visibility="visible"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/numCarte_serie"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
@@ -111,6 +114,7 @@
             android:visibility="visible"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/exp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"

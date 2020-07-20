@@ -28,7 +28,7 @@
         <ImageView
             android:layout_width="180dp"
             android:layout_height="50dp"
-            android:src="@drawable/logo" />
+            android:src="@drawable/pub_ezpass_transparent" />
     </RelativeLayout>
 
     <RelativeLayout

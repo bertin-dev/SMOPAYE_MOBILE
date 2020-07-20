@@ -35,7 +35,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="@string/paiementQRCode"
-        android:textColor="#fff"
+        android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold" />
 

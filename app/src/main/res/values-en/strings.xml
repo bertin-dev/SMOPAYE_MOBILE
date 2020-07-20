@@ -27,15 +27,16 @@
     <string name="ModifMotDePasse">Change Password</string>
     <string name="ModifierCompte">Edit Account</string>
     <string name="MsgConsulterHistorique">View the transactions History of your account for more details.</string>
-    <string name="MsgDescAbonnement">Please insert your account number and select the desired subscription, then validate.</string>
-    <string name="MsgDescConsulterSolde">Please insert an account number and select the type of balance, then press consult.</string>
+    <string name="MsgDescAbonnement">Please select the desired subscription, then validate.</string>
+    <string name="MsgDescConsulterSolde">Please insert a card number and select the type of balance, then validate</string>
     <string name="MsgDescDebitCarte">Please enter the amount and press on swipe the card.</string>
-    <string name="MsgDescPayerFacture">Please insert the beneficiary\'s account number and the amount to be transferred, then validate.</string>
+    <string name="MsgDescPayerFacture">Please insert the beneficiary\'s card number and the amount to be paid, then validate.</string>
     <string name="MsgDescRecharge">Please insert your account number and the top-up amount, then validate.</string>
-    <string name="MsgDescRetraitChezOperateur">Please insert your account number and follow the steps.</string>
+    <string name="MsgDescRetraitChezOperateur">Please insert your card number and follow the steps.</string>
     <string name="MsgDescRetraitChezSmopaye">Please insert the beneficiary\'s account number and the amount to be withdrawn, then validate.</string>
-    <string name="MsgDescTransfert">Please insert the beneficiary\'s account number and the amount to be transferred, then press on perform.</string>
-    <string name="MsgDescVerifierNumCarte">Please insert your card number, then press swipe card.</string>
+    <string name="MsgDescTransfert">Please select the type of transfer, then insert the beneficiary\'s account number or the beneficiary\'s card number and finally the amount to be transferred, then confirm.</string>
+    <string name="MsgDescVerifierNumCarte">Please press swipe card then swipe your card on the terminal.</string>
+    <string name="MsgDescBasculer">Veuillez cliquer sur la liste déroulante, selectionner le solde que vous souhaitez faire basculer, entrez le montant puis valider.</string>
     <string name="NombreAccepteurs">Number of Acceptors</string>
     <string name="NombreAgents">Number of Agents</string>
     <string name="NotificationsVides">Empty notifications</string>
@@ -129,7 +130,7 @@
     <string name="dateExp">Card expiration date</string>
     <string name="dateExpiration">Your expiration date:</string>
     <string name="dateSystemePosePB">The date on your system is problematic.</string>
-    <string name="debitCarte">Debit Account</string>
+    <string name="debitCarte">Debit Card</string>
     <string name="deconnexion">Sign Out</string>
     <string name="descriptionImgAlertDialog">Success</string>
     <string name="details">Detail</string>
@@ -245,7 +246,7 @@
     <string name="montant1">AMOUNT</string>
     <string name="montantAccumule">Collected Amount</string>
     <string name="montantApayer">Amount to be paid</string>
-    <string name="montantBeneficiaire">Beneficiary Amount</string>
+    <string name="montantBeneficiaire">Amount to be paid</string>
     <string name="montantTelecollecte">The Amount of the Telecollect</string>
     <string name="msgConnexionInternetIntrouvable">Please check your wifi or activate mobile data in the settings of your device.</string>
     <string name="msgEntreprise">The call center can be reached 24/7</string>
@@ -269,8 +270,10 @@
     <string name="numCarte">Account number</string>
     <string name="numCarteAbonement">12345678</string>
     <string name="numCompteExistPas">This account number does not exist.</string>
-    <string name="numdeCarte">Account number</string>
+    <string name="numdeCarte">Card number</string>
+    <string name="numdeCarteB">Beneficiary card number</string>
     <string name="numdeCarteBeneficiaire">Beneficiary account number</string>
+    <string name="numdeCarteBeneficiaire1">Beneficiary card number</string>
     <string name="numdeCarteDonataire">Donor account number</string>
     <string name="numdelaCarte">Account number</string>
     <string name="numero">Phone</string>
@@ -340,10 +343,12 @@
     <string name="serviceClient"> Customer Service</string>
     <string name="serviceClient7j7">We welcome you 7 days a week, 24 hours a day</string>
     <string name="serviceIndisponible">Service Unavailable.</string>
-    <string name="services">Services</string>
+    <string name="services">Service</string>
     <string name="servicesV">Sale of cards, card recharge, rental of VSEs, transaction log made</string>
     <string name="siteWebDrawer">Website</string>
+    <string name="client">Customers area</string>
     <string name="siteWebMobile">Website</string>
+    <string name="espaceClient">Customers area</string>
     <string name="skip">Do not show this message again</string>
     <string name="slide_1_title">E-ZPASS terminal</string>
     <string name="slide_2_desc">The E-ZPASS Terminal is a high-performance payment terminal in removable format. This latest generation device allows traders to accept payments anywhere and anytime.</string>
@@ -482,7 +487,9 @@
     <string name="networkOffline">No connection</string>
 
     <string name="compteCourt">Your account number is short</string>
+    <string name="carteCourt">Your card number is short</string>
     <string name="insererCompte">Please insert your account number</string>
+    <string name="insererCarte">Please insert your card number</string>
     <string name="insererMontant">Please insert amount</string>
     <string name="insererNewPassword">Please enter new password</string>
     <string name="insererOldPassword">Please enter old password</string>
@@ -552,6 +559,7 @@
     <string name="modeRetrait">Withdrawal mode</string>
     <string name="savedCards">Saved cards</string>
     <string name="numCard">Card Number</string>
+    <string name="numCompte">Account Number</string>
     <string name="loading">Loading…</string>
     <string name="serial">serial number associate</string>
     <string name="etatCarte">Card status</string>
@@ -595,5 +603,24 @@
     <string name="monCode">MY CODE</string>
     <string name="scanner">TO SCAN</string>
     <string name="centre">CENTER</string>
+    <string name="default_theme">Default theme</string>
+    <string name="red">Bright Red</string>
+    <string name="sky_blue">Sky blue</string>
+    <string name="smopaye">SMOPAYE</string>
+    <string name="facture">Bill</string>
+
+    <string name="typeTransfert">type of transfer</string>
+    <string name="compteAcompte">Account to Account</string>
+    <string name="carteAcarte">Card to Card</string>
+    <string name="espaceCarte">Card Space</string>
+    <string name="espaceCompte">Account space</string>
+    <string name="proprietaire">Owner</string>
+    <string name="soldeRestant">My Remaining Balance</string>
+    <string name="confirmSubmit">Please confirm that you agree to submit this request.</string>
+    <string name="confirmCheckBox">Are you sure you want to submit this request ?</string>
+    <string name="infoChangement">You will be informed of any changes made following your comments.</string>
+    <string name="email">Please enter a valid email address</string>
+    <string name="basculer">Toggle</string>
+    <string name="basculerSolde">Toggle your Balance</string>
 
 </resources>

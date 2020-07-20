@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -13,15 +14,20 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Patterns;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -31,8 +37,10 @@ import android.widget.Toast;
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
+import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
+import com.ezpass.smopaye_mobile.Methods;
 import com.ezpass.smopaye_mobile.NotifApp;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
@@ -77,13 +85,27 @@ public class SendEmail extends AppCompatActivity
     private ProgressDialog progressDialog;
     private AlertDialog.Builder build_error;
 
+    private SharedPreferences sharedPreferences, app_preferences;
+    private SharedPreferences.Editor editor;
+    private Methods methods;
+    private int appTheme;
+    private int themeColor;
+    private int appColor;
+    private Constant constant;
+    private Toolbar toolbar;
+
+    private boolean validateRequest = false;
+    private CheckBox submitRequest;
+
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        changeTheme();
         setContentView(R.layout.activity_send_email);
 
-        Toolbar toolbar = findViewById(R.id.myToolbar);
+        toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.giveComment));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -95,9 +117,13 @@ public class SendEmail extends AppCompatActivity
         validator = new AwesomeValidation(ValidationStyle.TEXT_INPUT_LAYOUT);
         progressDialog = new ProgressDialog(SendEmail.this);
         build_error = new AlertDialog.Builder(SendEmail.this);
+        submitRequest = (CheckBox) findViewById(R.id.submitRequest);
 
         /*Appels de toutes les méthodes qui seront utilisées*/
         setupRulesValidatForm();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget();
+        }
     }
 
 
@@ -164,7 +190,10 @@ public class SendEmail extends AppCompatActivity
             view = snackbar.getView();
             TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(color);
-            textView.setBackgroundColor(Color.parseColor("#039BE5"));
+            if(Constant.color == getResources().getColor(R.color.colorPrimaryRed))
+                textView.setBackgroundResource(R.color.colorPrimaryRed);
+            else
+                textView.setBackgroundColor(Color.parseColor("#039BE5"));
             textView.setGravity(Gravity.CENTER);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
@@ -245,7 +274,22 @@ public class SendEmail extends AppCompatActivity
     }
 
     public void sendScreeShotClicked(View view) {
-        Toast.makeText(this, "cliked", Toast.LENGTH_SHORT).show();
+        final boolean checked = ((CheckBox) view).isChecked();
+
+        switch(view.getId()) {
+
+            case R.id.submitRequest:
+                if (checked) {
+                    validateRequest = true;
+                    //Toast.makeText(this, "Coché", Toast.LENGTH_SHORT).show();
+                } else {
+                    validateRequest = false;
+                    //Toast.makeText(this, "Décoché", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
+        }
     }
 
 
@@ -253,6 +297,11 @@ public class SendEmail extends AppCompatActivity
      void sendEmail(){
 
         if(!validateEmail(til_email) | !validateComments(til_desc_comment)){
+            return;
+        }
+
+        if(!validateRequest){
+            Toast.makeText(this, getString(R.string.confirmSubmit), Toast.LENGTH_LONG).show();
             return;
         }
         /*Action à poursuivre si tous les champs sont remplis*/
@@ -308,6 +357,9 @@ public class SendEmail extends AppCompatActivity
         if(email.isEmpty()){
             til_email1.setError(getString(R.string.insererEmail));
             return false;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            til_email1.setError(getString(R.string.email));
+            return false;
         } else {
             til_email1.setError(null);
             return true;
@@ -324,5 +376,50 @@ public class SendEmail extends AppCompatActivity
         super.attachBaseContext(LocaleHelper.onAttach(newBase));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    private void changeColorWidget() {
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            toolbar.setBackground(ContextCompat.getDrawable(this, R.color.colorPrimaryDarkRed));
+
+            //description du module
+            LinearLayout desc = (LinearLayout) findViewById(R.id.descModule);
+            TextView myTitle = (TextView) findViewById(R.id.descContent);
+            myTitle.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+            desc.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+
+            //button valider
+            findViewById(R.id.btn_sendEmail).setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+
+            //network not available ic_wifi_red
+            conStatusIv.setImageResource(R.drawable.ic_wifi_red);
+            titleNetworkLimited.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            msgNetworkLimited.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            findViewById(R.id.btnReessayer).setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+
+
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+        } else{
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+    }
+
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            setTheme(Constant.theme);
+        }else{
+            setTheme(appTheme);
+        }
+    }
 
 }

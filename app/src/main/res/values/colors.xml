@@ -47,6 +47,50 @@
 
 
 
-    <!--COULEURS SECONDAIRES-->
+    <!--COULEURS SECONDAIRES RED-->
+    <color name="colorPrimaryRed">#e1011b</color>
+    <color name="colorPrimaryDarkRed">#e3001b</color>
+    <color name="colorAccentRed">#D81B60</color>
+    <color name="bgColorStandardRed">#de0019</color>
+
+    <color name="textColorStandardRed">#262626</color>
+    <color name="textColorGreenRed">#40d054</color>
+    <color name="textColorGrayRed">#808080</color>
+    <color name="textColorBlackRed">#000</color>
+    <color name="whiteRed">#FFFFFF</color>
+    <color name="colorRippleRed">#A9A9F5</color>
+    <color name="redRed">#f80000</color>
+    <color name="textColorGray1Red">#EEEDED</color>
+    <color name="yellowRed">#ffae03</color>
+    <!-- dots inactive colors -->
+    <color name="dot_dark_screen1Red">#39d1ba</color>
+    <color name="dot_dark_screen2Red">#14a895</color>
+    <!-- dots active colors -->
+    <color name="dot_light_screen1Red">#8de7f9</color>
+    <color name="dot_light_screen2Red">#8cf9eb</color>
+    <array name="array_dot_activeRed">
+        <item>@color/dot_light_screen1</item>
+        <item>@color/dot_light_screen2</item>
+    </array>
+    <array name="array_dot_inactiveRed">
+        <item>@color/dot_dark_screen1</item>
+        <item>@color/dot_dark_screen2</item>
+    </array>
+    <color name="bgRowBackgroundRed">#FA315B</color>
+    <color name="itemNameRed">#535353</color>
+    <color name="DescriptionRed">#a9a9a9</color>
+    <color name="colorDividerRed">#ECECEC</color>
+    <color name="vertClairRed">#05df29</color>
+    <color name="grisRed">#bfbfbf</color>
+    <color name="rougeFinRed">#fef2f2</color>
+    <color name="rougeColoreRed">#FF5252</color>
+    <color name="grisFonceRed">#757575</color>
+    <color name="whitRed">#f3f2f2</color>
+    <color name="marronRed">#ddccb5</color>
+    <color name="blackFinRed">#262626</color>
+    <color name="grisFonce1Red">#E0E0E0</color>
+    <color name="gris1Red">#e6e6e6</color>
+    <color name="bleuFonceRed">#0C61AB</color>
+    <color name="gris2">#6d6d6d</color>
 
 </resources>

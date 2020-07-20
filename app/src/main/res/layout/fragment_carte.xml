@@ -279,7 +279,7 @@
                     android:textColor="@color/textColorBlack"
                     android:textStyle="bold"
                     android:textSize="20sp"
-                    android:text="@string/numCarte"/>
+                    android:text="@string/numCompte"/>
                 <TextView
                     android:layout_below="@+id/abc"
                     android:id="@+id/AccountNumber"

@@ -1,5 +1,6 @@
 package com.ezpass.smopaye_mobile.Manage_Transactions.Manage_Payments.Manage_Withdrawal;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -7,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -15,13 +17,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -40,6 +46,7 @@ import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
+import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
@@ -172,6 +179,15 @@ public class FragmentRetraitChezSmopaye extends Fragment implements Connectivity
     private int c2;
     private String tmp_card_number = "";
 
+
+    //changement de couleur du theme
+    private Constant constant;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences app_preferences;
+    int appTheme;
+    int themeColor;
+    int appColor;
+
     public FragmentRetraitChezSmopaye() {
         // Required empty public constructor
     }
@@ -180,6 +196,7 @@ public class FragmentRetraitChezSmopaye extends Fragment implements Connectivity
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        changeTheme();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_retrait_chez_smopaye, container, false);
 
@@ -231,6 +248,9 @@ public class FragmentRetraitChezSmopaye extends Fragment implements Connectivity
         callHandlerMethod();
 
         tie_numCartSmopaye.setText(tmp_card_number);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget(view);
+        }
         return view;
     }
 
@@ -906,5 +926,41 @@ public class FragmentRetraitChezSmopaye extends Fragment implements Connectivity
         ////////////////////////////////////FIN NOTIFICATIONS/////////////////////
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    private void changeColorWidget(View view) {
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            //desctiption du module
+            LinearLayout desc = (LinearLayout) view.findViewById(R.id.descModule);
+            TextView myTitle = (TextView) view.findViewById(R.id.descContent);
+            myTitle.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+            desc.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.edittextborder_red));
+            //numero carte
+            tie_numCartSmopaye.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryRed));
+            tie_numCartSmopaye.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.edittextborder_red));
+            //montant
+            tie_montantSmopaye.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryRed));
+            tie_montantSmopaye.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.edittextborder_red));
+            //Button
+            view.findViewById(R.id.btnRetraitSmopaye).setBackground(ContextCompat.getDrawable(getContext(), R.drawable.btn_rounded_red));
+            view.findViewById(R.id.btnOpenNFC).setBackground(ContextCompat.getDrawable(getContext(), R.drawable.btn_rounded_red));
+        }
+    }
+
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            getActivity().setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            getActivity().setTheme(Constant.theme);
+        }else{
+            getActivity().setTheme(appTheme);
+        }
+    }
 
 }

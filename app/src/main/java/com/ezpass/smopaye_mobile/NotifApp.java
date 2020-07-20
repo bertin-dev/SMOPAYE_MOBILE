@@ -19,7 +19,7 @@ public class NotifApp extends Application {
     public void onCreate() {
         super.onCreate();
         createNotificationChannel();
-        initInterceptor();
+        //initInterceptor();
 
         mInstance = this;
     }

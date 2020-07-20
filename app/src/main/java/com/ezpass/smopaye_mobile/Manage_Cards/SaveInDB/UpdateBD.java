@@ -1,10 +1,16 @@
 package com.ezpass.smopaye_mobile.Manage_Cards.SaveInDB;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 import com.ezpass.smopaye_mobile.R;
@@ -28,6 +35,8 @@ import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
+
+import java.io.FileInputStream;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,14 +58,28 @@ public class UpdateBD extends AppCompatActivity {
     private TokenManager tokenManager;
     private Call<AllMyResponse> call;
 
-    private String myId_card = "10";  //Identifiant de la carte de celui qui modifie
+    //private String myId_card = "10";  //Identifiant de la carte de celui qui modifie
+
+    //changement de couleur du theme
+    private Constant constant;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences app_preferences;
+    private int appTheme;
+    private int themeColor;
+    private int appColor;
+    private Toolbar toolbar;
+
+    private String file = "tmp_card_id";
+    private int c;
+    private String temp_card_id = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_update_bd);
+        changeTheme();
+        setContentView(R.layout.activity_update_b_d);
 
-        Toolbar toolbar = findViewById(R.id.myToolbar);
+        toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.modifier));
         toolbar.setSubtitle(getString(R.string.ezpass));
@@ -74,6 +97,10 @@ public class UpdateBD extends AppCompatActivity {
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         progressDialog = new ProgressDialog(UpdateBD.this);
         build_error = new AlertDialog.Builder(UpdateBD.this);
+
+        //lecture de l'id dela carte de l'utilisateur connecté
+        readTempIDCARDInFile();
+        Toast.makeText(this, "ID CARD: " + temp_card_id, Toast.LENGTH_SHORT).show();
 
 
         Bundle extras = getIntent().getExtras();
@@ -140,6 +167,23 @@ public class UpdateBD extends AppCompatActivity {
             }
         });
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget();
+        }
+    }
+
+
+    private void readTempIDCARDInFile() {
+        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
+        try{
+            FileInputStream fIn = getApplication().openFileInput(file);
+            while ((c = fIn.read()) != -1){
+                temp_card_id = temp_card_id + Character.toString((char)c);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void deleteCard(int card_id) {
@@ -207,7 +251,7 @@ public class UpdateBD extends AppCompatActivity {
             }
         });
 
-        call = service.updateCard(Integer.parseInt(card_id), model_card.getCode_number(), model_card.getSerial_number(), model_card.getEnd_date(), Integer.parseInt(myId_card));
+        call = service.updateCard(Integer.parseInt(card_id), model_card.getCode_number(), model_card.getSerial_number(), model_card.getEnd_date(), Integer.parseInt(temp_card_id));
         call.enqueue(new Callback<AllMyResponse>() {
             @Override
             public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
@@ -331,6 +375,67 @@ public class UpdateBD extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    private void changeColorWidget() {
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            toolbar.setBackground(ContextCompat.getDrawable(this, R.color.colorPrimaryDarkRed));
+
+            TextView automatique = (TextView) findViewById(R.id.automatique);
+            automatique.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+            automatique.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+
+            TextView num_serie_auto = (TextView) findViewById(R.id.num_serie_auto);
+            num_serie_auto.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+
+            TextView numCarte_serie = (TextView) findViewById(R.id.numCarte_serie);
+            numCarte_serie.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+
+
+            TextView exp = (TextView) findViewById(R.id.exp);
+            exp.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+
+            //ID CARTE
+            card_numbers.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            card_numbers.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+
+            //ID CARTE PUBLIC (N° SERIE)
+            serial_number_card.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            serial_number_card.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //EXPIRATION
+            expire_date.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            expire_date.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+
+            //Button
+            BtnDeleteDB.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+            BtnUpdateDB.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+
+
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+        } else{
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+    }
+
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            setTheme(Constant.theme);
+        }else{
+            setTheme(appTheme);
+        }
     }
 
 }

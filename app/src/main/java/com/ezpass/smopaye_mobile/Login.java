@@ -1,5 +1,6 @@
 package com.ezpass.smopaye_mobile;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -9,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -16,12 +18,15 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -29,6 +34,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -161,6 +167,23 @@ public class Login extends AppCompatActivity
     @BindView(R.id.msgNetworkLimited)
     TextView msgNetworkLimited;
 
+    //changement de couleur du theme
+    private Constant constant;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences app_preferences;
+    int appTheme;
+    int themeColor;
+    int appColor;
+
+    @BindView(R.id.titleLogin)
+    TextView titleLogin;
+    @BindView(R.id.btnlogin)
+    Button btnlogin1;
+    @BindView(R.id.btnAutoRegister)
+    Button btnAutoRegister1;
+    @BindView(R.id.txt_passwordForgot)
+    TextView txt_passwordForgot;
+
 
     @Override
     protected void onStart() {
@@ -185,6 +208,7 @@ public class Login extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        changeTheme();
         setContentView(R.layout.activity_login);
 
         /*Mise en cache de la barre des titre dans le login*/
@@ -201,6 +225,9 @@ public class Login extends AppCompatActivity
         setupRulesValidatForm();
         readTempNumberInFile();
         readNumberAfterUpdate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget();
+        }
 
 
         //verification si l'utilisateur a déjà enregistré son token dans le sharepreference. si oui alors il est redirigé directement dans le MainActivity
@@ -209,6 +236,65 @@ public class Login extends AppCompatActivity
             startActivity(intent);
             finish();
         }*/
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    private void changeColorWidget() {
+
+        /*final int sdk = android.os.Build.VERSION.SDK_INT;
+        if(sdk < Build.VERSION_CODES.JELLY_BEAN) {
+            titleLogin.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextborder) );
+        } else {
+            titleLogin.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder));
+        }*/
+
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            titleLogin.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+            titleLogin.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            txt_passwordForgot.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+
+            //telephone
+            tie_telephone.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_phone_android_red_24dp, 0);
+            tie_telephone.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            tie_telephone.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //password
+            tie_password.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_visibility_off_red_24dp, 0);
+            tie_password.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            tie_password.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //Button
+            btnlogin1.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+            btnAutoRegister1.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+
+            //network not available ic_wifi_red
+            conStatusIv.setImageResource(R.drawable.ic_wifi_red);
+            titleNetworkLimited.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            msgNetworkLimited.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            findViewById(R.id.btnReessayer).setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+
+            //setTheme(R.style.colorPrimaryDark);
+            //getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+        } else{
+            //getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+    }
+
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            setTheme(Constant.theme);
+        }else{
+            setTheme(appTheme);
+        }
     }
 
 
@@ -293,7 +379,10 @@ public class Login extends AppCompatActivity
             view = snackbar.getView();
             TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(color);
-            textView.setBackgroundColor(Color.parseColor("#039BE5"));
+            if(Constant.color == getResources().getColor(R.color.colorPrimaryRed))
+            textView.setBackgroundResource(R.color.colorPrimaryRed);
+            else
+                textView.setBackgroundColor(Color.parseColor("#039BE5"));
             textView.setGravity(Gravity.CENTER);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
@@ -409,7 +498,7 @@ public class Login extends AppCompatActivity
                     }
                 }
                 else{
-                    if(response.code() == 422){
+                   /* if(response.code() == 422){
                         handleErrors(response.errorBody());
                         //errorResponse(response.message());
                     }
@@ -419,8 +508,10 @@ public class Login extends AppCompatActivity
                         errorResponse(apiError.getMessage());
                     } else{
                         errorResponse(response.message());
-                    }
-                    //errorResponse(response.message());
+                    }*/
+                    ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                    Toast.makeText(Login.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                    errorResponse(apiError.getMessage());
                 }
             }
 

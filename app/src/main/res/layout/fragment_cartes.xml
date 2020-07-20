@@ -93,51 +93,18 @@
                 android:gravity="center_horizontal" />
         </LinearLayout>
 
-
-        <RelativeLayout
-            android:id="@+id/notif_search"
-            android:elevation="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/descAllCarte"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:layout_below="@+id/descAllCarte">
 
-            <EditText
-                android:id="@+id/inputSearch"
+            <ListView
+                android:id="@+id/listViewContent"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/rechercher"
-                android:textColor="@color/blackFin"
-                android:background="@drawable/search_input_style"
-                android:layout_marginStart="24dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:ems="10"
-                android:drawablePadding="8dp"
-                android:inputType="textPersonName"
-                android:drawableLeft="@drawable/ic_search_black_24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:drawableStart="@drawable/ic_search_black_24dp" />
+                android:layout_height="match_parent"/>
 
-
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swipeRefreshLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/inputSearch">
-
-                <ListView
-                    android:id="@+id/listViewContent"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-            </android.support.v4.widget.SwipeRefreshLayout>
-
-        </RelativeLayout>
-
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <ProgressBar
             android:id="@+id/progressBar"

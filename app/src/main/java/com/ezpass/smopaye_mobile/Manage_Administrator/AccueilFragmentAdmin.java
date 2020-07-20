@@ -1,10 +1,17 @@
 package com.ezpass.smopaye_mobile.Manage_Administrator;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Cards.Accueil_Carte;
 import com.ezpass.smopaye_mobile.Manage_Transactions.Manage_Payments.Manage_Factures.PayerFacture;
 import com.ezpass.smopaye_mobile.Manage_Transactions.Manage_Payments.Manage_QRCode.MenuQRCode;
@@ -34,10 +42,18 @@ public class AccueilFragmentAdmin  extends Fragment {
     private FloatingActionButton Register;
     private Button consulterHistoriqueAdmin;
     private String code_number_sender, telephone, role, categorie, idUser;
+    //changement de couleur du theme
+    private Constant constant;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences app_preferences;
+    int appTheme;
+    int themeColor;
+    int appColor;
 
 
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
+        changeTheme();
         View view =  inflater.inflate(R.layout.fragment_accueil_admin, container, false);
 
         Register = view.findViewById(R.id.btnRegister);
@@ -184,7 +200,36 @@ public class AccueilFragmentAdmin  extends Fragment {
             }
         });
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget(view);
+        }
         return view;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    private void changeColorWidget(View view) {
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            consulterHistoriqueAdmin.setBackground(ContextCompat.getDrawable(getContext(), R.color.colorPrimaryRed));
+            FloatingActionButton ttt = (FloatingActionButton) view.findViewById(R.id.btnRegister);
+            ttt.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryRed)));
+        }
+    }
+
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            getActivity().setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            getActivity().setTheme(Constant.theme);
+        }else{
+            getActivity().setTheme(appTheme);
+        }
     }
 
 }

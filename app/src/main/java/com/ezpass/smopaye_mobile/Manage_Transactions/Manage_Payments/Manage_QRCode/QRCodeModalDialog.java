@@ -3,7 +3,9 @@ package com.ezpass.smopaye_mobile.Manage_Transactions.Manage_Payments.Manage_QRC
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.R;
 
 import java.io.FileInputStream;
@@ -26,6 +29,14 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
     private String file2 = "tmp_card_number";
     private String temp_card = "";
     private TextView statutOperation;
+
+    //changement de couleur du theme
+    private Constant constant;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences app_preferences;
+    int appTheme;
+    int themeColor;
+    int appColor;
 
 
     public QRCodeModalDialog newInstanceCode(String numCarteBeneficiaire, String message) {
@@ -45,10 +56,15 @@ public class QRCodeModalDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.layout_dialog_qr_code, null);
 
 
+
         editTextMontant = view.findViewById(R.id.edit_montant);
         edit_num_carte = view.findViewById(R.id.edit_num_carte);
         statutOperation = view.findViewById(R.id.statutOperation);
         statutOperation.setText((String) getArguments().getString("message"));
+
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            view.findViewById(R.id.title).setBackground(ContextCompat.getDrawable(getContext(), R.color.colorPrimaryDarkRed));
+        }
 
         /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
         readTempCardInFile();

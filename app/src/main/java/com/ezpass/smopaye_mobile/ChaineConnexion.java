@@ -23,6 +23,7 @@ public class ChaineConnexion {
 
     private static double rand = Math.random();
     private static final String security_keys = "56ZS5PQ1RF-eyJsaWNlbnNlSWQiOiI1NlpGVkIjpmYWxzZX0+-==" + rand;
+    private static final String espace_clients = "http://e-zpass.smopaye.fr/";
 
     public static String getAdresseURLsmopayeServer() {
         return adresseURLsmopayeServer;
@@ -48,10 +49,11 @@ public class ChaineConnexion {
         return security_keys;
     }
 
+    public static String getEspace_clients() {
+        return espace_clients;
+    }
 
-
-
-        /*//Encryption test
+    /*//Encryption test
         String string = "bonjour";
         byte[] bytes = string.getBytes();
         HashMap<String, byte[]> map = encryptBytes(bytes, "123456789");

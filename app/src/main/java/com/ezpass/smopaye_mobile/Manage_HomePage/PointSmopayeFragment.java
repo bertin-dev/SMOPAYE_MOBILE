@@ -194,6 +194,14 @@ public class PointSmopayeFragment extends Fragment implements
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 500);
+            return;
+        }
+
+        mMap.clear();
         //marker
         for(int i=0;i<arrayList.size();i++){
             mMap.addMarker(new MarkerOptions().position(arrayList.get(i)).title("Point Marchant"));

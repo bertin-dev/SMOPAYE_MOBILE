@@ -1,11 +1,18 @@
 package com.ezpass.smopaye_mobile;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
@@ -22,13 +29,24 @@ public class ModalDialog_PasswordForgot extends AppCompatDialogFragment {
 
     private ModalDialog_PasswordForgot.ExampleDialogListener listener;
     private TextInputLayout telRetrieve, cniRetrieve;
+    private TextInputEditText telNumber, cniNumber;
     private Spinner typePjustificative;
     private String[] pieceJ;
     private TextView title;
     private Button btnForgetPassword;
 
+    //changement de couleur du theme
+    private Constant constant;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences app_preferences;
+    int appTheme;
+    int themeColor;
+    int appColor;
+
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        changeTheme();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -37,6 +55,9 @@ public class ModalDialog_PasswordForgot extends AppCompatDialogFragment {
 
         telRetrieve = view.findViewById(R.id.telRetrieve);
         cniRetrieve = view.findViewById(R.id.cniRetrieve);
+        telNumber = view.findViewById(R.id.telNumber);
+        cniNumber = view.findViewById(R.id.cniNumber);
+
         typePjustificative = view.findViewById(R.id.typePjustificative);
         title = view.findViewById(R.id.title);
         btnForgetPassword = view.findViewById(R.id.btnForgetPassword);
@@ -63,11 +84,20 @@ public class ModalDialog_PasswordForgot extends AppCompatDialogFragment {
                     "student card"
             };
         }
-        // Initializing an ArrayAdapter justificatives
-        ArrayAdapter<String> spinnerArrayAdapter7 = new ArrayAdapter<String>(
-                getActivity(), R.layout.spinner_item, pieceJ);
-        spinnerArrayAdapter7.setDropDownViewResource(R.layout.spinner_item);
-        typePjustificative.setAdapter(spinnerArrayAdapter7);
+
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            // Initializing an ArrayAdapter justificatives
+            ArrayAdapter<String> spinnerArrayAdapter7 = new ArrayAdapter<String>(
+                    getActivity(), R.layout.spinner_item_red, pieceJ);
+            spinnerArrayAdapter7.setDropDownViewResource(R.layout.spinner_item_red);
+            typePjustificative.setAdapter(spinnerArrayAdapter7);
+        } else{
+            // Initializing an ArrayAdapter justificatives
+            ArrayAdapter<String> spinnerArrayAdapter7 = new ArrayAdapter<String>(
+                    getActivity(), R.layout.spinner_item, pieceJ);
+            spinnerArrayAdapter7.setDropDownViewResource(R.layout.spinner_item);
+            typePjustificative.setAdapter(spinnerArrayAdapter7);
+        }
 
 
         typePjustificative.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -141,7 +171,8 @@ public class ModalDialog_PasswordForgot extends AppCompatDialogFragment {
                     return;
                 }
 
-                listener.applyTexts(telephone.trim(), pieceJustificative.toLowerCase().trim());
+                //listener.applyTexts(telephone.trim(), pieceJustificative.toLowerCase().trim());
+                listener.applyTexts(telephone.trim(), cniRetrieve.getEditText().getText().toString().trim());
 
             }
         });
@@ -172,6 +203,9 @@ public class ModalDialog_PasswordForgot extends AppCompatDialogFragment {
                     }
                 });*/
         builder.setView(view);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget(view);
+        }
         return builder.create();
     }
 
@@ -220,4 +254,42 @@ public class ModalDialog_PasswordForgot extends AppCompatDialogFragment {
     public interface ExampleDialogListener {
         void applyTexts(String tel, String pj);
     }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    private void changeColorWidget(View view) {
+
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            title.setBackground(ContextCompat.getDrawable(getActivity(), R.color.colorPrimaryRed));
+
+            //telephone
+            telNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_phone_android_red_24dp, 0);
+            telNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryRed));
+            telNumber.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.edittextborder_red));
+            //cni
+            cniNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_red_24dp, 0);
+            cniNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryRed));
+            cniNumber.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.edittextborder_red));
+            //Button
+            btnForgetPassword.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.btn_rounded_red));
+        }
+    }
+
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            getActivity().setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            getActivity().setTheme(Constant.theme);
+        }else{
+            getActivity().setTheme(appTheme);
+        }
+    }
+
 }

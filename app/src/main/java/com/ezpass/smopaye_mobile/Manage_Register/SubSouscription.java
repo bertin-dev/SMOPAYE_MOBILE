@@ -1,5 +1,6 @@
 package com.ezpass.smopaye_mobile.Manage_Register;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -8,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -17,13 +19,16 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -48,6 +53,7 @@ import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
+import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbUser;
 import com.ezpass.smopaye_mobile.Login;
@@ -217,6 +223,23 @@ public class SubSouscription extends AppCompatActivity
     Spinner typeChauffeur;
 
 
+    @BindView(R.id.tie_nom)
+    TextInputEditText tie_nom;
+    @BindView(R.id.tie_prenom)
+    TextInputEditText tie_prenom;
+    @BindView(R.id.tie_numeroTel)
+    TextInputEditText tie_numeroTel;
+    @BindView(R.id.tie_adresse)
+    TextInputEditText tie_adresse;
+
+    //changement de couleur du theme
+    private Constant constant;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences app_preferences;
+    private int appTheme;
+    private int themeColor;
+    private int appColor;
+    private Toolbar toolbar;
 
     @Override
     protected void onStart() {
@@ -324,11 +347,12 @@ public class SubSouscription extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        changeTheme();
         setContentView(R.layout.activity_sub_souscription);
 
 
         /*Mise de la barre des titre dans la fenêtre souscription*/
-        Toolbar toolbar = findViewById(R.id.myToolbar);
+        toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.addSubAccount));
         toolbar.setSubtitle(getString(R.string.ezpass));
@@ -380,23 +404,33 @@ public class SubSouscription extends AppCompatActivity
         }
 
         // Initializing an ArrayAdapter gender
-        ArrayAdapter<String> spinnerArrayAdapter3 = new ArrayAdapter<String>(
-                this, R.layout.spinner_item, sexe1);
-        spinnerArrayAdapter3.setDropDownViewResource(R.layout.spinner_item);
-        sexe.setAdapter(spinnerArrayAdapter3);
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            ArrayAdapter<String> spinnerArrayAdapter3 = new ArrayAdapter<String>(
+                    this, R.layout.spinner_item_red, sexe1);
+            spinnerArrayAdapter3.setDropDownViewResource(R.layout.spinner_item);
+            sexe.setAdapter(spinnerArrayAdapter3);
 
 
-        // Initializing an ArrayAdapter justificatives
-        ArrayAdapter<String> spinnerArrayAdapter4 = new ArrayAdapter<String>(
-                this, R.layout.spinner_item, pieceJ);
-        spinnerArrayAdapter4.setDropDownViewResource(R.layout.spinner_item);
-        typePjustificative.setAdapter(spinnerArrayAdapter4);
+            // Initializing an ArrayAdapter justificatives
+            ArrayAdapter<String> spinnerArrayAdapter4 = new ArrayAdapter<String>(
+                    this, R.layout.spinner_item_red, pieceJ);
+            spinnerArrayAdapter4.setDropDownViewResource(R.layout.spinner_item);
+            typePjustificative.setAdapter(spinnerArrayAdapter4);
+        }else {
+            ArrayAdapter<String> spinnerArrayAdapter3 = new ArrayAdapter<String>(
+                    this, R.layout.spinner_item, sexe1);
+            spinnerArrayAdapter3.setDropDownViewResource(R.layout.spinner_item);
+            sexe.setAdapter(spinnerArrayAdapter3);
 
 
+            // Initializing an ArrayAdapter justificatives
+            ArrayAdapter<String> spinnerArrayAdapter4 = new ArrayAdapter<String>(
+                    this, R.layout.spinner_item, pieceJ);
+            spinnerArrayAdapter4.setDropDownViewResource(R.layout.spinner_item);
+            typePjustificative.setAdapter(spinnerArrayAdapter4);
+        }
 
         readTempNumberInFile();
-
-
 
         typePjustificative.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -493,9 +527,15 @@ public class SubSouscription extends AppCompatActivity
                                 }
 
                                 /* Set your ArrayAdapter with the StringWithTag, and when each entry is shown in the Spinner, .toString() is called. */
-                                ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(SubSouscription.this, R.layout.spinner_item, itemList1);
-                                spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
-                                typeChauffeur.setAdapter(spinnerAdapter);
+                                if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+                                    ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(SubSouscription.this, R.layout.spinner_item_red, itemList1);
+                                    spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_red);
+                                    typeChauffeur.setAdapter(spinnerAdapter);
+                                } else {
+                                    ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(SubSouscription.this, R.layout.spinner_item, itemList1);
+                                    spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
+                                    typeChauffeur.setAdapter(spinnerAdapter);
+                                }
                                 //------------------------------
 
 
@@ -558,6 +598,10 @@ public class SubSouscription extends AppCompatActivity
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget();
+        }
     }
 
 
@@ -723,7 +767,10 @@ public class SubSouscription extends AppCompatActivity
             view = snackbar.getView();
             TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(color);
-            textView.setBackgroundColor(Color.parseColor("#039BE5"));
+            if(Constant.color == getResources().getColor(R.color.colorPrimaryRed))
+                textView.setBackgroundResource(R.color.colorPrimaryRed);
+            else
+                textView.setBackgroundColor(Color.parseColor("#039BE5"));
             textView.setGravity(Gravity.CENTER);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
@@ -1657,5 +1704,63 @@ public class SubSouscription extends AppCompatActivity
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    private void changeColorWidget() {
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            //Nom
+            tie_nom.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            tie_nom.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //prenom
+            tie_prenom.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            tie_prenom.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //telephone
+            tie_numeroTel.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            tie_numeroTel.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //cni
+            tie_cni.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            tie_cni.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //adresse
+            tie_adresse.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            tie_adresse.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //numero de carte
+            tie_numCarte.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            tie_numCarte.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //Button
+            findViewById(R.id.btnSouscription).setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+            findViewById(R.id.btnOpenNFC).setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+
+            //network not available ic_wifi_red
+            conStatusIv.setImageResource(R.drawable.ic_wifi_red);
+            titleNetworkLimited.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            msgNetworkLimited.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            findViewById(R.id.btnReessayer).setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+
+            //setTheme(R.style.colorPrimaryDark);
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+        } else{
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+    }
+
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            setTheme(Constant.theme);
+        }else{
+            setTheme(appTheme);
+        }
     }
 }

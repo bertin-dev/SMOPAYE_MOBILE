@@ -24,7 +24,7 @@
 
 
     <string name="telecollecte_retrait">Télécollecte et Retrait</string>
-    <string name="debitCarte">Débit Compte</string>
+    <string name="debitCarte">Débit Carte</string>
     <string name="verification">Vérification</string>
     <string name="consulterSolde">Consulter Solde</string>
     <string name="rechargeComptes">Recharge Comptes</string>
@@ -62,7 +62,8 @@
     <string name="rechargeUneAutreCarte">Recharge d\'un autre Compte</string>
     <string name="rechargeCommerciaux">Recharge pour Commerciaux</string>
 
-    <string name="numCarte">N° Compte</string>
+    <string name="numCarte">N° Carte</string>
+    <string name="numCompte">N° Compte</string>
     <string name="votreNumCarte">Votre Numéro de Compte est :</string>
 
 
@@ -122,9 +123,11 @@
     <string name="gesUserAgent">Gestion Utilisateurs et Agents</string>
     <string name="userGoogle">Utilisateurs Google</string>
     <string name="effectuer">éffectuer</string>
-    <string name="numdeCarte">Numéro de Compte</string>
+    <string name="numdeCarte">Numéro de Carte</string>
+    <string name="numdeCarteB">N°Carte Bénéficiaire</string>
     <string name="numdeCarteDonataire">N° de Compte donataire</string>
     <string name="numdeCarteBeneficiaire">N° de Compte bénéficiaire</string>
+    <string name="numdeCarteBeneficiaire1">N° de Carte bénéficiaire</string>
     <string name="gesAccepteurActif">Accepteurs Actifs  &#160; &#160;</string>
     <string name="gesAccepteurInActif">Accepteurs Inactif  &#160; &#160;</string>
     <string name="listAccepteurs">Liste des Accepteurs</string>
@@ -155,7 +158,7 @@
     <string name="DebitDeCarte">Débit de carte</string>
     <string name="Debit">Débit</string>
 
-    <string name="operateur">Opérateur</string>
+    <string name="operateur">OPERATEUR</string>
 
     <string name="ancienPass">Ancien Mot de Passe</string>
     <string name="nouveauPass">Nouveau Mot de Passe</string>
@@ -173,6 +176,7 @@
     <string name="questionsFrequentesDrawer">Questions Fréquentes</string>
     <string name="parametreDrawer">Paramètres</string>
     <string name="deconnexion">Déconnexion</string>
+    <string name="client">Espace Clients</string>
 
     <string name="Off">Off</string>
     <string name="On">On</string>
@@ -205,7 +209,7 @@
 
 
     <string name="beneficiaire">Téléphone Bénéficiaire</string>
-    <string name="montantBeneficiaire">Montant Bénéficiaire</string>
+    <string name="montantBeneficiaire">Montant à Payer</string>
     <string name="entrez_le_montant">Entrez le Montant</string>
 
 
@@ -249,7 +253,7 @@
 
     <string name="yde">YAOUNDE</string>
     <string name="adresseV">Retrouvez nos commerciaux dans la zone de (Camair/Omnisport/Soa) ou rendez-vous dans nos locaux.</string>
-    <string name="services">Services</string>
+    <string name="services">Service</string>
     <string name="servicesV">Vente des cartes, recharge de carte, location des TPEs, journal de transaction effectuées</string>
     <string name="horaire">Horaires d\'ouverture</string>
     <string name="horaireV">Lundi-Vendredi: de 08h00 à 17h</string>
@@ -325,15 +329,16 @@
     <string name="typeSolde">Type de Solde : </string>
 
     <string name="MsgConsulterHistorique">Consulter l\'Historique de vos transactions éffectuées.</string>
-    <string name="MsgDescTransfert">Veuillez insérer le numéro de compte du bénéficiaire et le montant à transférer, puis, appuyer sur effectuer.</string>
-    <string name="MsgDescAbonnement">Veuillez insérez votre numéro de compte et sélectionner l\'abonnement souhaité, puis valider.</string>
+    <string name="MsgDescTransfert">Veuillez sélectionner le type de transfert, ensuite insérer le numéro de compte du bénéficiaire ou le numéro de carte du bénéficiaire et enfin le montant à transférer puis, valider.</string>
+    <string name="MsgDescAbonnement">Veuillez sélectionner l\'abonnement souhaité, puis valider.</string>
     <string name="MsgDescRecharge">Veuillez insérer votre numéro de compte et le montant de recharge, puis valider.</string>
-    <string name="MsgDescPayerFacture">Veuillez insérer le numéro de compte du bénéficiaire et le montant à transférer, puis valider.</string>
+    <string name="MsgDescPayerFacture">Veuillez insérer le numéro de carte du bénéficiaire et le montant à payer, puis valider.</string>
     <string name="MsgDescDebitCarte">Veuillez saisir le montant puis appuyer sur passer la carte.</string>
-    <string name="MsgDescConsulterSolde">Veuillez insérer un numéro de compte et sélectionner le type de solde, puis appuyer sur consulter.</string>
+    <string name="MsgDescConsulterSolde">Veuillez insérer un numéro de carte et sélectionner le type de solde, puis valider.</string>
     <string name="MsgDescRetraitChezSmopaye">Veuillez insérer le numéro de compte du bénéficiaire et le montant à retirer, puis valider.</string>
-    <string name="MsgDescRetraitChezOperateur">Veuillez insérer votre numéro de compte puis suivre les étapes.</string>
-    <string name="MsgDescVerifierNumCarte">Veuillez insérer votre numéro de carte, puis appuyer sur passer la carte.</string>
+    <string name="MsgDescRetraitChezOperateur">Veuillez insérer votre numéro de carte puis suivre les étapes.</string>
+    <string name="MsgDescVerifierNumCarte">Veuillez appuyer sur passer la carte ensuite faites passer votre carte sur le terminal.</string>
+    <string name="MsgDescBasculer">Veuillez cliquer sur la liste déroulante, selectionner le solde que vous souhaitez faire basculer, entrez le montant puis valider.</string>
 
 
     <string name="suivant">Suivant</string>
@@ -385,6 +390,7 @@
     <string name="AlertNouveauMsg">Nouveau Message</string>
     <string name="echoue">Echoué</string>
     <string name="siteWebMobile">Site Web</string>
+    <string name="espaceClient">Espace Clients</string>
     <string name="encoursTelechargement">Encours de Chargement…</string>
     <string name="pasMessage">Pas de Message</string>
     <string name="uploadEncours">Upload Encours…</string>
@@ -399,7 +405,7 @@
     <string name="montant1">MONTANT</string>
     <string name="heure">HEURE</string>
     <string name="numeroCarte">Numéro de Compte</string>
-    <string name="carteDebite">Compte Debitées:</string>
+    <string name="carteDebite">Compte Debités:</string>
     <string name="numCompteExistPas">Ce numéro de compte n\'existe pas.</string>
     <string name="impossibleSendNotification">Impossible d\'envoyer votre notification.</string>
     <string name="monsieur">Monsieur</string>
@@ -562,7 +568,9 @@
     <string name="networkOffline">Aucune connexion</string>
 
     <string name="compteCourt">Votre numéro de compte est court</string>
+    <string name="carteCourt">Votre numéro de carte est court</string>
     <string name="insererCompte">Veuillez inserer votre numéro de compte</string>
+    <string name="insererCarte">Veuillez inserer votre numéro de carte</string>
     <string name="insererMontant">Veuillez Inserer le montant</string>
     <string name="insererNewPassword">Veuillez inserer le nouveau mot de passe</string>
     <string name="insererOldPassword">Veuillez inserer l\'ancien mot de passe</string>
@@ -675,5 +683,25 @@
     <string name="monCode">MON CODE</string>
     <string name="scanner">SCANNER</string>
     <string name="centre">CENTRE</string>
+    <string name="default_theme">Thème par défaut</string>
+    <string name="red">Rouge Vif</string>
+    <string name="sky_blue">Bleu ciel</string>
+    <string name="smopaye">SMOPAYE</string>
+    <string name="facture">Facture</string>
+
+    <string name="typeTransfert">Type de Transfert</string>
+    <string name="compteAcompte">Compte à Compte</string>
+    <string name="carteAcarte">Carte à Carte</string>
+    <string name="espaceCarte">Espace Cartes</string>
+    <string name="espaceCompte">Espace Compte</string>
+    <string name="proprietaire">Propriétaire</string>
+    <string name="soldeRestant">Mon solde Restant</string>
+    <string name="confirmSubmit">S\'il vous plait Veuillez confirmer que vous acceptez soumettre cette requête.</string>
+    <string name="confirmCheckBox">Êtes-vous sur de vouloir soumettre cette requête ?</string>
+    <string name="infoChangement">Vous serez informé de tout changement apporté suite à vos commentaires</string>
+    <string name="email">S\'il vous plaît, mettez une adresse email valide</string>
+    <string name="basculer">Basculer</string>
+    <string name="basculerSolde">Basculer votre solde</string>
+
 
 </resources>

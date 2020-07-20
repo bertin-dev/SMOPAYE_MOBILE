@@ -54,5 +54,9 @@
         <item>Très satisfaisant</item>
     </string-array>
 
+    <string-array name="type_tranfert">
+        <item>@string/carteAcarte</item>
+        <item >@string/compteAcompte</item>
+    </string-array>
 
 </resources>

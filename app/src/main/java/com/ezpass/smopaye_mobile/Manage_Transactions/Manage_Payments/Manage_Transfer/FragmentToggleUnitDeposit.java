@@ -1,5 +1,6 @@
 package com.ezpass.smopaye_mobile.Manage_Transactions.Manage_Payments.Manage_Transfer;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -7,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -14,37 +16,37 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
-import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
+import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Login;
-import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 import com.ezpass.smopaye_mobile.NotifApp;
 import com.ezpass.smopaye_mobile.NotifReceiver;
 import com.ezpass.smopaye_mobile.R;
@@ -55,8 +57,6 @@ import com.ezpass.smopaye_mobile.RemoteNotifications.Data;
 import com.ezpass.smopaye_mobile.RemoteNotifications.MyResponse;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Sender;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
-import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
-import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
@@ -72,16 +72,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.telpo.tps550.api.TelpoException;
-import com.telpo.tps550.api.nfc.Nfc;
-import com.telpo.tps550.api.util.StringUtil;
 
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
-import java.util.Timer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -93,32 +90,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
-public class Transfert extends AppCompatActivity
-        implements ConnectivityReceiver.ConnectivityReceiverListener{
 
-    private static final String TAG = "Transfert";
+public class FragmentToggleUnitDeposit extends Fragment
+                                       implements ConnectivityReceiver.ConnectivityReceiverListener {
+
+    private static final String TAG = "FragmentToggleUnitDepos";
     private ProgressDialog progressDialog;
-    private String tel, code_number_sender;
     private AlertDialog.Builder build_error;
     private ACProgressPie dialog2;
-    /////////////////////////////////////////////////////////////////////////////////
-    private Handler handler;
-    private Runnable runnable;
-    private Timer timer;
-    private Thread readThread;
-    private final int CHECK_NFC_TIMEOUT = 1;
-    private final int SHOW_NFC_DATA = 2;
-    private long time1, time2;
-    private byte blockNum_1 = 1;
-    private byte blockNum_2 = 2;
-    private final byte B_CPU = 3;
-    private final byte A_CPU = 1;
-    private final byte A_M1 = 2;
-    private Nfc nfc = new Nfc(this);
-
-
     //BD LOCALE
     private DbHandler dbHandler;
     private Date aujourdhui;
@@ -136,18 +118,20 @@ public class Transfert extends AppCompatActivity
     private AwesomeValidation validator;
     private Call<HomeResponse> call;
 
-    @BindView(R.id.til_numCarteBeneficiaire)
-    TextInputLayout til_numCarteBeneficiaire;
-    @BindView(R.id.til_montantBeneficiaire)
-    TextInputLayout til_montantBeneficiaire;
+    //changement de couleur du theme
+    private Constant constant;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences app_preferences;
+    int appTheme;
+    int themeColor;
+    int appColor;
 
-    @BindView(R.id.tie_numCarteBeneficiaire)
-    TextInputEditText tie_numCarteBeneficiaire;
-    @BindView(R.id.tie_montantBeneficiaire)
-    TextInputEditText tie_montantBeneficiaire;
-
-    @BindView(R.id.numTelDonataire)
-    EditText numTelDonataire;
+    @BindView(R.id.til_montant)
+    TextInputLayout til_montant;
+    @BindView(R.id.tie_montant)
+    TextInputEditText tie_montant;
+    @BindView(R.id.typeSolde)
+    Spinner typeSolde;
 
     @BindView(R.id.authWindows)
     LinearLayout authWindows;
@@ -160,48 +144,77 @@ public class Transfert extends AppCompatActivity
     @BindView(R.id.msgNetworkLimited)
     TextView msgNetworkLimited;
 
+    private String[] statut1;
+    private String myId_card;
+    private String code_number_sender;
+
+
+    public FragmentToggleUnitDeposit() {
+        // Required empty public constructor
+    }
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transfert);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        changeTheme();
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_toggle_unit_deposit, container, false);
 
-        Toolbar toolbar = findViewById(R.id.myToolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.transfert));
-        toolbar.setSubtitle(getString(R.string.ezpass));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        Intent intent = getActivity().getIntent();
+        myId_card = intent.getStringExtra("myId_card");
+        code_number_sender = intent.getStringExtra("compte");
 
         //initialisation des objets qui seront manipulés
-        ButterKnife.bind(this);
-        tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        ButterKnife.bind(this, view);
+        tokenManager = TokenManager.getInstance(getActivity().getSharedPreferences("prefs", MODE_PRIVATE));
         if(tokenManager.getToken() == null){
-            startActivity(new Intent(this, Login.class));
-            finish();
+            startActivity(new Intent(getActivity(), Login.class));
+            getActivity().finish();
         }
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
         //service = RetrofitBuilder.createService(ApiService.class);
         //tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         validator = new AwesomeValidation(ValidationStyle.TEXT_INPUT_LAYOUT);
-        progressDialog = new ProgressDialog(Transfert.this);
-        build_error = new AlertDialog.Builder(Transfert.this);
+        progressDialog = new ProgressDialog(getActivity());
+        build_error = new AlertDialog.Builder(getActivity());
         //service google firebase
         apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
 
-        Intent intent = getIntent();
-        tel = intent.getStringExtra("telephone");
-        code_number_sender = intent.getStringExtra("compte");
-        if(tel != null)
-            numTelDonataire.setText(tel);
-
-
         /*Appels de toutes les méthodes qui seront utilisées*/
         setupRulesValidatForm();
-        callHandlerMethod();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget(view);
+        }
+
+
+
+        //Vérification si la langue du telephone est en Francais
+        if(Locale.getDefault().getLanguage().contentEquals("fr")) {
+            // Initializing a String Array
+            statut1 = new String[]{"DEPOT", "UNITE"
+            };
+        } else{
+            // Initializing a String Array
+            statut1 = new String[]{"DEPOSIT", "UNIT"};
+        }
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            // Initializing an ArrayAdapter
+            ArrayAdapter<String> spinnerArrayAdapter1 = new ArrayAdapter<String>(getContext(),R.layout.spinner_item_red,statut1);
+            spinnerArrayAdapter1.setDropDownViewResource(R.layout.spinner_item_red);
+            typeSolde.setAdapter(spinnerArrayAdapter1);
+        } else{
+            // Initializing an ArrayAdapter
+            ArrayAdapter<String> spinnerArrayAdapter1 = new ArrayAdapter<String>(getContext(),R.layout.spinner_item,statut1);
+            spinnerArrayAdapter1.setDropDownViewResource(R.layout.spinner_item);
+            typeSolde.setAdapter(spinnerArrayAdapter1);
+        }
+
+
+        return view;
     }
 
 
@@ -212,169 +225,39 @@ public class Transfert extends AppCompatActivity
     private void setupRulesValidatForm(){
 
         //coloration des champs lorsqu'il y a erreur
-        til_numCarteBeneficiaire.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
-        til_montantBeneficiaire.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
-
-        validator.addValidation(this, R.id.til_numCarteBeneficiaire, RegexTemplate.NOT_EMPTY, R.string.insererCompte);
-        validator.addValidation(this, R.id.til_montantBeneficiaire, RegexTemplate.NOT_EMPTY, R.string.insererMontant);
+        til_montant.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+        validator.addValidation(getActivity(), R.id.til_montant, RegexTemplate.NOT_EMPTY, R.string.insererMontant);
     }
 
-    //DETECTION DE TYPE DE CARTE ET SON ID
-    private void callHandlerMethod() {
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case CHECK_NFC_TIMEOUT: {
-                        Toast.makeText(getApplicationContext(), "Check card time out!", Toast.LENGTH_LONG).show();
-                       /* open_btn.setEnabled(true);
-                        close_btn.setEnabled(false);
-                        check_btn.setEnabled(false);*/
-                    }
-                    break;
-                    case SHOW_NFC_DATA: {
-                        byte[] uid_data = (byte[]) msg.obj;
-                        if (uid_data[0] == 0x42) {
-                            // TYPE B类（暂时只支持cpu卡）
-                            byte[] atqb = new byte[uid_data[16]];
-                            byte[] pupi = new byte[4];
-                            String type = null;
-
-                            System.arraycopy(uid_data, 17, atqb, 0, uid_data[16]);
-                            System.arraycopy(uid_data, 29, pupi, 0, 4);
-
-                            if (uid_data[1] == B_CPU) {
-                                type = "CPU";
-                               /* sendApduBtn.setEnabled(true);
-                                getAtsBtn.setEnabled(true);*/
-                            } else {
-                                type = "unknow";
-                            }
-
-                            new AlertDialog.Builder(Transfert.this)
-                                    .setMessage(getString(R.string.card_type) + getString(R.string.type_b) + " " + type +
-                                            "\r\n" + getString(R.string.atqb_data) + StringUtil.toHexString(atqb) +
-                                            "\r\n" + getString(R.string.pupi_data) + StringUtil.toHexString(pupi))
-                                    .setPositiveButton("OK", null)
-                                    .setCancelable(false)
-                                    .show();
-
-                           /* uid_editText.setText(getString(R.string.card_type) + getString(R.string.type_b) + " " + type +
-                                    "\r\n" + getString(R.string.atqb_data) + StringUtil.toHexString(atqb) +
-                                    "\r\n" + getString(R.string.pupi_data) + StringUtil.toHexString(pupi));*/
-
-                        } else if (uid_data[0] == 0x41) {
-                            // TYPE A类（CPU, M1）
-                            byte[] atqa = new byte[2];
-                            byte[] sak = new byte[1];
-                            byte[] uid = new byte[uid_data[5]];
-                            String type = null;
-
-                            System.arraycopy(uid_data, 2, atqa, 0, 2);
-                            System.arraycopy(uid_data, 4, sak, 0, 1);
-                            System.arraycopy(uid_data, 6, uid, 0, uid_data[5]);
-
-                            if (uid_data[1] == A_CPU) {
-                                type = "CPU";
-                                /*sendApduBtn.setEnabled(true);
-                                getAtsBtn.setEnabled(true);*/
-                            } else if (uid_data[1] == A_M1) {
-                                type = "M1";
-                                // authenticateBtn.setEnabled(true);
-                            } else {
-                                type = "unknow";
-                            }
-                           /* new AlertDialog.Builder(Login.this)
-                                    .setMessage(getString(R.string.card_type) + getString(R.string.type_a) + " " + type +
-                                            "\r\n" + getString(R.string.atqa_data) + StringUtil.toHexString(atqa) +
-                                            "\r\n" + getString(R.string.sak_data) + StringUtil.toHexString(sak) +
-                                            "\r\n" + getString(R.string.uid_data) + StringUtil.toHexString(uid))
-                                    .setPositiveButton("OK", null)
-                                    .setCancelable(false)
-                                    .show();*/
-
-                            progressDialog.dismiss();
-                            m1CardAuthenticate();
-
-                            try {
-                                nfc.close();
-                            } catch (TelpoException e) {
-                                e.printStackTrace();
-                            }
-
-                        } else {
-                            Log.e(TAG, "unknow type card!!");
-                        }
-                    }
-                    break;
-
-                    default:
-                        break;
-                }
-            }
-        };
-    }
-
-    /**
-     * openNFC() méthode permettant recupérer le contenu d'une carte NFC
-     * @since 2019
-     * */
-    @OnClick(R.id.btnOpenNFC)
-    void openNFC(){
-        try {
-            nfc.open();
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-
-                    // On ajoute un message à notre progress dialog
-                    progressDialog.setMessage(getString(R.string.passerCarte));
-                    // On donne un titre à notre progress dialog
-                    progressDialog.setTitle(getString(R.string.attenteCarte));
-                    // On spécifie le style
-                    //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    // On affiche notre message
-                    progressDialog.show();
-                    //build.setPositiveButton("ok", new View.OnClickListener()
-                }
-            });
-
-        } catch (TelpoException e) {
-            e.printStackTrace();
-        }
-        readThread = new ReadThread();
-        readThread.start();
-    }
 
     /**
      * transfert() méthode permettant de démarrer l'opération de transfert
      * @since 2019
      * */
-    @OnClick(R.id.btnTransfert)
-    void transfert(){
+    @OnClick(R.id.btnToggleUnitDeposit)
+    void toggleUnitDeposit(){
 
-        if(!validateCompte(til_numCarteBeneficiaire) | !validateMontant(til_montantBeneficiaire)){
-            return;
-        }
+            if(!validateMontant(til_montant)){
+                return;
+            }
+            String montant = til_montant.getEditText().getText().toString();
+        String typeSold = (typeSolde.getSelectedItem().toString().trim().toUpperCase().equalsIgnoreCase("UNITE") ||
+                typeSolde.getSelectedItem().toString().trim().toUpperCase().equalsIgnoreCase("UNIT") ? "unity" : "deposit");
+            validator.clear();
 
-        String id_card = til_numCarteBeneficiaire.getEditText().getText().toString();
-        String montant = til_montantBeneficiaire.getEditText().getText().toString();
-        String telephone = numTelDonataire.getText().toString();
-        validator.clear();
+            /*Action à poursuivre si tous les champs sont remplis*/
+            if(validator.validate()){
+                //********************DEBUT***********
+                dialog2 = new ACProgressPie.Builder(getActivity())
+                        .ringColor(Color.WHITE)
+                        .pieColor(Color.WHITE)
+                        .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                        .build();
+                dialog2.show();
+                //*******************FIN*****
+                toggleUnitDepositInSmopayeServer(myId_card, typeSold,  montant);
+            }
 
-        /*Action à poursuivre si tous les champs sont remplis*/
-        if(validator.validate()){
-
-            //********************DEBUT***********
-            dialog2 = new ACProgressPie.Builder(this)
-                    .ringColor(Color.WHITE)
-                    .pieColor(Color.WHITE)
-                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
-                    .build();
-            dialog2.show();
-            //*******************FIN*****
-            transfertDataInSmopayeServer(montant, code_number_sender,  id_card);
-        }
 
     }
 
@@ -393,16 +276,16 @@ public class Transfert extends AppCompatActivity
     }
 
     private void changeActivity() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
         if(activeInfo != null && activeInfo.isConnected()){
-            progressDialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
+            progressDialog = ProgressDialog.show(getActivity(), getString(R.string.connexion), getString(R.string.encours), true);
             progressDialog.show();
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {
                     progressDialog.dismiss();
-                    recreate();
+                    getActivity().recreate();
                 }
             }, 2000); // 2000 milliseconds delay
 
@@ -410,7 +293,7 @@ public class Transfert extends AppCompatActivity
             progressDialog.dismiss();
             authWindows.setVisibility(View.GONE);
             internetIndisponible.setVisibility(View.VISIBLE);
-            Toast.makeText(Transfert.this, getString(R.string.connexionIntrouvable), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.connexionIntrouvable), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -423,18 +306,21 @@ public class Transfert extends AppCompatActivity
 
         if(isConnected){
             message = getString(R.string.networkOnline);
-            snackbar = Snackbar.make(findViewById(R.id.transfert), message, Snackbar.LENGTH_LONG);
+            snackbar = Snackbar.make(getActivity().findViewById(R.id.fragment_toggle_unit_deposit), message, Snackbar.LENGTH_LONG);
             view = snackbar.getView();
             TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(color);
-            textView.setBackgroundColor(Color.parseColor("#039BE5"));
+            if(Constant.color == getResources().getColor(R.color.colorPrimaryRed))
+                textView.setBackgroundResource(R.color.colorPrimaryRed);
+            else
+                textView.setBackgroundColor(Color.parseColor("#039BE5"));
             textView.setGravity(Gravity.CENTER);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
             }
         } else{
             message = getString(R.string.networkOffline);
-            snackbar = Snackbar.make(findViewById(R.id.transfert), message, Snackbar.LENGTH_INDEFINITE);
+            snackbar = Snackbar.make(getActivity().findViewById(R.id.fragment_toggle_unit_deposit), message, Snackbar.LENGTH_INDEFINITE);
             view = snackbar.getView();
             TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(color);
@@ -455,14 +341,14 @@ public class Transfert extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
         //register intent filter
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
-        registerReceiver(connectivityReceiver, intentFilter);
+        getActivity().registerReceiver(connectivityReceiver, intentFilter);
 
         //register connection status listener
         NotifApp.getInstance().setConnectivityListener(this);
@@ -475,32 +361,12 @@ public class Transfert extends AppCompatActivity
      * @since 2020
      */
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
 
         if(call != null){
             call.cancel();
             call = null;
-        }
-    }
-
-    /**
-     * validateCompte() méthode permettant de verifier si le numéro de compte inséré est valide
-     * @param til_num_compte1
-     * @return Boolean
-     * @since 2019
-     * */
-    private Boolean validateCompte(TextInputLayout til_num_compte1){
-        String my_numCompte = til_num_compte1.getEditText().getText().toString().trim();
-        if(my_numCompte.isEmpty()){
-            til_num_compte1.setError(getString(R.string.insererCompte));
-            return false;
-        } else if(my_numCompte.length() < 8){
-            til_num_compte1.setError(getString(R.string.compteCourt));
-            return false;
-        } else {
-            til_num_compte1.setError(null);
-            return true;
         }
     }
 
@@ -522,10 +388,9 @@ public class Transfert extends AppCompatActivity
     }
 
 
+    private void toggleUnitDepositInSmopayeServer(String card_id, String action, String withDrawalAmount) {
 
-    private void transfertDataInSmopayeServer(String montant, String id_card_sender, String id_card_receiver) {
-
-        call = service.transaction(Float.parseFloat(montant), id_card_sender, id_card_receiver, "TRANSFERT");
+        call = service.toggleBalance(card_id, action, Float.parseFloat(withDrawalAmount));
         call.enqueue(new Callback<HomeResponse>() {
             @Override
             public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {
@@ -534,11 +399,11 @@ public class Transfert extends AppCompatActivity
 
                 assert response.body() != null;
                 if(response.isSuccessful()){
-                    String msgReceiver = response.body().getMessage().getCard_receiver().getNotif();
-                    String msgSender = response.body().getMessage().getCard_sender().getNotif();
+                    //String msgReceiver = response.body().getMessage().getCard_receiver().getNotif();
+                    //String msgSender = response.body().getMessage().getCard_sender().getNotif();
+                    //successResponse(code_number_sender, msgReceiver, "", msgSender);
 
-                    //tokenManager.saveToken(response.body());
-                    successResponse(id_card_receiver, msgReceiver, id_card_sender, msgSender);
+                    successResponse("", "", code_number_sender, response.message());
 
                 }
                 else{
@@ -547,8 +412,8 @@ public class Transfert extends AppCompatActivity
                         handleErrors(response.errorBody());
                     } else{
                         ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
-                        Toast.makeText(Transfert.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
-                        errorResponse(id_card_receiver, apiError.getMessage());
+                        Toast.makeText(getContext(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        errorResponse(code_number_sender, apiError.getMessage());
                     }
                 }
 
@@ -561,12 +426,12 @@ public class Transfert extends AppCompatActivity
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
 
                 /*Vérification si la connexion internet accessible*/
-                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
                 if(!(activeInfo != null && activeInfo.isConnected())){
                     authWindows.setVisibility(View.GONE);
                     internetIndisponible.setVisibility(View.VISIBLE);
-                    Toast.makeText(Transfert.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
                 }
                 /*Vérification si le serveur est inaccessible*/
                 else{
@@ -575,7 +440,7 @@ public class Transfert extends AppCompatActivity
                     conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
                     titleNetworkLimited.setText(getString(R.string.connexionLimite));
                     //msgNetworkLimited.setText();
-                    Toast.makeText(Transfert.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -605,12 +470,12 @@ public class Transfert extends AppCompatActivity
                             RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.transfert), msgReceiver, "success");
                             //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(Transfert.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
                 else{
-                    Toast.makeText(Transfert.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -638,12 +503,12 @@ public class Transfert extends AppCompatActivity
                             RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.transfert), id_cardSender, "success");
                             //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(Transfert.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
                 else{
-                    Toast.makeText(Transfert.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -659,13 +524,13 @@ public class Transfert extends AppCompatActivity
         LocalNotification(getString(R.string.transfert), msgSender);
 
         ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
-        dbHandler = new DbHandler(getApplicationContext());
+        dbHandler = new DbHandler(getContext());
         aujourdhui = new Date();
         shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
         dbHandler.insertUserDetails(getString(R.string.transfert), msgSender, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
 
-        View view = LayoutInflater.from(Transfert.this).inflate(R.layout.alert_dialog_success, null);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_success, null);
         TextView title = (TextView) view.findViewById(R.id.title);
         TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
         ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
@@ -678,8 +543,7 @@ public class Transfert extends AppCompatActivity
         build_error.show();
 
         //supression des champs de saisis
-        tie_numCarteBeneficiaire.setText("");
-        tie_montantBeneficiaire.setText("");
+        tie_montant.setText("");
     }
 
     private void errorResponse(String id_cardReceiver, String msgReceiver){
@@ -687,12 +551,12 @@ public class Transfert extends AppCompatActivity
         LocalNotification(getString(R.string.transfert), msgReceiver);
 
         ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
-        dbHandler = new DbHandler(getApplicationContext());
+        dbHandler = new DbHandler(getContext());
         aujourdhui = new Date();
         shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
         dbHandler.insertUserDetails(getString(R.string.transfert), msgReceiver, "0", R.drawable.ic_notifications_red_48dp, shortDateFormat.format(aujourdhui));
 
-        View view = LayoutInflater.from(Transfert.this).inflate(R.layout.alert_dialog_success, null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.alert_dialog_success, null);
         TextView title = (TextView) view.findViewById(R.id.title);
         TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
         ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
@@ -716,129 +580,11 @@ public class Transfert extends AppCompatActivity
         ApiError apiError = Utils_manageError.convertErrors(responseBody);
         for(Map.Entry<String, List<String>> error: apiError.getErrors().entrySet()){
 
-            if(error.getKey().equals("card_number")){
-                til_numCarteBeneficiaire.setError(error.getValue().get(0));
-            }
-
-            if(error.getKey().equals("amount")){
-                til_montantBeneficiaire.setError(error.getValue().get(0));
+            if(error.getKey().equals("withDrawalAmount")){
+                til_montant.setError(error.getValue().get(0));
             }
         }
 
-    }
-
-
-
-    private class ReadThread extends Thread {
-        byte[] nfcData = null;
-
-        @Override
-        public void run() {
-            try {
-
-                time1 = System.currentTimeMillis();
-                nfcData = nfc.activate(10 * 1000); // 10s
-                time2 = System.currentTimeMillis();
-                Log.e("yw activate", (time2 - time1) + "");
-                if (null != nfcData) {
-                    handler.sendMessage(handler.obtainMessage(SHOW_NFC_DATA, nfcData));
-                } else {
-                    Log.d(TAG, "Check Card timeout...");
-                    handler.sendMessage(handler.obtainMessage(CHECK_NFC_TIMEOUT, null));
-                }
-            } catch (TelpoException e) {
-                Log.e("yw", e.toString());
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-    private void m1CardAuthenticate() {
-        Boolean status = true;
-        byte[] passwd = {(byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff};
-        try {
-
-            time1 = System.currentTimeMillis();
-            nfc.m1_authenticate(blockNum_1, (byte) 0x0B, passwd);//0x0B
-            time2 = System.currentTimeMillis();
-            Log.e("yw m1_authenticate", (time2 - time1) + "");
-
-
-        } catch (TelpoException e) {
-            status = false;
-            e.printStackTrace();
-            Log.e("yw", e.toString());
-        }
-
-        if (status) {
-            Log.d(TAG, "m1CardAuthenticate success!");
-            //writeBlockData();
-            //readBlockData();
-
-            //writeValueData();
-            readValueDataCourt();
-        } else {
-            Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "m1CardAuthenticate fail!");
-        }
-    }
-
-
-    private void readValueDataCourt() {
-        byte[] data = null;
-        try {
-            data = nfc.m1_read_value(blockNum_2);
-        } catch (TelpoException e) {
-            e.printStackTrace();
-        }
-
-        if (null == data) {
-            Log.e(TAG, "readValueBtn fail!");
-            Toast.makeText(this, getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
-        } else {
-            til_numCarteBeneficiaire.getEditText().setText(StringUtil.toHexString(data));
-        }
-    }
-
-
-    /*                    GESTION DU MENU DROIT                  */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.apropos) {
-            Intent intent = new Intent(getApplicationContext(), Apropos.class);
-            startActivity(intent);
-        }
-
-        if (id == R.id.tuto) {
-            Intent intent = new Intent(getApplicationContext(), TutorielUtilise.class);
-            startActivity(intent);
-        }
-
-        if(id == R.id.modifierCompte){
-            Intent intent = new Intent(getApplicationContext(), UpdatePassword.class);
-            startActivity(intent);
-        }
-
-        if (id == android.R.id.home) {
-            super.onBackPressed();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
 
@@ -860,7 +606,7 @@ public class Transfert extends AppCompatActivity
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     if(response.code() == 200){
                                         if(response.body().success != 1){
-                                            Toast.makeText(Transfert.this, getString(R.string.echoue), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), getString(R.string.echoue), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
@@ -884,15 +630,15 @@ public class Transfert extends AppCompatActivity
     private void LocalNotification(String titles, String subtitles){
 
         ///////////////DEBUT NOTIFICATIONS///////////////////////////////
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
 
-        RemoteViews collapsedView = new RemoteViews(getPackageName(),
+        RemoteViews collapsedView = new RemoteViews(getActivity().getPackageName(),
                 R.layout.notif_collapsed);
-        RemoteViews expandedView = new RemoteViews(getPackageName(),
+        RemoteViews expandedView = new RemoteViews(getActivity().getPackageName(),
                 R.layout.notif_expanded);
 
-        Intent clickIntent = new Intent(getApplicationContext(), NotifReceiver.class);
-        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
+        Intent clickIntent = new Intent(getContext(), NotifReceiver.class);
+        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(getContext(),
                 0, clickIntent, 0);
 
         collapsedView.setTextViewText(R.id.text_view_collapsed_1, titles);
@@ -901,7 +647,7 @@ public class Transfert extends AppCompatActivity
         expandedView.setImageViewResource(R.id.image_view_expanded, R.mipmap.logo_official);
         expandedView.setOnClickPendingIntent(R.id.image_view_expanded, clickPendingIntent);
 
-        Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+        Notification notification = new NotificationCompat.Builder(getContext(), CHANNEL_ID)
                 .setSmallIcon(R.mipmap.logo_official)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
@@ -936,14 +682,50 @@ public class Transfert extends AppCompatActivity
         status("offline");
     }*/
 
-    /**
-     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
-     * @param newBase
-     * @since 2020
-     */
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleHelper.onAttach(newBase));
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    private void changeColorWidget(View view) {
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            //toolbar
+            //desctiption du module
+            LinearLayout desc = (LinearLayout) view.findViewById(R.id.descModule);
+            TextView myTitle = (TextView) view.findViewById(R.id.descContent);
+            myTitle.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+            desc.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.edittextborder_red));
+            TextView typeTransfer = (TextView) view.findViewById(R.id.titleTypeSolde);
+            typeTransfer.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+
+            //montant
+            tie_montant.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryRed));
+            tie_montant.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.edittextborder_red));
+            //Button
+            view.findViewById(R.id.btnTransfert).setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.btn_rounded_red));
+            view.findViewById(R.id.btnOpenNFC).setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.btn_rounded_red));
+
+            //network not available ic_wifi_red
+            conStatusIv.setImageResource(R.drawable.ic_wifi_red);
+            titleNetworkLimited.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryRed));
+            msgNetworkLimited.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryRed));
+            view.findViewById(R.id.btnReessayer).setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.btn_rounded_red));
+        }
     }
+
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            getActivity().setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            getActivity().setTheme(Constant.theme);
+        }else{
+            getActivity().setTheme(appTheme);
+        }
+    }
+
 
 }

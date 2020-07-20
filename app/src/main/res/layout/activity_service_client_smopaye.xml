@@ -19,6 +19,7 @@
             layout="@layout/bar_layout"/>
 
         <LinearLayout
+            android:id="@+id/bgGrdPublic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="100"
@@ -36,6 +37,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/txtVGrdPublic"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"

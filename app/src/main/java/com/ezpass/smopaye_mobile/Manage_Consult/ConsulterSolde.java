@@ -1,5 +1,6 @@
 package com.ezpass.smopaye_mobile.Manage_Consult;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -7,6 +8,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -14,12 +17,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -39,6 +46,7 @@ import android.widget.Toast;
 
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
+import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
@@ -171,13 +179,24 @@ public class ConsulterSolde extends AppCompatActivity
     @BindView(R.id.msgNetworkLimited)
     TextView msgNetworkLimited;
 
+    //changement de couleur du theme
+    private Constant constant;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences app_preferences;
+    int appTheme;
+    int themeColor;
+    int appColor;
+
+    private Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        changeTheme();
         setContentView(R.layout.activity_consulter_solde);
 
-        Toolbar toolbar = findViewById(R.id.myToolbar);
+        toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.verificationSolde));
         toolbar.setSubtitle(getString(R.string.ezpass));
@@ -222,11 +241,23 @@ public class ConsulterSolde extends AppCompatActivity
             // Initializing a String Array
              statut1 = new String[]{"DEPOSIT", "UNIT"};
         }
-        // Initializing an ArrayAdapter
-        ArrayAdapter<String> spinnerArrayAdapter1 = new ArrayAdapter<String>(
-                this,R.layout.spinner_item,statut1);
-        spinnerArrayAdapter1.setDropDownViewResource(R.layout.spinner_item);
-        typeSolde.setAdapter(spinnerArrayAdapter1);
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            // Initializing an ArrayAdapter
+            ArrayAdapter<String> spinnerArrayAdapter1 = new ArrayAdapter<String>(
+                    this,R.layout.spinner_item_red,statut1);
+            spinnerArrayAdapter1.setDropDownViewResource(R.layout.spinner_item_red);
+            typeSolde.setAdapter(spinnerArrayAdapter1);
+        } else{
+            // Initializing an ArrayAdapter
+            ArrayAdapter<String> spinnerArrayAdapter1 = new ArrayAdapter<String>(
+                    this,R.layout.spinner_item,statut1);
+            spinnerArrayAdapter1.setDropDownViewResource(R.layout.spinner_item);
+            typeSolde.setAdapter(spinnerArrayAdapter1);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget();
+        }
     }
 
     /**
@@ -548,7 +579,10 @@ public class ConsulterSolde extends AppCompatActivity
             view = snackbar.getView();
             TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(color);
-            textView.setBackgroundColor(Color.parseColor("#039BE5"));
+            if(Constant.color == getResources().getColor(R.color.colorPrimaryRed))
+                textView.setBackgroundResource(R.color.colorPrimaryRed);
+            else
+                textView.setBackgroundColor(Color.parseColor("#039BE5"));
             textView.setGravity(Gravity.CENTER);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
@@ -964,4 +998,54 @@ public class ConsulterSolde extends AppCompatActivity
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase));
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    private void changeColorWidget() {
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            toolbar.setBackground(ContextCompat.getDrawable(this, R.color.colorPrimaryDarkRed));
+
+            LinearLayout desc = (LinearLayout) findViewById(R.id.descModule);
+            TextView myTitle = (TextView) findViewById(R.id.descContent);
+            myTitle.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+            desc.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+
+            tie_numCompte.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            tie_numCompte.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            TextView txtV = (TextView) findViewById(R.id.type);
+            txtV.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+            findViewById(R.id.btnConsulterSolde).setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+
+
+            //network not available ic_wifi_red
+            conStatusIv.setImageResource(R.drawable.ic_wifi_red);
+            titleNetworkLimited.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            msgNetworkLimited.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            findViewById(R.id.btnReessayer).setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+
+
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+        } else{
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+    }
+
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            setTheme(Constant.theme);
+        }else{
+            setTheme(appTheme);
+        }
+    }
+
 }

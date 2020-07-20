@@ -9,24 +9,29 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -40,6 +45,7 @@ import android.widget.Toast;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
+import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.NotifApp;
@@ -170,6 +176,17 @@ public class CarteFragment extends Fragment
     TextView msgNetworkLimited;
 
 
+    //changement de couleur du theme
+    private Constant constant;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences app_preferences;
+    int appTheme;
+    int themeColor;
+    int appColor;
+
+    private String profil_complet;
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -218,27 +235,17 @@ public class CarteFragment extends Fragment
         myPersonalAccountNumber = getArguments().getString("myPersonalAccountNumber");
         myPersonalAccountState = getArguments().getString("myPersonalAccountState");
         myPersonalAccountAmount = getArguments().getString("myPersonalAccountAmount");
+        profil_complet = getArguments().getString("profil_complet");
 
         build_error = new AlertDialog.Builder(getContext());
     }
 
     @SuppressLint("SetTextI18n")
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
+        changeTheme();
         View view = inflater.inflate(R.layout.fragment_carte, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle(getString(R.string.maCarteSmopaye));
-
-        ImageSlider imageSlider = view.findViewById(R.id.image_slider);
-        List<SlideModel> slideModels = new ArrayList<>();
-        slideModels.add(new SlideModel(R.drawable.carte_smopaye, "Recto de ma Carte"));
-        slideModels.add(new SlideModel(R.drawable.pub_back_card, "Verso de ma carte"));
-        slideModels.add(new SlideModel(R.drawable.pub_qrcode, "Mon QR CODE"));
-        slideModels.add(new SlideModel(R.drawable.pub_distributor, "Ma solution de paiement"));
-        slideModels.add(new SlideModel(R.drawable.pub_kiosk, "Distributeur Smopaye"));
-        slideModels.add(new SlideModel(R.drawable.pub_parasol, "Parasole Smopaye"));
-        imageSlider.setImageList(slideModels, true);
-        imageSlider.startSliding(5000);
-
 
         detailsCard(myId_card);
 
@@ -274,9 +281,35 @@ public class CarteFragment extends Fragment
 
             }
         });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+                view.findViewById(R.id.btnDetails).setBackground(ContextCompat.getDrawable(getContext(), R.color.colorPrimaryRed));
+                view.findViewById(R.id.sWtVerouillerCarte).setBackground(ContextCompat.getDrawable(getContext(), R.color.colorPrimaryRed));
+
+                //network not available ic_wifi_red
+                conStatusIv.setImageResource(R.drawable.ic_wifi_red);
+                titleNetworkLimited.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryRed));
+                msgNetworkLimited.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryRed));
+                view.findViewById(R.id.btnReessayer).setBackground(ContextCompat.getDrawable(getContext(), R.drawable.btn_rounded_red));
+            }
+        }
+
+        ImageSlider imageSlider = view.findViewById(R.id.image_slider);
+        List<SlideModel> slideModels = new ArrayList<>();
+        slideModels.add(new SlideModel(R.drawable.carte_smopaye, "Recto de ma Carte"));
+        slideModels.add(new SlideModel(R.drawable.pub_back_card, "Verso de ma carte"));
+        slideModels.add(new SlideModel(R.drawable.pub_qrcode, "Mon QR CODE"));
+        slideModels.add(new SlideModel(R.drawable.pub_distributor, "Ma solution de paiement"));
+        slideModels.add(new SlideModel(R.drawable.pub_kiosk, "Distributeur Smopaye"));
+        slideModels.add(new SlideModel(R.drawable.pub_parasol, "Parasole Smopaye"));
+        imageSlider.setImageList(slideModels, true);
+        imageSlider.startSliding(5000);
 
         return view;
     }
+
+
 
 
 
@@ -311,7 +344,11 @@ public class CarteFragment extends Fragment
 
 
 
-                        tAbonnement.setText(abonnement);
+                        if(abonnement.isEmpty()){
+                            tAbonnement.setText(getString(R.string.services));
+                        } else {
+                            tAbonnement.setText(abonnement);
+                        }
                         etatCart = card.getCard_state();
 
                         if (etatCart.equalsIgnoreCase("activer")){
@@ -628,12 +665,15 @@ public class CarteFragment extends Fragment
         //compte
         account_number.setText(myPersonalAccountNumber);
         state_account.setText(myPersonalAccountState);
+        TextView subAccount = bottomSheetView.findViewById(R.id.proprietaire);
+        subAccount.setText(profil_complet);
 
         //card
         card_number.setText(card_id);
         serial_numbers.setText(serial_number);
         card_state.setText(cardState);
         card_type.setText(getString(R.string.carteMag) + " " + typeCard);
+
 
         bottomSheetView.findViewById(R.id.btnClose).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -643,8 +683,17 @@ public class CarteFragment extends Fragment
             }
         });
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            TextView tt = bottomSheetView.findViewById(R.id.showDetail);
+            if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+                tt.setBackground(ContextCompat.getDrawable(getContext(), R.color.colorPrimaryRed));
+                tt.setTextColor(getResources().getColor(R.color.white));
+            }
+        }
+
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
+
     }
 
     @OnClick(R.id.btnReessayer)
@@ -691,7 +740,10 @@ public class CarteFragment extends Fragment
             view = snackbar.getView();
             TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(color);
-            textView.setBackgroundColor(Color.parseColor("#039BE5"));
+            if(Constant.color == getResources().getColor(R.color.colorPrimaryRed))
+                textView.setBackgroundResource(R.color.colorPrimaryRed);
+            else
+                textView.setBackgroundColor(Color.parseColor("#039BE5"));
             textView.setGravity(Gravity.CENTER);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
@@ -818,5 +870,20 @@ public class CarteFragment extends Fragment
         ////////////////////////////////////FIN NOTIFICATIONS/////////////////////
     }
 
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            getActivity().setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            getActivity().setTheme(Constant.theme);
+        }else{
+            getActivity().setTheme(appTheme);
+        }
+    }
 
 }

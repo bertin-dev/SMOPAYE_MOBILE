@@ -20,6 +20,11 @@
             android:title="@string/siteWebDrawer" />
 
         <item
+            android:id="@+id/nav_clients"
+            android:icon="@drawable/ic_account_clients"
+            android:title="@string/client" />
+
+        <item
             android:id="@+id/nav_transfert"
             android:icon="@drawable/ic_import_export_black_24dp"
             android:title="@string/transfert" />

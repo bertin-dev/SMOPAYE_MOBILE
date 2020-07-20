@@ -4,9 +4,14 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 import com.ezpass.smopaye_mobile.R;
@@ -73,15 +79,26 @@ public class SaveBD extends AppCompatActivity {
     @BindView(R.id.numCartePublicAutoSaveBD)
     EditText numCartePublicAutoSaveBD;
 
+    //changement de couleur du theme
+    private Constant constant;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences app_preferences;
+    int appTheme;
+    int themeColor;
+    int appColor;
+
+    private Toolbar toolbar;
+
 
 
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        changeTheme();
         setContentView(R.layout.activity_save_bd);
 
-        Toolbar toolbar = findViewById(R.id.myToolbar);
+        toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.writeInCard));
         toolbar.setSubtitle(getString(R.string.ezpass));
@@ -192,6 +209,9 @@ public class SaveBD extends AppCompatActivity {
                 }
             }
         };
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget();
+        }
     }
 
     @OnClick(R.id.BtnSaveCarte)
@@ -580,6 +600,67 @@ public class SaveBD extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    private void changeColorWidget() {
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            toolbar.setBackground(ContextCompat.getDrawable(this, R.color.colorPrimaryDarkRed));
+
+            TextView automatique = (TextView) findViewById(R.id.automatique);
+            automatique.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+            automatique.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+
+            TextView num_serie_auto = (TextView) findViewById(R.id.num_serie_auto);
+            num_serie_auto.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+
+            TextView numCarte_serie = (TextView) findViewById(R.id.numCarte_serie);
+            numCarte_serie.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+
+
+            TextView exp = (TextView) findViewById(R.id.exp);
+            exp.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+
+            //ID CARTE
+            numCartePriveAutoSaveBD.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            numCartePriveAutoSaveBD.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+
+            //ID CARTE PUBLIC
+            numCartePublicAutoSaveBD.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            numCartePublicAutoSaveBD.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //EXPIRATION
+            expire_date.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            expire_date.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+
+            //Button
+            findViewById(R.id.BtnPasserCarteSaveBDAuto).setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+            findViewById(R.id.BtnSaveCarte).setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+
+
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+        } else{
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+    }
+
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            setTheme(Constant.theme);
+        }else{
+            setTheme(appTheme);
+        }
     }
 
 }

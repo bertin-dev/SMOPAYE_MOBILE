@@ -11,6 +11,7 @@
     android:focusableInTouchMode="true"
     tools:context=".Manage_Cards.SaveInDB.UpdateBD">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,6 +27,7 @@
             layout="@layout/bar_layout"/>
 
         <TextView
+            android:id="@+id/automatique"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textAlignment="center"
@@ -46,6 +48,7 @@
             android:layout_marginLeft="20dp"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/num_serie_auto"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
@@ -79,6 +82,7 @@
             android:visibility="visible"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/numCarte_serie"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
@@ -95,7 +99,7 @@
                 android:padding="10dp"
                 android:textSize="14sp"
                 android:textStyle="bold|italic"
-                android:inputType="text"
+                android:inputType="number"
                 android:background="@drawable/edittextborder"
                 android:layout_width="match_parent"
                 android:textColorHint="@color/bgColorStandard"
@@ -113,6 +117,7 @@
             android:visibility="visible"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/exp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"

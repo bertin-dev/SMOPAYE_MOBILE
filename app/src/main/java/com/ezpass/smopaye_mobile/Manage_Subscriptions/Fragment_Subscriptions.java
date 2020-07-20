@@ -1,5 +1,6 @@
 package com.ezpass.smopaye_mobile.Manage_Subscriptions;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -7,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -15,13 +17,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -39,6 +44,7 @@ import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.ezpass.smopaye_mobile.ChaineConnexion;
+import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.NotifApp;
@@ -94,7 +100,8 @@ import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
  * A simple {@link Fragment} subclass.
  */
 public class Fragment_Subscriptions extends Fragment
-                                    implements PasswordModalDialog.ExampleDialogListener, ConnectivityReceiver.ConnectivityReceiverListener{
+                                    implements PasswordModalDialog.ExampleDialogListener,
+                                               ConnectivityReceiver.ConnectivityReceiverListener{
 
     private static final String TAG = "Fragment_Subscriptions";
     private String abonnement = "";
@@ -157,6 +164,14 @@ public class Fragment_Subscriptions extends Fragment
     private CheckBox AbonnementMensuel;
     private CheckBox AbonnementHebdomadaire;
 
+    //changement de couleur du theme
+    private Constant constant;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences app_preferences;
+    int appTheme;
+    int themeColor;
+    int appColor;
+
     public Fragment_Subscriptions() {
         // Required empty public constructor
     }
@@ -165,6 +180,7 @@ public class Fragment_Subscriptions extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        changeTheme();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_subscriptions, container, false);
 
@@ -247,9 +263,9 @@ public class Fragment_Subscriptions extends Fragment
 
             }
         });
-
-
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget(view);
+        }
         return view;
     }
 
@@ -373,7 +389,10 @@ public class Fragment_Subscriptions extends Fragment
             view = snackbar.getView();
             TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(color);
-            textView.setBackgroundColor(Color.parseColor("#039BE5"));
+            if(Constant.color == getResources().getColor(R.color.colorPrimaryRed))
+                textView.setBackgroundResource(R.color.colorPrimaryRed);
+            else
+                textView.setBackgroundColor(Color.parseColor("#039BE5"));
             textView.setGravity(Gravity.CENTER);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
@@ -943,6 +962,48 @@ public class Fragment_Subscriptions extends Fragment
     @Override
     public void applyTexts(String pass) {
         paiement(til_numCarteBeneficiaire.getEditText().getText().toString().trim(), abonnement, pass);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    private void changeColorWidget(View view) {
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            //desctiption du module
+            LinearLayout desc = (LinearLayout) view.findViewById(R.id.descModule);
+            TextView myTitle = (TextView) view.findViewById(R.id.descContent);
+            myTitle.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+            desc.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.edittextborder_red));
+
+            TextView tt = (TextView) view.findViewById(R.id.abonnement);
+            tt.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+
+            AbonnementMensuel.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+            AbonnementHebdomadaire.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+            view.findViewById(R.id.btnPayerAbonnment).setBackground(ContextCompat.getDrawable(getContext(), R.drawable.btn_rounded_red));
+
+            //reéssayer
+            //network not available ic_wifi_red
+            conStatusIv.setImageResource(R.drawable.ic_wifi_red);
+            titleNetworkLimited.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryRed));
+            msgNetworkLimited.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryRed));
+            view.findViewById(R.id.btnReessayer).setBackground(ContextCompat.getDrawable(getContext(), R.drawable.btn_rounded_red));
+        }
+    }
+
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            getActivity().setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            getActivity().setTheme(Constant.theme);
+        }else{
+            getActivity().setTheme(appTheme);
+        }
     }
 
 }

@@ -1,11 +1,17 @@
 package com.ezpass.smopaye_mobile.Manage_Cards.WriteInCard;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,8 +21,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 import com.ezpass.smopaye_mobile.R;
@@ -47,13 +56,24 @@ public class InformationsCard extends AppCompatActivity {
     long time1, time2;
     private final String TAG = "EnregCarte";
 
+    //changement de couleur du theme
+    private Constant constant;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences app_preferences;
+    int appTheme;
+    int themeColor;
+    int appColor;
+
+    private Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        changeTheme();
         setContentView(R.layout.activity_informations_card);
 
-        Toolbar toolbar = findViewById(R.id.myToolbar);
+        toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.gesCard));
         toolbar.setSubtitle(getString(R.string.ezpass));
@@ -206,6 +226,9 @@ public class InformationsCard extends AppCompatActivity {
             }
         };
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget();
+        }
     }
 
 
@@ -465,5 +488,87 @@ public class InformationsCard extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    private void changeColorWidget() {
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            toolbar.setBackground(ContextCompat.getDrawable(this, R.color.colorPrimaryDarkRed));
+
+            TextView infoCard = (TextView) findViewById(R.id.infoCard);
+            infoCard.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+            infoCard.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+
+            TextView card = (TextView) findViewById(R.id.card);
+            card.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+
+            TextView typeA = (TextView) findViewById(R.id.typeA);
+            typeA.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+
+
+            TextView atqa = (TextView) findViewById(R.id.atqa);
+            atqa.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+
+            TextView sak = (TextView) findViewById(R.id.sak);
+            sak.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+
+            TextView infoSmopaye = (TextView) findViewById(R.id.infoSmopaye);
+            infoSmopaye.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+            infoSmopaye.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+
+            TextView numCard = (TextView) findViewById(R.id.numCard);
+            numCard.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+
+            TextView num_serie = (TextView) findViewById(R.id.num_serie);
+            num_serie.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+
+            //ID CARTE
+            idCarte.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            idCarte.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+
+            //TYPE CARTES
+            typeCarte1.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            typeCarte1.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //ATQA
+            atqa1.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            atqa1.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //SAK
+            sak1.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            sak1.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //N°CARTE COURT
+            numCarteCourt.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            numCarteCourt.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+            //N°CARTE LONG
+            numCarteLong.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
+            numCarteLong.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
+
+            //Button
+            BtnOpenNFC.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_red));
+
+
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+        } else{
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+    }
+
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            setTheme(Constant.theme);
+        }else{
+            setTheme(appTheme);
+        }
     }
 }

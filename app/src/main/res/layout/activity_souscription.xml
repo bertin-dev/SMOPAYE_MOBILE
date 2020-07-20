@@ -345,7 +345,7 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/til_numCarte"
-                android:hint="@string/numdelaCarte"
+                android:hint="@string/numdeCarte"
                 android:textColorHint="@color/bgColorStandard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -373,71 +373,6 @@
 
 
             </android.support.design.widget.TextInputLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:padding="10dp"
-                android:gravity="center"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:weightSum="100"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="40"
-                    android:layout_height="wrap_content"
-                    android:text="@string/abonnement"
-                    android:textSize="17sp"
-                    android:textStyle="bold|italic"
-                    android:textColorHint="@color/bgColorStandard"
-                    android:textColor="@color/bgColorStandard"
-                    />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="60"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <CheckBox
-                        android:id="@+id/AbonnementMensuel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="onCheckboxClicked1"
-                        android:textColor="@color/bgColorStandard"
-                        android:textStyle="bold|italic"
-                        android:theme="@style/BlueCheck"
-                        android:text="@string/AbonnementMensuel" />
-
-                    <CheckBox
-                        android:id="@+id/AbonnementHebdomadaire"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="onCheckboxClicked1"
-                        android:textColor="@color/bgColorStandard"
-                        android:textStyle="bold|italic"
-                        android:theme="@style/BlueCheck"
-                        android:text="@string/AbonnementHebdomadaire" />
-
-                    <CheckBox
-                        android:id="@+id/AbonnementService"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="onCheckboxClicked1"
-                        android:textStyle="bold|italic"
-                        android:textColor="@color/bgColorStandard"
-                        android:text="@string/AbonnementService"
-                        android:theme="@style/BlueCheck"
-                        android:checked="true"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
 
             <TextView
                 android:textColor="@color/bgColorStandard"

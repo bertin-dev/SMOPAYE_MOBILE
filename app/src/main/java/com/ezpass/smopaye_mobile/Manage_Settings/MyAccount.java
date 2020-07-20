@@ -1,10 +1,16 @@
 package com.ezpass.smopaye_mobile.Manage_Settings;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
@@ -17,8 +23,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
+import com.ezpass.smopaye_mobile.Methods;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
@@ -38,13 +46,23 @@ public class MyAccount extends AppCompatActivity {
     private String numero_card;
     private String idUser;
 
+    private SharedPreferences sharedPreferences, app_preferences;
+    private SharedPreferences.Editor editor;
+    private Methods methods;
+    int appTheme;
+    int themeColor;
+    int appColor;
+    Constant constant;
+    private Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        changeTheme();
         setContentView(R.layout.activity_my_account);
 
-        Toolbar toolbar = findViewById(R.id.myToolbar);
+        toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.config));
         toolbar.setSubtitle(getString(R.string.ezpass));
@@ -87,7 +105,11 @@ public class MyAccount extends AppCompatActivity {
                 //item.setTypeface(mTypeface);
 
                 // Set the list view item's text color
-                item.setTextColor(Color.parseColor("#039BE5"));
+                if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+                    item.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+                } else{
+                    item.setTextColor(getResources().getColor(R.color.colorPrimary));
+                }
 
                 // Set the item text style to bold
                 item.setTypeface(item.getTypeface(), Typeface.BOLD);
@@ -128,8 +150,9 @@ public class MyAccount extends AppCompatActivity {
                 }
             }
         });
-
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget();
+        }
     }
 
     /*                    GESTION DU MENU DROIT                  */
@@ -180,5 +203,34 @@ public class MyAccount extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    private void changeColorWidget() {
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            toolbar.setBackground(ContextCompat.getDrawable(this, R.color.colorPrimaryDarkRed));
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+        } else{
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+    }
+
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            setTheme(Constant.theme);
+        }else{
+            setTheme(appTheme);
+        }
     }
 }

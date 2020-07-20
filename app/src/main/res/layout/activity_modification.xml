@@ -334,7 +334,7 @@
                 android:id="@+id/numCarte"
                 android:textColor="@color/bgColorStandard"
                 android:layout_gravity="center"
-                android:hint="@string/numdelaCarte"
+                android:hint="@string/numdeCarte"
                 android:imeOptions="actionNext"
                 android:layout_marginBottom="10dp"
                 android:padding="10dp"

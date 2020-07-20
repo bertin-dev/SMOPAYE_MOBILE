@@ -69,6 +69,7 @@
                         android:background="@color/textColorGray"
                         android:layout_margin="10dp"/>
                     <TextView
+                        android:id="@+id/saveCard"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -112,6 +113,7 @@
                         android:background="@color/textColorGray"
                         android:layout_margin="10dp"/>
                     <TextView
+                        android:id="@+id/writeCard"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"

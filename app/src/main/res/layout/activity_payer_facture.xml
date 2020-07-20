@@ -38,6 +38,7 @@
             app:cardElevation="10dp">
 
             <LinearLayout
+                android:id="@+id/descModule"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -54,6 +55,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
+                        android:id="@+id/descContent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
@@ -62,7 +64,7 @@
                         android:gravity="center"
                         android:textStyle="italic|bold"
                         android:textAlignment="gravity"
-                        android:textColor="@color/bgColorStandard"
+                        android:textColor="@color/colorPrimary"
                         android:text="@string/MsgDescPayerFacture"
                         android:textSize="14sp" />
 
@@ -108,7 +110,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:hint="@string/numdeCarte"
+                android:hint="@string/numdeCarteB"
                 android:textColorHint="@color/bgColorStandard"
                 app:errorEnabled="true"
                 app:counterEnabled="true"

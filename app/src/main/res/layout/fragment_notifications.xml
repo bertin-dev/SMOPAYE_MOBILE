@@ -42,20 +42,54 @@
         android:dividerHeight="2dp"
         android:footerDividersEnabled="false"/>-->
 
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycle_view"
-        android:visibility="visible"
-        android:scrollbars="vertical"
+    <RelativeLayout
+        android:id="@+id/notif_search"
+        android:layout_marginTop="60dp"
+        android:elevation="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:layout_marginBottom="70dp"
-        tools:ignore="MissingConstraints">
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/inputSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/rechercher"
+            android:textColor="@color/blackFin"
+            android:background="@drawable/search_input_style"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:ems="10"
+            android:drawablePadding="8dp"
+            android:inputType="textPersonName"
+            android:drawableLeft="@drawable/ic_search_black_24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:drawableStart="@drawable/ic_search_black_24dp" />
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="70dp"
+            android:layout_below="@+id/inputSearch">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycle_view"
+                android:visibility="visible"
+                android:scrollbars="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="MissingConstraints">
 
 
-    </android.support.v7.widget.RecyclerView>
+            </android.support.v7.widget.RecyclerView>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btnSuppNotif"

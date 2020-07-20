@@ -14,6 +14,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
@@ -23,16 +25,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.Manage_Apropos.InformationLegales;
 import com.ezpass.smopaye_mobile.BuildConfig;
 import com.ezpass.smopaye_mobile.Manage_Offre_Smopaye.Demarrage;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
+import com.ezpass.smopaye_mobile.Methods;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
@@ -44,9 +49,9 @@ public class Setting extends AppCompatActivity {
 
     private ListView listAllSetting;
     private String [] config;
-    private Dialog myDialog;
+    private Dialog myDialog, myDialogTheme;
     private TextView txtclose, titleLanguage, myVersion, copy;
-    private RadioButton radioFr, radioEn;
+    private RadioButton radioFr, radioEn, radioDefaultTheme, radioRedTheme;
     private  Boolean checked;
     String currentLanguage = (Locale.getDefault().getLanguage().contentEquals("fr")) ? "fr" : "en", currentLang;
 
@@ -59,21 +64,35 @@ public class Setting extends AppCompatActivity {
     private String numero_card;
     private String idUser;
 
+
+    private SharedPreferences sharedPreferences, app_preferences;
+    private SharedPreferences.Editor editor;
+    private Methods methods;
+    int appTheme;
+    int themeColor;
+    int appColor;
+    Constant constant;
+    private Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        changeTheme();
         setContentView(R.layout.activity_setting);
 
-        Toolbar toolbar = findViewById(R.id.myToolbar);
+        toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.config));
         toolbar.setSubtitle(getString(R.string.ezpass));
         toolbar.setLogo(R.mipmap.logo_official);
-        //getSupportActionBar().setSubtitle(getString(R.string.monCompte));
-        //getSupportActionBar().setIcon(R.mipmap.logo_official);
-        //getSupportActionBar().setLogo(R.mipmap.logo_official);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        //toolbar.setBackgroundColor(Constant.color);
+        methods = new Methods();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = sharedPreferences.edit();
+
 
 
         Intent intent = getIntent();
@@ -95,6 +114,7 @@ public class Setting extends AppCompatActivity {
                     "Rechercher les mises à jour",
                     "Mon Compte",
                     "Langue par défaut",
+                    "Changer votre Thème",
                     "Informations légales",
                     "Fournir des commentaires",
                     "Á propos de l'Application"
@@ -105,6 +125,7 @@ public class Setting extends AppCompatActivity {
                     "Check for updates",
                     "My Account",
                     "Default language",
+                    "Change your theme",
                     "Legal information",
                     "Provide feedback",
                     "About the App"
@@ -122,7 +143,11 @@ public class Setting extends AppCompatActivity {
                 //item.setTypeface(mTypeface);
 
                 // Set the list view item's text color
-                item.setTextColor(Color.parseColor("#039BE5"));
+                if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+                    item.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+                } else{
+                    item.setTextColor(getResources().getColor(R.color.colorPrimary));
+                }
 
                 // Set the item text style to bold
                 item.setTypeface(item.getTypeface(), Typeface.BOLD);
@@ -231,6 +256,9 @@ public class Setting extends AppCompatActivity {
                         });
 
                         txtclose =(TextView) myDialog.findViewById(R.id.txtclose);
+                        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+                            txtclose.setBackgroundColor(getResources().getColor(R.color.colorPrimaryRed));
+                        }
                         txtclose.setText("X");
                         txtclose.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -242,17 +270,89 @@ public class Setting extends AppCompatActivity {
                         myDialog.show();
                         break;
                     case 3:
+                        //Change your thème
+                        myDialogTheme = new Dialog(Setting.this);
+                        myDialogTheme.setContentView(R.layout.layout_dialog_change_theme);
+
+                        radioDefaultTheme = (RadioButton) myDialogTheme.findViewById(R.id.radioDefaultTheme);
+                        radioRedTheme = (RadioButton) myDialogTheme.findViewById(R.id.radioRedTheme);
+
+                        radioDefaultTheme.setChecked(true);
+
+
+
+                        if(Constant.color != getResources().getColor(R.color.colorPrimaryRed)) {
+                            radioDefaultTheme.setChecked(true);
+                        } else {
+                            radioRedTheme.setChecked(true);
+                        }
+
+                        radioDefaultTheme.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                checked = ((RadioButton) v).isChecked();
+                                if(checked){
+                                    Constant.color = getResources().getColor(R.color.colorPrimaryDark);
+
+                                    methods.setColorTheme();
+                                    editor.putInt("color", getResources().getColor(R.color.colorPrimaryDark));
+                                    editor.putInt("theme",Constant.theme);
+                                    editor.commit();
+
+                                    Intent intent = new Intent(Setting.this, Demarrage.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
+                                    myDialogTheme.dismiss();
+                                }
+
+                            }
+                        });
+                        radioRedTheme.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                checked = ((RadioButton) v).isChecked();
+                                if(checked){
+                                    Constant.color = getResources().getColor(R.color.colorPrimaryRed);
+
+                                    methods.setColorTheme();
+                                    editor.putInt("color", getResources().getColor(R.color.colorPrimaryRed));
+                                    editor.putInt("theme",Constant.theme);
+                                    editor.commit();
+
+                                    Intent intent = new Intent(Setting.this, Demarrage.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
+                                    myDialogTheme.dismiss();
+                                }
+                            }
+                        });
+
+                        txtclose =(TextView) myDialogTheme.findViewById(R.id.txtclose);
+                        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+                            txtclose.setBackgroundColor(getResources().getColor(R.color.colorPrimaryRed));
+                        }
+                        txtclose.setText("X");
+                        txtclose.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                myDialogTheme.dismiss();
+                            }
+                        });
+                        myDialogTheme.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        myDialogTheme.show();
+                        break;
+                    case 4:
                         //Information légale
                         intent = new Intent(Setting.this, InformationLegales.class);
                         startActivity(intent);
                         break;
-                    case 4:
+                    case 5:
                         //Information légale
                         intent = new Intent(Setting.this, SendEmail.class);
                         startActivity(intent);
                         break;
 
-                    case 5:
+                    case 6:
                         //Apropos Application
                         myDialog = new Dialog(Setting.this);
                         myDialog.setContentView(R.layout.layout_dialog_apropos_ezpass);
@@ -262,6 +362,9 @@ public class Setting extends AppCompatActivity {
                         copy.setText("© " + Calendar.getInstance().get(Calendar.YEAR) + " E-ZPASS by SMOPAYE");
 
                         txtclose =(TextView) myDialog.findViewById(R.id.txtclose);
+                        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+                            txtclose.setBackgroundColor(getResources().getColor(R.color.colorPrimaryRed));
+                        }
                         txtclose.setText("X");
                         txtclose.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -292,6 +395,39 @@ public class Setting extends AppCompatActivity {
 
             }
         });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    private void changeColorWidget() {
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            toolbar.setBackground(ContextCompat.getDrawable(this, R.color.colorPrimaryDarkRed));
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
+        } else{
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+    }
+
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            setTheme(Constant.theme);
+        }else{
+            setTheme(appTheme);
+        }
     }
 
     private void setLocale(String localeName) {

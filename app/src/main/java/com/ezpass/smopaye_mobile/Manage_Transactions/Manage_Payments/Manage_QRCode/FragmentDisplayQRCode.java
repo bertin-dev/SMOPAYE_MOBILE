@@ -1,24 +1,32 @@
 package com.ezpass.smopaye_mobile.Manage_Transactions.Manage_Payments.Manage_QRCode;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
@@ -55,6 +63,14 @@ public class FragmentDisplayQRCode extends Fragment {
     private String temp_card = "";
 
     private Bitmap bitmap;
+    //changement de couleur du theme
+    private Constant constant;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences app_preferences;
+    private int appTheme;
+    private int themeColor;
+    private int appColor;
+    private Button btn_shared;
 
     public FragmentDisplayQRCode() {
         // Required empty public constructor
@@ -64,11 +80,13 @@ public class FragmentDisplayQRCode extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        changeTheme();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_display_q_r_code, container, false);
 
         card_number = (TextView) view.findViewById(R.id.card_number);
         qrcode = (ImageView) view.findViewById(R.id.qrcode);
+        btn_shared = (Button) view.findViewById(R.id.btn_shared);
 
 
         /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
@@ -116,6 +134,24 @@ public class FragmentDisplayQRCode extends Fragment {
 
         // Display saved image uri to TextView
         card_number.setText(String.valueOf(carteCrypte));*/
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget();
+        }
+
+
+        btn_shared.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    shareBitmap(viewToBitmap(qrcode, qrcode.getWidth(), qrcode.getHeight()));
+                } else {
+                    startShare();
+                }
+
+            }
+        });
         return view;
     }
 
@@ -234,6 +270,31 @@ public class FragmentDisplayQRCode extends Fragment {
             e.printStackTrace();
         }
 
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    private void changeColorWidget() {
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            qrcode.setBackground(ContextCompat.getDrawable(getContext(), R.color.colorPrimaryRed));
+        }
+    }
+
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            getActivity().setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            getActivity().setTheme(Constant.theme);
+        }else{
+            getActivity().setTheme(appTheme);
+        }
     }
 
 }

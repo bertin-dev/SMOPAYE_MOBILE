@@ -7,13 +7,21 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.ChaineConnexion;
+import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.NotifReceiver;
@@ -113,6 +122,17 @@ public class FragmentCartes extends Fragment {
     private Date aujourdhui;
     private DateFormat shortDateFormat;
 
+    //changement de couleur du theme
+    private Constant constant;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences app_preferences;
+    int appTheme;
+    int themeColor;
+    int appColor;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private List<DataAllUserCard> allUserCard;
+
 
     public FragmentCartes() {
         // Required empty public constructor
@@ -122,12 +142,14 @@ public class FragmentCartes extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        changeTheme();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cartes, container, false);
 
         listView = (ListView) view.findViewById(R.id.listViewContent);
         progressBar = (ProgressBar)view.findViewById(R.id.progressBar);
         listCards = (LinearLayout) view.findViewById(R.id.listCards);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
 
         tokenManager = TokenManager.getInstance(getActivity().getSharedPreferences("prefs", MODE_PRIVATE));
         if(tokenManager.getToken() == null){
@@ -144,7 +166,25 @@ public class FragmentCartes extends Fragment {
         myCardNumber =  getArguments().getString("compte", "");
         readTempAccountInFile();
 
+        Toast.makeText(getContext(), idUser, Toast.LENGTH_SHORT).show();
         showAllUserCards(Integer.parseInt(idUser));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget(view);
+        }
+
+        //module d'actualisation
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                showAllUserCards(Integer.parseInt(idUser));
+
+                if(!allUserCard.isEmpty()){
+                    adapterUserCardList.notifyDataSetChanged();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         return view;
     }
@@ -161,7 +201,7 @@ public class FragmentCartes extends Fragment {
                     myResponse = response.body();
                     if(myResponse.isSuccess()){
                         //Toast.makeText(ListAllCardSaved.this, myResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                        List<DataAllUserCard> allUserCard = myResponse.getData();
+                         allUserCard = myResponse.getData();
 
                         if(allUserCard.isEmpty()){
                             listCards.setVisibility(View.VISIBLE);
@@ -615,6 +655,35 @@ public class FragmentCartes extends Fragment {
 
         notificationManager.notify(new Random().nextInt(), notification);
         ////////////////////////////////////FIN NOTIFICATIONS/////////////////////
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    private void changeColorWidget(View view) {
+        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+            //description du module
+            LinearLayout desc = (LinearLayout) view.findViewById(R.id.descModule);
+            TextView myTitle = (TextView) view.findViewById(R.id.descContent);
+            myTitle.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
+            desc.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.edittextborder_red));
+        }
+    }
+
+    private void changeTheme() {
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
+
+        if (themeColor == 0){
+            getActivity().setTheme(Constant.theme);
+        }else if (appTheme == 0){
+            getActivity().setTheme(Constant.theme);
+        }else{
+            getActivity().setTheme(appTheme);
+        }
     }
 
 }

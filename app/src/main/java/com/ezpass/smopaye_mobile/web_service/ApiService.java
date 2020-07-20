@@ -146,13 +146,28 @@ public interface ApiService {
                                        @Field("cni") String cni);
 
 
-    /* Transfert, Payer Facture, QR CODE, RETRAIT_SMOPAYE*/
+    /* Transfert (Carte à Carte), Payer Facture, QR CODE, RETRAIT_SMOPAYE*/
     @POST("api/card/transaction/payment")
     @FormUrlEncoded
     Call<HomeResponse> transaction(@Field("amount") float amount,
                                    @Field("code_number_sender") String code_number_sender,
                                    @Field("code_number_receiver") String code_number_receiver,
                                    @Field("transaction_type") String transaction_type);
+
+    /* Transfert (Compte à Compte)*/
+    @POST("api/account/transaction/payment")
+    @FormUrlEncoded
+    Call<HomeResponse> transaction_compte_A_Compte(@Field("amount") float amount,
+                                   @Field("account_number_receiver") String account_number_receiver,
+                                   @Field("account_number_sender") String account_number_sender,
+                                   @Field("transaction_type") String transaction_type);
+
+    /* Basculer (Compte Unité vers Compte dépot et vis-vers ça)*/
+    @POST("api/card/{card_id}/toggleUnityDeposit")
+    @FormUrlEncoded
+    Call<HomeResponse> toggleBalance(@Path("card_id") String card_id,
+                                            @Field("action") String action,
+                                            @Field("withDrawalAmount") float withDrawalAmount);
 
     /* Debit */
     @POST("api/card/transaction/payment")
