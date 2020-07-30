@@ -18,16 +18,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -349,7 +349,7 @@ public class UpdatePassword extends AppCompatActivity
             message = getString(R.string.networkOnline);
             snackbar = Snackbar.make(findViewById(R.id.update_password), message, Snackbar.LENGTH_LONG);
             view = snackbar.getView();
-            TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
+            TextView textView = view.findViewById(com.google.android.material.R.id.snackbar_text);
             textView.setTextColor(color);
             if(Constant.color == getResources().getColor(R.color.colorPrimaryRed))
                 textView.setBackgroundResource(R.color.colorPrimaryRed);
@@ -363,7 +363,7 @@ public class UpdatePassword extends AppCompatActivity
             message = getString(R.string.networkOffline);
             snackbar = Snackbar.make(findViewById(R.id.update_password), message, Snackbar.LENGTH_INDEFINITE);
             view = snackbar.getView();
-            TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
+            TextView textView = view.findViewById(com.google.android.material.R.id.snackbar_text);
             textView.setTextColor(color);
             textView.setGravity(Gravity.CENTER);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {

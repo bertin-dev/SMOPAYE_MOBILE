@@ -88,7 +88,7 @@
 
 
 
-                    <android.support.design.widget.TabLayout
+                    <com.google.android.material.tabs.TabLayout
                         android:layout_width="match_parent"
                         android:id="@+id/tlTab"
                         app:tabGravity="fill"
@@ -109,7 +109,7 @@
 
 
 
-            <android.support.v4.view.ViewPager
+            <androidx.viewpager.widget.ViewPager
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 tools:layout_editor_absoluteX="8dp"

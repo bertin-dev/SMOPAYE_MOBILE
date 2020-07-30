@@ -149,8 +149,8 @@
 
     <string name="subTitle">Recharge</string>
     <string name="donataire">Donataire</string>
-    <string name="nomDonataire">Modjo</string>
-    <string name="beneficier">Bénéficier</string>
+    <string name="nomDonataire">Bertin</string>
+    <string name="beneficier">Bénéficiaire</string>
     <string name="nomBeneficier">Modjo</string>
     <string name="valeurMontant">4 000 F</string>
 
@@ -692,7 +692,7 @@
     <string name="typeTransfert">Type de Transfert</string>
     <string name="compteAcompte">Compte à Compte</string>
     <string name="carteAcarte">Carte à Carte</string>
-    <string name="espaceCarte">Espace Cartes</string>
+    <string name="espaceCarte">Espace Carte</string>
     <string name="espaceCompte">Espace Compte</string>
     <string name="proprietaire">Propriétaire</string>
     <string name="soldeRestant">Mon solde Restant</string>
@@ -702,6 +702,11 @@
     <string name="email">S\'il vous plaît, mettez une adresse email valide</string>
     <string name="basculer">Basculer</string>
     <string name="basculerSolde">Basculer votre solde</string>
+
+    <string name="frais">Frais</string>
+    <string name="ownerCard">Carte Principale</string>
+    <string name="listSubCard">Liste des sous-cartes</string>
+    <string name="listOwnerCard">Vous ne possedez pas de carte principale.</string>
 
 
 </resources>

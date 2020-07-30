@@ -14,10 +14,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +25,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -73,6 +72,8 @@ public class Setting extends AppCompatActivity {
     int appColor;
     Constant constant;
     private Toolbar toolbar;
+    private String role;
+    private String categorie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +104,8 @@ public class Setting extends AppCompatActivity {
         adresse = intent.getStringExtra("adresse");
         numero_card = intent.getStringExtra("numero_card");
         idUser = intent.getStringExtra("idUser");
+        role = intent.getStringExtra("role");
+        categorie = intent.getStringExtra("categorie");
 
 
         listAllSetting = (ListView)findViewById(R.id.listAllSetting);
@@ -208,6 +211,8 @@ public class Setting extends AppCompatActivity {
                         intent.putExtra("adresse", adresse);
                         intent.putExtra("numero_card", numero_card);
                         intent.putExtra("idUser", idUser);
+                        intent.putExtra("role", role);
+                        intent.putExtra("categorie", categorie);
                         startActivity(intent);
                         break;
                     case 2:

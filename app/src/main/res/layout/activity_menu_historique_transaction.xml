@@ -52,7 +52,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/historiqueTelecollecte"
+            android:id="@+id/historiqueCodeQr"
             android:focusable="true"
             android:clickable="true"
             android:visibility="visible"
@@ -121,7 +121,7 @@
         <LinearLayout
             android:id="@+id/historiqueTransfert"
             android:focusable="true"
-            android:visibility="gone"
+            android:visibility="visible"
             android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -156,7 +156,7 @@
             android:id="@+id/historiqueFacture"
             android:focusable="true"
             android:clickable="true"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -188,7 +188,7 @@
 
         <LinearLayout
             android:id="@+id/historiqueRetrait"
-            android:visibility="gone"
+            android:visibility="visible"
             android:focusable="true"
             android:clickable="true"
             android:layout_width="match_parent"

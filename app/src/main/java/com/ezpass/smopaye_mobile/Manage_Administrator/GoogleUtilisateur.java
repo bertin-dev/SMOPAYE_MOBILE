@@ -1,6 +1,6 @@
 package com.ezpass.smopaye_mobile.Manage_Administrator;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.ezpass.smopaye_mobile.RemoteModel.User;
 import com.google.android.gms.tasks.OnSuccessListener;

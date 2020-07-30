@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -18,7 +18,6 @@ import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Geolocalisation.HomeGoogleMap;
 import com.ezpass.smopaye_mobile.R;
-import com.ezpass.smopaye_mobile.service_indisponible.ServicesIndisponible;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 
 public class BoutiqueSmopaye extends AppCompatActivity {

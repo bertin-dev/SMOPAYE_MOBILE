@@ -30,7 +30,7 @@
             android:orientation="vertical"
             android:foregroundGravity="center_horizontal|center_vertical">
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_nom"
                 android:hint="@string/nom"
                 android:textColorHint="@color/bgColorStandard"
@@ -40,7 +40,7 @@
                 android:layout_marginLeft="20dp"
                 app:errorEnabled="true">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tie_nom"
                     android:textColor="@color/bgColorStandard"
                     android:layout_gravity="center"
@@ -56,9 +56,9 @@
                     android:layout_height="wrap_content"/>
 
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_prenom"
                 android:hint="@string/prenom"
                 android:textColorHint="@color/bgColorStandard"
@@ -68,7 +68,7 @@
                 android:layout_marginLeft="20dp"
                 app:errorEnabled="true">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tie_prenom"
                     android:textColor="@color/bgColorStandard"
                     android:layout_gravity="center"
@@ -84,10 +84,10 @@
                     android:layout_height="wrap_content"/>
 
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_numeroTel"
                 android:hint="@string/telephone"
                 android:textColorHint="@color/bgColorStandard"
@@ -99,7 +99,7 @@
                 app:counterMaxLength="9"
                 app:errorEnabled="true">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tie_numeroTel"
                     android:textColor="@color/bgColorStandard"
                     android:layout_gravity="center"
@@ -116,7 +116,7 @@
                     android:layout_height="wrap_content"/>
 
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -157,7 +157,7 @@
 
             </LinearLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_cni"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -165,7 +165,7 @@
                 android:layout_marginLeft="20dp"
                 app:errorEnabled="true">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tie_cni"
                     android:textColor="@color/bgColorStandard"
                     android:layout_gravity="center"
@@ -181,12 +181,12 @@
                     android:layout_height="wrap_content"/>
 
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
 
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_adresse"
                 android:hint="@string/adresse"
                 android:textColorHint="@color/bgColorStandard"
@@ -196,7 +196,7 @@
                 android:layout_marginLeft="20dp"
                 app:errorEnabled="true">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tie_adresse"
                     android:textColor="@color/bgColorStandard"
                     android:layout_gravity="center"
@@ -212,7 +212,7 @@
                     android:layout_height="wrap_content"/>
 
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
             <LinearLayout
@@ -281,7 +281,7 @@
                     android:textColorHint="@color/bgColorStandard"
                     android:textColor="@color/bgColorStandard" />
 
-                <android.support.v7.widget.AppCompatSpinner
+                <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/statut"
                     android:layout_weight="75"
                     android:layout_width="0dp"
@@ -323,7 +323,7 @@
 
 
 
-                <android.support.v7.widget.AppCompatSpinner
+                <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/typeChauffeur"
                     android:layout_weight="75"
                     android:layout_width="0dp"
@@ -341,7 +341,7 @@
             </LinearLayout>
 
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_numCarte"
                 android:hint="@string/numdeCarte"
                 android:textColorHint="@color/bgColorStandard"
@@ -353,7 +353,7 @@
                 app:counterEnabled="true"
                 app:counterMaxLength="8">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tie_numCarte"
                     android:textColor="@color/bgColorStandard"
                     android:layout_gravity="center"
@@ -370,7 +370,7 @@
                     android:layout_height="wrap_content"/>
 
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
             <TextView

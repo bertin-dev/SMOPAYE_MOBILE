@@ -17,15 +17,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.fragment.app.Fragment;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -63,7 +63,7 @@ import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
 import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
-import com.ezpass.smopaye_mobile.web_service_response.HomeResponse;
+import com.ezpass.smopaye_mobile.web_service_response.Home_toggle;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -116,7 +116,7 @@ public class FragmentToggleUnitDeposit extends Fragment
     private ApiService service;
     private TokenManager tokenManager;
     private AwesomeValidation validator;
-    private Call<HomeResponse> call;
+    private Call<Home_toggle> call;
 
     //changement de couleur du theme
     private Constant constant;
@@ -308,7 +308,7 @@ public class FragmentToggleUnitDeposit extends Fragment
             message = getString(R.string.networkOnline);
             snackbar = Snackbar.make(getActivity().findViewById(R.id.fragment_toggle_unit_deposit), message, Snackbar.LENGTH_LONG);
             view = snackbar.getView();
-            TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
+            TextView textView = view.findViewById(com.google.android.material.R.id.snackbar_text);
             textView.setTextColor(color);
             if(Constant.color == getResources().getColor(R.color.colorPrimaryRed))
                 textView.setBackgroundResource(R.color.colorPrimaryRed);
@@ -322,7 +322,7 @@ public class FragmentToggleUnitDeposit extends Fragment
             message = getString(R.string.networkOffline);
             snackbar = Snackbar.make(getActivity().findViewById(R.id.fragment_toggle_unit_deposit), message, Snackbar.LENGTH_INDEFINITE);
             view = snackbar.getView();
-            TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
+            TextView textView = view.findViewById(com.google.android.material.R.id.snackbar_text);
             textView.setTextColor(color);
             textView.setGravity(Gravity.CENTER);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -391,19 +391,18 @@ public class FragmentToggleUnitDeposit extends Fragment
     private void toggleUnitDepositInSmopayeServer(String card_id, String action, String withDrawalAmount) {
 
         call = service.toggleBalance(card_id, action, Float.parseFloat(withDrawalAmount));
-        call.enqueue(new Callback<HomeResponse>() {
+        call.enqueue(new Callback<Home_toggle>() {
             @Override
-            public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {
+            public void onResponse(Call<Home_toggle> call, Response<Home_toggle> response) {
                 Log.w(TAG, "SMOPAYE_SERVER onResponse: " + response);
                 dialog2.dismiss();
 
                 assert response.body() != null;
                 if(response.isSuccessful()){
-                    //String msgReceiver = response.body().getMessage().getCard_receiver().getNotif();
-                    //String msgSender = response.body().getMessage().getCard_sender().getNotif();
-                    //successResponse(code_number_sender, msgReceiver, "", msgSender);
-
-                    successResponse("", "", code_number_sender, response.message());
+                    String msgSender = response.body().getCard_sender().getNotif();
+                    String id_card = response.body().getCard_sender().getCode_number();
+                    //code_number_sender
+                    successResponse(id_card, msgSender);
 
                 }
                 else{
@@ -420,7 +419,7 @@ public class FragmentToggleUnitDeposit extends Fragment
             }
 
             @Override
-            public void onFailure(Call<HomeResponse> call, Throwable t) {
+            public void onFailure(Call<Home_toggle> call, Throwable t) {
 
                 dialog2.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
@@ -449,43 +448,10 @@ public class FragmentToggleUnitDeposit extends Fragment
 
     }
 
-    private void successResponse(String id_cardReceiver, String msgReceiver, String id_cardSender, String msgSender) {
+    private void successResponse(String id_cardSender, String msgSender) {
 
         /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
         //SERVICE GOOGLE FIREBASE
-
-        /*****************************************************RECEIVER MESSAGE******************************/
-        Query queryReceiver = FirebaseDatabase.getInstance().getReference("Users")
-                .orderByChild("id_carte")
-                .equalTo(id_cardReceiver);
-
-        queryReceiver.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                if(dataSnapshot.exists()){
-                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                        User user = userSnapshot.getValue(User.class);
-                        if (user.getId_carte().equals(id_cardReceiver)) {
-                            RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.transfert), msgReceiver, "success");
-                            //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getContext(), getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-                else{
-                    Toast.makeText(getContext(), getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
 
 /*****************************************************SENDER MESSAGE******************************/
         Query querySender = FirebaseDatabase.getInstance().getReference("Users")

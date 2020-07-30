@@ -36,7 +36,7 @@
     <string name="MsgDescRetraitChezSmopaye">Please insert the beneficiary\'s account number and the amount to be withdrawn, then validate.</string>
     <string name="MsgDescTransfert">Please select the type of transfer, then insert the beneficiary\'s account number or the beneficiary\'s card number and finally the amount to be transferred, then confirm.</string>
     <string name="MsgDescVerifierNumCarte">Please press swipe card then swipe your card on the terminal.</string>
-    <string name="MsgDescBasculer">Veuillez cliquer sur la liste déroulante, selectionner le solde que vous souhaitez faire basculer, entrez le montant puis valider.</string>
+    <string name="MsgDescBasculer">Please click on the drop-down list, select the balance you want to switch, enter the amount and confirm.</string>
     <string name="NombreAccepteurs">Number of Acceptors</string>
     <string name="NombreAgents">Number of Agents</string>
     <string name="NotificationsVides">Empty notifications</string>
@@ -622,5 +622,10 @@
     <string name="email">Please enter a valid email address</string>
     <string name="basculer">Toggle</string>
     <string name="basculerSolde">Toggle your Balance</string>
+
+    <string name="frais">Fees</string>
+    <string name="ownerCard">Main Card</string>
+    <string name="listSubCard">List of sub-cards</string>
+    <string name="listOwnerCard">You do not have a primary card.</string>
 
 </resources>

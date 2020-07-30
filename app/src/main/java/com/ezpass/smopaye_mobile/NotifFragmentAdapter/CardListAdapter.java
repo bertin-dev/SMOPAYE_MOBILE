@@ -1,12 +1,11 @@
 package com.ezpass.smopaye_mobile.NotifFragmentAdapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -19,7 +18,6 @@ import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.NotifFragmentModel.Item;
 import com.ezpass.smopaye_mobile.R;
 import java.util.ArrayList;
-import java.util.List;
 
 public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.MyViewHolder> implements Filterable {
 

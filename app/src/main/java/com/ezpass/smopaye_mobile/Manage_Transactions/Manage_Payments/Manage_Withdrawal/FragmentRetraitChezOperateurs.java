@@ -19,15 +19,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.fragment.app.Fragment;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -433,7 +433,7 @@ public class FragmentRetraitChezOperateurs extends Fragment
             message = getString(R.string.networkOnline);
             snackbar = Snackbar.make(getActivity().findViewById(R.id.retrait_accepteur), message, Snackbar.LENGTH_LONG);
             view = snackbar.getView();
-            TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
+            TextView textView = view.findViewById(com.google.android.material.R.id.snackbar_text);
             textView.setTextColor(color);
             if(Constant.color == getResources().getColor(R.color.colorPrimaryRed))
                 textView.setBackgroundResource(R.color.colorPrimaryRed);
@@ -447,7 +447,7 @@ public class FragmentRetraitChezOperateurs extends Fragment
             message = getString(R.string.networkOffline);
             snackbar = Snackbar.make(getActivity().findViewById(R.id.retrait_accepteur), message, Snackbar.LENGTH_INDEFINITE);
             view = snackbar.getView();
-            TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
+            TextView textView = view.findViewById(com.google.android.material.R.id.snackbar_text);
             textView.setTextColor(color);
             textView.setGravity(Gravity.CENTER);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {

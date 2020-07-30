@@ -8,11 +8,11 @@
     tools:context=".Manage_Assistance.HomeAssistanceOnline">
 
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,9 +36,9 @@
                 android:textStyle="bold"
                 android:layout_marginStart="25dp" />
 
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
-        <android.support.design.widget.TabLayout
+        <com.google.android.material.tabs.TabLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tab_layoutChat"
@@ -49,9 +49,9 @@
            app:tabIndicatorHeight="8dp"
            -->
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-<android.support.v4.view.ViewPager
+<androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pagerChat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

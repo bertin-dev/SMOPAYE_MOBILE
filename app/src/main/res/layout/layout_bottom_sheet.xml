@@ -155,7 +155,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="25dp"
                         android:textColor="@color/textColorBlack"
-                        android:text="@string/numCarte"
+                        android:text="@string/numCompte"
                         android:textSize="15sp"/>
                     <TextView
                         android:id="@+id/account_number"

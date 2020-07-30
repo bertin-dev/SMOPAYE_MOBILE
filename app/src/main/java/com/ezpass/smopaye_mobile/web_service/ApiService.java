@@ -5,8 +5,10 @@ import com.ezpass.smopaye_mobile.Profil_user.Card;
 import com.ezpass.smopaye_mobile.Profil_user.Categorie;
 import com.ezpass.smopaye_mobile.Profil_user.DataUser;
 import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
+import com.ezpass.smopaye_mobile.web_service_historique_trans.Home_Historique;
 import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 import com.ezpass.smopaye_mobile.web_service_response.HomeResponse;
+import com.ezpass.smopaye_mobile.web_service_response.Home_toggle;
 import com.ezpass.smopaye_mobile.web_service_response.Recharge.ListAllUserCardResponse;
 import com.ezpass.smopaye_mobile.web_service_response.Recharge.MessageRechargeCardByAccount;
 import com.ezpass.smopaye_mobile.web_service_response.Recharge.RechargeResponse;
@@ -165,9 +167,9 @@ public interface ApiService {
     /* Basculer (Compte Unité vers Compte dépot et vis-vers ça)*/
     @POST("api/card/{card_id}/toggleUnityDeposit")
     @FormUrlEncoded
-    Call<HomeResponse> toggleBalance(@Path("card_id") String card_id,
-                                            @Field("action") String action,
-                                            @Field("withDrawalAmount") float withDrawalAmount);
+    Call<Home_toggle> toggleBalance(@Path("card_id") String card_id,
+                                    @Field("action") String action,
+                                    @Field("withDrawalAmount") float withDrawalAmount);
 
     /* Debit */
     @POST("api/card/transaction/payment")
@@ -251,6 +253,13 @@ public interface ApiService {
     /* Categories  */
     @GET("api/categorierole")
     Call<List<Categorie>> getAllCategories();
+
+
+
+    /* Historique des Transactions */
+    @GET("api/transaction/{date}/{type_operation}/historique")
+    Call<Home_Historique> historiqueTransactions(@Path("date") String date,
+                                                 @Path("type_operation") String type_operation);
     /*----------------------------------------------------------END SMOPAYE MOBILE-------------------------------------------------------*/
 
 

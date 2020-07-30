@@ -8,18 +8,17 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.RequiresApi;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,31 +69,45 @@ public class HistoriqueTransactions extends AppCompatActivity {
         Intent intent = getIntent();
         typeHistoriqueTransaction = intent.getStringExtra("typeHistoriqueTransaction");
 
-        if (typeHistoriqueTransaction.toLowerCase().equalsIgnoreCase("recharge")) {
+        if (typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("RECHARGE")) {
             titleTypeTransaction.setText(getString(R.string.recharge));
             getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.recharge));
-            toolbar.setSubtitle(getString(R.string.recharge));
+            toolbar.setSubtitle(getString(R.string.ezpass));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
-        } else if(typeHistoriqueTransaction.toLowerCase().equalsIgnoreCase("debitcarte")){
+        } else if(typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("QRCODE")){
+            titleTypeTransaction.setText(getString(R.string.qrcode));
+            getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.qrcode));
+            toolbar.setSubtitle(getString(R.string.ezpass));
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+        } else if(typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("DEBIT")){
             titleTypeTransaction.setText(getString(R.string.debitCarte));
             getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.debitCarte));
-            toolbar.setSubtitle(getString(R.string.debitCarte));
+            toolbar.setSubtitle(getString(R.string.ezpass));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
-        } else if(typeHistoriqueTransaction.toLowerCase().equalsIgnoreCase("transfert")){
+        } else if(typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("TRANSFERT")){
             titleTypeTransaction.setText(getString(R.string.transfert));
             getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.transfert));
-            toolbar.setSubtitle(getString(R.string.transfert));
+            toolbar.setSubtitle(getString(R.string.ezpass));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
-        } else if(typeHistoriqueTransaction.toLowerCase().equalsIgnoreCase("telecollecte")){
-            titleTypeTransaction.setText(getString(R.string.telecollecte));
-            getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.telecollecte));
-            toolbar.setSubtitle(getString(R.string.telecollecte));
+        }else if(typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("FACTURE")){
+            titleTypeTransaction.setText(getString(R.string.facture));
+            getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.facture));
+            toolbar.setSubtitle(getString(R.string.ezpass));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
-        } else{
+        } else if(typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("RETRAIT")){
+            titleTypeTransaction.setText(getString(R.string.retrait));
+            getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.retrait));
+            toolbar.setSubtitle(getString(R.string.ezpass));
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+        }
+
+        else{
             getSupportActionBar().setTitle(getString(R.string.historiqueTransaction));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);

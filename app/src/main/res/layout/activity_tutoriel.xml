@@ -10,7 +10,7 @@
         android:id="@+id/myToolbar"
         layout="@layout/bar_layout"/>
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPagerTutoriel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,6 +19,6 @@
         android:overScrollMode="never"
         android:foregroundGravity="center">
 
-    </android.support.v4.view.ViewPager>
+    </androidx.viewpager.widget.ViewPager>
 
 </RelativeLayout>

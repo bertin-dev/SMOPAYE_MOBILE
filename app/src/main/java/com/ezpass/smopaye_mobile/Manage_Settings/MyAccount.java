@@ -4,15 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,6 +53,8 @@ public class MyAccount extends AppCompatActivity {
     int appColor;
     Constant constant;
     private Toolbar toolbar;
+    private String role;
+    private String categorie;
 
 
     @Override
@@ -77,6 +78,8 @@ public class MyAccount extends AppCompatActivity {
         adresse = intent.getStringExtra("adresse");
         numero_card = intent.getStringExtra("numero_card");
         idUser = intent.getStringExtra("idUser");
+        role = intent.getStringExtra("role");
+        categorie = intent.getStringExtra("categorie");
 
 
         listAllAccount = (ListView)findViewById(R.id.listAllAccount);
@@ -139,6 +142,8 @@ public class MyAccount extends AppCompatActivity {
                         intent.putExtra("adresse", adresse);
                         intent.putExtra("numero_card", numero_card);
                         intent.putExtra("idUser", idUser);
+                        intent.putExtra("role", role);
+                        intent.putExtra("categorie", categorie);
                         startActivity(intent);
                         break;
                     case 1:

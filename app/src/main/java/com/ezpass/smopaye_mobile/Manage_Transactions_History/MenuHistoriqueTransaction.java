@@ -7,10 +7,10 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +27,7 @@ import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 
 public class MenuHistoriqueTransaction extends AppCompatActivity {
 
-    private LinearLayout historiqueRecharge, historiqueTelecollecte, historiqueDebit, historiqueTransfert;
+    private LinearLayout historiqueRecharge, historiqueCodeQr, historiqueDebit, historiqueTransfert, historiqueFacture, historiqueRetrait;
     //changement de couleur du theme
     private Constant constant;
     private SharedPreferences.Editor editor;
@@ -65,17 +65,17 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), HistoriqueTransactions.class);
-                intent.putExtra("typeHistoriqueTransaction", "Manage_Recharge");
+                intent.putExtra("typeHistoriqueTransaction", "RECHARGE");
                 startActivity(intent);
             }
         });
 
-        historiqueTelecollecte = (LinearLayout) findViewById(R.id.historiqueTelecollecte);
-        historiqueTelecollecte.setOnClickListener(new View.OnClickListener() {
+        historiqueCodeQr = (LinearLayout) findViewById(R.id.historiqueCodeQr);
+        historiqueCodeQr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), HistoriqueTransactions.class);
-                intent.putExtra("typeHistoriqueTransaction", "Telecollecte");
+                intent.putExtra("typeHistoriqueTransaction", "QRCODE");
                 startActivity(intent);
             }
         });
@@ -85,7 +85,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), HistoriqueTransactions.class);
-                intent.putExtra("typeHistoriqueTransaction", "debitcarte");
+                intent.putExtra("typeHistoriqueTransaction", "DEBIT");
                 startActivity(intent);
             }
         });
@@ -95,7 +95,27 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), HistoriqueTransactions.class);
-                intent.putExtra("typeHistoriqueTransaction", "transfert");
+                intent.putExtra("typeHistoriqueTransaction", "TRANSFERT");
+                startActivity(intent);
+            }
+        });
+
+        historiqueFacture = (LinearLayout) findViewById(R.id.historiqueFacture);
+        historiqueFacture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), HistoriqueTransactions.class);
+                intent.putExtra("typeHistoriqueTransaction", "FACTURE");
+                startActivity(intent);
+            }
+        });
+
+        historiqueRetrait = (LinearLayout) findViewById(R.id.historiqueRetrait);
+        historiqueRetrait.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), HistoriqueTransactions.class);
+                intent.putExtra("typeHistoriqueTransaction", "RETRAIT");
                 startActivity(intent);
             }
         });

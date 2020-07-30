@@ -18,20 +18,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.fragment.app.Fragment;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -43,7 +41,6 @@ import android.widget.RemoteViews;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
@@ -52,9 +49,6 @@ import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Login;
-import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
-import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
-import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 import com.ezpass.smopaye_mobile.NotifApp;
 import com.ezpass.smopaye_mobile.NotifReceiver;
 import com.ezpass.smopaye_mobile.R;
@@ -65,7 +59,6 @@ import com.ezpass.smopaye_mobile.RemoteNotifications.Data;
 import com.ezpass.smopaye_mobile.RemoteNotifications.MyResponse;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Sender;
 import com.ezpass.smopaye_mobile.RemoteNotifications.Token;
-import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
@@ -543,7 +536,7 @@ public class FragmentTransfer extends Fragment
             message = getString(R.string.networkOnline);
             snackbar = Snackbar.make(getActivity().findViewById(R.id.fragment_transfer), message, Snackbar.LENGTH_LONG);
             view = snackbar.getView();
-            TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
+            TextView textView = view.findViewById(com.google.android.material.R.id.snackbar_text);
             textView.setTextColor(color);
             if(Constant.color == getResources().getColor(R.color.colorPrimaryRed))
                 textView.setBackgroundResource(R.color.colorPrimaryRed);
@@ -557,7 +550,7 @@ public class FragmentTransfer extends Fragment
             message = getString(R.string.networkOffline);
             snackbar = Snackbar.make(getActivity().findViewById(R.id.fragment_transfer), message, Snackbar.LENGTH_INDEFINITE);
             view = snackbar.getView();
-            TextView textView = view.findViewById(android.support.design.R.id.snackbar_text);
+            TextView textView = view.findViewById(com.google.android.material.R.id.snackbar_text);
             textView.setTextColor(color);
             textView.setGravity(Gravity.CENTER);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -616,10 +609,10 @@ public class FragmentTransfer extends Fragment
         if(my_numCompte.isEmpty()){
             til_num_compte1.setError(getString(R.string.insererCompte));
             return false;
-        } /*else if(my_numCompte.length() < 10){
+        } else if(my_numCompte.length() < 9){
             til_num_compte1.setError(getString(R.string.compteCourt));
             return false;
-        }*/ else {
+        } else {
             til_num_compte1.setError(null);
             return true;
         }

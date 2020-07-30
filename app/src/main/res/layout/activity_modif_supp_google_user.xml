@@ -222,7 +222,7 @@
                     android:textColor="@color/bgColorStandard"
                     />
 
-                <android.support.v7.widget.AppCompatSpinner
+                <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/statut"
                     android:layout_weight="75"
                     android:layout_width="0dp"
@@ -262,7 +262,7 @@
 
 
 
-                <android.support.v7.widget.AppCompatSpinner
+                <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/typeChauffeur"
                     android:layout_weight="75"
                     android:layout_width="0dp"

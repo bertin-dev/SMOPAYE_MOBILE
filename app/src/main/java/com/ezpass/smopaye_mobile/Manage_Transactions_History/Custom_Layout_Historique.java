@@ -1,8 +1,10 @@
 package com.ezpass.smopaye_mobile.Manage_Transactions_History;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,32 +12,45 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.ezpass.smopaye_mobile.R;
+import com.ezpass.smopaye_mobile.web_service_historique_trans.User;
 
-public class Custom_Layout_Historique extends ArrayAdapter<String> {
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+public class Custom_Layout_Historique extends ArrayAdapter<User> {
 
 
     private String[] title_montant_valeur;
-    private String[] title_donataire_valeur;
-    private String[] title_beneficiaire_valeur;
+    private String[] title_operation;
+    private String[] title_frais;
     private String[] title_temps;
     private Activity context;
+    private List<User> userList;
+    private static final String TAG = "Custom_Layout_Historiqu";
+    //DecimalFormat df = new DecimalFormat("0.00"); // import java.text.DecimalFormat;
 
-    public Custom_Layout_Historique(Activity context, String[] title_montant_valeur, String[] title_donataire_valeur, String[] title_beneficiaire_valeur, String[] title_temps) {
-        super(context, R.layout.layout_historique, title_montant_valeur);
+    public Custom_Layout_Historique(Activity context, String[] title_montant_valeur, String[] title_operation, String[] title_frais, String[] title_temps, List<User> userList) {
+        super(context, R.layout.layout_historique, userList);
 
         this.title_montant_valeur = title_montant_valeur;
-        this.title_donataire_valeur = title_donataire_valeur;
-        this.title_beneficiaire_valeur = title_beneficiaire_valeur;
+        this.title_operation = title_operation;
+        this.title_frais = title_frais;
         this.title_temps = title_temps;
         this.context = context;
+        this.userList = userList;
     }
 
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         View r = convertView;
         ViewHolder viewHolder = null;
+        Log.w(TAG, "getView:----------------------------------- " + userList.size() );
 
         if(r==null){
             LayoutInflater layoutInflater=context.getLayoutInflater();
@@ -46,10 +61,39 @@ public class Custom_Layout_Historique extends ArrayAdapter<String> {
         else{
             viewHolder = (ViewHolder)r.getTag();
         }
-        viewHolder.tvw1.setText(title_montant_valeur[position]);
-        viewHolder.tvw2.setText(title_donataire_valeur[position]);
-        viewHolder.tvw3.setText(title_beneficiaire_valeur[position]);
-        viewHolder.tvw4.setText(title_temps[position]);
+
+        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat outputFormat = new SimpleDateFormat("dd MMM yyyy à HH:mm:ss");
+        Date date = null;
+        String startDateStrNewFormat = null;
+
+        try {
+            date = inputFormat.parse(title_temps[position]);
+             startDateStrNewFormat = outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        viewHolder.tvw1.setText(title_montant_valeur[position] + " Fcfa");
+        viewHolder.tvw4.setText(startDateStrNewFormat);
+        viewHolder.tvw6.setText(title_frais[position]);
+        if(userList.get(position).getType().toLowerCase().equalsIgnoreCase("emetteur")) {
+            viewHolder.tvw2.setText(userList.get(position).getFirstname().toLowerCase() + " " + userList.get(position).getLastname().toLowerCase());
+            if(userList.get(position).getGender().toLowerCase().equalsIgnoreCase("masculin")){
+                viewHolder.tvw5.setText("M. " + userList.get(position).getFirstname() + " vous avez Emis un paiement par " + title_operation[position]);
+            }else{
+                viewHolder.tvw5.setText("Mme. " + userList.get(position).getFirstname() + " vous avez Emis un paiement par " + title_operation[position]);
+            }
+        } else{
+            viewHolder.tvw3.setText(userList.get(position).getLastname() + " " + userList.get(position).getLastname());
+            if(userList.get(position).getGender().toLowerCase().equalsIgnoreCase("masculin")){
+                viewHolder.tvw5.setText("M. " + userList.get(position).getFirstname() + " vous avez Réçu un paiement par " + title_operation[position]);
+            }else{
+                viewHolder.tvw5.setText("Mme. " + userList.get(position).getFirstname() + " vous avez Réçu un paiement par " + title_operation[position]);
+            }
+        }
+
+
         return r;
     }
 
@@ -58,12 +102,16 @@ public class Custom_Layout_Historique extends ArrayAdapter<String> {
         TextView tvw2;
         TextView tvw3;
         TextView tvw4;
+        TextView tvw5;
+        TextView tvw6;
 
         ViewHolder(View v){
             tvw1 = (TextView)v.findViewById(R.id.title_montant_valeur);
             tvw2 = (TextView)v.findViewById(R.id.title_donataire_valeur);
             tvw3 = (TextView)v.findViewById(R.id.title_beneficiaire_valeur);
             tvw4 = (TextView)v.findViewById(R.id.date_transaction);
+            tvw5 = (TextView)v.findViewById(R.id.typePaiement);
+            tvw6 = (TextView)v.findViewById(R.id.title_frais_valeur);
         }
     }
 

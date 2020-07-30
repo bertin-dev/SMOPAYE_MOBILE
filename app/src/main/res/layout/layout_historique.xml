@@ -8,7 +8,7 @@
 
     <!--VERSION RESPONSIVE POUR TELEPHONE-->
     <!--app:cardUseCompatPadding="true"-->
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="10dp"
@@ -20,8 +20,7 @@
         android:layout_gravity="top"
         app:cardCornerRadius="4dp"
         app:elevation="10dp"
-        app:cardElevation="10dp"
-        >
+        app:cardElevation="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,8 +34,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="100"
-                android:background="@drawable/border_bottom_gray"
-                >
+                android:background="@drawable/border_bottom_gray">
 
                 <TextView
                     android:id="@+id/date_transaction"
@@ -44,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:text="15H30min"
                     android:textStyle="normal"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     android:gravity="start"
                     android:paddingLeft="5dp"
                     android:paddingStart="5dp"
@@ -59,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/montant"
                     android:textStyle="normal"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     android:gravity="end"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_weight="25"
@@ -82,6 +80,7 @@
                     android:layout_marginRight="5dp"
                     android:paddingLeft="5dp"
                     android:paddingStart="5dp"
+                    android:background="@drawable/border_right_slim_gray"
                     android:layout_weight="30"
                     android:orientation="vertical">
 
@@ -92,7 +91,7 @@
                         android:text="@string/donataire"
                         android:textStyle="bold"
                         android:textColor="@color/textColorBlack"
-                        android:textSize="18sp"
+                        android:textSize="15sp"
                         android:autoSizeTextType="uniform"
                         android:autoSizeStepGranularity="2sp"
                         />
@@ -102,32 +101,12 @@
                         android:layout_height="wrap_content"
                         android:text="@string/nomDonataire"
                         android:textStyle="italic"
-                        android:textSize="15sp"
+                        android:textSize="11sp"
                         android:autoSizeTextType="uniform"
                         android:autoSizeStepGranularity="2sp"
                         />
 
                 </LinearLayout>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="15"
-                    android:orientation="vertical">
-
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:background="@drawable/border_bottom_gray_big"/>
-
-                </LinearLayout>
-
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -146,7 +125,7 @@
                         android:text="@string/beneficier"
                         android:textStyle="bold"
                         android:textColor="@color/textColorBlack"
-                        android:textSize="18sp"
+                        android:textSize="15sp"
                         android:autoSizeTextType="uniform"
                         android:autoSizeStepGranularity="2sp"
                         />
@@ -156,11 +135,43 @@
                         android:layout_height="wrap_content"
                         android:text="@string/nomBeneficier"
                         android:textStyle="italic"
-                        android:textSize="15sp"
+                        android:textSize="11sp"
                         android:autoSizeTextType="uniform"
                         android:autoSizeStepGranularity="2sp"
                         />
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="15"
+                    android:background="@drawable/border_right_slim_gray"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/title_frais"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/frais"
+                        android:textStyle="bold"
+                        android:textColor="@color/textColorBlack"
+                        android:textSize="15sp"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeStepGranularity="2sp" />
+                    <TextView
+                        android:id="@+id/title_frais_valeur"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="100"
+                        android:textStyle="italic"
+                        android:textSize="11sp"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeStepGranularity="2sp"
+                        />
                 </LinearLayout>
 
                 <LinearLayout
@@ -182,7 +193,7 @@
                         android:layout_gravity="center_horizontal|center_vertical"
                         android:gravity="center"
                         android:textColor="@color/textColorBlack"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         android:autoSizeTextType="uniform"
                         android:autoSizeStepGranularity="2sp"
                         />
@@ -191,10 +202,30 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/border_bottom_gray">
+
+
+                <TextView
+                    android:id="@+id/typePaiement"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="M/Mme Modjo vous avez effectué un paiement par Code QR "
+                    android:textStyle="normal"
+                    android:textSize="13sp"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeStepGranularity="2sp"/>
+            </LinearLayout>
+
 
 
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>
