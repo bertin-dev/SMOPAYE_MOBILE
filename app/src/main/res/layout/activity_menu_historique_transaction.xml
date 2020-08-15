@@ -259,7 +259,7 @@
                         android:layout_gravity="center"
                         android:fontFamily="@font/roboto_medium"
                         android:text="@string/situation"
-                        android:textColor="#5E5E5E"
+                        android:textColor="@color/viewGray"
                         android:textSize="18sp" />
 
                     <View
@@ -357,7 +357,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_medium"
                         android:text="@string/detailsTransaction"
-                        android:textColor="#5E5E5E"
+                        android:textColor="@color/viewGray"
                         android:textSize="18sp" />
 
                     <View

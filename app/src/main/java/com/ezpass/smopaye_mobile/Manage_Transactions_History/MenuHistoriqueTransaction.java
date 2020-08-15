@@ -154,6 +154,9 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
         RadarDataSet dataSet1 = new RadarDataSet(dataValues1(), "Utilisateur 1");
         RadarDataSet dataSet2 = new RadarDataSet(dataValues2(), "Utilisateur 2");
 
+        radarChart.getDescription().setEnabled(false);
+        radarChart.animateXY(2000, 2000);
+
         dataSet1.setColor(Color.RED);
         dataSet2.setColor(Color.BLUE);
 

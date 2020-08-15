@@ -5,10 +5,22 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import androidx.annotation.RequiresApi;
+
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IFillFormatter;
+import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -52,6 +64,7 @@ public class HistoriqueTransactions extends AppCompatActivity {
     int appColor;
     private Toolbar toolbar;
 
+    private LineChart mChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,6 +185,86 @@ public class HistoriqueTransactions extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             changeColorWidget();
         }
+
+
+        mChart = (LineChart) findViewById(R.id.mChart);
+        //mChart.setBackgroundColor(Color.WHITE);
+        //mChart.setGridBackgroundColor(Color.CYAN);
+        //mChart.setDrawGridBackground(true);
+
+        mChart.setDrawBorders(true);
+        mChart.getDescription().setEnabled(false);
+        mChart.setPinchZoom(false);
+
+        Legend l = mChart.getLegend();
+        l.setEnabled(false);
+
+        YAxis leftAxis = mChart.getAxisLeft();
+        leftAxis.setAxisMaximum(300);
+        leftAxis.setAxisMinimum(50);
+        leftAxis.setDrawAxisLine(false);
+        leftAxis.setDrawZeroLine(false);
+        leftAxis.setDrawGridLines(false);
+
+
+        mChart.animateXY(2000, 2000);
+
+        setData(50, 20);
+
+    }
+
+
+    private void setData(int count, float range){
+
+        ArrayList<Entry> yVals = new ArrayList<>();
+        for(int i=0; i<count;i++){
+            float val = (float) (Math.random()*range) + 100;
+            yVals.add(new Entry(i, val));
+        }
+
+
+        LineDataSet set1;
+
+        if (mChart.getData() != null &&
+                mChart.getData().getDataSetCount() > 0) {
+            set1 = (LineDataSet) mChart.getData().getDataSetByIndex(0);
+            set1.setValues(yVals);
+            mChart.getData().notifyDataChanged();
+            mChart.notifyDataSetChanged();
+        } else {
+            // create a dataset and give it a type
+            set1 = new LineDataSet(yVals, "DataSet 1");
+
+            set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+            set1.setCubicIntensity(0.2f);
+            set1.setDrawFilled(true);
+            set1.setDrawCircles(false);
+            set1.setLineWidth(1.8f);
+            set1.setCircleRadius(4f);
+            set1.setCircleColor(Color.WHITE);
+            set1.setHighLightColor(Color.rgb(244, 117, 117));
+            set1.setColor(Color.WHITE);
+            set1.setFillColor(Color.WHITE);
+            set1.setFillAlpha(100);
+            set1.setDrawHorizontalHighlightIndicator(false);
+            set1.setFillFormatter(new IFillFormatter() {
+                @Override
+                public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
+                    return mChart.getAxisLeft().getAxisMinimum();
+                }
+            });
+
+            // create a data object with the data sets
+            LineData data = new LineData(set1);
+            data.setValueTextSize(9f);
+            data.setDrawValues(false);
+            mChart.setData(data);
+        }
+
+
+
+
+
     }
 
     private void changeTheme() {

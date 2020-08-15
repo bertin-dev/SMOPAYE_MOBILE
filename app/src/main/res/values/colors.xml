@@ -92,5 +92,6 @@
     <color name="gris1Red">#e6e6e6</color>
     <color name="bleuFonceRed">#0C61AB</color>
     <color name="gris2">#6d6d6d</color>
+    <color name="viewGray">#5E5E5E</color>
 
 </resources>
