@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,217 +9,751 @@
     tools:context=".Manage_Transactions_History.MenuHistoriqueTransaction">
 
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:background="@drawable/gradient_bg"
+        android:fitsSystemWindows="true">
 
-        <include
-            android:id="@+id/myToolbar"
-            layout="@layout/bar_layout"/>
-
-        <LinearLayout
-            android:id="@+id/historiqueRecharge"
-            android:focusable="true"
-            android:clickable="true"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:orientation="horizontal">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleTextAppearance="@android:color/transparent"
+            android:fitsSystemWindows="true">
 
-            <ImageView
-                android:id="@+id/historiqueDirection1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_history_black_24dp"/>
 
-            <TextView
-                android:id="@+id/rechargeDirection1"
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/bgColorStandard"
-                android:textSize="20sp"
-                android:textStyle="bold|italic"
-                android:background="@drawable/edittextborder"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:text="@string/recharge"/>
-        </LinearLayout>
+                android:layout_height="400dp"
+                android:layout_marginTop="20dp"
+                android:padding="16dp"
+                android:background="@drawable/gradient_bg"
+                android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/historiqueCodeQr"
-            android:focusable="true"
-            android:clickable="true"
-            android:visibility="visible"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_collapseMode="parallax"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="@string/tableauDeBord"
+                        android:textColor="@color/white"
+                        android:textSize="24sp" />
+
+                    <View
+                        android:layout_width="40dp"
+                        android:layout_height="6dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:background="@drawable/bg_view"
+                        android:layout_marginStart="8dp" />
+
+                </LinearLayout>
+
+                <!--<LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="15"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_mediumitalic"
+                        android:text="Good Morning"
+                        android:textColor="#ffff"
+                        android:textSize="18dp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="28dp"
+                            android:layout_alignParentRight="true"
+                            android:src="@drawable/ic_baseline_history_48" />
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>-->
+
+                <!--<LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="15"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_medium"
+                        android:text="Android Developer"
+                        android:textColor="#ffff"
+                        android:textSize="24dp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:fontFamily="@font/roboto_medium"
+                            android:text="21 C"
+                            android:textColor="#ffff"
+                            android:textSize="18dp" />
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>-->
+
+                <!--<ImageView
+                    app:layout_collapseMode="parallax"
+                    android:src="@drawable/pub_ezpass_transparent"
+                    android:contentDescription="@string/app_name"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_width="200dp"
+                    android:layout_height="70dp" />-->
+
+
+                <com.github.mikephil.charting.charts.RadarChart
+                    android:id="@+id/radar_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+                <!--
+                    android:firstBaselineToTopHeight="0dp"
+                    android:includeFontPadding="false"-->
+
+            </LinearLayout>
+
+
+
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar2"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                android:title="@string/app_name"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/white"
+                app:layout_collapseMode="pin" />
+
+
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            app:cardElevation="5dp"
+            app:cardCornerRadius="30dp"
+            app:cardUseCompatPadding="true">
 
-            <ImageView
-                android:id="@+id/historiqueDirection2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_history_black_24dp"/>
-
-            <TextView
-                android:id="@+id/qrcodeDirection2"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/bgColorStandard"
-                android:textSize="20sp"
-                android:textStyle="bold|italic"
-                android:background="@drawable/edittextborder"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:text="@string/qrcode"/>
-        </LinearLayout>
+                android:background="@drawable/border_full"
+                android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/historiqueDebit"
-            android:focusable="true"
-            android:clickable="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/gradient_bg"
+                    android:gravity="center"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:weightSum="100"
+                    android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/historiqueDirection3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_history_black_24dp"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="20"
+                        android:background="@color/white" />
 
-            <TextView
-                android:id="@+id/debitDirection3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/bgColorStandard"
-                android:textSize="20sp"
-                android:textStyle="bold|italic"
-                android:background="@drawable/edittextborder"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:text="@string/Debit"/>
-        </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="60"
+                        android:gravity="center"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/historiqueTransfert"
-            android:focusable="true"
-            android:visibility="visible"
-            android:clickable="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="5dp"
+                            android:src="@drawable/ic_twotone_dashboard_24"
+                            android:layout_marginEnd="5dp" />
 
-            <ImageView
-                android:id="@+id/historiqueDirection4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_history_black_24dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:lineSpacingMultiplier="1.5"
+                            android:fontFamily="@font/roboto_bold"
+                            android:text="@string/statistiques"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="24sp"/>
 
-            <TextView
-                android:id="@+id/transfertDirection4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/bgColorStandard"
-                android:textSize="20sp"
-                android:textStyle="bold|italic"
-                android:background="@drawable/edittextborder"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:text="@string/transfert"/>
-        </LinearLayout>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:src="@drawable/ic_twotone_dashboard_24"
+                            android:layout_marginStart="5dp" />
 
-        <LinearLayout
-            android:id="@+id/historiqueFacture"
-            android:focusable="true"
-            android:clickable="true"
-            android:visibility="visible"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:orientation="horizontal">
+                    </LinearLayout>
 
-            <ImageView
-                android:id="@+id/historiqueDirection5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_history_black_24dp"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="20"
+                        android:background="@color/white" />
 
-            <TextView
-                android:id="@+id/factureDirection5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/bgColorStandard"
-                android:textSize="20sp"
-                android:textStyle="bold|italic"
-                android:background="@drawable/edittextborder"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:text="@string/facture"/>
-        </LinearLayout>
+                </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/historiqueRetrait"
-            android:visibility="visible"
-            android:focusable="true"
-            android:clickable="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/historiqueDirection6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_history_black_24dp"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:src="@drawable/ic_twotone_timer_24"
+                        android:layout_marginEnd="5dp" />
 
-            <TextView
-                android:id="@+id/retraitDirection6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/bgColorStandard"
-                android:textSize="20sp"
-                android:textStyle="bold|italic"
-                android:background="@drawable/edittextborder"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:text="@string/retrait"/>
-        </LinearLayout>
 
-    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/roboto_medium"
+                        android:text="@string/situation"
+                        android:textColor="#5E5E5E"
+                        android:textSize="18sp" />
 
-</LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:background="#7a8b8b8b"
+                        android:layout_marginStart="8dp" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="12dp"
+                    android:weightSum="2">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_marginEnd="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/gradient"
+                        android:padding="15dp">
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/output" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginLeft="12dp"
+                            android:fontFamily="@font/roboto_regular"
+                            android:text="2186.25 FCFA"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_marginStart="1dp"
+                        android:layout_marginLeft="1dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/gradient"
+                        android:baselineAligned="false"
+                        android:padding="15dp">
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/input" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginLeft="12dp"
+                            android:fontFamily="@font/roboto_regular"
+                            android:text="1200.26 FCFA"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/ic_twotone_details_24"
+                        android:layout_marginEnd="10dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_medium"
+                        android:text="@string/detailsTransaction"
+                        android:textColor="#5E5E5E"
+                        android:textSize="18sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:background="#7a8b8b8b"
+                        android:layout_marginStart="8dp" />
+
+                </LinearLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/historiqueRecharge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginTop="1dp">
+
+                    <ImageView
+                        android:id="@+id/historiqueDirection1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_twotone_account_balance_wallet_48"/>
+
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_toRightOf="@id/historiqueDirection1"
+                        android:layout_marginStart="16dp"
+                        android:layout_toEndOf="@id/historiqueDirection1"
+                        android:layout_gravity="center_vertical|center_horizontal">
+
+                        <TextView
+                            android:id="@+id/rechargeDirection1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold|italic"
+                            android:text="@string/recharge"
+                            android:fontFamily="@font/roboto_bold"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/sub_rechargeDirection1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold|italic"
+                            android:text="@string/rechargeHistorique"
+                            android:textSize="12sp"
+                            android:layout_below="@+id/rechargeDirection1"/>
+
+                    </RelativeLayout>
+
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/arrow_dark"
+                        android:layout_alignParentEnd="true"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorDivider"/>
+
+                <RelativeLayout
+                    android:id="@+id/historiqueRetrait"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:id="@+id/historiqueDirection6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_twotone_trending_down_48"/>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_toRightOf="@id/historiqueDirection6"
+                        android:layout_marginStart="16dp"
+                        android:layout_toEndOf="@id/historiqueDirection6"
+                        android:layout_gravity="center_vertical|center_horizontal">
+
+                        <TextView
+                            android:id="@+id/retraitDirection6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_bold"
+                            android:textStyle="bold|italic"
+                            android:text="@string/retrait"
+                            android:textSize="20sp"/>
+
+                        <TextView
+                            android:id="@+id/sub_retraitDirection6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold|italic"
+                            android:text="@string/retraitHistorique"
+                            android:textSize="12sp"
+                            android:layout_below="@+id/retraitDirection6"/>
+
+
+                    </RelativeLayout>
+
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/arrow_dark"
+                        android:layout_alignParentEnd="true"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorDivider"/>
+
+                <RelativeLayout
+                    android:id="@+id/historiqueTransfert"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:id="@+id/historiqueDirection4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_baseline_import_export_48"/>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_toRightOf="@id/historiqueDirection4"
+                        android:layout_marginStart="16dp"
+                        android:layout_toEndOf="@id/historiqueDirection4"
+                        android:layout_gravity="center_vertical|center_horizontal">
+
+                        <TextView
+                            android:id="@+id/transfertDirection4"
+                            android:layout_width="match_parent"
+                            android:fontFamily="@font/roboto_bold"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold|italic"
+                            android:text="@string/transfert"
+                            android:textSize="20sp"/>
+
+                        <TextView
+                            android:id="@+id/sub_transfertDirection4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold|italic"
+                            android:text="@string/transfertHistorique"
+                            android:textSize="12sp"
+                            android:layout_below="@+id/transfertDirection4"/>
+
+
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/arrow_dark"
+                        android:layout_alignParentEnd="true"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorDivider"/>
+
+                <RelativeLayout
+                    android:id="@+id/historiqueDebit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:id="@+id/historiqueDirection3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_twotone_credit_card_48"/>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_toRightOf="@id/historiqueDirection3"
+                    android:layout_marginStart="16dp"
+                    android:layout_toEndOf="@id/historiqueDirection3"
+                    android:layout_gravity="center_vertical|center_horizontal">
+
+                    <TextView
+                        android:id="@+id/debitDirection3"
+                        android:fontFamily="@font/roboto_bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold|italic"
+                        android:text="@string/Debit"
+                        android:textSize="20sp"/>
+
+                    <TextView
+                        android:id="@+id/sub_debitDirection3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold|italic"
+                        android:text="@string/debitHistorique"
+                        android:textSize="12sp"
+                        android:layout_below="@+id/debitDirection3"/>
+
+
+                </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/arrow_dark"
+                        android:layout_alignParentEnd="true"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorDivider"/>
+
+
+                <RelativeLayout
+                    android:id="@+id/historiqueFacture"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:id="@+id/historiqueDirection5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_twotone_monetization_on_48"/>
+
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_toRightOf="@id/historiqueDirection5"
+                        android:layout_marginStart="16dp"
+                        android:layout_toEndOf="@id/historiqueDirection5"
+                        android:layout_gravity="center_vertical|center_horizontal">
+
+                        <TextView
+                            android:id="@+id/factureDirection5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_bold"
+                            android:textStyle="bold|italic"
+                            android:text="@string/facture"
+                            android:textSize="20sp"/>
+
+                        <TextView
+                            android:id="@+id/sub_factureDirection5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold|italic"
+                            android:text="@string/factureHistorique"
+                            android:textSize="12sp"
+                            android:layout_below="@+id/factureDirection5"/>
+
+
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/arrow_dark"
+                        android:layout_alignParentEnd="true"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorDivider"/>
+
+                <RelativeLayout
+                    android:id="@+id/historiqueCodeQr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:id="@+id/historiqueDirection2"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/qrcode"/>
+
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_toRightOf="@id/historiqueDirection2"
+                        android:layout_marginStart="16dp"
+                        android:layout_toEndOf="@id/historiqueDirection2"
+                        android:layout_gravity="center_vertical|center_horizontal">
+
+                        <TextView
+                            android:id="@+id/qrcodeDirection2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold|italic"
+                            android:fontFamily="@font/roboto_bold"
+                            android:text="@string/qrcode"
+                            android:textSize="20sp"/>
+
+
+                        <TextView
+                            android:id="@+id/sub_qrcodeDirection2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold|italic"
+                            android:text="@string/codeQrHistorique"
+                            android:textSize="12sp"
+                            android:layout_below="@+id/qrcodeDirection2"/>
+
+
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/arrow_dark"
+                        android:layout_alignParentEnd="true"/>
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:src="@drawable/ic_twotone_bar_chart_48"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="6dp"
+        app:backgroundTint="@color/bgColorStandardRed"
+        app:pressedTranslationZ="12dp"
+        app:layout_anchor="@id/app_bar_layout"
+        app:layout_anchorGravity="bottom|right|end" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

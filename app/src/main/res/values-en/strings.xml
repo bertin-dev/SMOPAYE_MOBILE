@@ -628,4 +628,15 @@
     <string name="listSubCard">List of sub-cards</string>
     <string name="listOwnerCard">You do not have a primary card.</string>
 
+    <string name="tableauDeBord">E-ZPASS | Dashboard</string>
+    <string name="statistiques">Statistics</string>
+    <string name="situation">Current situation</string>
+    <string name="detailsTransaction">Transaction Details</string>
+    <string name="rechargeHistorique">Top-ups made from your Monney Mobile</string>
+    <string name="retraitHistorique">Withdraw your money from operators or at smopaye</string>
+    <string name="transfertHistorique">Account to account or card to card transfer</string>
+    <string name="debitHistorique">E-Zpass contactless card payment</string>
+    <string name="factureHistorique">Payment of bills after consumption</string>
+    <string name="codeQrHistorique">Payment of bills after consumption</string>
+
 </resources>

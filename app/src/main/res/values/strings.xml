@@ -708,5 +708,16 @@
     <string name="listSubCard">Liste des sous-cartes</string>
     <string name="listOwnerCard">Vous ne possedez pas de carte principale.</string>
 
+    <string name="tableauDeBord">Tableau de Bord | E-ZPASS</string>
+    <string name="statistiques">Statistiques</string>
+    <string name="situation">Situation actuelle</string>
+    <string name="detailsTransaction">Détails des Transactions</string>
+    <string name="rechargeHistorique">Recharges effectuées à partir de votre Mobile Monney</string>
+    <string name="retraitHistorique">Retirer votre argent auprès des opérateurs ou chez smopaye</string>
+    <string name="transfertHistorique">Transfert compte à compte ou carte à carte.</string>
+    <string name="debitHistorique">Paiement par Carte sans contact E-Zpass</string>
+    <string name="factureHistorique">Paiement des factures après consommation</string>
+    <string name="codeQrHistorique">Paiement rapide par Code QR</string>
+
 
 </resources>

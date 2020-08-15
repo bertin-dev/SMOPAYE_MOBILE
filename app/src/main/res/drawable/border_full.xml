@@ -14,7 +14,7 @@
     </item>
     <item>
         <shape android:shape="rectangle">
-            <stroke android:width="2dp" android:color="@color/textColorBlack"/>
+            <stroke android:width="2dp" android:color="@color/bgColorStandard"/>
         </shape>
     </item>
 </selector>

@@ -4,18 +4,26 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+
+import androidx.annotation.ColorInt;
 import androidx.annotation.RequiresApi;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ezpass.smopaye_mobile.Constant;
@@ -24,10 +32,31 @@ import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.charts.RadarChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.data.RadarData;
+import com.github.mikephil.charting.data.RadarDataSet;
+import com.github.mikephil.charting.data.RadarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
+import java.util.ArrayList;
 
 public class MenuHistoriqueTransaction extends AppCompatActivity {
 
-    private LinearLayout historiqueRecharge, historiqueCodeQr, historiqueDebit, historiqueTransfert, historiqueFacture, historiqueRetrait;
+    private RelativeLayout historiqueRecharge, historiqueCodeQr, historiqueDebit, historiqueTransfert, historiqueFacture, historiqueRetrait;
     //changement de couleur du theme
     private Constant constant;
     private SharedPreferences.Editor editor;
@@ -38,29 +67,24 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
     private Toolbar toolbar;
 
 
+    private RadarChart radarChart;
+    private String[] labels = {"Debit", "Code QR", "Transfert", "Recharge", "Retrait"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         changeTheme();
         setContentView(R.layout.activity_menu_historique_transaction);
-
-
-        toolbar = findViewById(R.id.myToolbar);
+        toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.historiqueTransaction));
-        toolbar.setSubtitle(getString(R.string.voirDetails));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setTitle(getString(R.string.historiqueTransaction));
+            toolbar.setSubtitle(getString(R.string.voirDetails));
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+        }
 
-        /*Intent intent = getIntent();
-        telephone = intent.getStringExtra("telephone");
-
-        Toast.makeText(this, telephone, Toast.LENGTH_SHORT).show();*/
-
-
-
-
-        historiqueRecharge = (LinearLayout) findViewById(R.id.historiqueRecharge);
+        historiqueRecharge = (RelativeLayout) findViewById(R.id.historiqueRecharge);
         historiqueRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,7 +94,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
             }
         });
 
-        historiqueCodeQr = (LinearLayout) findViewById(R.id.historiqueCodeQr);
+        historiqueCodeQr = (RelativeLayout) findViewById(R.id.historiqueCodeQr);
         historiqueCodeQr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,7 +104,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
             }
         });
 
-        historiqueDebit = (LinearLayout) findViewById(R.id.historiqueDebit);
+        historiqueDebit = (RelativeLayout) findViewById(R.id.historiqueDebit);
         historiqueDebit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +114,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
             }
         });
 
-        historiqueTransfert = (LinearLayout) findViewById(R.id.historiqueTransfert);
+        historiqueTransfert = (RelativeLayout) findViewById(R.id.historiqueTransfert);
         historiqueTransfert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,7 +124,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
             }
         });
 
-        historiqueFacture = (LinearLayout) findViewById(R.id.historiqueFacture);
+        historiqueFacture = (RelativeLayout) findViewById(R.id.historiqueFacture);
         historiqueFacture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,7 +134,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
             }
         });
 
-        historiqueRetrait = (LinearLayout) findViewById(R.id.historiqueRetrait);
+        historiqueRetrait = (RelativeLayout) findViewById(R.id.historiqueRetrait);
         historiqueRetrait.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,6 +147,46 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             changeColorWidget();
         }
+
+
+        //GRAPHIQUE
+        radarChart = findViewById(R.id.radar_chart);
+        RadarDataSet dataSet1 = new RadarDataSet(dataValues1(), "Utilisateur 1");
+        RadarDataSet dataSet2 = new RadarDataSet(dataValues2(), "Utilisateur 2");
+
+        dataSet1.setColor(Color.RED);
+        dataSet2.setColor(Color.BLUE);
+
+        RadarData data = new RadarData();
+        data.addDataSet(dataSet1);
+        data.addDataSet(dataSet2);
+
+        XAxis xAxis = radarChart.getXAxis();
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
+        radarChart.setData(data);
+        radarChart.invalidate();
+    }
+
+
+    private ArrayList<RadarEntry> dataValues1(){
+        ArrayList<RadarEntry> dataVals = new ArrayList<>();
+        dataVals.add(new RadarEntry(4));
+        dataVals.add(new RadarEntry(7));
+        dataVals.add(new RadarEntry(1));
+        dataVals.add(new RadarEntry(5));
+        dataVals.add(new RadarEntry(9));
+        return dataVals;
+    }
+
+
+    private ArrayList<RadarEntry> dataValues2(){
+        ArrayList<RadarEntry> dataVals = new ArrayList<>();
+        dataVals.add(new RadarEntry(7));
+        dataVals.add(new RadarEntry(4));
+        dataVals.add(new RadarEntry(8));
+        dataVals.add(new RadarEntry(2));
+        dataVals.add(new RadarEntry(6));
+        return dataVals;
     }
 
 

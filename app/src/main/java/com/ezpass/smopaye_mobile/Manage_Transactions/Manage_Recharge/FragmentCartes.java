@@ -42,6 +42,7 @@ import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.NotifReceiver;
+import com.ezpass.smopaye_mobile.Profil_user.DataUser;
 import com.ezpass.smopaye_mobile.Profil_user.DataUserCard;
 import com.ezpass.smopaye_mobile.Profil_user.Particulier;
 import com.ezpass.smopaye_mobile.R;
@@ -129,6 +130,13 @@ public class FragmentCartes extends Fragment {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<DataAllUserCard> allUserCard;
+    private ListView listViewOwnerCard;
+    private Call<DataUser> CallOwnerCard;
+    private List<DataUserCard> ownerCardResponse;
+    private AdapterOwnerCard adapterOwnerCard;
+    private LinearLayout listOwnerCard;
+    private String file = "tmp_number";
+    private String temp_number = "";
 
 
     public FragmentCartes() {
@@ -148,6 +156,9 @@ public class FragmentCartes extends Fragment {
         listCards = (LinearLayout) view.findViewById(R.id.listCards);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
 
+        listViewOwnerCard = (ListView) view.findViewById(R.id.listViewOwnerCard);
+        listOwnerCard = (LinearLayout) view.findViewById(R.id.listOwnerCard);
+
         tokenManager = TokenManager.getInstance(getActivity().getSharedPreferences("prefs", MODE_PRIVATE));
         if(tokenManager.getToken() == null){
             startActivity(new Intent(getContext(), Login.class));
@@ -162,8 +173,11 @@ public class FragmentCartes extends Fragment {
         idUser = getArguments().getString("idUser", "");
         myCardNumber =  getArguments().getString("compte", "");
         readTempAccountInFile();
+        readTempNumberInFile();
 
-        Toast.makeText(getContext(), idUser, Toast.LENGTH_SHORT).show();
+        showOwnerCard(temp_number);
+
+        //Toast.makeText(getContext(), idUser, Toast.LENGTH_SHORT).show();
         showAllUserCards(Integer.parseInt(idUser));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -198,7 +212,7 @@ public class FragmentCartes extends Fragment {
                     myResponse = response.body();
                     if(myResponse.isSuccess()){
                         //Toast.makeText(ListAllCardSaved.this, myResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                         allUserCard = myResponse.getData();
+                        allUserCard = myResponse.getData();
 
                         if(allUserCard.isEmpty()){
                             listCards.setVisibility(View.VISIBLE);
@@ -228,6 +242,43 @@ public class FragmentCartes extends Fragment {
         });
     }
 
+    private void showOwnerCard(String telephone) {
+
+        CallOwnerCard = service.profil(telephone);
+        CallOwnerCard.enqueue(new Callback<DataUser>() {
+            @Override
+            public void onResponse(Call<DataUser> call, Response<DataUser> response) {
+                Log.w(TAG, "SMOPAYE SERVER onResponse: "+ response);
+                if(response.isSuccessful()){
+                    assert response.body() != null;
+                    ownerCardResponse = response.body().getCards();
+
+                    if(ownerCardResponse.isEmpty()){
+                        listOwnerCard.setVisibility(View.VISIBLE);
+                        listViewOwnerCard.setVisibility(View.GONE);
+                    } else{
+                        listOwnerCard.setVisibility(View.GONE);
+                        adapterOwnerCard = new AdapterOwnerCard(getContext(), ownerCardResponse);
+                        listViewOwnerCard.setAdapter(adapterOwnerCard);
+                    }
+
+                }
+                else{
+                    tokenManager.deleteToken();
+                    startActivity(new Intent(getActivity(), Login.class));
+                    getActivity().finish();
+                }
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(Call<DataUser> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
+            }
+        });
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -239,6 +290,11 @@ public class FragmentCartes extends Fragment {
         if(call != null){
             call.cancel();
             call = null;
+        }
+
+        if(CallOwnerCard != null){
+            CallOwnerCard.cancel();
+            CallOwnerCard = null;
         }
     }
 
@@ -253,7 +309,7 @@ public class FragmentCartes extends Fragment {
 
 
     /**************************************CLASSE EXTEND ARRAYADAPTER*************************************/
-    public class AdapterUserCardList extends ArrayAdapter<DataAllUserCard> {
+    private class AdapterUserCardList extends ArrayAdapter<DataAllUserCard> {
 
         private Context context;
         private List<DataAllUserCard> myAllUserCard;
@@ -360,6 +416,157 @@ public class FragmentCartes extends Fragment {
             }
         });*/
 
+            return convertView;
+        }
+
+
+
+
+        private void rechargeYourCarte(String card_id, Float amount, String account_number){
+
+            //********************DEBUT***********
+            dialog2 = new ACProgressPie.Builder(getContext())
+                    .ringColor(Color.WHITE)
+                    .pieColor(Color.WHITE)
+                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                    .build();
+            dialog2.show();
+            //*******************FIN*****
+
+            call = service.rechargeCards(card_id, amount, account_number);
+            call.enqueue(new Callback<MessageRechargeCardByAccount>() {
+                @Override
+                public void onResponse(Call<MessageRechargeCardByAccount> call, Response<MessageRechargeCardByAccount> response) {
+                    Log.w(TAG, "SMOPAYE SERVER onResponse: "+ response);
+                    dialog2.dismiss();
+                    if(response.isSuccessful()){
+
+                        assert response.body() != null;
+
+                        String card_sender = myCardNumber;
+                        String msg_sender = response.body().getMessage().getNotif();
+
+                        String card_receiver = response.body().getMessage().getCode_number();
+                        String msg_receiver = getString(R.string.notifRechargeCard) + " " + amount + " FCFA " + getString(R.string.notif2RechargeCard) + response.body().getMessage().getDeposit() + " FCFA";
+
+                        successResponse(card_receiver, msg_receiver, card_sender, msg_sender);
+
+                    }
+                    else{
+                        ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                        Toast.makeText(getActivity(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        errorResponse(myCardNumber, apiError.getMessage());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<MessageRechargeCardByAccount> call, Throwable t) {
+                    dialog2.dismiss();
+                    Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
+                }
+            });
+        }
+
+
+
+    }
+
+    private class AdapterOwnerCard extends ArrayAdapter<DataUserCard> {
+
+        private Context context;
+        private List<DataUserCard> myOwnerCard;
+
+        public AdapterOwnerCard(Context context, List<DataUserCard> myOwnerCard){
+            super(context, R.layout.list_all_user_cards, myOwnerCard);
+            this.context = context;
+            this.myOwnerCard = myOwnerCard;
+        }
+
+
+        @SuppressLint("SetTextI18n")
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            LayoutInflater layoutInflater = LayoutInflater.from(context);
+            convertView = layoutInflater.inflate(R.layout.list_all_user_cards, parent, false);
+
+            //info sur la carte
+            List<DataUserCard> card = myOwnerCard;
+            for(int i=0; i<card.size();i++) {
+
+                //telephone du détenteur de carte
+                TextView txtV_telUserCard = (TextView) convertView.findViewById(R.id.telUserCard);
+                txtV_telUserCard.setText("Tel: " + temp_number);
+
+                //date de creation de la carte
+                //TextView txtV_create_at = (TextView) convertView.findViewById(R.id.created_at);
+                //txtV_create_at.setText(getString(R.string.create) + card.get(i).getCreated_at().substring(0,10));
+                //numéro de carte
+                TextView txtV_codeNumber = (TextView) convertView.findViewById(R.id.code_number);
+                txtV_codeNumber.setText("N°"+card.get(i).getCode_number());
+                //numéro de série
+                TextView txtV_serialNumber = (TextView) convertView.findViewById(R.id.serial_number);
+                txtV_serialNumber.setText(card.get(i).getSerial_number());
+                //etat de la carte
+                TextView txtV_cardState = (TextView) convertView.findViewById(R.id.cardState);
+                txtV_cardState.setText(getString(R.string.etat) + card.get(i).getCard_state());
+                //nom et prenom
+                //TextView txtV_exp_at = (TextView) convertView.findViewById(R.id.username);
+                //txtV_exp_at.setText(card.getEnd_date());
+
+                CheckBox chk_State = (CheckBox) convertView.findViewById(R.id.cardSelected);
+                int finalI = i;
+                chk_State.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked){
+                            chk_State.setChecked(false);
+                            //Toast.makeText(context, card.get(finalI).getId(), Toast.LENGTH_SHORT).show();
+
+                            View view = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_recharge_carte, null);
+                            TextView title = (TextView) view.findViewById(R.id.title);
+                            TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
+                            statutOperation.setText(getString(R.string.rechargeCard) + card.get(finalI).getCode_number() + " " + getString(R.string.amountPlease));
+                            EditText montant = (EditText) view.findViewById(R.id.edit_montant);
+                            title.setText(getString(R.string.recharge));
+                            build_error.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    if(!montant.getText().toString().equalsIgnoreCase("")){
+                                        rechargeYourCarte(card.get(finalI).getCode_number(), Float.parseFloat(montant.getText().toString()), temp_account);
+                                    } else{
+                                        Toast.makeText(context, getString(R.string.veuillezInsererMontant), Toast.LENGTH_SHORT).show();
+                                    }
+
+                                }
+                            });
+                            build_error.setNeutralButton(getString(R.string.annuler), new DialogInterface.OnClickListener() { // define the 'Cancel' button
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Either of the following two lines should work.
+                                    dialog.cancel();
+                                    //dialog.dismiss();
+                                }
+                            });
+                            build_error.setCancelable(false);
+                            build_error.setView(view);
+                            build_error.show();
+
+                        }
+                    }
+                });
+            }
+
+
+
+            /**********************************************************************/
+            /*List<Particulier> particuliers = myAllUserCard.get(position).getParticulier();
+            for(int j=0; j<particuliers.size();j++){
+                //nom et prenom
+                TextView txtV_username = (TextView) convertView.findViewById(R.id.username);
+                txtV_username.setText(particuliers.get(j).getFirstname() + " " + particuliers.get(j).getLastname());
+            }*/
             return convertView;
         }
 
@@ -680,6 +887,19 @@ public class FragmentCartes extends Fragment {
             getActivity().setTheme(Constant.theme);
         }else{
             getActivity().setTheme(appTheme);
+        }
+    }
+
+    private void readTempNumberInFile() {
+        /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
+        try{
+            FileInputStream fIn = getActivity().openFileInput(file);
+            while ((c = fIn.read()) != -1){
+                temp_number = temp_number + Character.toString((char)c);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
     }
 
