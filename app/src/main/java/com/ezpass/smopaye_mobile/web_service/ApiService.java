@@ -5,6 +5,7 @@ import com.ezpass.smopaye_mobile.Profil_user.Card;
 import com.ezpass.smopaye_mobile.Profil_user.Categorie;
 import com.ezpass.smopaye_mobile.Profil_user.DataUser;
 import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
+import com.ezpass.smopaye_mobile.web_service_historique_trans.Home_AllHistoriques;
 import com.ezpass.smopaye_mobile.web_service_historique_trans.Home_Historique;
 import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 import com.ezpass.smopaye_mobile.web_service_response.HomeResponse;
@@ -256,10 +257,15 @@ public interface ApiService {
 
 
 
-    /* Historique des Transactions */
+    /* Historique des Transactions filtré par date */
     @GET("api/transaction/{date}/{type_operation}/historique")
     Call<Home_Historique> historiqueTransactions(@Path("date") String date,
                                                  @Path("type_operation") String type_operation);
+
+
+    /* Historique des Transactions complètes */
+    @GET("api/transaction")
+    Call<Home_AllHistoriques> allTransactions();
     /*----------------------------------------------------------END SMOPAYE MOBILE-------------------------------------------------------*/
 
 
