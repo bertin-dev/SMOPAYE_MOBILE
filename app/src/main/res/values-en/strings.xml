@@ -638,5 +638,6 @@
     <string name="debitHistorique">E-Zpass contactless card payment</string>
     <string name="factureHistorique">Payment of bills after consumption</string>
     <string name="codeQrHistorique">Payment of bills after consumption</string>
+    <string name="user1">User 1</string>
 
 </resources>

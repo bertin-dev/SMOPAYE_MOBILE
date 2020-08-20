@@ -38,8 +38,8 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.2.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.github.scottyab:showhidepasswordedittext:0.8'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -98,7 +98,7 @@ dependencies {
 
     //service permettant de gerer le QR code
     //implementation 'com.google.zxing:core:3.2.1' //deja intégré dans la bibliotheque Core 3.1.0
-    implementation 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
+    implementation 'com.journeyapps:zxing-android-embedded:3.5.0@aar'
     //implementation('com.journeyapps:zxing-android-embedded:4.1.0') { transitive = false }
     //implementation 'com.google.zxing:core:3.3.0'
 
@@ -118,8 +118,8 @@ dependencies {
     //service permettant de gerer le binding entre xml et java (utilise minimum api 24 (la gestion des vues))
     //implementation 'com.jakewharton:butterknife:9.0.0-rc2'
     //annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc2'
-    implementation 'com.jakewharton:butterknife:10.0.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
+    implementation 'com.jakewharton:butterknife:10.2.3'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
 
 
     //service permettant de gerer permettant de gerer toutes les erreurs produites par les nouvelles library intégrées just au dessus

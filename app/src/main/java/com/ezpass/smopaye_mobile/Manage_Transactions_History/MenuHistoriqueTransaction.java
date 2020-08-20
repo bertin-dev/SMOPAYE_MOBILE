@@ -22,11 +22,13 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -70,9 +72,15 @@ import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.Pulse;
+import com.github.ybq.android.spinkit.style.ThreeBounce;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -80,9 +88,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.ezpass.smopaye_mobile.R2.id.DoubleBounce;
+import static com.ezpass.smopaye_mobile.R2.id.off;
 
 public class MenuHistoriqueTransaction extends AppCompatActivity {
 
@@ -98,12 +112,13 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
 
     private RadarChart radarChart;
     private String[] labels = {"Debit", "Code QR", "Transfert", "Recharge", "Retrait", "Facture"};
+    String[] countries = new String[]{"India", "USA", "UK", "Libya", "Cuba"};
 
     private static final String TAG = "MenuHistoriqueTransacti";
     private ApiService service;
     private TokenManager tokenManager;
     private Call<Home_AllHistoriques> transaction;
-    List<AllOperations> historique;
+    private List<AllOperations> historique;
     private int nbreDebit;
     private int nbreCodeQR;
     private int nbreTransfert;
@@ -119,6 +134,24 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
     private float totalRetrait;
     private float totalFacture;
 
+    private ProgressBar progressBar;
+    private Sprite wave;
+    DecimalFormat df = new DecimalFormat("0.00");
+
+    @BindView(R.id.recharge)
+    TextView recharge;
+    @BindView(R.id.retrait)
+    TextView retrait;
+    @BindView(R.id.transfert)
+    TextView transfert;
+    @BindView(R.id.facture)
+    TextView facture;
+    @BindView(R.id.debit)
+    TextView debit;
+    @BindView(R.id.codeQr)
+    TextView codeQr;
+
+    private PieChart mChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +166,12 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
         }
+
+        /*Initialisation de tous les objets qui seront manipulés*/
+        ButterKnife.bind(this);
+         progressBar = (ProgressBar)findViewById(R.id.spinKit_history);
+         wave = new Pulse();
+        progressBar.setIndeterminateDrawable(wave);
 
         //web service
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
@@ -404,7 +443,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                     dataValueChart.add(new RadarEntry(nbreRecharge));
                     dataValueChart.add(new RadarEntry(nbreRetrait));
                     dataValueChart.add(new RadarEntry(nbreFacture));
-                    dataSet1 = new RadarDataSet(dataValueChart, "Utilisateur 1");
+                    dataSet1 = new RadarDataSet(dataValueChart, getString(R.string.user1));
 
 
                     dataSet1.setColor(Color.rgb(103, 110, 129));
@@ -426,6 +465,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                     radarChart.setWebAlpha(100);
 
                     //radar marker
+                    progressBar.setVisibility(View.GONE);
                     MarkerView mv = new RadarMarkerView(MenuHistoriqueTransaction.this, R.layout.radar_markerview);
                     mv.setChartView(radarChart); // For bounds control
                     radarChart.setMarker(mv); // Set the marker to the chart
@@ -472,7 +512,14 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                     l.setYEntrySpace(5f);
                     l.setTextColor(Color.WHITE);
 
-                    Toast.makeText(MenuHistoriqueTransaction.this, "DEBIT: " + totalDebit + " RECHARGE " + totalRecharge, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MenuHistoriqueTransaction.this, "DEBIT: " + totalDebit + " RECHARGE " + totalRecharge, Toast.LENGTH_SHORT).show();
+
+                    recharge.setText(df.format(totalRecharge) + " FCFA");
+                    retrait.setText(df.format(totalRetrait) + " FCFA");
+                    transfert.setText(df.format(totalTransfert) + " FCFA");
+                    debit.setText(df.format(totalDebit) + " FCFA");
+                    facture.setText(df.format(totalFacture) + " FCFA");
+                    codeQr.setText(df.format(totalCodeQR) + " FCFA");
 
                 }
                 else{
@@ -486,6 +533,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Home_AllHistoriques> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
             }
         });
@@ -529,5 +577,97 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
         dataVals.add(new RadarEntry(6));
         return dataVals;
     }*/
+
+
+    @OnClick(R.id.floatingDashboard)
+    void loadPieChart(){
+
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this, R.style.BottomSheetDialogTheme);
+        View bottomSheetView = LayoutInflater.from(this)
+                .inflate(
+                        R.layout.layout_bottom_sheet_chart,
+                        (LinearLayout)bottomSheetDialog.findViewById(R.id.bottom_sheet)
+                );
+
+        mChart = bottomSheetView.findViewById(R.id.chart1);
+        mChart.setBackgroundColor(Color.WHITE);
+
+        progressBar = bottomSheetView.findViewById(R.id.spinKit_graph);
+        wave = new Pulse();
+        progressBar.setIndeterminateDrawable(wave);
+
+        //moveOffScreen();
+
+        mChart.setUsePercentValues(true);
+        mChart.getDescription().setEnabled(false);
+        mChart.setDrawHoleEnabled(true);
+        mChart.setMaxAngle(180);
+        mChart.setRotationAngle(180);
+        mChart.setCenterTextOffset(0,-20);
+
+        setData(4, 100);
+
+        mChart.animateY(1000, Easing.EaseInOutCubic);
+
+        Legend l = mChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+        l.setYOffset(50f);
+
+        /*TextView updateDateDialog = bottomSheetView.findViewById(R.id.updateDateDialog);
+
+        String current = new SimpleDateFormat("dd/MM/yyyy à HH:mm:ss", Locale.getDefault()).format(new Date());
+        updateDateDialog.setText(getString(R.string.updateTo) + " " + current);*/
+
+
+        /*bottomSheetView.findViewById(R.id.btnClose).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), getString(R.string.fermeture), Toast.LENGTH_SHORT).show();
+                bottomSheetDialog.dismiss();
+            }
+        });*/
+
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
+    }
+
+
+    private void setData(int count, int range){
+        ArrayList<PieEntry> values = new ArrayList<>();
+
+        for(int i=0; i<count; i++){
+            float val = (float)((Math.random()*range)+range/5);
+            values.add(new PieEntry(val, countries[i]));
+        }
+
+        PieDataSet dataSet = new PieDataSet(values, "Partner");
+        dataSet.setSelectionShift(5f);
+        dataSet.setSliceSpace(3f);
+        dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+
+        PieData data = new PieData(dataSet);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(15f);
+        data.setValueTextColor(Color.WHITE);
+
+        mChart.setData(data);
+        mChart.invalidate();
+    }
+
+    private void moveOffScreen(PieChart mChart){
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int height = metrics.heightPixels;
+
+        int offset = (int) (height*0.5);
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mChart.getLayoutParams();
+        params.setMargins(0,0, 0, -offset);
+        mChart.setLayoutParams(params);
+    }
 
 }

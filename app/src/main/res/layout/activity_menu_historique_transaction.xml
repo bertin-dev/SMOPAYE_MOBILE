@@ -130,14 +130,27 @@
                     android:layout_width="200dp"
                     android:layout_height="70dp" />-->
 
-
-                <com.github.mikephil.charting.charts.RadarChart
-                    android:id="@+id/radar_chart"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-                <!--
-                    android:firstBaselineToTopHeight="0dp"
-                    android:includeFontPadding="false"-->
+                    android:layout_height="wrap_content">
+                    <com.github.mikephil.charting.charts.RadarChart
+                        android:id="@+id/radar_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+                    <!--
+                        android:firstBaselineToTopHeight="0dp"
+                        android:includeFontPadding="false"-->
+                    <com.github.ybq.android.spinkit.SpinKitView
+                        android:id="@+id/spinKit_history"
+                        style="@style/SpinKitView"
+                        android:layout_centerInParent="true"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:SpinKit_Color="@color/white" />
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -326,6 +339,139 @@
 
                         <TextView
                             android:id="@+id/retrait"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginLeft="12dp"
+                            android:fontFamily="@font/roboto_regular"
+                            android:text="1200.26 FCFA"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="12dp"
+                    android:weightSum="2">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_marginEnd="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/gradient"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_baseline_import_export_48" />
+
+                        <TextView
+                            android:id="@+id/transfert"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginLeft="12dp"
+                            android:fontFamily="@font/roboto_regular"
+                            android:text="2186.25 FCFA"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_marginStart="1dp"
+                        android:layout_marginLeft="1dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/gradient"
+                        android:baselineAligned="false"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_twotone_credit_card_48" />
+
+                        <TextView
+                            android:id="@+id/debit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginLeft="12dp"
+                            android:fontFamily="@font/roboto_regular"
+                            android:text="1200.26 FCFA"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="12dp"
+                    android:weightSum="2">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_marginEnd="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/gradient"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_twotone_monetization_on_48" />
+
+                        <TextView
+                            android:id="@+id/facture"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginLeft="12dp"
+                            android:fontFamily="@font/roboto_regular"
+                            android:text="2186.25 FCFA"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_marginStart="1dp"
+                        android:layout_marginLeft="1dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/gradient"
+                        android:baselineAligned="false"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/qrcode" />
+
+                        <TextView
+                            android:id="@+id/codeQr"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
@@ -749,6 +895,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingDashboard"
         android:src="@drawable/ic_twotone_bar_chart_48"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

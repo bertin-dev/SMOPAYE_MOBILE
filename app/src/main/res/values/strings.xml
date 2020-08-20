@@ -718,6 +718,7 @@
     <string name="debitHistorique">Paiement par Carte sans contact E-Zpass</string>
     <string name="factureHistorique">Paiement des factures après consommation</string>
     <string name="codeQrHistorique">Paiement rapide par Code QR</string>
+    <string name="user1">Utilisateur 1</string>
 
 
 </resources>
