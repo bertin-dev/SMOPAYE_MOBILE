@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -19,6 +20,10 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -152,6 +157,14 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
     TextView codeQr;
 
     private PieChart mChart;
+    private int nbreDebit1;
+    private int nbreCodeQR1;
+    private int nbreTransfert1;
+    private int nbreRecharge1;
+    private int nbreRetrait1;
+    private int nbreFacture1;
+    private Call<Home_AllHistoriques> transaction1;
+    private List<AllOperations> historique1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -389,6 +402,11 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
             transaction.cancel();
             transaction = null;
         }
+
+        if(transaction1 != null){
+            transaction1.cancel();
+            transaction1 = null;
+        }
     }
 
     @Override
@@ -443,7 +461,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                     dataValueChart.add(new RadarEntry(nbreRecharge));
                     dataValueChart.add(new RadarEntry(nbreRetrait));
                     dataValueChart.add(new RadarEntry(nbreFacture));
-                    dataSet1 = new RadarDataSet(dataValueChart, getString(R.string.user1));
+                    dataSet1 = new RadarDataSet(dataValueChart, getString(R.string.successful));
 
 
                     dataSet1.setColor(Color.rgb(103, 110, 129));
@@ -512,7 +530,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                     l.setYEntrySpace(5f);
                     l.setTextColor(Color.WHITE);
 
-                    //Toast.makeText(MenuHistoriqueTransaction.this, "DEBIT: " + totalDebit + " RECHARGE " + totalRecharge, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MenuHistoriqueTransaction.this, "DEBIT: " + nbreDebit + " RECHARGE " + nbreRecharge, Toast.LENGTH_SHORT).show();
 
                     recharge.setText(df.format(totalRecharge) + " FCFA");
                     retrait.setText(df.format(totalRetrait) + " FCFA");
@@ -590,52 +608,152 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                 );
 
         mChart = bottomSheetView.findViewById(R.id.chart1);
-        mChart.setBackgroundColor(Color.WHITE);
 
-        progressBar = bottomSheetView.findViewById(R.id.spinKit_graph);
-        wave = new Pulse();
-        progressBar.setIndeterminateDrawable(wave);
+        loadDataApi(new ArrayList<>());
+        //setData(4, 100);
 
-        //moveOffScreen();
-
-        mChart.setUsePercentValues(true);
-        mChart.getDescription().setEnabled(false);
-        mChart.setDrawHoleEnabled(true);
-        mChart.setMaxAngle(180);
-        mChart.setRotationAngle(180);
-        mChart.setCenterTextOffset(0,-20);
-
-        setData(4, 100);
-
-        mChart.animateY(1000, Easing.EaseInOutCubic);
-
-        Legend l = mChart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        l.setDrawInside(false);
-        l.setYOffset(50f);
-
-        /*TextView updateDateDialog = bottomSheetView.findViewById(R.id.updateDateDialog);
-
-        String current = new SimpleDateFormat("dd/MM/yyyy à HH:mm:ss", Locale.getDefault()).format(new Date());
-        updateDateDialog.setText(getString(R.string.updateTo) + " " + current);*/
-
-
-        /*bottomSheetView.findViewById(R.id.btnClose).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), getString(R.string.fermeture), Toast.LENGTH_SHORT).show();
-                bottomSheetDialog.dismiss();
-            }
-        });*/
 
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
     }
 
+    private void loadDataApi(ArrayList<PieEntry> values) {
 
-    private void setData(int count, int range){
+        transaction1 = service.allTransactions();
+        transaction1.enqueue(new Callback<Home_AllHistoriques>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(Call<Home_AllHistoriques> call, Response<Home_AllHistoriques> response) {
+                Log.w(TAG, "SMOPAYE_SERVER onResponse Bottom Sheet " +response);
+
+                if(response.isSuccessful()){
+
+                    assert response.body() != null;
+                    historique1 = response.body().getData();
+                    //CHARGEMENT DES DONNEES GRAPHIQUES
+                    mChart.setBackgroundColor(Color.WHITE);
+                    mChart.setUsePercentValues(true);
+                    mChart.getDescription().setEnabled(false);
+                    mChart.setDrawHoleEnabled(true);
+                    mChart.setMaxAngle(180);
+                    mChart.setRotationAngle(180);
+                    mChart.setCenterTextOffset(0,-20);
+
+
+                    mChart.setCenterText(generateCenterSpannableText());
+                    mChart.setHoleColor(Color.WHITE);
+                    mChart.setTransparentCircleColor(Color.WHITE);
+                    mChart.setTransparentCircleAlpha(110);
+                    mChart.setHoleRadius(58f);
+                    mChart.setTransparentCircleRadius(61f);
+
+                    mChart.setDrawCenterText(true);
+
+                    mChart.setRotationEnabled(false);
+                    mChart.setHighlightPerTapEnabled(true);
+                    ArrayList<Integer> colors = new ArrayList<>();
+                    Integer[] productColors = {Color.DKGRAY, Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.BLACK};        //ArrayList<PieEntry> values;
+                    values.clear();
+                    init1();
+                    for(int i=0; i<historique1.size(); i++){
+
+                        if(historique1.get(i).getTransaction_type().toLowerCase().contains("facture")){
+                            nbreFacture1++;
+                        } else if(historique1.get(i).getTransaction_type().toLowerCase().contains("debit")){
+                            nbreDebit1++;
+                        } else if(historique1.get(i).getTransaction_type().toLowerCase().contains("transfert")){
+                            nbreTransfert1++;
+                        } else if(historique1.get(i).getTransaction_type().toLowerCase().contains("recharge")){
+                            nbreRecharge1++;
+                        } else if(historique1.get(i).getTransaction_type().toLowerCase().contains("retrait")){
+                            nbreRetrait1++;
+                        } else if(historique1.get(i).getTransaction_type().toLowerCase().contains("qrcode")){
+                            nbreCodeQR1++;
+                        }
+                    }
+
+                    values.add(new PieEntry(nbreDebit1, "Debit"));
+                    values.add(new PieEntry(nbreCodeQR1, "Code QR"));
+                    values.add(new PieEntry(nbreTransfert1, "Transfert"));
+                    values.add(new PieEntry(nbreRecharge1, "Recharge"));
+                    values.add(new PieEntry(nbreRetrait1, "Retrait"));
+                    values.add(new PieEntry(nbreFacture1, "Facture"));
+
+                    for(int j=0;j<values.size();j++){
+                        colors.add(productColors[j]);
+                    }
+
+                    Toast.makeText(MenuHistoriqueTransaction.this, "DEBIT-1: " + nbreDebit1 + " RECHARGE-1 " + nbreRecharge1, Toast.LENGTH_SHORT).show();
+
+                    PieDataSet dataSet = new PieDataSet(values, getString(R.string.successful));
+                    dataSet.setSelectionShift(5f);
+                    dataSet.setSliceSpace(3f);
+                    //dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+                    dataSet.setColors(colors);
+
+                    PieData data = new PieData(dataSet);
+                    data.setValueFormatter(new PercentFormatter());
+                    data.setValueTextSize(15f);
+                    data.setValueTextColor(Color.WHITE);
+
+                    mChart.setData(data);
+                    mChart.invalidate();
+
+
+
+                    mChart.animateY(2000, Easing.EaseInOutCubic);
+
+                    Legend l = mChart.getLegend();
+                    l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+                    l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+                    l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+                    l.setDrawInside(false);
+                    l.setYOffset(50f);
+
+                    //TextView updateDateDialog = bottomSheetView.findViewById(R.id.updateDateDialog);
+                    //String current = new SimpleDateFormat("dd/MM/yyyy à HH:mm:ss", Locale.getDefault()).format(new Date());
+                    //updateDateDialog.setText(getString(R.string.updateTo) + " " + current);
+
+
+                }
+                else{
+                    tokenManager.deleteToken();
+                    startActivity(new Intent(MenuHistoriqueTransaction.this, Login.class));
+                    finish();
+                }
+            }
+            @Override
+            public void onFailure(Call<Home_AllHistoriques> call, Throwable t) {
+                Log.w(TAG, "SMOPAYE_SERVER onFailure Bottom Sheet " + t.getMessage());
+            }
+        });
+
+    }
+
+    private void init1() {
+
+        nbreFacture1 = 0;
+        nbreDebit1 = 0;
+        nbreTransfert1 = 0;
+        nbreRecharge1 = 0;
+        nbreRetrait1 = 0;
+        nbreCodeQR1 = 0;
+    }
+
+
+    private SpannableString generateCenterSpannableText() {
+        SpannableString s = new SpannableString("Transactions\nChez E-ZPASS by SMOPAYE");
+        s.setSpan(new RelativeSizeSpan(1.7f), 0, 14, 0);
+        s.setSpan(new StyleSpan(Typeface.NORMAL), 14, s.length() - 15, 0);
+        s.setSpan(new ForegroundColorSpan(Color.GRAY), 14, s.length() - 15, 0);
+        s.setSpan(new RelativeSizeSpan(.8f), 14, s.length() - 15, 0);
+        s.setSpan(new StyleSpan(Typeface.ITALIC), s.length() - 18, s.length(), 0);
+        s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length() - 18, s.length(), 0);
+        return s;
+    }
+
+
+    /*private void setData(int count, int range){
         ArrayList<PieEntry> values = new ArrayList<>();
 
         for(int i=0; i<count; i++){
@@ -643,7 +761,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
             values.add(new PieEntry(val, countries[i]));
         }
 
-        PieDataSet dataSet = new PieDataSet(values, "Partner");
+        PieDataSet dataSet = new PieDataSet(values, getString(R.string.successful));
         dataSet.setSelectionShift(5f);
         dataSet.setSliceSpace(3f);
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
@@ -655,19 +773,6 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
 
         mChart.setData(data);
         mChart.invalidate();
-    }
-
-    private void moveOffScreen(PieChart mChart){
-        Display display = getWindowManager().getDefaultDisplay();
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int height = metrics.heightPixels;
-
-        int offset = (int) (height*0.5);
-
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mChart.getLayoutParams();
-        params.setMargins(0,0, 0, -offset);
-        mChart.setLayoutParams(params);
-    }
+    }*/
 
 }

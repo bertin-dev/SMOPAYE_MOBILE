@@ -661,7 +661,7 @@
     <string name="french">Français</string>
     <string name="english">Anglais</string>
     <string name="currentSubscription">Votre abonnement actuel est au service.</string>
-    <string name="listCard">Vous ne possedez pas de cartes.</string>
+    <string name="listCard">Vous ne possedez pas de sous-cartes.</string>
     <string name="rechargeCard">Vous êtes sur le point de recharger la carte N°</string>
     <string name="amountPlease">Entrez le montant s\'il vous plait</string>
     <string name="create">Créée : </string>
@@ -718,7 +718,8 @@
     <string name="debitHistorique">Paiement par Carte sans contact E-Zpass</string>
     <string name="factureHistorique">Paiement des factures après consommation</string>
     <string name="codeQrHistorique">Paiement rapide par Code QR</string>
-    <string name="user1">Utilisateur 1</string>
+    <string name="successful">opération réussie</string>
+    <string name="failled">opération échouée</string>
 
 
 </resources>
