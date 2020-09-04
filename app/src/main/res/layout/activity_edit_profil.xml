@@ -368,7 +368,7 @@
                     android:layout_gravity="center"
                     android:imeOptions="actionDone"
                     android:padding="7dp"
-                    android:enabled="true"
+                    android:enabled="false"
                     android:drawablePadding="7dp"
                     android:maxLines="1"
                     android:maxLength="8"

@@ -640,5 +640,6 @@
     <string name="codeQrHistorique">Payment of bills after consumption</string>
     <string name="successful">successful operation</string>
     <string name="failled">failed operation</string>
-
+    <string name="transactionFrequences">Frequency of Transactions</string>
+    <string name="codeQR">QR Code</string>
 </resources>

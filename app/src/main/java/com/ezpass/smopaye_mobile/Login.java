@@ -21,6 +21,8 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+
+import com.ezpass.smopaye_mobile.Manage_Register.SouscriptionUploadIMGidCard;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -459,7 +461,7 @@ public class Login extends AppCompatActivity
 
     @OnClick(R.id.btnAutoRegister)
     void autoRegister(){
-        Intent intent = new Intent(getApplicationContext(), Souscription_User_AutoEnreg.class);
+        Intent intent = new Intent(getApplicationContext(), SouscriptionUploadIMGidCard.class);
         startActivity(intent);
     }
 
@@ -760,9 +762,11 @@ public class Login extends AppCompatActivity
         String psw = til_password1.getEditText().getText().toString().trim();
         if(psw.isEmpty()){
             til_password1.setError(getString(R.string.insererPassword));
+            til_password1.requestFocus();
             return false;
         } else if(psw.length() < 5){
             til_password1.setError(getString(R.string.passwordCourt));
+            til_password1.requestFocus();
             return false;
         } else {
             til_password1.setError(null);
@@ -781,9 +785,11 @@ public class Login extends AppCompatActivity
         String myTel = til_telephone1.getEditText().getText().toString().trim();
         if(myTel.isEmpty()){
             til_telephone1.setError(getString(R.string.insererTelephone));
+            til_telephone1.requestFocus();
             return false;
         } else if(myTel.length() < 9){
             til_telephone1.setError(getString(R.string.telephoneCourt));
+            til_telephone1.requestFocus();
             return false;
         } else {
             til_telephone1.setError(null);

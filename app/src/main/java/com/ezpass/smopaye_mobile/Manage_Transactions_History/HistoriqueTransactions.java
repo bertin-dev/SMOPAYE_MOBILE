@@ -11,9 +11,15 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import androidx.annotation.RequiresApi;
 
+import com.ezpass.smopaye_mobile.Login;
+import com.ezpass.smopaye_mobile.web_service.ApiService;
+import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
+import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
+import com.ezpass.smopaye_mobile.web_service_historique_trans.AllOperations;
+import com.ezpass.smopaye_mobile.web_service_historique_trans.Home_AllHistoriques;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -21,6 +27,8 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.Pulse;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -29,8 +37,12 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +61,10 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class HistoriqueTransactions extends AppCompatActivity {
 
     private TextView mois, annee, titleTypeTransaction;
@@ -65,6 +81,15 @@ public class HistoriqueTransactions extends AppCompatActivity {
     private Toolbar toolbar;
 
     private LineChart mChart;
+    private Intent intent;
+    private static final String TAG = "HistoriqueTransactions";
+    private ApiService service;
+    private TokenManager tokenManager;
+    private Call<Home_AllHistoriques> transaction;
+    private List<AllOperations> historique;
+    private int j = 0;
+    private ProgressBar progressBar;
+    private Sprite wave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,14 +97,26 @@ public class HistoriqueTransactions extends AppCompatActivity {
         changeTheme();
         setContentView(R.layout.activity_historique_transactions);
 
+        progressBar = (ProgressBar)findViewById(R.id.spinKit_history);
+        wave = new Pulse();
+        progressBar.setIndeterminateDrawable(wave);
+
         toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
+
+        //web service
+        tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        if(tokenManager.getToken() == null){
+            startActivity(new Intent(this, Login.class));
+            finish();
+        }
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
 
         titleTypeTransaction = (TextView) findViewById(R.id.titleTypeTransaction);
         mois = (TextView) findViewById(R.id.txt_moisHistorique);
         annee = (TextView) findViewById(R.id.txt_anneeHistorique);
 
-        Intent intent = getIntent();
+        intent = getIntent();
         typeHistoriqueTransaction = intent.getStringExtra("typeHistoriqueTransaction");
 
         if (typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("RECHARGE")) {
@@ -185,87 +222,135 @@ public class HistoriqueTransactions extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             changeColorWidget();
         }
-
-
-        mChart = (LineChart) findViewById(R.id.mChart);
-        //mChart.setBackgroundColor(Color.WHITE);
-        //mChart.setGridBackgroundColor(Color.CYAN);
-        //mChart.setDrawGridBackground(true);
-
-        mChart.setDrawBorders(true);
-        mChart.getDescription().setEnabled(false);
-        mChart.setPinchZoom(false);
-
-        Legend l = mChart.getLegend();
-        l.setEnabled(false);
-
-        YAxis leftAxis = mChart.getAxisLeft();
-        leftAxis.setAxisMaximum(300);
-        leftAxis.setAxisMinimum(50);
-        leftAxis.setDrawAxisLine(false);
-        leftAxis.setDrawZeroLine(false);
-        leftAxis.setDrawGridLines(false);
-
-
-        mChart.animateXY(2000, 2000);
-
-        setData(50, 20);
-
     }
 
 
-    private void setData(int count, float range){
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadDataApi(new ArrayList<>());
+    }
 
-        ArrayList<Entry> yVals = new ArrayList<>();
-        for(int i=0; i<count;i++){
-            float val = (float) (Math.random()*range) + 100;
-            yVals.add(new Entry(i, val));
-        }
+    private void loadDataApi(ArrayList<Entry> yVals) {
+
+        transaction = service.allTransactions();
+        transaction.enqueue(new Callback<Home_AllHistoriques>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(Call<Home_AllHistoriques> call, Response<Home_AllHistoriques> response) {
+                Log.w(TAG, "SMOPAYE_SERVER onResponse Bottom Sheet " +response);
+
+                if(response.isSuccessful()){
+
+                    assert response.body() != null;
+                    historique = response.body().getData();
+                    //CHARGEMENT DES DONNEES GRAPHIQUES
+                    mChart = (LineChart) findViewById(R.id.mChart);
+                    //mChart.setBackgroundColor(Color.WHITE);
+                    //mChart.setGridBackgroundColor(Color.CYAN);
+                    //mChart.setDrawGridBackground(true);
+
+                    mChart.setDrawBorders(false);
+                    mChart.setBorderWidth(0);
+                    mChart.getDescription().setEnabled(false);
+                    mChart.setPinchZoom(true);
+                    //mChart.setTouchEnabled(true);
+                    //mChart.setScaleMinima(200,200);
+
+                    XAxis xl = mChart.getXAxis();
+                    xl.setPosition(XAxis.XAxisPosition.BOTTOM);
+                    xl.setDrawAxisLine(false);
+                    xl.setDrawGridLines(false);
+                    //xl.setAxisMaximum(70);
+                    //xl.setAxisMinimum(0);
+                    xl.setGranularity(10f);
+
+                    Legend l = mChart.getLegend();
+                    l.setEnabled(true);
+                    YAxis leftAxis = mChart.getAxisLeft();
+                    mChart.getAxisRight().setEnabled(false);
+                    leftAxis.removeAllLimitLines();
+                    //coordonnée x est caché
+                    mChart.getXAxis().setEnabled(false);
+                    //leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+
+                    //leftAxis.setAxisMaximum(70);
+                    //leftAxis.setAxisMinimum(0);
+                    leftAxis.setDrawAxisLine(false);
+                    leftAxis.setDrawZeroLine(false);
+                    leftAxis.setDrawGridLines(false);
+                    mChart.animateXY(2000, 2000);
 
 
-        LineDataSet set1;
+                    yVals.clear();
+                    for(int i=0; i<historique.size(); i++){
 
-        if (mChart.getData() != null &&
-                mChart.getData().getDataSetCount() > 0) {
-            set1 = (LineDataSet) mChart.getData().getDataSetByIndex(0);
-            set1.setValues(yVals);
-            mChart.getData().notifyDataChanged();
-            mChart.notifyDataSetChanged();
-        } else {
-            // create a dataset and give it a type
-            set1 = new LineDataSet(yVals, "DataSet 1");
+                        if(historique.get(i).getTransaction_type().toLowerCase().equalsIgnoreCase(typeHistoriqueTransaction.toLowerCase())){
 
-            set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-            set1.setCubicIntensity(0.2f);
-            set1.setDrawFilled(true);
-            set1.setDrawCircles(false);
-            set1.setLineWidth(1.8f);
-            set1.setCircleRadius(4f);
-            set1.setCircleColor(Color.WHITE);
-            set1.setHighLightColor(Color.rgb(244, 117, 117));
-            set1.setColor(Color.WHITE);
-            set1.setFillColor(Color.WHITE);
-            set1.setFillAlpha(100);
-            set1.setDrawHorizontalHighlightIndicator(false);
-            set1.setFillFormatter(new IFillFormatter() {
-                @Override
-                public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
-                    return mChart.getAxisLeft().getAxisMinimum();
+                            if(historique.get(i).getState().toLowerCase().contains("success")){
+                                j++;
+                                yVals.add(new Entry(j, Float.parseFloat(historique.get(i).getAmount())));
+                            }
+                        }
+                    }
+
+                    LineDataSet set1;
+
+                    if (mChart.getData() != null &&
+                            mChart.getData().getDataSetCount() > 0) {
+                        set1 = (LineDataSet) mChart.getData().getDataSetByIndex(0);
+                        set1.setValues(yVals);
+                        mChart.getData().notifyDataChanged();
+                        mChart.notifyDataSetChanged();
+                    } else {
+                        // create a dataset and give it a type
+                        set1 = new LineDataSet(yVals, getString(R.string.montant).toUpperCase() + " " + typeHistoriqueTransaction);
+
+                        set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+                        set1.setCubicIntensity(0.2f);
+                        set1.setDrawFilled(true);
+                        set1.setDrawCircles(true);
+                        set1.setLineWidth(1.8f);
+                        set1.setCircleRadius(4f);
+                        set1.setCircleColor(Color.WHITE);
+                        set1.setHighLightColor(Color.rgb(244, 117, 117));
+                        set1.setColor(Color.WHITE);
+                        set1.setFillColor(Color.WHITE);
+                        set1.setFillAlpha(100);
+                        set1.setDrawHorizontalHighlightIndicator(false);
+                        set1.setFillFormatter(new IFillFormatter() {
+                            @Override
+                            public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
+                                return mChart.getAxisLeft().getAxisMinimum();
+                            }
+                        });
+
+                        //hide progessbar
+                        progressBar.setVisibility(View.GONE);
+
+                        // create a data object with the data sets
+                        LineData data = new LineData(set1);
+                        data.setValueTextSize(9f);
+                        data.setDrawValues(false);
+                        mChart.setData(data);
+                    }
+
                 }
-            });
-
-            // create a data object with the data sets
-            LineData data = new LineData(set1);
-            data.setValueTextSize(9f);
-            data.setDrawValues(false);
-            mChart.setData(data);
-        }
-
-
-
-
+                else{
+                    tokenManager.deleteToken();
+                    startActivity(new Intent(HistoriqueTransactions.this, Login.class));
+                    finish();
+                }
+            }
+            @Override
+            public void onFailure(Call<Home_AllHistoriques> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Log.w(TAG, "SMOPAYE_SERVER onFailure Bottom Sheet " + t.getMessage());
+            }
+        });
 
     }
+
 
     private void changeTheme() {
         app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -301,6 +386,7 @@ public class HistoriqueTransactions extends AppCompatActivity {
     }
 
 
+    @SuppressLint("SimpleDateFormat")
     private void setViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         //adapter.addFragment(new TabLayoutScrollable().newInstance(24, 10, 2019), "Movie");
@@ -335,7 +421,7 @@ public class HistoriqueTransactions extends AppCompatActivity {
             histJour = Integer.parseInt(new SimpleDateFormat("dd").format(date));
             histMois = Integer.parseInt(new SimpleDateFormat("MM").format(date));
             histAnnee = Integer.parseInt(new SimpleDateFormat("yyyy").format(date));
-            adapter.addFragment(new TabLayoutScrollable().newInstance(histJour, histMois, histAnnee, typeHistoriqueTransaction), String.valueOf(currentDate3));
+            adapter.addFragment(TabLayoutScrollable.newInstance(histJour, histMois, histAnnee, typeHistoriqueTransaction), String.valueOf(currentDate3));
         }
 
 
@@ -383,7 +469,7 @@ public class HistoriqueTransactions extends AppCompatActivity {
 
 
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
+    static class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
@@ -427,6 +513,16 @@ public class HistoriqueTransactions extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if(transaction != null){
+            transaction.cancel();
+            transaction = null;
+        }
     }
 
 }

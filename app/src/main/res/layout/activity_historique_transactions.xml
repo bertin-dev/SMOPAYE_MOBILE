@@ -87,11 +87,28 @@
                             />
                     </LinearLayout>
 
-                    <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/mChart"
+
+
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_weight="70"
-                        android:layout_height="0dp" />
+                        android:layout_height="0dp">
+                        <com.github.mikephil.charting.charts.LineChart
+                            android:id="@+id/mChart"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+
+                        <com.github.ybq.android.spinkit.SpinKitView
+                            android:id="@+id/spinKit_history"
+                            style="@style/SpinKitView"
+                            android:layout_centerInParent="true"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            app:SpinKit_Color="@color/white" />
+                    </RelativeLayout>
 
 
                     <com.google.android.material.tabs.TabLayout

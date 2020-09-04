@@ -77,19 +77,20 @@ public interface ApiService {
                                @Path("id") String id);
 
     /*auto register */
-    @POST("api/auth/autoregister")
-    @FormUrlEncoded
-    Call<AccessToken> autoregister(@Field("firstname") String firstname,
-                                   @Field("lastname") String lastname,
-                                   @Field("gender") String gender,
-                                   @Field("address") String address,
-                                   @Field("category_id") String category_id,
-                                   @Field("created_by") String created_by,
-                                   @Field("role_id") String role_id,
-                                   @Field("cni") String cni,
-                                   @Field("phone") String phone,
-                                   @Field("nom_img_recto") String nom_img_recto,
-                                   @Field("nom_img_verso") String nom_img_verso);
+    @Multipart
+    @POST("api/autoregister")
+    Call<AllMyResponse> autoregister1(@Part("firstname") RequestBody firstname,
+                                   @Part("lastname") RequestBody lastname,
+                                   @Part("gender") RequestBody gender,
+                                   @Part("address") RequestBody address,
+                                   @Part("category_id") RequestBody category_id,
+                                   @Part("role_id") RequestBody role_id,
+                                   @Part("cni") RequestBody cni,
+                                   @Part("phone") RequestBody phone,
+                                   @Part("nom_img_recto") RequestBody nom_img_recto,
+                                   @Part("nom_img_verso") RequestBody nom_img_verso,
+                                   @Part MultipartBody.Part piece_recto,
+                                   @Part MultipartBody.Part piece_verso);
 
     /*auto register */
     @Multipart
@@ -104,8 +105,8 @@ public interface ApiService {
                                     @Part("phone") RequestBody phone,
                                     @Part("nom_img_recto") RequestBody nom_img_recto,
                                     @Part("nom_img_verso") RequestBody nom_img_verso,
-                                    @Part("piece_recto") MultipartBody.Part piece_recto,
-                                    @Part("piece_verso") MultipartBody.Part piece_verso);
+                                    @Part MultipartBody.Part piece_recto,
+                                    @Part MultipartBody.Part piece_verso);
 
     /* Login */
     @POST("api/auth/login")

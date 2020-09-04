@@ -720,6 +720,8 @@
     <string name="codeQrHistorique">Paiement rapide par Code QR</string>
     <string name="successful">opération réussie</string>
     <string name="failled">opération échouée</string>
+    <string name="transactionFrequences">Fréquence Transactions</string>
+    <string name="codeQR">Code QR</string>
 
 
 </resources>

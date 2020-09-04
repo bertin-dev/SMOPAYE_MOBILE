@@ -367,6 +367,7 @@ public class Souscription extends AppCompatActivity
 
         progressDialog = new ProgressDialog(Souscription.this);
         build_error = new AlertDialog.Builder(Souscription.this);
+        progressDialogGoogle = new ProgressDialog(this);
 
         setupRulesValidatForm();
         callHandlerMethod();
@@ -992,9 +993,11 @@ public class Souscription extends AppCompatActivity
         String my_numCompte = til_num_compte1.getEditText().getText().toString().trim();
         if(my_numCompte.isEmpty()){
             til_num_compte1.setError(getString(R.string.insererCompte));
+            til_num_compte1.requestFocus();
             return false;
         } else if(my_numCompte.length() < 8){
             til_num_compte1.setError(getString(R.string.compteCourt));
+            til_num_compte1.requestFocus();
             return false;
         } else {
             til_num_compte1.setError(null);
@@ -1012,9 +1015,11 @@ public class Souscription extends AppCompatActivity
         String my_name = til_nom.getEditText().getText().toString().trim();
         if(my_name.isEmpty()){
             til_nom.setError(getString(R.string.veuillezInserer) + " " + getString(R.string.nom));
+            til_nom.requestFocus();
             return false;
         } else if(!isValid(my_name)){
             til_nom.setError(getString(R.string.votre) + " " + getString(R.string.nom) + " " + getString(R.string.invalidCararatere));
+            til_nom.requestFocus();
             return false;
         } else {
             til_nom.setError(null);
@@ -1033,6 +1038,7 @@ public class Souscription extends AppCompatActivity
 
         if(status.getCount() == 0){
             Toast.makeText(this, getString(R.string.veuillezInserer) + " " + getString(R.string.AlertStatutListDeroulante), Toast.LENGTH_SHORT).show();
+            status.requestFocus();
             return false;
         }
         return true;
@@ -1048,6 +1054,7 @@ public class Souscription extends AppCompatActivity
 
         if(cat.getCount() == 0){
             Toast.makeText(this, getString(R.string.veuillezInserer) + " " + getString(R.string.AlertCategorieListDeroulante), Toast.LENGTH_SHORT).show();
+            cat.requestFocus();
             return false;
         }
         return true;
@@ -1064,9 +1071,11 @@ public class Souscription extends AppCompatActivity
         String my_surname = til_prenom.getEditText().getText().toString().trim();
         if(my_surname.isEmpty()){
             til_prenom.setError(getString(R.string.veuillezInserer) + " " + getString(R.string.prenom));
+            til_prenom.requestFocus();
             return false;
         } else if(!isValid(my_surname)){
             til_prenom.setError(getString(R.string.votre) + " " + getString(R.string.prenom) + " " + getString(R.string.invalidCararatere));
+            til_prenom.requestFocus();
             return false;
         } else {
             til_prenom.setError(null);
@@ -1085,9 +1094,11 @@ public class Souscription extends AppCompatActivity
         String my_cni = til_cni.getEditText().getText().toString().trim();
         if(my_cni.isEmpty()){
             til_cni.setError(getString(R.string.veuillezInserer) + " " + getString(R.string.numeroDe) + " " + typePjustificative.getSelectedItem().toString());
+            til_cni.requestFocus();
             return false;
         } else if(!isValid(my_cni)){
             til_cni.setError(getString(R.string.votre) + " " + typePjustificative.getSelectedItem().toString() + " " + getString(R.string.invalidCararatere));
+            til_cni.requestFocus();
             return false;
         } else {
             til_cni.setError(null);
@@ -1106,9 +1117,11 @@ public class Souscription extends AppCompatActivity
         String my_adress = til_adress.getEditText().getText().toString().trim();
         if(my_adress.isEmpty()){
             til_adress.setError(getString(R.string.veuillezInserer) + " " + getString(R.string.adresse));
+            til_adress.requestFocus();
             return false;
         } else if(!isValid(my_adress)){
             til_adress.setError(getString(R.string.votre) + " " + getString(R.string.adresse) + " " + getString(R.string.invalidCararatere));
+            til_adress.requestFocus();
             return false;
         } else {
             til_adress.setError(null);
@@ -1141,9 +1154,11 @@ public class Souscription extends AppCompatActivity
         String my_phone = til_tel.getEditText().getText().toString().trim();
         if(my_phone.isEmpty()){
             til_tel.setError(getString(R.string.insererTelephone));
+            til_tel.requestFocus();
             return false;
         } else if(my_phone.length() < 9){
             til_tel.setError(getString(R.string.telephoneCourt));
+            til_tel.requestFocus();
             return false;
         } else {
             til_tel.setError(null);
@@ -1474,7 +1489,22 @@ public class Souscription extends AppCompatActivity
                                          String adresse1, String id_carte1, String typeUser1,
                                         String email1, String imageURL1, String status1, String abonnement1, String response1) {
 
-        progressDialogGoogle = ProgressDialog.show(Souscription.this, getString(R.string.etape2EnvoiDesDonnees), getString(R.string.connexionServeurSmopaye),true,true);
+        //progressDialogGoogle = ProgressDialog.show(Souscription.this, getString(R.string.etape2EnvoiDesDonnees), getString(R.string.connexionServeurSmopaye),true,true);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // On ajoute un message à notre progress dialog
+                progressDialogGoogle.setMessage(getString(R.string.connexionServeurSmopaye));
+                // On donne un titre à notre progress dialog
+                progressDialogGoogle.setTitle(getString(R.string.etape2EnvoiDesDonnees));
+                // On spécifie le style
+                //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                // On affiche notre message
+                progressDialogGoogle.show();
+                //build.setPositiveButton("ok", new View.OnClickListener()
+            }
+        });
 
         auth.createUserWithEmailAndPassword(email1, tel1)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {

@@ -93,5 +93,6 @@
     <color name="bleuFonceRed">#0C61AB</color>
     <color name="gris2">#6d6d6d</color>
     <color name="viewGray">#5E5E5E</color>
+    <color name="divider">#5d5d5d</color>
 
 </resources>

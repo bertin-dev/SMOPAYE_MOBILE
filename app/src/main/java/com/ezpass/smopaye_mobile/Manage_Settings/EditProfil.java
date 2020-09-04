@@ -561,6 +561,7 @@ public class EditProfil extends AppCompatActivity
                                 List<Categorie> mycategories = response.body();
                                 for(int i = 0; i<mycategories.size(); i++){
 
+                                    //listFILTRECategorie.put(mycategories.get(i).getId(), mycategories.get(i).getname());
                                     if(num_statut.equals(mycategories.get(i).getRole_id())){
                                         listFILTRECategorie.put(mycategories.get(i).getId(), mycategories.get(i).getname());
                                     }
@@ -1050,9 +1051,11 @@ public class EditProfil extends AppCompatActivity
         String my_numCompte = til_num_compte1.getEditText().getText().toString().trim();
         if(my_numCompte.isEmpty()){
             til_num_compte1.setError(getString(R.string.insererCompte));
+            til_num_compte1.requestFocus();
             return false;
         } else if(my_numCompte.length() < 8){
             til_num_compte1.setError(getString(R.string.compteCourt));
+            til_num_compte1.requestFocus();
             return false;
         } else {
             til_num_compte1.setError(null);
@@ -1070,9 +1073,11 @@ public class EditProfil extends AppCompatActivity
         String my_name = til_nom.getEditText().getText().toString().trim();
         if(my_name.isEmpty()){
             til_nom.setError(getString(R.string.veuillezInserer) + " " + getString(R.string.nom));
+            til_nom.requestFocus();
             return false;
         } else if(!isValid(my_name)){
             til_nom.setError(getString(R.string.votre) + " " + getString(R.string.nom) + " " + getString(R.string.invalidCararatere));
+            til_nom.requestFocus();
             return false;
         } else {
             til_nom.setError(null);
@@ -1091,6 +1096,7 @@ public class EditProfil extends AppCompatActivity
 
         if(status.getCount() == 0){
             Toast.makeText(this, getString(R.string.veuillezInserer) + " " + getString(R.string.AlertStatutListDeroulante), Toast.LENGTH_SHORT).show();
+            status.requestFocus();
             return false;
         }
         return true;
@@ -1106,6 +1112,7 @@ public class EditProfil extends AppCompatActivity
 
         if(cat.getCount() == 0){
             Toast.makeText(this, getString(R.string.veuillezInserer) + " " + getString(R.string.AlertCategorieListDeroulante), Toast.LENGTH_SHORT).show();
+            cat.requestFocus();
             return false;
         }
         return true;
@@ -1122,9 +1129,11 @@ public class EditProfil extends AppCompatActivity
         String my_surname = til_prenom.getEditText().getText().toString().trim();
         if(my_surname.isEmpty()){
             til_prenom.setError(getString(R.string.veuillezInserer) + " " + getString(R.string.prenom));
+            til_prenom.requestFocus();
             return false;
         } else if(!isValid(my_surname)){
             til_prenom.setError(getString(R.string.votre) + " " + getString(R.string.prenom) + " " + getString(R.string.invalidCararatere));
+            til_prenom.requestFocus();
             return false;
         } else {
             til_prenom.setError(null);
@@ -1143,9 +1152,11 @@ public class EditProfil extends AppCompatActivity
         String my_cni = til_cni.getEditText().getText().toString().trim();
         if(my_cni.isEmpty()){
             til_cni.setError(getString(R.string.veuillezInserer) + " " + getString(R.string.numeroDe) + " " + typePjustificative.getSelectedItem().toString());
+            til_cni.requestFocus();
             return false;
         } else if(!isValid(my_cni)){
             til_cni.setError(getString(R.string.votre) + " " + typePjustificative.getSelectedItem().toString() + " " + getString(R.string.invalidCararatere));
+            til_cni.requestFocus();
             return false;
         } else {
             til_cni.setError(null);
@@ -1164,9 +1175,11 @@ public class EditProfil extends AppCompatActivity
         String my_adress = til_adress.getEditText().getText().toString().trim();
         if(my_adress.isEmpty()){
             til_adress.setError(getString(R.string.veuillezInserer) + " " + getString(R.string.adresse));
+            til_adress.requestFocus();
             return false;
         } else if(!isValid(my_adress)){
             til_adress.setError(getString(R.string.votre) + " " + getString(R.string.adresse) + " " + getString(R.string.invalidCararatere));
+            til_adress.requestFocus();
             return false;
         } else {
             til_adress.setError(null);
@@ -1199,9 +1212,11 @@ public class EditProfil extends AppCompatActivity
         String my_phone = til_tel.getEditText().getText().toString().trim();
         if(my_phone.isEmpty()){
             til_tel.setError(getString(R.string.insererTelephone));
+            til_tel.requestFocus();
             return false;
         } else if(my_phone.length() < 9){
             til_tel.setError(getString(R.string.telephoneCourt));
+            til_tel.requestFocus();
             return false;
         } else {
             til_tel.setError(null);

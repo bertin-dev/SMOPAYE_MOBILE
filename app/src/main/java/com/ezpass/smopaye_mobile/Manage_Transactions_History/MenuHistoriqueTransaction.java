@@ -6,16 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-
-import androidx.annotation.ColorInt;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.appcompat.widget.AppCompatRatingBar;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -24,9 +19,7 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,17 +30,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
-import com.ezpass.smopaye_mobile.Profil_user.Card;
-import com.ezpass.smopaye_mobile.Profil_user.DataUserCard;
 import com.ezpass.smopaye_mobile.R;
-import com.ezpass.smopaye_mobile.RemoteFragments.APIService;
-import com.ezpass.smopaye_mobile.RemoteNotifications.Client;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
@@ -56,18 +43,13 @@ import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.ezpass.smopaye_mobile.web_service_historique_trans.AllOperations;
 import com.ezpass.smopaye_mobile.web_service_historique_trans.Home_AllHistoriques;
 import com.ezpass.smopaye_mobile.web_service_historique_trans.RadarMarkerView;
-import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -79,14 +61,8 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.Pulse;
-import com.github.ybq.android.spinkit.style.ThreeBounce;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
-
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -100,8 +76,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.ezpass.smopaye_mobile.R2.id.DoubleBounce;
-import static com.ezpass.smopaye_mobile.R2.id.off;
 
 public class MenuHistoriqueTransaction extends AppCompatActivity {
 
@@ -117,7 +91,6 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
 
     private RadarChart radarChart;
     private String[] labels = {"Debit", "Code QR", "Transfert", "Recharge", "Retrait", "Facture"};
-    String[] countries = new String[]{"India", "USA", "UK", "Libya", "Cuba"};
 
     private static final String TAG = "MenuHistoriqueTransacti";
     private ApiService service;
@@ -157,14 +130,23 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
     TextView codeQr;
 
     private PieChart mChart;
-    private int nbreDebit1;
-    private int nbreCodeQR1;
-    private int nbreTransfert1;
-    private int nbreRecharge1;
-    private int nbreRetrait1;
-    private int nbreFacture1;
+    private float nbreDebit1;
+    private float nbreCodeQR1;
+    private float nbreTransfert1;
+    private float nbreRecharge1;
+    private float nbreRetrait1;
+    private float nbreFacture1;
     private Call<Home_AllHistoriques> transaction1;
     private List<AllOperations> historique1;
+
+    private int nbreEchecDebit;
+    private int nbreEchecCodeQR;
+    private int nbreEchecTransfert;
+    private int nbreEchecRecharge;
+    private int nbreEchecRetrait;
+    private int nbreEchecFacture;
+    private ArrayList<RadarEntry> dataValueChartEchec;
+    private RadarDataSet dataSet1Echec;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -431,95 +413,87 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                     //CHARGEMENT DES DONNEES GRAPHIQUES
                     radarChart = findViewById(R.id.radar_chart);
                     dataValueChart = new ArrayList<>();
+                    dataValueChartEchec = new ArrayList<>();
                     init();
                     for(int i=0; i<historique.size(); i++){
 
                         if(historique.get(i).getTransaction_type().toLowerCase().contains("facture")){
-                            nbreFacture++;
-                            totalFacture = totalFacture + Float.parseFloat(historique.get(i).getAmount());
+
+                            //nbreFacture++;
+                            //nbreEchecFacture =+ 2;
+                            //totalFacture = totalFacture + Float.parseFloat(historique.get(i).getAmount());
+                            if(historique.get(i).getState().toLowerCase().contains("success")){
+                                nbreFacture++;
+                                totalFacture = totalFacture + Float.parseFloat(historique.get(i).getAmount());
+                            } else{
+                                nbreEchecFacture++;
+                            }
+
                         } else if(historique.get(i).getTransaction_type().toLowerCase().contains("debit")){
-                            nbreDebit++;
-                            totalDebit = totalDebit + Float.parseFloat(historique.get(i).getAmount());
+
+                            //nbreDebit++;
+                            //nbreEchecDebit += 2;
+                            //totalDebit = totalDebit + Float.parseFloat(historique.get(i).getAmount());
+                            if(historique.get(i).getState().toLowerCase().contains("success")){
+                                nbreDebit++;
+                                totalDebit = totalDebit + Float.parseFloat(historique.get(i).getAmount());
+                            } else {
+                                nbreEchecDebit++;
+                            }
+
                         } else if(historique.get(i).getTransaction_type().toLowerCase().contains("transfert")){
-                            nbreTransfert++;
-                            totalTransfert = totalTransfert + Float.parseFloat(historique.get(i).getAmount());
+
+                            //nbreTransfert++;
+                            //nbreEchecTransfert+=2;
+                            //totalTransfert = totalTransfert + Float.parseFloat(historique.get(i).getAmount());
+                            if(historique.get(i).getState().toLowerCase().contains("success")){
+                                nbreTransfert++;
+                                totalTransfert = totalTransfert + Float.parseFloat(historique.get(i).getAmount());
+                            } else{
+                                nbreEchecTransfert++;
+                            }
                         } else if(historique.get(i).getTransaction_type().toLowerCase().contains("recharge")){
-                            nbreRecharge++;
-                            totalRecharge = totalRecharge + Float.parseFloat(historique.get(i).getAmount());
+
+                            if(historique.get(i).getState().toLowerCase().contains("success")){
+                                nbreRecharge++;
+                                totalRecharge = totalRecharge + Float.parseFloat(historique.get(i).getAmount());
+                            } else{
+                                nbreEchecRecharge++;
+                            }
+                            //nbreRecharge++;
+                            //nbreEchecRecharge+=2;
+                            //totalRecharge = totalRecharge + Float.parseFloat(historique.get(i).getAmount());
+
                         } else if(historique.get(i).getTransaction_type().toLowerCase().contains("retrait")){
-                            nbreRetrait++;
-                            totalRetrait = totalRetrait + Float.parseFloat(historique.get(i).getAmount());
+
+                            //nbreRetrait++;
+                            //nbreEchecRetrait+=2;
+                            //totalRetrait = totalRetrait + Float.parseFloat(historique.get(i).getAmount());
+                            if(historique.get(i).getState().toLowerCase().contains("success")){
+                                nbreRetrait++;
+                                totalRetrait = totalRetrait + Float.parseFloat(historique.get(i).getAmount());
+                            } else{
+                                nbreEchecRetrait++;
+                            }
+
                         } else if(historique.get(i).getTransaction_type().toLowerCase().contains("qrcode")){
-                            nbreCodeQR++;
-                            totalCodeQR = totalCodeQR + Float.parseFloat(historique.get(i).getAmount());
+
+                            //nbreCodeQR++;
+                            //nbreEchecCodeQR+=2;
+                            //totalCodeQR = totalCodeQR + Float.parseFloat(historique.get(i).getAmount());
+                            if(historique.get(i).getState().toLowerCase().contains("success")){
+                                nbreCodeQR++;
+                                totalCodeQR = totalCodeQR + Float.parseFloat(historique.get(i).getAmount());
+                            } else{
+                                nbreEchecCodeQR++;
+                            }
                         }
                     }
 
-                    dataValueChart.add(new RadarEntry(nbreDebit));
-                    dataValueChart.add(new RadarEntry(nbreCodeQR));
-                    dataValueChart.add(new RadarEntry(nbreTransfert));
-                    dataValueChart.add(new RadarEntry(nbreRecharge));
-                    dataValueChart.add(new RadarEntry(nbreRetrait));
-                    dataValueChart.add(new RadarEntry(nbreFacture));
-                    dataSet1 = new RadarDataSet(dataValueChart, getString(R.string.successful));
+                    operationEchoue();
+                    operationReussie();
 
-
-                    dataSet1.setColor(Color.rgb(103, 110, 129));
-                    dataSet1.setFillColor(Color.rgb(103, 110, 129));
-                    dataSet1.setDrawFilled(true);
-                    dataSet1.setFillAlpha(180);
-                    dataSet1.setLineWidth(2f);
-                    dataSet1.setDrawHighlightCircleEnabled(true);
-                    dataSet1.setDrawHighlightIndicators(false);
-
-
-
-                    radarChart.getDescription().setEnabled(false);
-
-                    radarChart.setWebLineWidth(1f);
-                    radarChart.setWebColor(Color.LTGRAY);
-                    radarChart.setWebLineWidthInner(1f);
-                    radarChart.setWebColorInner(Color.LTGRAY);
-                    radarChart.setWebAlpha(100);
-
-                    //radar marker
                     progressBar.setVisibility(View.GONE);
-                    MarkerView mv = new RadarMarkerView(MenuHistoriqueTransaction.this, R.layout.radar_markerview);
-                    mv.setChartView(radarChart); // For bounds control
-                    radarChart.setMarker(mv); // Set the marker to the chart
-
-                    radarChart.animateXY(2000, 2000);
-                    dataSet1.setColor(Color.RED);
-                    RadarData data = new RadarData();
-
-
-                    data.setValueTextSize(8f);
-                    data.setDrawValues(false);
-                    data.setValueTextColor(Color.WHITE);
-
-                    data.addDataSet(dataSet1);
-                    XAxis xAxis = radarChart.getXAxis();
-
-                    xAxis.setTextSize(9f);
-                    xAxis.setYOffset(0f);
-                    xAxis.setXOffset(0f);
-
-                    xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
-
-                    xAxis.setTextColor(Color.WHITE);
-                    YAxis yAxis = radarChart.getYAxis();
-                    //yAxis.setLabelCount(6, false);
-                    //yAxis.setTextSize(9f);
-                    //yAxis.setAxisMinimum(0f);
-                    //yAxis.setAxisMaximum(80f);
-                    yAxis.setDrawLabels(false);
-
-
-                    radarChart.setData(data);
-                    radarChart.invalidate();
-
-
-
 
                     Legend l = radarChart.getLegend();
                     l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
@@ -530,7 +504,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                     l.setYEntrySpace(5f);
                     l.setTextColor(Color.WHITE);
 
-                    Toast.makeText(MenuHistoriqueTransaction.this, "DEBIT: " + nbreDebit + " RECHARGE " + nbreRecharge, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MenuHistoriqueTransaction.this, "DEBIT: " + nbreDebit + " RECHARGE " + nbreRecharge, Toast.LENGTH_SHORT).show();
 
                     recharge.setText(df.format(totalRecharge) + " FCFA");
                     retrait.setText(df.format(totalRetrait) + " FCFA");
@@ -557,6 +531,88 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
         });
     }
 
+    private void operationReussie() {
+
+        dataValueChart.add(new RadarEntry(nbreDebit));
+        dataValueChart.add(new RadarEntry(nbreCodeQR));
+        dataValueChart.add(new RadarEntry(nbreTransfert));
+        dataValueChart.add(new RadarEntry(nbreRecharge));
+        dataValueChart.add(new RadarEntry(nbreRetrait));
+        dataValueChart.add(new RadarEntry(nbreFacture));
+        dataSet1 = new RadarDataSet(dataValueChart, getString(R.string.successful));
+
+
+        dataSet1.setColor(Color.rgb(103, 110, 129));
+        dataSet1.setFillColor(Color.rgb(103, 110, 129));
+        dataSet1.setDrawFilled(true);
+        dataSet1.setFillAlpha(180);
+        dataSet1.setLineWidth(2f);
+        dataSet1.setDrawHighlightCircleEnabled(true);
+        dataSet1.setDrawHighlightIndicators(false);
+
+
+
+        radarChart.getDescription().setEnabled(false);
+
+        radarChart.setWebLineWidth(1f);
+        radarChart.setWebColor(Color.LTGRAY);
+        radarChart.setWebLineWidthInner(1f);
+        radarChart.setWebColorInner(Color.LTGRAY);
+        radarChart.setWebAlpha(100);
+
+        //radar marker
+        //progressBar.setVisibility(View.GONE);
+        MarkerView mv = new RadarMarkerView(MenuHistoriqueTransaction.this, R.layout.radar_markerview);
+        mv.setChartView(radarChart); // For bounds control
+        radarChart.setMarker(mv); // Set the marker to the chart
+
+        radarChart.animateXY(2000, 2000);
+        dataSet1.setColor(Color.RED);
+        RadarData data = new RadarData();
+        data.setValueTextSize(8f);
+        data.setDrawValues(false);
+        data.setValueTextColor(Color.WHITE);
+        data.addDataSet(dataSet1);
+        data.addDataSet(dataSet1Echec);
+        XAxis xAxis = radarChart.getXAxis();
+
+        xAxis.setTextSize(9f);
+        xAxis.setYOffset(0f);
+        xAxis.setXOffset(0f);
+
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
+
+        xAxis.setTextColor(Color.WHITE);
+        YAxis yAxis = radarChart.getYAxis();
+        //yAxis.setLabelCount(6, false);
+        //yAxis.setTextSize(9f);
+        //yAxis.setAxisMinimum(0f);
+        //yAxis.setAxisMaximum(80f);
+        yAxis.setDrawLabels(false);
+
+
+        radarChart.setData(data);
+        radarChart.invalidate();
+    }
+    private void operationEchoue() {
+        dataValueChartEchec.add(new RadarEntry(nbreEchecDebit));
+        dataValueChartEchec.add(new RadarEntry(nbreEchecCodeQR));
+        dataValueChartEchec.add(new RadarEntry(nbreEchecTransfert));
+        dataValueChartEchec.add(new RadarEntry(nbreEchecRecharge));
+        dataValueChartEchec.add(new RadarEntry(nbreEchecRetrait));
+        dataValueChartEchec.add(new RadarEntry(nbreEchecFacture));
+        dataSet1Echec = new RadarDataSet(dataValueChartEchec, getString(R.string.failled));
+
+
+        dataSet1Echec.setColor(Color.GREEN);
+        dataSet1Echec.setFillColor(Color.rgb(103, 110, 129));
+        dataSet1Echec.setDrawFilled(true);
+        dataSet1Echec.setFillAlpha(180);
+        dataSet1Echec.setLineWidth(2f);
+        dataSet1Echec.setDrawHighlightCircleEnabled(true);
+        dataSet1Echec.setDrawHighlightIndicators(false);
+    }
+
     private void init() {
         dataValueChart.clear();
         nbreFacture = 0;
@@ -571,6 +627,14 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
         totalFacture = 0;
         totalRecharge = 0;
         totalRetrait = 0;
+
+        dataValueChartEchec.clear();
+        nbreEchecFacture = 0;
+        nbreEchecDebit = 0;
+        nbreEchecTransfert = 0;
+        nbreEchecRecharge = 0;
+        nbreEchecRetrait = 0;
+        nbreEchecCodeQR = 0;
     }
 
 
@@ -608,8 +672,11 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                 );
 
         mChart = bottomSheetView.findViewById(R.id.chart1);
-
-        loadDataApi(new ArrayList<>());
+        TextView updateDateDialog = bottomSheetView.findViewById(R.id.dateDuJour);
+        AppCompatRatingBar moy_note2 = bottomSheetView.findViewById(R.id.moy_note2);
+        TextView moy_note1 = bottomSheetView.findViewById(R.id.moy_note1);
+        TextView moy = bottomSheetView.findViewById(R.id.moy);
+        loadDataApi(new ArrayList<>(), updateDateDialog, moy_note1, moy_note2, moy);
         //setData(4, 100);
 
 
@@ -617,7 +684,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
         bottomSheetDialog.show();
     }
 
-    private void loadDataApi(ArrayList<PieEntry> values) {
+    private void loadDataApi(ArrayList<PieEntry> values, TextView updateDateDialog, TextView moy_note1, AppCompatRatingBar moy_note2, TextView moy) {
 
         transaction1 = service.allTransactions();
         transaction1.enqueue(new Callback<Home_AllHistoriques>() {
@@ -635,8 +702,8 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                     mChart.setUsePercentValues(true);
                     mChart.getDescription().setEnabled(false);
                     mChart.setDrawHoleEnabled(true);
-                    mChart.setMaxAngle(180);
-                    mChart.setRotationAngle(180);
+                    //mChart.setMaxAngle(180);
+                    //mChart.setRotationAngle(180);
                     mChart.setCenterTextOffset(0,-20);
 
 
@@ -672,20 +739,22 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                         }
                     }
 
-                    values.add(new PieEntry(nbreDebit1, "Debit"));
-                    values.add(new PieEntry(nbreCodeQR1, "Code QR"));
-                    values.add(new PieEntry(nbreTransfert1, "Transfert"));
-                    values.add(new PieEntry(nbreRecharge1, "Recharge"));
-                    values.add(new PieEntry(nbreRetrait1, "Retrait"));
-                    values.add(new PieEntry(nbreFacture1, "Facture"));
+                    values.add(new PieEntry(nbreDebit1, getString(R.string.debitCarte)));
+                    values.add(new PieEntry(nbreCodeQR1, getString(R.string.codeQR)));
+                    values.add(new PieEntry(nbreTransfert1, getString(R.string.transfert)));
+                    values.add(new PieEntry(nbreRecharge1, getString(R.string.recharge)));
+                    values.add(new PieEntry(nbreRetrait1, getString(R.string.retrait)));
+                    values.add(new PieEntry(nbreFacture1, getString(R.string.facture)));
 
+                    int compteurTransactions = 0;
                     for(int j=0;j<values.size();j++){
                         colors.add(productColors[j]);
+                        compteurTransactions++;
                     }
 
-                    Toast.makeText(MenuHistoriqueTransaction.this, "DEBIT-1: " + nbreDebit1 + " RECHARGE-1 " + nbreRecharge1, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MenuHistoriqueTransaction.this, "DEBIT-1: " + nbreDebit1 + " RECHARGE-1 " + nbreRecharge1, Toast.LENGTH_SHORT).show();
 
-                    PieDataSet dataSet = new PieDataSet(values, getString(R.string.successful));
+                    PieDataSet dataSet = new PieDataSet(values, "");
                     dataSet.setSelectionShift(5f);
                     dataSet.setSliceSpace(3f);
                     //dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
@@ -699,8 +768,6 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                     mChart.setData(data);
                     mChart.invalidate();
 
-
-
                     mChart.animateY(2000, Easing.EaseInOutCubic);
 
                     Legend l = mChart.getLegend();
@@ -710,9 +777,15 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                     l.setDrawInside(false);
                     l.setYOffset(50f);
 
-                    //TextView updateDateDialog = bottomSheetView.findViewById(R.id.updateDateDialog);
-                    //String current = new SimpleDateFormat("dd/MM/yyyy à HH:mm:ss", Locale.getDefault()).format(new Date());
-                    //updateDateDialog.setText(getString(R.string.updateTo) + " " + current);
+
+                    String current = new SimpleDateFormat("dd/MM/yyyy à HH:mm:ss", Locale.getDefault()).format(new Date());
+                    float total = nbreDebit1 + nbreCodeQR1 + nbreRecharge1 + nbreFacture1 + nbreRetrait1 + nbreTransfert1;
+                    updateDateDialog.setText(getString(R.string.updateTo) + " " + current);
+                    //moy.setText("(" + df.format(total/compteurTransactions) + ")");
+
+                    moy_note1.setText(String.valueOf(df.format((total/compteurTransactions)/10)));
+                    moy_note2.setNumStars(10);
+                    moy_note2.setRating((total/compteurTransactions)/10);
 
 
                 }

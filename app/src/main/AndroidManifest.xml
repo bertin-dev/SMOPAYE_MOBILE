@@ -35,7 +35,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Manage_Url_Website.EspaceClients"></activity>
+        <activity android:name=".Manage_Url_Website.EspaceClients"/>
         <activity android:name=".Manage_Cards.SaveInDB.UpdateBD" />
 
         <meta-data

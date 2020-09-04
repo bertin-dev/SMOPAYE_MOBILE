@@ -316,7 +316,7 @@
                             android:layout_marginStart="12dp"
                             android:layout_marginLeft="12dp"
                             android:fontFamily="@font/roboto_regular"
-                            android:text="2186.25 FCFA"
+                            android:text=""
                             android:textColor="@color/white"
                             android:textSize="18sp" />
                     </LinearLayout>
@@ -345,7 +345,7 @@
                             android:layout_marginStart="12dp"
                             android:layout_marginLeft="12dp"
                             android:fontFamily="@font/roboto_regular"
-                            android:text="1200.26 FCFA"
+                            android:text=""
                             android:textColor="@color/white"
                             android:textSize="18sp" />
                     </LinearLayout>
@@ -383,7 +383,7 @@
                             android:layout_marginStart="12dp"
                             android:layout_marginLeft="12dp"
                             android:fontFamily="@font/roboto_regular"
-                            android:text="2186.25 FCFA"
+                            android:text=""
                             android:textColor="@color/white"
                             android:textSize="18sp" />
                     </LinearLayout>
@@ -412,7 +412,7 @@
                             android:layout_marginStart="12dp"
                             android:layout_marginLeft="12dp"
                             android:fontFamily="@font/roboto_regular"
-                            android:text="1200.26 FCFA"
+                            android:text=""
                             android:textColor="@color/white"
                             android:textSize="18sp" />
                     </LinearLayout>
@@ -449,7 +449,7 @@
                             android:layout_marginStart="12dp"
                             android:layout_marginLeft="12dp"
                             android:fontFamily="@font/roboto_regular"
-                            android:text="2186.25 FCFA"
+                            android:text=""
                             android:textColor="@color/white"
                             android:textSize="18sp" />
                     </LinearLayout>
@@ -478,7 +478,7 @@
                             android:layout_marginStart="12dp"
                             android:layout_marginLeft="12dp"
                             android:fontFamily="@font/roboto_regular"
-                            android:text="1200.26 FCFA"
+                            android:text=""
                             android:textColor="@color/white"
                             android:textSize="18sp" />
                     </LinearLayout>
