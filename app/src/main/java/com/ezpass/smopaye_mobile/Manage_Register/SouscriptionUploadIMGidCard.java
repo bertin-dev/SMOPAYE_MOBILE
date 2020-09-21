@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -42,6 +43,7 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.loader.content.CursorLoader;
 
 import android.util.Base64;
 import android.util.Log;
@@ -170,7 +172,6 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
     @BindView(R.id.msgNetworkLimited)
     TextView msgNetworkLimited;
 
-    private ArrayList<Uri> arrayList;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -187,7 +188,7 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
-        /*Intent intent = getIntent();
+        Intent intent = getIntent();
         nom = intent.getStringExtra("NOM");
         prenom = intent.getStringExtra("PRENOM");
         genre = intent.getStringExtra("GENRE");
@@ -198,24 +199,15 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
         idcategorie = intent.getStringExtra("IDCathegorie");
         uniquser = intent.getStringExtra("uniquser");
         sessioncompteValue = intent.getStringExtra("sessioncompteValue");
-        idcategorieValue = intent.getStringExtra("IDCathegorieValue");*/
+        idcategorieValue = intent.getStringExtra("IDCathegorieValue");
 
 
-        nom = "Cyrille";
-        prenom = "Cyrille1";
-        genre = "masculin";
-        tel = "656619149";
-        cni = "123456789";
-        sessioncompte = "1";
-        adresse = "yaounde";
-        idcategorie = "1";
 
 
         //initialisation des objets qui seront manipulés
         ButterKnife.bind(this);
         service = RetrofitBuilder.createService(ApiService.class);
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
-        arrayList = new ArrayList<>();
 
         //INITIALISATION DES SERVICES GOOGLE FIREBASE
         apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
@@ -235,6 +227,15 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
         infoCni = (TextView) findViewById(R.id.infoCni);
         dividerBarUpload = (RelativeLayout) findViewById(R.id.dividerBarUpload);
 
+        String[] parts = cni.split("-");
+        typePieceJusti = parts[0].toLowerCase();
+        if(typePieceJusti.equals("cni"))
+            infoCni.setText(getString(R.string.infoIdCard));
+        else
+            infoCni.setText(getString(R.string.pays) + ", " + parts[0]);
+
+        infoNom.setText(nom);
+        infoPrenom.setText(prenom);
 
         if (ContextCompat.checkSelfPermission(SouscriptionUploadIMGidCard.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -255,6 +256,8 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
         UploadImageOnServerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                GetImageNameFromRectoIdCard = nom + "_" + "_Recto" + parts[0];
+                GetImageNameFromVersoIdCard = nom + "_" + "_Verso" + parts[0];
                 uploadImagesToServerSMOPAYE();
             }
         });
@@ -277,39 +280,10 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
                 }
             });
 
-        // create list of file parts (photo, video, ...)
-        List<MultipartBody.Part> parts = new ArrayList<>();
-
-        if (arrayList != null) {
-            // create part for file (photo, video, ...)
-            for (int i = 0; i < arrayList.size(); i++) {
-                parts.add(prepareFilePart("image"+i, arrayList.get(i)));
-            }
-        }
-
-        // create a map of data to pass along
-        RequestBody description = createPartFromString("photos");
-        RequestBody size = createPartFromString(""+parts.size());
+            initImage();
 
 
-
-        RequestBody prenom1 = RequestBody.create(MediaType.parse("multipart/form-data"), prenom);
-        RequestBody nom1 = RequestBody.create(MediaType.parse("multipart/form-data"), nom);
-        RequestBody genre1 = RequestBody.create(MediaType.parse("multipart/form-data"), genre);
-        RequestBody adresse1 = RequestBody.create(MediaType.parse("multipart/form-data"), adresse);
-        RequestBody idcategorie1 = RequestBody.create(MediaType.parse("multipart/form-data"), idcategorie);
-        RequestBody sessioncompte1 = RequestBody.create(MediaType.parse("multipart/form-data"), sessioncompte);
-        RequestBody cni1 = RequestBody.create(MediaType.parse("multipart/form-data"), cni);
-        RequestBody tel1 = RequestBody.create(MediaType.parse("multipart/form-data"), tel);
-        /*RequestBody imgName_recto1 = RequestBody.create(MediaType.parse("multipart/form-data"), imgName_recto);
-        RequestBody imgName_verso1 = RequestBody.create(MediaType.parse("multipart/form-data"), imgName_verso);
-
-        RequestBody imgRectoFile1 = RequestBody.create(MediaType.parse("multipart/form-data"), byteArray1);
-        MultipartBody.Part request1 =MultipartBody.Part.createFormData("image", "");
-        RequestBody imgRectoFile2 = RequestBody.create(MediaType.parse("multipart/form-data"), byteArray2);*/
-
-
-        call = service.autoregister1(prenom1, nom1, genre1, adresse1, idcategorie1, sessioncompte1, cni1, tel1, description, description, parts.get(0), parts.get(0));
+        call = service.autoregister1(prenom, nom, genre, adresse, idcategorie, sessioncompte, cni, tel, GetImageNameFromRectoIdCard, GetImageNameFromVersoIdCard, ConvertImageRecto, ConvertImageVerso);
         call.enqueue(new Callback<AllMyResponse>() {
             @Override
             public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
@@ -357,6 +331,20 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
 
             }
         });
+    }
+
+    private void initImage() {
+        byteArrayOutputStream1 = new ByteArrayOutputStream();
+        byteArrayOutputStream2 = new ByteArrayOutputStream();
+
+        FixBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream1);
+        FixBitmap2.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream2);
+
+        byteArray1 = byteArrayOutputStream1.toByteArray();
+        byteArray2 = byteArrayOutputStream2.toByteArray();
+
+        ConvertImageRecto = Base64.encodeToString(byteArray1, Base64.DEFAULT);
+        ConvertImageVerso = Base64.encodeToString(byteArray2, Base64.DEFAULT);
     }
 
 
@@ -539,18 +527,16 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
             return;
         }
         if (requestCode == GALLERY) {
+
             if (data != null) {
                 Uri contentURI = data.getData();
                 try {
 
                     if(typePieceJusti.equalsIgnoreCase("passeport")){
-
                         FixBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
                         ShowSelectedImageRecto.setImageBitmap(FixBitmap);
-
                         UploadImageOnServerButton.setVisibility(View.VISIBLE);
                         GetImageFromGalleryButton.setVisibility(View.GONE);
-
                     }
                     else{
                         if(ShowSelectedImageRecto.getDrawable() == null) {
@@ -574,20 +560,6 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
                             GetImageFromGalleryButton.setVisibility(View.GONE);
                         }
                     }
-
-                    arrayList.add(contentURI);
-
-                    byteArrayOutputStream1 = new ByteArrayOutputStream();
-                    byteArrayOutputStream2 = new ByteArrayOutputStream();
-
-                    FixBitmap.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream1);
-                    FixBitmap2.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream2);
-
-                    byteArray1 = byteArrayOutputStream1.toByteArray();
-                    byteArray2 = byteArrayOutputStream2.toByteArray();
-
-                    ConvertImageRecto = Base64.encodeToString(byteArray1, Base64.DEFAULT);
-                    ConvertImageVerso = Base64.encodeToString(byteArray2, Base64.DEFAULT);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -634,9 +606,9 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
                     GetImageFromGalleryButton.setVisibility(View.GONE);
                 }
             }
-            //arrayList.add(FixBitmap);
         }
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -652,27 +624,6 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
 
             }
         }
-    }
-
-
-
-
-
-    @NonNull
-    private RequestBody createPartFromString(String descriptionString) {
-        return RequestBody.create(MediaType.parse(FileUtilsUpload.MIME_TYPE_TEXT), descriptionString);
-    }
-
-    @NonNull
-    private MultipartBody.Part prepareFilePart(String partName, Uri fileUri) {
-        // use the FileUtils to get the actual file by uri
-        File file = FileUtilsUpload.getFile(this, fileUri);
-
-        // create RequestBody instance from file
-        RequestBody requestFile = RequestBody.create (MediaType.parse(FileUtilsUpload.MIME_TYPE_IMAGE), file);
-
-        // MultipartBody.Part is used to send also the actual file name
-        return MultipartBody.Part.createFormData(partName, file.getName(), requestFile);
     }
 
 
@@ -874,6 +825,23 @@ public class SouscriptionUploadIMGidCard extends AppCompatActivity
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
+
+
+    private String convertToString1()
+    {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        FixBitmap.compress(Bitmap.CompressFormat.JPEG,100, byteArrayOutputStream);
+        byte[] imgByte = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(imgByte,Base64.DEFAULT);
+    }
+
+    private String convertToString2()
+    {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        FixBitmap2.compress(Bitmap.CompressFormat.JPEG,100, byteArrayOutputStream);
+        byte[] imgByte = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(imgByte,Base64.DEFAULT);
     }
 
 }

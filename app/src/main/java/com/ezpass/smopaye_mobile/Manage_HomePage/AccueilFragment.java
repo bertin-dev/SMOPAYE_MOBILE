@@ -1,13 +1,18 @@
 package com.ezpass.smopaye_mobile.Manage_HomePage;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
@@ -15,7 +20,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +60,19 @@ public class AccueilFragment extends Fragment {
     int themeColor;
     int appColor;
 
+    /*private Dialog epicDialog;
+    private ImageView closePopupPositionImg;
+    private TextView titleTv;
+    private TextView messageTv;
+    private RelativeLayout myBonus;*/
+
+    private TextView points;
+    private TextView bonus;
+    private int nbreBonus;
+    private int nbrePoints;
+    private ImageView close;
+    private RelativeLayout reportDashboad;
+
     public AccueilFragment() {
         // Required empty public constructor
     }
@@ -76,6 +96,7 @@ public class AccueilFragment extends Fragment {
         montant = (String) getArguments().getString("montant");*/
     }
 
+    @SuppressLint("SetTextI18n")
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         changeTheme();
         View view =  inflater.inflate(R.layout.fragment_accueil, container, false);
@@ -88,6 +109,16 @@ public class AccueilFragment extends Fragment {
         myRole   = (TextView) view.findViewById(R.id.myRole);
         myCategorie   = (TextView) view.findViewById(R.id.myCategorie);
 
+        //epicDialog = new Dialog(getActivity());
+        //myBonus = (RelativeLayout) view.findViewById(R.id.myBonus);
+        //showPopupBonus();
+        points = (TextView) view.findViewById(R.id.points);
+        bonus   = (TextView) view.findViewById(R.id.bonus);
+        close = (ImageView) view.findViewById(R.id.close);
+        reportDashboad = (RelativeLayout) view.findViewById(R.id.reportDashboad);
+
+
+
         //recupération des informations de la BD pendant l'authentificatiion sous forme de SESSION
         //avec les données quittant de Activity -> Fragment
         assert getArguments() != null;
@@ -96,9 +127,21 @@ public class AccueilFragment extends Fragment {
          categorie = getArguments().getString("categorie");
          role = getArguments().getString("role");
          idUser = getArguments().getString("idUser");
+         nbrePoints = getArguments().getInt("points", 0);
+         nbreBonus = getArguments().getInt("bonus", 0);
 
         myRole.setText(role);
         myCategorie.setText(categorie);
+        points.setText(getString(R.string.points) + " " + nbrePoints);
+        bonus.setText(getString(R.string.bonus) + " " +nbreBonus);
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Animatoo.animateInAndOut(getContext());
+                reportDashboad.setVisibility(View.GONE);
+            }
+        });
 
        //Vérification si la langue du telephone est en Francais
         if(Locale.getDefault().getLanguage().contentEquals("fr")){
@@ -249,6 +292,23 @@ public class AccueilFragment extends Fragment {
         }
         return view;
     }
+
+    /*private void showPopupBonus() {
+        epicDialog.setContentView(R.layout.bonus_modal_dialog);
+        closePopupPositionImg = (ImageView) epicDialog.findViewById(R.id.closePopupPositionImg);
+        titleTv = (TextView) epicDialog.findViewById(R.id.titleTv);
+        messageTv = (TextView) epicDialog.findViewById(R.id.messageTv);
+
+        closePopupPositionImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                epicDialog.dismiss();
+            }
+        });
+
+        epicDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        epicDialog.show();
+    }*/
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

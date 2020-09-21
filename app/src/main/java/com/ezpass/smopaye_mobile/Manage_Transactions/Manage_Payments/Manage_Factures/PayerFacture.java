@@ -282,7 +282,7 @@ public class PayerFacture extends AppCompatActivity
                     .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
                     .build();
             dialog2.show();
-            payementInSmopayeServer(montantBeneficiaire, code_number_sender, id_cardBeneficiaire, "FACTURE");
+            payementInSmopayeServer(montantBeneficiaire, code_number_sender, id_cardBeneficiaire, "PAYEMENT_FACTURE");
         }
 
     }

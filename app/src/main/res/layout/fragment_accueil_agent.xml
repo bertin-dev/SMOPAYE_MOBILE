@@ -33,16 +33,27 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
+                    <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="60dp"
+                    android:weightSum="1">
+                    <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="0.5">
                     <TextView
                         android:id="@+id/sessionAgent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/agents"
+                        android:fontFamily="@font/roboto_medium"
                         android:layout_gravity="start"
                         android:textSize="20sp"
                         android:textColor="@color/white"
                         android:paddingLeft="15dp"
-                        android:layout_marginTop="60dp"
                         android:textStyle="bold"
                         android:paddingStart="15dp" />
                     <TextView
@@ -50,12 +61,91 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/typeAgents"
+                        android:fontFamily="@font/roboto_medium"
                         android:layout_gravity="start"
                         android:textSize="12sp"
                         android:textColor="@color/white"
                         android:paddingLeft="15dp"
                         android:textStyle="bold"
                         android:paddingStart="15dp" />
+                </LinearLayout>
+                    <RelativeLayout
+                        android:id="@+id/reportDashboad"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:layout_weight="0.5">
+
+                        <ImageView
+                            android:id="@+id/close"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_close_black_24dp"
+                            android:layout_marginTop="7dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_marginEnd="7dp"
+                            android:elevation="5dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true" />
+
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="5dp"
+                            app:elevation="10dp"
+                            app:cardElevation="10dp"
+                            app:contentPadding="15dp"
+                            app:cardBackgroundColor="@color/zxing_transparent"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true">
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:padding="5dp">
+
+                                    <TextView
+                                        android:id="@+id/points"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:textStyle="bold"
+                                        android:textColor="@color/white"
+                                        android:textSize="15sp"
+                                        android:fontFamily="@font/roboto_medium"
+                                        android:text=""/>
+
+                                    <TextView
+                                        android:id="@+id/bonus"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:textStyle="bold"
+                                        android:textColor="@color/white"
+                                        android:textSize="15sp"
+                                        android:fontFamily="@font/roboto_medium"
+                                        android:text=""/>
+
+
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </androidx.cardview.widget.CardView>
+
+                    </RelativeLayout>
+                </LinearLayout>
 
 
                     <LinearLayout
@@ -71,7 +161,7 @@
                             android:layout_height="wrap_content"
                             android:text=""
                             android:layout_gravity="end"
-                            android:textSize="100sp"
+                            android:textSize="80sp"
                             android:textColor="@color/white"
                             android:paddingStart="15dp"
                             android:paddingLeft="15dp"
@@ -87,7 +177,7 @@
                                 android:layout_height="wrap_content"
                                 android:text=""
                                 android:layout_marginTop="30dp"
-                                android:textSize="20sp"
+                                android:textSize="15sp"
                                 android:textColor="@color/white"
                                 android:textStyle="bold"
                                 />
@@ -96,7 +186,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
-                                android:textSize="15sp"
+                                android:textSize="13sp"
                                 android:textColor="@color/white"
                                 android:textStyle="bold"
                                 />

@@ -20,6 +20,8 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+
+import com.ezpass.smopaye_mobile.web_service_response.AllMyHomeResponse;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -139,6 +141,7 @@ public class FragmentTransfer extends Fragment
     private TokenManager tokenManager;
     private AwesomeValidation validator;
     private Call<HomeResponse> call;
+    private Call<AllMyHomeResponse> call2;
 
     @BindView(R.id.til_numCarteBeneficiaire)
     TextInputLayout til_numCarteBeneficiaire;
@@ -180,6 +183,8 @@ public class FragmentTransfer extends Fragment
     TextView titleNetworkLimited;
     @BindView(R.id.msgNetworkLimited)
     TextView msgNetworkLimited;
+
+    private String operation = "";
 
 
     public FragmentTransfer() {
@@ -269,10 +274,14 @@ public class FragmentTransfer extends Fragment
                     til_numCompteBeneficiaire.setVisibility(View.VISIBLE);
                     til_numCarteBeneficiaire.setVisibility(View.GONE);
                     positionTypeTransfert = position;
+                    operation = "TRANSFERT_COMPTE_A_COMPTE";
+                    // Toast.makeText(getContext(), operation, Toast.LENGTH_LONG).show();
                 } else {
                     til_numCompteBeneficiaire.setVisibility(View.GONE);
                     til_numCarteBeneficiaire.setVisibility(View.VISIBLE);
                     positionTypeTransfert = position;
+                    operation = "TRANSFERT_CARTE_A_CARTE";
+                    //Toast.makeText(getContext(), operation, Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -458,7 +467,7 @@ public class FragmentTransfer extends Fragment
                         .build();
                 dialog2.show();
                 //*******************FIN*****
-                transfertCompteACompteInSmopayeServer(montant, myPersonalAccountNumber,  account_number_receiver);
+                transfertCompteACompteInSmopayeServer(montant, myPersonalAccountNumber,  account_number_receiver, operation);
             }
         } //carte
         else {
@@ -483,7 +492,7 @@ public class FragmentTransfer extends Fragment
                         .build();
                 dialog2.show();
                 //*******************FIN*****
-                transfertDataInSmopayeServer(montant, code_number_sender,  id_card);
+                transfertDataInSmopayeServer(montant, code_number_sender,  id_card, operation);
             }
         }
 
@@ -596,6 +605,11 @@ public class FragmentTransfer extends Fragment
             call.cancel();
             call = null;
         }
+
+        if(call2 != null){
+            call2.cancel();
+            call2 = null;
+        }
     }
 
     /**
@@ -657,9 +671,9 @@ public class FragmentTransfer extends Fragment
 
 
 
-    private void transfertDataInSmopayeServer(String montant, String id_card_sender, String id_card_receiver) {
+    private void transfertDataInSmopayeServer(String montant, String id_card_sender, String id_card_receiver, String typeTransaction) {
 
-        call = service.transaction(Float.parseFloat(montant), id_card_sender, id_card_receiver, "TRANSFERT");
+        call = service.transaction(Float.parseFloat(montant), id_card_sender, id_card_receiver, typeTransaction);
         call.enqueue(new Callback<HomeResponse>() {
             @Override
             public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {
@@ -717,19 +731,19 @@ public class FragmentTransfer extends Fragment
 
 
     }
-    private void transfertCompteACompteInSmopayeServer(String montant, String id_account_sender, String account_number_receiver) {
+    private void transfertCompteACompteInSmopayeServer(String montant, String id_account_sender, String account_number_receiver, String typeOperation) {
 
-        call = service.transaction_compte_A_Compte(Float.parseFloat(montant), account_number_receiver, id_account_sender, "TRANSFERT");
-        call.enqueue(new Callback<HomeResponse>() {
+        call2 = service.transaction_compte_A_Compte(Float.parseFloat(montant), account_number_receiver, id_account_sender, typeOperation);
+        call2.enqueue(new Callback<AllMyHomeResponse>() {
             @Override
-            public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {
+            public void onResponse(Call<AllMyHomeResponse> call, Response<AllMyHomeResponse> response) {
                 Log.w(TAG, "SMOPAYE_SERVER onResponse: " + response);
                 dialog2.dismiss();
 
                 assert response.body() != null;
                 if(response.isSuccessful()){
-                    String msgReceiver = response.body().getMessage().getCard_receiver().getNotif();
-                    String msgSender = response.body().getMessage().getCard_sender().getNotif();
+                    String msgReceiver = response.body().getMessage().getCompte_receiver().getNotif();
+                    String msgSender = response.body().getMessage().getSender().getNotif();
 
                     successResponse("", msgReceiver, "", msgSender);
 
@@ -748,7 +762,7 @@ public class FragmentTransfer extends Fragment
             }
 
             @Override
-            public void onFailure(Call<HomeResponse> call, Throwable t) {
+            public void onFailure(Call<AllMyHomeResponse> call, Throwable t) {
 
                 dialog2.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());

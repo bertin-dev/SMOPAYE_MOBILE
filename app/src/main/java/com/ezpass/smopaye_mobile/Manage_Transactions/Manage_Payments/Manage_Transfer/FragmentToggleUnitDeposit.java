@@ -399,8 +399,8 @@ public class FragmentToggleUnitDeposit extends Fragment
 
                 assert response.body() != null;
                 if(response.isSuccessful()){
-                    String msgSender = response.body().getCard_sender().getNotif();
-                    String id_card = response.body().getCard_sender().getCode_number();
+                    String msgSender = response.body().getMessage().getNotif();
+                    String id_card = response.body().getMessage().getCode_number();
                     //code_number_sender
                     successResponse(id_card, msgSender);
 

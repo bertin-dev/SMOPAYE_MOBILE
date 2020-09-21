@@ -273,7 +273,7 @@ public class FragmentReadQRCode extends Fragment implements QRCodeModalDialog.Ex
 
         String id_card = beneficiaireCard;
 
-        call = service.transaction(Float.parseFloat(montant), donataireCard, beneficiaireCard,"QRCODE");
+        call = service.transaction(Float.parseFloat(montant), donataireCard, beneficiaireCard,"PAYEMENT_VIA_QR-CODE");
         call.enqueue(new Callback<HomeResponse>() {
             @Override
             public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {

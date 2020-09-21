@@ -8,9 +8,17 @@ public class Home_toggle {
     @SerializedName("success")
     @Expose
     private boolean success;
-    @SerializedName("card_sender")
+    @SerializedName("message")
     @Expose
-    private Card_Sender card_sender;
+    private MessageToggle message;
+
+    public Home_toggle() {
+    }
+
+    public Home_toggle(boolean success, MessageToggle message) {
+        this.success = success;
+        this.message = message;
+    }
 
     public boolean isSuccess() {
         return success;
@@ -20,12 +28,12 @@ public class Home_toggle {
         this.success = success;
     }
 
-    public Card_Sender getCard_sender() {
-        return card_sender;
+    public MessageToggle getMessage() {
+        return message;
     }
 
-    public void setCard_sender(Card_Sender card_sender) {
-        this.card_sender = card_sender;
+    public void setMessage(MessageToggle message) {
+        this.message = message;
     }
 }
 

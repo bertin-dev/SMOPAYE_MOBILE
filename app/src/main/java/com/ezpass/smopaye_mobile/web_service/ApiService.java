@@ -7,6 +7,7 @@ import com.ezpass.smopaye_mobile.Profil_user.DataUser;
 import com.ezpass.smopaye_mobile.web_service_access.AccessToken;
 import com.ezpass.smopaye_mobile.web_service_historique_trans.Home_AllHistoriques;
 import com.ezpass.smopaye_mobile.web_service_historique_trans.Home_Historique;
+import com.ezpass.smopaye_mobile.web_service_response.AllMyHomeResponse;
 import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 import com.ezpass.smopaye_mobile.web_service_response.HomeResponse;
 import com.ezpass.smopaye_mobile.web_service_response.Home_toggle;
@@ -72,25 +73,24 @@ public interface ApiService {
                                @Field("address") String address,
                                @Field("category_id") String category_id,
                                @Field("role_id") String role_id,
-                               @Field("cni") String cni,
                                @Field("card_number") String card_number,
                                @Path("id") String id);
 
     /*auto register */
-    @Multipart
     @POST("api/autoregister")
-    Call<AllMyResponse> autoregister1(@Part("firstname") RequestBody firstname,
-                                   @Part("lastname") RequestBody lastname,
-                                   @Part("gender") RequestBody gender,
-                                   @Part("address") RequestBody address,
-                                   @Part("category_id") RequestBody category_id,
-                                   @Part("role_id") RequestBody role_id,
-                                   @Part("cni") RequestBody cni,
-                                   @Part("phone") RequestBody phone,
-                                   @Part("nom_img_recto") RequestBody nom_img_recto,
-                                   @Part("nom_img_verso") RequestBody nom_img_verso,
-                                   @Part MultipartBody.Part piece_recto,
-                                   @Part MultipartBody.Part piece_verso);
+    @FormUrlEncoded
+    Call<AllMyResponse> autoregister1(@Field("firstname") String firstname,
+                                   @Field("lastname") String lastname,
+                                   @Field("gender") String gender,
+                                   @Field("address") String address,
+                                   @Field("category_id") String category_id,
+                                   @Field("role_id") String role_id,
+                                   @Field("cni") String cni,
+                                   @Field("phone") String phone,
+                                   @Field("nom_img_recto") String nom_img_recto,
+                                   @Field("nom_img_verso") String nom_img_verso,
+                                   @Field("piece_recto") String piece_recto,
+                                   @Field("piece_verso") String piece_verso);
 
     /*auto register */
     @Multipart
@@ -161,10 +161,10 @@ public interface ApiService {
     /* Transfert (Compte à Compte)*/
     @POST("api/account/transaction/payment")
     @FormUrlEncoded
-    Call<HomeResponse> transaction_compte_A_Compte(@Field("amount") float amount,
-                                   @Field("account_number_receiver") String account_number_receiver,
-                                   @Field("account_number_sender") String account_number_sender,
-                                   @Field("transaction_type") String transaction_type);
+    Call<AllMyHomeResponse> transaction_compte_A_Compte(@Field("amount") float amount,
+                                                        @Field("account_number_receiver") String account_number_receiver,
+                                                        @Field("account_number_sender") String account_number_sender,
+                                                        @Field("transaction_type") String transaction_type);
 
     /* Basculer (Compte Unité vers Compte dépot et vis-vers ça)*/
     @POST("api/card/{card_id}/toggleUnityDeposit")

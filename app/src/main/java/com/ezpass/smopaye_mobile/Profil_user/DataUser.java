@@ -43,6 +43,10 @@ public class DataUser {
     @Expose
     private String role_id;
 
+    @SerializedName("bonus")
+    @Expose
+    private String bonus;
+
     @SerializedName("created_at")
     @Expose
     private String created_at;
@@ -51,6 +55,13 @@ public class DataUser {
     @Expose
     private String updated_at;
 
+    @SerializedName("bonus_valider")
+    @Expose
+    private String bonus_valider;
+
+    @SerializedName("bonus_non_valider")
+    @Expose
+    private String bonus_non_valider;
 
     @SerializedName("categorie")
     @Expose
@@ -210,5 +221,29 @@ public class DataUser {
 
     public void setEnterprise(List<Entreprise> enterprise) {
         this.enterprise = enterprise;
+    }
+
+    public String getBonus() {
+        return bonus;
+    }
+
+    public void setBonus(String bonus) {
+        this.bonus = bonus;
+    }
+
+    public String getBonus_valider() {
+        return bonus_valider;
+    }
+
+    public void setBonus_valider(String bonus_valider) {
+        this.bonus_valider = bonus_valider;
+    }
+
+    public String getBonus_non_valider() {
+        return bonus_non_valider;
+    }
+
+    public void setBonus_non_valider(String bonus_non_valider) {
+        this.bonus_non_valider = bonus_non_valider;
     }
 }

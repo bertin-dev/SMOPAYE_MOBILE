@@ -191,7 +191,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), HistoriqueTransactions.class);
-                intent.putExtra("typeHistoriqueTransaction", "QRCODE");
+                intent.putExtra("typeHistoriqueTransaction", "PAYEMENT_VIA_QR-CODE");
                 startActivity(intent);
             }
         });
@@ -201,7 +201,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), HistoriqueTransactions.class);
-                intent.putExtra("typeHistoriqueTransaction", "DEBIT");
+                intent.putExtra("typeHistoriqueTransaction", "DEBIT_CARTE");
                 startActivity(intent);
             }
         });
@@ -221,7 +221,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), HistoriqueTransactions.class);
-                intent.putExtra("typeHistoriqueTransaction", "FACTURE");
+                intent.putExtra("typeHistoriqueTransaction", "PAYEMENT_FACTURE");
                 startActivity(intent);
             }
         });
@@ -417,7 +417,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                     init();
                     for(int i=0; i<historique.size(); i++){
 
-                        if(historique.get(i).getTransaction_type().toLowerCase().contains("facture")){
+                        if(historique.get(i).getTransaction_type().toLowerCase().contains("payement_facture")){
 
                             //nbreFacture++;
                             //nbreEchecFacture =+ 2;
@@ -429,7 +429,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                                 nbreEchecFacture++;
                             }
 
-                        } else if(historique.get(i).getTransaction_type().toLowerCase().contains("debit")){
+                        } else if(historique.get(i).getTransaction_type().toLowerCase().contains("debit_carte")){
 
                             //nbreDebit++;
                             //nbreEchecDebit += 2;
@@ -476,7 +476,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                                 nbreEchecRetrait++;
                             }
 
-                        } else if(historique.get(i).getTransaction_type().toLowerCase().contains("qrcode")){
+                        } else if(historique.get(i).getTransaction_type().toLowerCase().contains("payement_via_qr-code")){
 
                             //nbreCodeQR++;
                             //nbreEchecCodeQR+=2;

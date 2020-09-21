@@ -1,10 +1,12 @@
 package com.ezpass.smopaye_mobile;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -168,6 +170,9 @@ public class MainActivity extends AppCompatActivity
     int themeColor;
     int appColor;
 
+    private int bonus;
+    private int points;
+
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -319,6 +324,9 @@ public class MainActivity extends AppCompatActivity
                     adresse = response.body().getAddress();
                     numero_card = myCompte;
 
+                    points = Integer.parseInt(response.body().getBonus());
+                    bonus = Integer.parseInt(response.body().getBonus_valider()) + Integer.parseInt(response.body().getBonus_non_valider());
+
                     writeTempCardNumberInFile(myCompte);
                     writeTempCardIDInFile(myId_card);
                     writeTempAccountInFile(myPersonalAccountNumber);
@@ -339,6 +347,8 @@ public class MainActivity extends AppCompatActivity
                             bundle1.putString("role", session);
                             bundle1.putString("categorie", myCategorie);
                             bundle1.putString("idUser", idUser);
+                            bundle1.putInt("points", points);
+                            bundle1.putInt("bonus", bonus);
                             selectedFragment1 = new AccueilFragmentAdmin();
                             selectedFragment1.setArguments(bundle1);
                         }
@@ -349,6 +359,8 @@ public class MainActivity extends AppCompatActivity
                             bundle1.putString("categorie", myCategorie);
                             bundle1.putString("etat", etat);
                             bundle1.putString("idUser", idUser);
+                            bundle1.putInt("points", points);
+                            bundle1.putInt("bonus", bonus);
                             selectedFragment1 = new AccueilFragmentUser();
                             selectedFragment1.setArguments(bundle1);
                             txt_role.setText(getString(R.string.utilisateur));
@@ -361,6 +373,8 @@ public class MainActivity extends AppCompatActivity
                         bundle1.putString("categorie", myCategorie);
                         bundle1.putString("etat", etat);
                         bundle1.putString("idUser", idUser);
+                        bundle1.putInt("points", points);
+                        bundle1.putInt("bonus", bonus);
                         selectedFragment1 = new AccueilFragmentUser();
                         selectedFragment1.setArguments(bundle1);
                     }
@@ -373,6 +387,8 @@ public class MainActivity extends AppCompatActivity
                             bundle1.putString("role", session);
                             bundle1.putString("categorie", myCategorie);
                             bundle1.putString("idUser", idUser);
+                            bundle1.putInt("points", points);
+                            bundle1.putInt("bonus", bonus);
                             selectedFragment1 = new AccueilFragmentAgent();
                             selectedFragment1.setArguments(bundle1);
                         }
@@ -383,6 +399,8 @@ public class MainActivity extends AppCompatActivity
                             bundle1.putString("categorie", myCategorie);
                             bundle1.putString("etat", etat);
                             bundle1.putString("idUser", idUser);
+                            bundle1.putInt("points", points);
+                            bundle1.putInt("bonus", bonus);
                             selectedFragment1 = new AccueilFragmentUser();
                             selectedFragment1.setArguments(bundle1);
                             txt_role.setText(getString(R.string.utilisateur));
@@ -396,6 +414,8 @@ public class MainActivity extends AppCompatActivity
                             bundle1.putString("role", session);
                             bundle1.putString("categorie", myCategorie);
                             bundle1.putString("idUser", idUser);
+                            bundle1.putInt("points", points);
+                            bundle1.putInt("bonus", bonus);
                             selectedFragment1 = new AccueilFragment();
                             selectedFragment1.setArguments(bundle1);
                         }
@@ -406,6 +426,8 @@ public class MainActivity extends AppCompatActivity
                             bundle1.putString("categorie", myCategorie);
                             bundle1.putString("etat", etat);
                             bundle1.putString("idUser", idUser);
+                            bundle1.putInt("points", points);
+                            bundle1.putInt("bonus", bonus);
                             selectedFragment1 = new AccueilFragmentUser();
                             selectedFragment1.setArguments(bundle1);
                             txt_role.setText(getString(R.string.utilisateur));
@@ -447,6 +469,8 @@ public class MainActivity extends AppCompatActivity
                                             bundle.putString("role", session);
                                             bundle.putString("categorie", myCategorie);
                                             bundle.putString("idUser", idUser);
+                                            bundle.putInt("points", points);
+                                            bundle.putInt("bonus", bonus);
                                             selectedFragment = new AccueilFragmentAdmin();
                                             selectedFragment.setArguments(bundle);
                                         }
@@ -457,6 +481,8 @@ public class MainActivity extends AppCompatActivity
                                             bundle.putString("categorie", myCategorie);
                                             bundle.putString("etat", etat);
                                             bundle.putString("idUser", idUser);
+                                            bundle.putInt("points", points);
+                                            bundle.putInt("bonus", bonus);
                                             selectedFragment = new AccueilFragmentUser();
                                             selectedFragment.setArguments(bundle);
                                         }
@@ -469,6 +495,8 @@ public class MainActivity extends AppCompatActivity
                                         bundle.putString("categorie", myCategorie); //mini-bus cargo, petit-commerce
                                         bundle.putString("etat", etat);
                                         bundle.putString("idUser", idUser);
+                                        bundle.putInt("points", points);
+                                        bundle.putInt("bonus", bonus);
                                         selectedFragment = new AccueilFragmentUser();
                                         selectedFragment.setArguments(bundle);
                                     }
@@ -480,6 +508,8 @@ public class MainActivity extends AppCompatActivity
                                         bundle.putString("role", session);
                                         bundle.putString("categorie", myCategorie);
                                         bundle.putString("idUser", idUser);
+                                        bundle.putInt("points", points);
+                                        bundle.putInt("bonus", bonus);
                                         selectedFragment = new AccueilFragmentAgent();
                                         selectedFragment.setArguments(bundle);
                                     }
@@ -491,6 +521,8 @@ public class MainActivity extends AppCompatActivity
                                             bundle.putString("role", session);
                                             bundle.putString("categorie", myCategorie);
                                             bundle.putString("idUser", idUser);
+                                            bundle.putInt("points", points);
+                                            bundle.putInt("bonus", bonus);
                                             selectedFragment = new AccueilFragment();
                                             selectedFragment.setArguments(bundle);
                                         }
@@ -501,6 +533,8 @@ public class MainActivity extends AppCompatActivity
                                             bundle.putString("categorie", myCategorie);
                                             bundle.putString("etat", etat);
                                             bundle.putString("idUser", idUser);
+                                            bundle.putInt("points", points);
+                                            bundle.putInt("bonus", bonus);
                                             selectedFragment = new AccueilFragmentUser();
                                             selectedFragment.setArguments(bundle);
                                         }
@@ -835,19 +869,7 @@ public class MainActivity extends AppCompatActivity
             }*/
         }
         else if (id == R.id.nav_deconnexion) {
-
-            ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.deconnexion), getString(R.string.encours), true);
-            dialog.show();
-
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    FirebaseAuth.getInstance().signOut();
-                    dialog.dismiss();
-                    finish();
-                }
-            }, 2000); // 2000 milliseconds delay
-
+            Deconnexion();
         }
 
         else if (id == R.id.nav_QuestionFrequentes) {
@@ -869,6 +891,41 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void Deconnexion() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle(getString(R.string.confirmExit));
+        alertDialogBuilder.setIcon(R.drawable.ic_exit_to_app_black_24dp);
+        alertDialogBuilder.setMessage(getString(R.string.confirmExitMsg));
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setPositiveButton(getString(R.string.oui), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Exit();
+            }
+        });
+        alertDialogBuilder.setNegativeButton(getString(R.string.non), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    private void Exit() {
+        ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.deconnexion), getString(R.string.encours), true);
+        dialog.show();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                FirebaseAuth.getInstance().signOut();
+                dialog.dismiss();
+                finish();
+            }
+        }, 2000); // 2000 milliseconds delay
     }
 
     /*private void status(String status){

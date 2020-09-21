@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
@@ -16,7 +18,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +54,12 @@ public class AccueilFragmentAdmin  extends Fragment {
     int themeColor;
     int appColor;
 
+    private TextView points;
+    private TextView bonus;
+    private int nbreBonus;
+    private int nbrePoints;
+    private ImageView close;
+    private RelativeLayout reportDashboad;
 
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
@@ -62,6 +72,10 @@ public class AccueilFragmentAdmin  extends Fragment {
         ConsulterSolde = (LinearLayout) view.findViewById(R.id.btnConsulterSolde);
         RechargeAvecCashAdmin = (LinearLayout) view.findViewById(R.id.btnRechargeAvecCashAdmin);
         btn_gesCartes = (LinearLayout) view.findViewById(R.id.btn_gesCartes);
+        points = (TextView) view.findViewById(R.id.points);
+        bonus   = (TextView) view.findViewById(R.id.bonus);
+        close = (ImageView) view.findViewById(R.id.close);
+        reportDashboad = (RelativeLayout) view.findViewById(R.id.reportDashboad);
 
         jour = (TextView) view.findViewById(R.id.jour);
         jourSemaine = (TextView) view.findViewById(R.id.jourSemaine);
@@ -78,9 +92,21 @@ public class AccueilFragmentAdmin  extends Fragment {
         categorie = getArguments().getString("categorie");
         role = getArguments().getString("role");
         idUser = getArguments().getString("idUser");
+        nbrePoints = getArguments().getInt("points", 0);
+        nbreBonus = getArguments().getInt("bonus", 0);
 
         myCategorie.setText(categorie);
         myRole.setText(role);
+        points.setText(getString(R.string.points) + " " + nbrePoints);
+        bonus.setText(getString(R.string.bonus) + " " +nbreBonus);
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Animatoo.animateInAndOut(getContext());
+                reportDashboad.setVisibility(View.GONE);
+            }
+        });
 
 
 

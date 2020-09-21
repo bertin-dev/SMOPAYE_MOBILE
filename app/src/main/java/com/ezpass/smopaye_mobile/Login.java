@@ -461,7 +461,7 @@ public class Login extends AppCompatActivity
 
     @OnClick(R.id.btnAutoRegister)
     void autoRegister(){
-        Intent intent = new Intent(getApplicationContext(), SouscriptionUploadIMGidCard.class);
+        Intent intent = new Intent(getApplicationContext(), Souscription_User_AutoEnreg.class);
         startActivity(intent);
     }
 

@@ -722,6 +722,13 @@
     <string name="failled">opération échouée</string>
     <string name="transactionFrequences">Fréquence Transactions</string>
     <string name="codeQR">Code QR</string>
+    <string name="termine">Terminé</string>
+    <string name="points">Points :</string>
+    <string name="bonus">Bonus :</string>
+    <string name="confirmExit">Confirmer la sortie..!!!</string>
+    <string name="confirmExitMsg">Êtes-vous sûr de vouloir quitter</string>
+    <string name="oui">Oui</string>
+    <string name="non">Non</string>
 
 
 </resources>

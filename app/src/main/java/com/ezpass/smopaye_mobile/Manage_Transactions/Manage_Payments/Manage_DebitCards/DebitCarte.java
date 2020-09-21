@@ -649,7 +649,7 @@ public class DebitCarte extends AppCompatActivity
         //Intent in = getIntent();
         //telephone = in.getStringExtra("telephone");
 
-        call = service.debit(Float.parseFloat(montant), id_cardSender, code_number_receiver, "DEBIT", getSerialNumber());
+        call = service.debit(Float.parseFloat(montant), id_cardSender, code_number_receiver, "DEBIT_CARTE", getSerialNumber());
         call.enqueue(new Callback<HomeResponse>() {
             @Override
             public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {

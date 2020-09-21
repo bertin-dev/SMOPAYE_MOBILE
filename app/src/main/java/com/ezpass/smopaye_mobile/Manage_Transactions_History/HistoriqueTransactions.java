@@ -125,13 +125,13 @@ public class HistoriqueTransactions extends AppCompatActivity {
             toolbar.setSubtitle(getString(R.string.ezpass));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
-        } else if(typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("QRCODE")){
+        } else if(typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("PAYEMENT_VIA_QR-CODE")){
             titleTypeTransaction.setText(getString(R.string.qrcode));
             getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.qrcode));
             toolbar.setSubtitle(getString(R.string.ezpass));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
-        } else if(typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("DEBIT")){
+        } else if(typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("DEBIT_CARTE")){
             titleTypeTransaction.setText(getString(R.string.debitCarte));
             getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.debitCarte));
             toolbar.setSubtitle(getString(R.string.ezpass));
@@ -143,7 +143,7 @@ public class HistoriqueTransactions extends AppCompatActivity {
             toolbar.setSubtitle(getString(R.string.ezpass));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
-        }else if(typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("FACTURE")){
+        }else if(typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("PAYEMENT_FACTURE")){
             titleTypeTransaction.setText(getString(R.string.facture));
             getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.facture));
             toolbar.setSubtitle(getString(R.string.ezpass));

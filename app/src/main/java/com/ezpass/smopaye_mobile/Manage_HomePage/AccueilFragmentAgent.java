@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
@@ -15,7 +17,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +53,12 @@ public class AccueilFragmentAgent extends Fragment {
     int appTheme;
     int themeColor;
     int appColor;
+    private TextView points;
+    private TextView bonus;
+    private int nbreBonus;
+    private int nbrePoints;
+    private ImageView close;
+    private RelativeLayout reportDashboad;
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         changeTheme();
@@ -62,7 +72,10 @@ public class AccueilFragmentAgent extends Fragment {
         CheckCardNumberAgent = (LinearLayout) view.findViewById(R.id.btnCheckCardNumberAgent);
         categorie = (TextView) view.findViewById(R.id.categorieAgent);
         session = (TextView) view.findViewById(R.id.sessionAgent);
-
+        points = (TextView) view.findViewById(R.id.points);
+        bonus   = (TextView) view.findViewById(R.id.bonus);
+        close = (ImageView) view.findViewById(R.id.close);
+        reportDashboad = (RelativeLayout) view.findViewById(R.id.reportDashboad);
 
 
         jour = (TextView) view.findViewById(R.id.jour);
@@ -80,9 +93,21 @@ public class AccueilFragmentAgent extends Fragment {
         code_number_sender = getArguments().getString("compte");
         mycategorie = getArguments().getString("categorie");
         idUser = getArguments().getString("idUser");
+        nbrePoints = getArguments().getInt("points", 0);
+        nbreBonus = getArguments().getInt("bonus", 0);
 
         categorie.setText(mycategorie); // chauffeur, moto_taxi, bus, cargo   A GERER DANS LE NOUVEAU WEB SERVICE
         session.setText(statut1); //Administrateur, Utilisateur etc...
+        points.setText(getString(R.string.points) + " " + nbrePoints);
+        bonus.setText(getString(R.string.bonus) + " " +nbreBonus);
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Animatoo.animateInAndOut(getContext());
+                reportDashboad.setVisibility(View.GONE);
+            }
+        });
 
 
 

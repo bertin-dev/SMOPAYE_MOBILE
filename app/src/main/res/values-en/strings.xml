@@ -642,4 +642,11 @@
     <string name="failled">failed operation</string>
     <string name="transactionFrequences">Frequency of Transactions</string>
     <string name="codeQR">QR Code</string>
+    <string name="termine">Finish</string>
+    <string name="points">Points : </string>
+    <string name="bonus">Bonus : </string>
+    <string name="confirmExit">Confirm Exit..!!!</string>
+    <string name="confirmExitMsg">Are you sure you want to exit</string>
+    <string name="oui">Yes</string>
+    <string name="non">No</string>
 </resources>

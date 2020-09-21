@@ -1002,8 +1002,8 @@ public class EditProfil extends AppCompatActivity
     @OnClick(R.id.btnSouscription)
     void register(){
 
-        if(!validateNom(til_nom) | !validatePrenom(til_prenom) | !validateTel(til_numeroTel) | !validateCni(til_cni)
-                | !validateAdress(til_adresse) | !validateRole(statut) | !validateCategorie(typeChauffeur) | !validateCompte(til_numCarte)){
+        if(!validateNom(til_nom) | !validatePrenom(til_prenom) | !validateTel(til_numeroTel)  | !validateAdress(til_adresse)
+                | !validateRole(statut) | !validateCategorie(typeChauffeur) | !validateCompte(til_numCarte)){
             return;
         }
 
@@ -1143,29 +1143,6 @@ public class EditProfil extends AppCompatActivity
 
 
     /**
-     * validateCni() méthode permettant de verifier si le cni inséré est valide
-     * @param til_cni
-     * @return Boolean
-     * @since 2019
-     * */
-    private Boolean validateCni(TextInputLayout til_cni){
-        String my_cni = til_cni.getEditText().getText().toString().trim();
-        if(my_cni.isEmpty()){
-            til_cni.setError(getString(R.string.veuillezInserer) + " " + getString(R.string.numeroDe) + " " + typePjustificative.getSelectedItem().toString());
-            til_cni.requestFocus();
-            return false;
-        } else if(!isValid(my_cni)){
-            til_cni.setError(getString(R.string.votre) + " " + typePjustificative.getSelectedItem().toString() + " " + getString(R.string.invalidCararatere));
-            til_cni.requestFocus();
-            return false;
-        } else {
-            til_cni.setError(null);
-            return true;
-        }
-    }
-
-
-    /**
      * validateAdress() méthode permettant de verifier si le cni inséré est valide
      * @param til_adress
      * @return Boolean
@@ -1247,7 +1224,7 @@ public class EditProfil extends AppCompatActivity
                                              String status1, String abonnement1) {
 
 
-        call = service.update_profil(nom1, prenom1, sexe1.toLowerCase(), telephone1, adresse1, num_categorie, num_statut, cni1, num_carte1, idUser);
+        call = service.update_profil(nom1, prenom1, sexe1.toLowerCase(), telephone1, adresse1, num_categorie, num_statut, num_carte1, idUser);
         call.enqueue(new Callback<AllMyResponse>() {
             @Override
             public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {

@@ -344,14 +344,14 @@ public class FragmentCompte extends Fragment
          progressBar = (ProgressBar) dialogView.findViewById(R.id.progressbar);
         progressBar.setVisibility(View.VISIBLE);
 
-        countDownTimer = new CountDownTimer(299 * 1000, 1000) {
+        countDownTimer = new CountDownTimer(60 * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 timerRecharge.setText(String.valueOf(millisUntilFinished / 1000));
             }
             @Override
             public void onFinish() {
-                timerRecharge.setText("Terminé.");
+                timerRecharge.setText(getString(R.string.termine));
             }
         };
         countDownTimer.start();
