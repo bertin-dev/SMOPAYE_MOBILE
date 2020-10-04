@@ -171,8 +171,8 @@ public class ModalDialog_PasswordForgot extends AppCompatDialogFragment {
                     return;
                 }
 
-                //listener.applyTexts(telephone.trim(), pieceJustificative.toLowerCase().trim());
-                listener.applyTexts(telephone.trim(), cniRetrieve.getEditText().getText().toString().trim());
+                listener.applyTexts(telephone.trim(), pieceJustificative.toLowerCase().trim());
+                //listener.applyTexts(telephone.trim(), cniRetrieve.getEditText().getText().toString().trim());
 
             }
         });

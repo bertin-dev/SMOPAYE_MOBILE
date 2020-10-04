@@ -282,7 +282,7 @@ public class SubSouscription extends AppCompatActivity
 
                         Role myRole = mycategories.get(i).getRole();
 
-                        listAllSession.put(myRole.getId(),  myRole.getname());
+                        listAllSession.put(myRole.getId(),  myRole.getName());
                         listAllCategorie.put(mycategories.get(i).getId(), mycategories.get(i).getname());
                     }
                     List<StringWithTag> itemList = new ArrayList<>();
@@ -967,8 +967,8 @@ public class SubSouscription extends AppCompatActivity
             //*******************FIN*****
             String genre = sexe.getSelectedItem().toString().trim().toLowerCase().equalsIgnoreCase("masculin") || sexe.getSelectedItem().toString().trim().toLowerCase().equalsIgnoreCase("male") ? "MASCULIN" : "FEMININ";
 
-            registerSubAccountDataInSmopayeServer(nom, prenom, genre, telephone, typePjustificative.getSelectedItem().toString().trim(),
-                    cni, "", adresse, num_carte, "",
+            registerSubAccountDataInSmopayeServer(nom, prenom, genre, telephone, typePjustificative.getSelectedItem().toString().toLowerCase().trim(),
+                    cni.toLowerCase().trim(), "", adresse, num_carte, "",
                     "offline");
         }
 
@@ -1166,7 +1166,7 @@ public class SubSouscription extends AppCompatActivity
                                              String status1) {
 
 
-        call = service.register_sub_account(prenom1, nom1, sexe1.toLowerCase(), telephone1, adresse1, num_categorie, cni1.toLowerCase(), num_statut, num_carte1);
+        call = service.register_sub_account(prenom1, nom1, sexe1.toLowerCase(), telephone1, adresse1, num_categorie, typePJ1 + "-" + cni1, num_statut, num_carte1);
         call.enqueue(new Callback<AllMyResponse>() {
             @Override
             public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {

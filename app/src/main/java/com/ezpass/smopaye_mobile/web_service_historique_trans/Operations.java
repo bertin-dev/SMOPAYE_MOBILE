@@ -24,7 +24,7 @@ public class Operations {
     private String Frais;
     @SerializedName("user")
     @Expose
-    private List<User> user;
+    private Users user;
 
 
     public String getDate() {
@@ -67,11 +67,11 @@ public class Operations {
         Frais = frais;
     }
 
-    public List<User> getUser() {
+    public Users getUser() {
         return user;
     }
 
-    public void setUser(List<User> user) {
+    public void setUser(Users user) {
         this.user = user;
     }
 }

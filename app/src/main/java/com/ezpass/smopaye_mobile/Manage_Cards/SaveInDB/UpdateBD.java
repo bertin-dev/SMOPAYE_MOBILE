@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.Constant;
+import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 import com.ezpass.smopaye_mobile.R;
@@ -33,7 +34,9 @@ import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
+import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
+import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
 import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 
 import java.io.FileInputStream;
@@ -95,12 +98,18 @@ public class UpdateBD extends AppCompatActivity {
 
         service = RetrofitBuilder.createService(ApiService.class);
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        if(tokenManager.getToken() == null){
+            startActivity(new Intent(this, Login.class));
+            finish();
+        }
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
+
         progressDialog = new ProgressDialog(UpdateBD.this);
         build_error = new AlertDialog.Builder(UpdateBD.this);
 
         //lecture de l'id dela carte de l'utilisateur connecté
         readTempIDCARDInFile();
-        Toast.makeText(this, "ID CARD: " + temp_card_id, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "ID CARD: " + temp_card_id, Toast.LENGTH_SHORT).show();
 
 
         Bundle extras = getIntent().getExtras();
@@ -212,15 +221,12 @@ public class UpdateBD extends AppCompatActivity {
                 progressDialog.dismiss();
 
                 if(response.isSuccessful()){
-
-                    if(response.body().isSuccess()){
-                        //tokenManager.saveToken(response.body());
-                        successResponse(response.message());
-                    } else {
-                        errorResponse(response.errorBody().toString());
-                    }
+                    assert response.body() != null;
+                    successResponse(response.body().getMessage());
                 } else{
-                    errorResponse(response.errorBody().toString());
+                    ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                    Toast.makeText(getApplicationContext(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                    errorResponse(apiError.getMessage());
                 }
 
             }
@@ -228,7 +234,8 @@ public class UpdateBD extends AppCompatActivity {
             @Override
             public void onFailure(Call<AllMyResponse> call, Throwable t) {
                 progressDialog.dismiss();
-                Log.w(TAG, "SMOPAYE SERVER onFailure: " + t.getMessage() );
+                Log.w(TAG, "SMOPAYE SERVER onFailure: " + t.getMessage());
+                Toast.makeText(UpdateBD.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -259,15 +266,12 @@ public class UpdateBD extends AppCompatActivity {
                 progressDialog.dismiss();
 
                 if(response.isSuccessful()){
-
-                    if(response.body().isSuccess()){
-                        //tokenManager.saveToken(response.body());
-                        successResponse(response.message());
-                    } else {
-                        errorResponse(response.errorBody().toString());
-                    }
+                    assert response.body() != null;
+                    successResponse(response.body().getMessage());
                 } else{
-                    errorResponse(response.errorBody().toString());
+                    ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                    Toast.makeText(getApplicationContext(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                    errorResponse(apiError.getMessage());
                 }
 
             }
@@ -276,6 +280,7 @@ public class UpdateBD extends AppCompatActivity {
             public void onFailure(Call<AllMyResponse> call, Throwable t) {
                 progressDialog.dismiss();
                 Log.w(TAG, " SMOPAYE SERVER onFailure: " + t.getMessage());
+                Toast.makeText(UpdateBD.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -292,7 +297,12 @@ public class UpdateBD extends AppCompatActivity {
         title.setText(getString(R.string.information));
         imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
         statutOperation.setText(response);
-        build_error.setPositiveButton("OK", null);
+        build_error.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
         build_error.setCancelable(false);
         build_error.setView(view);
         build_error.show();

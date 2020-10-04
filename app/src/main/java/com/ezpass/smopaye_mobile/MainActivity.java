@@ -21,6 +21,8 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
+import com.ezpass.smopaye_mobile.Profil_user.Entreprise;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -286,46 +288,69 @@ public class MainActivity extends AppCompatActivity
                     Fragment selectedFragment1 = null;
                     Bundle bundle1 = new Bundle();
 
-                    //id de l'utilisateur courant
-                    idUser = response.body().getId();
-
+                    //initialisation des objets et listes
                     CategoryUser categorie = response.body().getCategorie();
                     List<Particulier> particulier = response.body().getParticulier();
+                    List<Entreprise> entreprise = response.body().getEnterprise();
                     Role role = response.body().getRole();
                     Compte compte = response.body().getCompte();
                     List<Abonnement> abonnement = compte.getCompte_subscriptions();
                     List<DataUserCard> dataUserCards = response.body().getCards();
 
-
-                    profil_complet = (particulier.get(0).getFirstname() + " " + particulier.get(0).getLastname()).toUpperCase();
-                    session = role.getname();
+                    //utilisateur courant
+                    idUser = response.body().getId();
                     etat = response.body().getState();
                     myPhone = response.body().getPhone();
-                    myCompte = dataUserCards.get(0).getCode_number();
-                    myId_card = dataUserCards.get(0).getId();
+                    adresse = response.body().getAddress();
+
+                    //categorie courante de l'utilisateur
                     myCategorie = categorie.getName();
 
-                    for(int i=0; i<abonnement.size(); i++){
-                        myAbon = abonnement.get(abonnement.size() - 1).getSubscription_type();
-                        //myAbon = abonnement.get(i).getSubscription_type();
+
+                    //utilisateur ou entreprise courante
+                    if(particulier.isEmpty()){
+                        profil_complet = (entreprise.get(0).getRaison_social()).toUpperCase();
+                        nom = entreprise.get(0).getRaison_social();
+                        prenom = "";
+                        cni = "";
+                    } else {
+                        profil_complet = (particulier.get(0).getFirstname() + " " + particulier.get(0).getLastname()).toUpperCase();
+                        nom = particulier.get(0).getLastname();
+                        prenom = particulier.get(0).getFirstname();
+                        cni = particulier.get(0).getCni();
                     }
 
-                    //infos sur le compte personnel
+                    //Role de l'utilisateur courant
+                    session = role.getName();
+
+                    //Compte de l'utilisateur courant
                     myPersonalAccountNumber = compte.getAccount_number();
                     myPersonalAccountState = compte.getAccount_state();
                     myPersonalAccountAmount = compte.getAmount();
                     myPersonalAccountId = compte.getId();
 
-                    //update account
-                    nom = particulier.get(0).getLastname();
-                    prenom = particulier.get(0).getFirstname();
-                    numeroTel = myPhone;
-                    cni = particulier.get(0).getCni();
-                    adresse = response.body().getAddress();
-                    numero_card = myCompte;
 
+                    //Listes des Cartes de l'utilisateur courant
+                    myCompte = dataUserCards.get(0).getCode_number();
+                    myId_card = dataUserCards.get(0).getId();
+
+
+                    //Liste des Cartes de l'utilisateur courant
+                    for(int i=0; i<abonnement.size(); i++){
+                        myAbon = abonnement.get(abonnement.size() - 1).getSubscription_type();
+                        //myAbon = abonnement.get(i).getSubscription_type();
+                    }
+
+
+                    //calcul des bonnus et points cumulés par l'utilisateur courant
+                    if(response.body().getBonus() != null)
                     points = Integer.parseInt(response.body().getBonus());
+                    if(response.body().getBonus_valider() != null && response.body().getBonus_non_valider() != null)
                     bonus = Integer.parseInt(response.body().getBonus_valider()) + Integer.parseInt(response.body().getBonus_non_valider());
+
+                    //update account
+                    numeroTel = myPhone;
+                    numero_card = myCompte;
 
                     writeTempCardNumberInFile(myCompte);
                     writeTempCardIDInFile(myId_card);
@@ -335,8 +360,11 @@ public class MainActivity extends AppCompatActivity
 
                     txt_role.setText(session); // Accepteur, Administrateur, Utilisateur, Agent
                     txt_profile.setText(profil_complet); //Bertin Mounok
-                    txt_telephone.setText("+237 " + myPhone); //+237 694048925
-
+                    if(particulier.isEmpty()){
+                        txt_telephone.setText(role.getType().toUpperCase() + " Tel: +237 " + myPhone); //+237 694048925
+                    }else {
+                        txt_telephone.setText("+237 " + myPhone); //+237 694048925
+                    }
 
                     if(session.toLowerCase().equalsIgnoreCase("administrateur")){
                         /*--------------------------------AJOUT DES ELEMENTS DANS LE HEADER DU  nav_header_main.xml---------------*/

@@ -25,7 +25,7 @@ import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 
 public class Menu_GestionComptes extends AppCompatActivity {
 
-    private LinearLayout accepteur, userAgent, usersGoogle;
+    private LinearLayout accepteur, userAgent, usersGoogle, btnGesAdmin, btnGesUser;
     //changement de couleur du theme
     private Constant constant;
     private SharedPreferences.Editor editor;
@@ -45,11 +45,14 @@ public class Menu_GestionComptes extends AppCompatActivity {
         toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.gesComptes));
+        toolbar.setSubtitle(getString(R.string.ezpass));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         accepteur = (LinearLayout) findViewById(R.id.btnGesCommercants);
         userAgent = (LinearLayout) findViewById(R.id.btnGesCommerciaux);
         usersGoogle = (LinearLayout) findViewById(R.id.usersGoogle);
+        btnGesAdmin = (LinearLayout) findViewById(R.id.btnGesAdmin);
+        btnGesUser = (LinearLayout) findViewById(R.id.btnGesUser);
 
 
         accepteur.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +67,25 @@ public class Menu_GestionComptes extends AppCompatActivity {
         userAgent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), GestionUtilisateursAgents.class);
+                Intent intent = new Intent(getApplicationContext(), GestionAgents.class);
+                startActivity(intent);
+            }
+        });
+
+
+        btnGesAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), GestionAdministrateur.class);
+                startActivity(intent);
+            }
+        });
+
+
+        btnGesUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), GestionUtilisateurs.class);
                 startActivity(intent);
             }
         });

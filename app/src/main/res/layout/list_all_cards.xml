@@ -35,20 +35,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_weight="50"
-                    android:weightSum="100">
+                    android:layout_weight="50">
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="25"
-                        android:gravity="center"
-                        android:layout_gravity="center_horizontal|center_vertical"
-                        android:text="@string/create"/>
 
                     <TextView
                         android:id="@+id/created_at"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text=""
                         android:textStyle="normal"
@@ -57,7 +49,6 @@
                         android:paddingLeft="5dp"
                         android:paddingStart="5dp"
                         android:layout_gravity="center_horizontal|center_vertical"
-                        android:layout_weight="75"
                         android:autoSizeTextType="uniform"
                         android:autoSizeStepGranularity="2sp"/>
 
@@ -67,28 +58,18 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_weight="50"
-                    android:weightSum="100">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="30"
-                        android:gravity="center"
-                        android:layout_gravity="center_horizontal|center_vertical"
-                        android:text="@string/expire"/>
+                    android:layout_weight="50">
 
 
                     <TextView
                         android:id="@+id/exp_date"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text=""
                         android:textStyle="normal"
                         android:textSize="12sp"
                         android:gravity="end"
                         android:layout_gravity="center_horizontal|center_vertical"
-                        android:layout_weight="70"
                         android:autoSizeTextType="uniform"
                         android:autoSizeStepGranularity="2sp"/>
 
@@ -180,23 +161,11 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="100">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="27"
-                            android:layout_height="wrap_content"
-                            android:text="@string/etat"
-                            android:textStyle="italic"
-                            android:textSize="15sp"
-                            android:autoSizeTextType="uniform"
-                            android:autoSizeStepGranularity="2sp" />
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/cardState"
-                            android:layout_width="0dp"
-                            android:layout_weight="73"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text=""
                             android:textStyle="italic"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -23,21 +23,20 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="120dp"
             android:layout_gravity="center_vertical|center_horizontal"
             android:gravity="center"
-            android:background="@drawable/bg">
-
-        </LinearLayout>
+            android:background="@drawable/bg"/>
 
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/compteur"
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_gravity="center"
             android:textAlignment="center"
             android:orientation="vertical"
-            android:padding="20dp"
+            android:padding="10dp"
             android:elevation="10dp"
             android:layout_marginTop="-100dp"
             android:background="@drawable/btn_rounded_white"
@@ -45,28 +44,29 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
+                android:id="@+id/totalAccepteurs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
+                android:layout_marginBottom="5dp"
                 android:orientation="horizontal">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/textColorBlack"
                     android:gravity="center"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:textAlignment="center"
                     android:text="@string/NombreAccepteurs"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     />
                 <Button
                     android:id="@+id/totalAccepteur"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="100"
-                    android:textSize="20sp"
+                    android:text=""
+                    android:textSize="15sp"
                     android:gravity="center"
                     android:padding="5dp"
                     android:layout_gravity="center_horizontal|center_vertical"
@@ -76,28 +76,30 @@
 
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/totalAccepteursActif"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
+                android:layout_marginBottom="5dp"
+                android:layout_below="@+id/totalAccepteurs"
                 android:orientation="horizontal">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/textColorBlack"
                     android:gravity="center"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:textAlignment="center"
                     android:text="@string/gesAccepteurActif"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     />
                 <Button
                     android:id="@+id/totalAccepteurActifs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="100"
-                    android:textSize="20sp"
+                    android:text=""
+                    android:textSize="15sp"
                     android:gravity="center"
                     android:padding="5dp"
                     android:layout_gravity="center_horizontal|center_vertical"
@@ -109,25 +111,26 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/totalAccepteursActif"
                 android:orientation="horizontal">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/textColorBlack"
                     android:gravity="center"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:textAlignment="center"
                     android:text="@string/gesAccepteurInActif"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     />
                 <Button
                     android:id="@+id/totalAccepteurInactifs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="100"
-                    android:textSize="20sp"
+                    android:text=""
+                    android:textSize="15sp"
                     android:gravity="center"
                     android:padding="5dp"
                     android:layout_gravity="center_horizontal|center_vertical"
@@ -137,108 +140,84 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
 
-
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/lnListAccepteurs"
-                android:clickable="true"
-                android:focusable="true"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:orientation="horizontal">
+                android:text="@string/accepteursList"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="@color/grisFonce"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:textSize="10sp"/>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_content_paste_black_24dp"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/bgColorStandard"
-                    android:textSize="20sp"
-                    android:textStyle="bold|italic"
-                    android:background="@drawable/edittextborder"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
-                    android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
-                    android:text="@string/listAccepteurs"/>
-            </LinearLayout>
+            <View
+                android:id="@+id/div_users"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
 
             <LinearLayout
-                android:id="@+id/lnModifAccepteurs"
-                android:clickable="true"
-                android:focusable="true"
+                android:id="@+id/emptyListUsers"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_update_black_24dp"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:gravity="center_horizontal|center_vertical"
+                android:textAlignment="center"
+                android:visibility="gone"
+                android:foregroundGravity="center_vertical|center_horizontal">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/bgColorStandard"
-                    android:textSize="20sp"
-                    android:textStyle="bold|italic"
-                    android:background="@drawable/edittextborder"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
-                    android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
-                    android:text="@string/ModifAccepteur"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/lnSuppAccepteurs"
-                android:clickable="true"
-                android:focusable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:orientation="horizontal">
-
-                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_delete_black_24dp"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
                     android:textColor="@color/bgColorStandard"
                     android:textSize="20sp"
-                    android:textStyle="bold|italic"
-                    android:background="@drawable/edittextborder"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
-                    android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
-                    android:text="@string/SuppAccepteur"/>
+                    android:text="@string/emptyUserlist"
+                    android:gravity="center_horizontal" />
             </LinearLayout>
 
-        </LinearLayout>
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefreshLayout"
+                android:layout_width="match_parent"
+                android:layout_below="@+id/div_users"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycle_view"
+                    android:visibility="visible"
+                    android:scrollbars="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_centerInParent="true"
+                android:foregroundGravity="center_vertical|center_horizontal"
+                android:visibility="visible"/>
+
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -246,4 +225,4 @@
 
 
 
-</ScrollView>
+</LinearLayout>

@@ -62,6 +62,7 @@ public class AccueilFragmentAdmin  extends Fragment {
     private RelativeLayout reportDashboad;
 
 
+    @SuppressLint("SetTextI18n")
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         changeTheme();
         View view =  inflater.inflate(R.layout.fragment_accueil_admin, container, false);
@@ -103,7 +104,6 @@ public class AccueilFragmentAdmin  extends Fragment {
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Animatoo.animateInAndOut(getContext());
                 reportDashboad.setVisibility(View.GONE);
             }
         });
@@ -222,6 +222,7 @@ public class AccueilFragmentAdmin  extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), Accueil_Carte.class);
+                intent.putExtra("idUser", idUser);
                 startActivity(intent);
             }
         });

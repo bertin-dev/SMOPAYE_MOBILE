@@ -14,9 +14,8 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/myToolbar"
+        android:layout_marginTop="55dp"
         android:divider="@color/material_blue_grey_800"
-        android:id="@+id/exp_list_view1">
-    </ListView>
+        android:id="@+id/exp_list_view"/>
 
 </RelativeLayout>

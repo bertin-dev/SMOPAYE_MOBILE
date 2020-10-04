@@ -214,7 +214,7 @@ public class Souscription_User_AutoEnreg extends AppCompatActivity
 
                         Role myRole = mycategories.get(i).getRole();
 
-                        listAllSession.put(myRole.getId(),  myRole.getname());
+                        listAllSession.put(myRole.getId(),  myRole.getName());
                         listAllCategorie.put(mycategories.get(i).getId(), mycategories.get(i).getname());
                     }
                     List<StringWithTag> itemList = new ArrayList<>();

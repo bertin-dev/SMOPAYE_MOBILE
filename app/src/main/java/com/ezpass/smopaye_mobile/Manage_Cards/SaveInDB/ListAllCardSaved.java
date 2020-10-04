@@ -8,10 +8,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,7 +49,6 @@ public class ListAllCardSaved extends AppCompatActivity {
     private static final String TAG = "ListAllCardSaved";
     private ListView listView;
     private ProgressBar progressBar;
-    private EditText search;
 
     private ApiService service;
     private TokenManager tokenManager;
@@ -77,7 +82,6 @@ public class ListAllCardSaved extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.listViewContent);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
-        search = (EditText)findViewById(R.id.search);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
 
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
@@ -90,26 +94,6 @@ public class ListAllCardSaved extends AppCompatActivity {
 
         showAllCards();
 
-
-        /*search.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //Updating Array Adapter ListView after typing inside EditText.
-                ListAllCardSaved.this.adapter.getFilter().filter(s);
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.toString().equals("")){
-                    ListAllCardSaved.this.adapter.getFilter().filter(s);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });*/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             changeColorWidget();
         }
@@ -173,7 +157,38 @@ public class ListAllCardSaved extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.toolbar_search_menu, menu);
+              //search listener
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+
+        //search listener
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                if(TextUtils.isEmpty(query)){
+                    adapterCardList.filter("");
+                    listView.clearTextFilter();
+                } else {
+                    adapterCardList.filter(query);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+
+                if(TextUtils.isEmpty(query)){
+                    adapterCardList.filter("");
+                    listView.clearTextFilter();
+                } else {
+                    adapterCardList.filter(query);
+                }
+                return true;
+            }
+        });
+
         return true;
     }
 
@@ -192,11 +207,6 @@ public class ListAllCardSaved extends AppCompatActivity {
 
         if (id == R.id.tuto) {
             Intent intent = new Intent(getApplicationContext(), TutorielUtilise.class);
-            startActivity(intent);
-        }
-
-        if(id == R.id.modifierCompte){
-            Intent intent = new Intent(getApplicationContext(), UpdatePassword.class);
             startActivity(intent);
         }
 

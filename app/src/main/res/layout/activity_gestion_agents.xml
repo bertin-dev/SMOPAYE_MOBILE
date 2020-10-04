@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/white"
+    android:id="@+id/gestionUtilisateurs"
+    tools:context=".Manage_Administrator.GestionAgents">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <include
+            android:id="@+id/myToolbar"
+            layout="@layout/bar_layout"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:gravity="center"
+            android:background="@drawable/bg"/>
+
+
+        <RelativeLayout
+            android:id="@+id/compteur"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:elevation="10dp"
+            android:layout_marginTop="-100dp"
+            android:background="@drawable/btn_rounded_white"
+            android:foregroundGravity="center_vertical|center_horizontal"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/totalAccepteurs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textColorBlack"
+                    android:gravity="center"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:textAlignment="center"
+                    android:text="@string/NombreAgents"
+                    android:textSize="15sp"
+                    />
+                <Button
+                    android:id="@+id/totalAccepteur"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:textAlignment="center"
+                    android:background="@drawable/btn_rounded"
+                    android:textColor="@color/white"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/totalAccepteursActif"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_below="@+id/totalAccepteurs"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textColorBlack"
+                    android:gravity="center"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:textAlignment="center"
+                    android:text="Agents Actif    "
+                    android:textSize="15sp"
+                    />
+                <Button
+                    android:id="@+id/totalAccepteurActifs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:textAlignment="center"
+                    android:background="@drawable/btn_rounded_green"
+                    android:textColor="@color/white"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/totalAccepteursActif"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textColorBlack"
+                    android:gravity="center"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:textAlignment="center"
+                    android:text="Agents Inactif   "
+                    android:textSize="15sp"
+                    />
+                <Button
+                    android:id="@+id/totalAccepteurInactifs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:textAlignment="center"
+                    android:background="@drawable/btn_rounded_red"
+                    android:textColor="@color/white"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/agentsList"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="@color/grisFonce"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:textSize="10sp"/>
+
+            <View
+                android:id="@+id/div_users"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+
+            <LinearLayout
+                android:id="@+id/emptyListUsers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:gravity="center_horizontal|center_vertical"
+                android:textAlignment="center"
+                android:visibility="gone"
+                android:foregroundGravity="center_vertical|center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:textColor="@color/bgColorStandard"
+                    android:textSize="20sp"
+                    android:text="@string/emptyUserlist"
+                    android:gravity="center_horizontal" />
+            </LinearLayout>
+
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefreshLayout"
+                android:layout_width="match_parent"
+                android:layout_below="@+id/div_users"
+                android:layout_height="match_parent">
+
+                <ListView
+                    android:id="@+id/list_view"
+                    android:visibility="visible"
+                    android:scrollbars="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_centerInParent="true"
+                android:foregroundGravity="center_vertical|center_horizontal"
+                android:visibility="visible"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

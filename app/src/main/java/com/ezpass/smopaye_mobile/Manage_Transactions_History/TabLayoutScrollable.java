@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.Login;
@@ -25,7 +26,7 @@ import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
 import com.ezpass.smopaye_mobile.web_service_historique_trans.Home_Historique;
 import com.ezpass.smopaye_mobile.web_service_historique_trans.Operations;
-import com.ezpass.smopaye_mobile.web_service_historique_trans.User;
+import com.ezpass.smopaye_mobile.web_service_historique_trans.Users;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,6 +38,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -88,7 +90,6 @@ public class TabLayoutScrollable extends Fragment {
     private TokenManager tokenManager;
     private Call<Home_Historique> cardCall;
     private List<Operations> myResponse;
-    private List<User> user;
 
    /* public static Fragment getInstance(int position) {
         Bundle bundle = new Bundle();
@@ -98,6 +99,8 @@ public class TabLayoutScrollable extends Fragment {
         return tabFragment;
     }*/
 
+   private String convertJour;
+    private String convertMois;
 
     public TabLayoutScrollable() {
         // Required empty public constructor
@@ -112,7 +115,20 @@ public class TabLayoutScrollable extends Fragment {
         annee = getArguments().getInt("annee", 0);
         //mois = (mois<10) ?  0 + mois : mois;
         //fullDate = annee + (mois < 10) ? mois: mois + annee;
-        fullDate = annee+"-"+mois+"-"+jour;
+
+        if(mois < 10){
+            convertMois = "0" + mois;
+        }else
+            convertMois = String.valueOf(mois);
+
+        if(jour < 10)
+            convertJour = "0" + jour;
+        else
+            convertJour = String.valueOf(jour);
+
+
+
+        fullDate = annee + "-" + convertMois + "-" + convertJour;
         typHistTransaction = getArguments().getString("typeHistTrans", "");
 
         /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
@@ -323,19 +339,25 @@ public class TabLayoutScrollable extends Fragment {
                     if(myResponse.isEmpty()){
                         historiqueVide.setVisibility(View.VISIBLE);
                         listView.setVisibility(View.GONE);
-                    } else{
-                        initArray(myResponse.size());
-                        for(int i=0; i<myResponse.size();i++){
-                            montant_valeur[i] = myResponse.get(i).getMontant();
-                            operation[i] = myResponse.get(i).getOperation();
-                            frais[i] = myResponse.get(i).getFrais();
-                            date_HistoriqueTransaction[i] = myResponse.get(i).getDate();
-                            user = myResponse.get(i).getUser();
-                        }
-                        customListView = new Custom_Layout_Historique(getActivity(), montant_valeur, operation, frais, date_HistoriqueTransaction, user);
-                        historiqueVide.setVisibility(View.GONE);
-                        listView.setAdapter(customListView);
+                        return;
                     }
+
+                    Log.w(TAG, "-----------------------: " + myResponse.toString() );
+                    Log.w(TAG, "-------------SALUT----------: " + myResponse.size() );
+
+                    initArray(myResponse.size());
+                    List<Users> usersList = new ArrayList<>();
+                    for(int i=0; i<myResponse.size();i++){
+                        montant_valeur[i] = myResponse.get(i).getMontant();
+                        operation[i] = myResponse.get(i).getOperation();
+                        frais[i] = myResponse.get(i).getFrais();
+                        date_HistoriqueTransaction[i] = myResponse.get(i).getDate();
+                        usersList.add(myResponse.get(i).getUser());
+                    }
+                    customListView = new Custom_Layout_Historique(getActivity(), montant_valeur, operation, frais, date_HistoriqueTransaction, usersList);
+                    historiqueVide.setVisibility(View.GONE);
+                    listView.setAdapter(customListView);
+
                 } else{
                     tokenManager.deleteToken();
                     startActivity(new Intent(getActivity(), Login.class));

@@ -11,6 +11,9 @@ public class Role{
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("type")
+    @Expose
+    private String type;
 
     @SerializedName("created_at")
     @Expose
@@ -27,12 +30,20 @@ public class Role{
         this.id = id;
     }
 
-    public String getname() {
+    public String getName() {
         return name;
     }
 
-    public void setname(String name) {
+    public void setName(String name) {
         this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getCreated_at() {

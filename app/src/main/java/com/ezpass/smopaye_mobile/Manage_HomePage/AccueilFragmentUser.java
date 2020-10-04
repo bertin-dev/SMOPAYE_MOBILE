@@ -66,6 +66,7 @@ public class AccueilFragmentUser extends Fragment {
 
 
 
+    @SuppressLint("SetTextI18n")
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         changeTheme();
         View view =  inflater.inflate(R.layout.fragment_accueil_user, container, false);
@@ -110,7 +111,6 @@ public class AccueilFragmentUser extends Fragment {
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Animatoo.animateInAndOut(getContext());
                 reportDashboad.setVisibility(View.GONE);
             }
         });

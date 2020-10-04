@@ -120,7 +120,7 @@
     <string name="gesComptes">Gestion comptes</string>
 
     <string name="gesAccepteur">Gestion Accepteurs</string>
-    <string name="gesUserAgent">Gestion Utilisateurs et Agents</string>
+    <string name="gesUserAgent">Gestion Agents</string>
     <string name="userGoogle">Utilisateurs Google</string>
     <string name="effectuer">éffectuer</string>
     <string name="numdeCarte">Numéro de Carte</string>
@@ -375,7 +375,10 @@
     <string name="openSourceProject">Copyright © 2012 The Android Open Source Project Volley est distribué sous licence Apache, Version 2.0 Plus d\'info: https://github.com/google/volley</string>
     <string name="pointDeVenteSmopaye">Points de Vente</string>
     <string name="yaounde">YAOUNDE</string>
+    <string name="soa_campus">Entrée Campus Soa</string>
+    <string name="soa_marche">Marché Soa</string>
     <string name="soa">SOA</string>
+    <string name="point_marchands">Points marchands</string>
     <string name="camair">CAMAIR</string>
     <string name="omnisport">OMNISPORT</string>
     <string name="details">Détail</string>
@@ -641,7 +644,7 @@
     <string name="savedCards">Cartes enregistrées</string>
     <string name="numCard">N° Carte</string>
     <string name="loading">Chargement…</string>
-    <string name="serial">N° Série Associé</string>
+    <string name="serial">N° Série </string>
     <string name="etatCarte">Etat Carte</string>
     <string name="editProfil">Editer Profil</string>
     <string name="MonAbonnement">Mon Abonnement</string>
@@ -723,12 +726,37 @@
     <string name="transactionFrequences">Fréquence Transactions</string>
     <string name="codeQR">Code QR</string>
     <string name="termine">Terminé</string>
-    <string name="points">Points :</string>
+    <string name="points">Points Cumulés :</string>
     <string name="bonus">Bonus :</string>
     <string name="confirmExit">Confirmer la sortie..!!!</string>
     <string name="confirmExitMsg">Êtes-vous sûr de vouloir quitter</string>
     <string name="oui">Oui</string>
     <string name="non">Non</string>
-
-
+    <string name="position">Votre Position</string>
+    <string name="infoCard">Information Carte</string>
+    <string name="infoCompte">Information Compte</string>
+    <string name="infoRole">Information Role</string>
+    <string name="infoUser">Information Utilisateur</string>
+    <string name="compagnie">Compagnie</string>
+    <string name="role">Role</string>
+    <string name="typeRole">Type Role</string>
+    <string name="accepteursList">Liste des accepteurs</string>
+    <string name="agentsList">Liste des agents</string>
+    <string name="usersList">Liste des utilisateurs</string>
+    <string name="emptyUserlist">Vous ne possedez pas d\'utilisateurs.</string>
+    <string name="dateCreation">Date Création </string>
+    <string name="NombreUtilisateurs">Nbre Utilisateurs</string>
+    <string name="UtilisateursActifs">Utilisateurs Actifs</string>
+    <string name="UtilisateursInactif">Utilisateurs Inactif</string>
+    <string name="GesAdmin">Gestion Administrateurs</string>
+    <string name="GesUser">Gestion Utilisateurs</string>
+    <string name="NombreAdmin">Nbre Admin</string>
+    <string name="AdminActifs">Admin Actifs</string>
+    <string name="AdminInactif">Admin Inactif</string>
+    <string name="adminList">Liste des adminstrateurs</string>
+    <string name="userList">Liste des utilisateurs</string>
+    <string name="typeRetrait">Type de Retrait</string>
+    <string name="MsgDescRetraitCompteChezOperateur">Veuillez insérer votre numéro de compte puis suivre les étapes.</string>
+    <string name="carte">CARTE</string>
+    <string name="comptes">COMPTE</string>
 </resources>

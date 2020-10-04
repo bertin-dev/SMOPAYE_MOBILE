@@ -20,6 +20,8 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+
+import com.ezpass.smopaye_mobile.web_service_response.AllMyHomeResponse;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -33,10 +35,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,6 +91,8 @@ import java.util.Timer;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressPie;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -138,6 +144,7 @@ public class FragmentRetraitChezSmopaye extends Fragment implements Connectivity
     private TokenManager tokenManager;
     private AwesomeValidation validator;
     private Call<HomeResponse> call;
+    private Call<AllMyHomeResponse> call2;
 
 
     @BindView(R.id.til_numCartSmopaye)
@@ -182,6 +189,15 @@ public class FragmentRetraitChezSmopaye extends Fragment implements Connectivity
     int themeColor;
     int appColor;
 
+    private Spinner typeRetrait;
+    @BindView(R.id.til_numCompteBeneficiaire)
+    TextInputLayout til_numCompteBeneficiaire;
+    @BindView(R.id.tie_numCompteBeneficiaire)
+    TextInputEditText tie_numCompteBeneficiaire;
+
+    private String operation = "";
+    int positionTypeTransfert = 0;
+
     public FragmentRetraitChezSmopaye() {
         // Required empty public constructor
     }
@@ -212,6 +228,7 @@ public class FragmentRetraitChezSmopaye extends Fragment implements Connectivity
         //service google firebase
         apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
+        typeRetrait = (Spinner) view.findViewById(R.id.typeRetrait);
 
 
         /////////////////////////////////LECTURE DES CONTENUS DES FICHIERS////////////////////
@@ -245,6 +262,32 @@ public class FragmentRetraitChezSmopaye extends Fragment implements Connectivity
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             changeColorWidget(view);
         }
+
+
+        typeRetrait.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 1){
+                    til_numCompteBeneficiaire.setVisibility(View.VISIBLE);
+                    til_numCartSmopaye.setVisibility(View.GONE);
+                    positionTypeTransfert = position;
+                    //operation = "RETRAIT_COMPTE_VIA_MONETBILL";
+                    // Toast.makeText(getContext(), operation, Toast.LENGTH_LONG).show();
+                } else {
+                    til_numCompteBeneficiaire.setVisibility(View.GONE);
+                    til_numCartSmopaye.setVisibility(View.VISIBLE);
+                    positionTypeTransfert = position;
+                    operation = "RETRAIT_SMOPAYE";
+                    //Toast.makeText(getContext(), operation, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         return view;
     }
 
@@ -353,9 +396,11 @@ public class FragmentRetraitChezSmopaye extends Fragment implements Connectivity
         //coloration des champs lorsqu'il y a erreur
         til_numCartSmopaye.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
         til_montantSmopaye.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+        til_numCompteBeneficiaire.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
 
         validator.addValidation(getActivity(), R.id.til_numCartSmopaye, RegexTemplate.NOT_EMPTY, R.string.verifierNumero);
         validator.addValidation(getActivity(), R.id.til_montantSmopaye, RegexTemplate.NOT_EMPTY, R.string.insererPassword);
+        validator.addValidation(getActivity(), R.id.til_numCompteBeneficiaire, RegexTemplate.NOT_EMPTY, R.string.insererCompte);
     }
 
     /**
@@ -398,35 +443,70 @@ public class FragmentRetraitChezSmopaye extends Fragment implements Connectivity
     @OnClick(R.id.btnRetraitSmopaye)
     void retrait(){
 
-        if(!validateCompte(til_numCartSmopaye) | !validateMontant(til_montantSmopaye)){
-            return;
+        //compte
+        if(positionTypeTransfert == 1){
+            if(!validateCompte(til_numCompteBeneficiaire) | !validateMontant(til_montantSmopaye)){
+                return;
+            }
+
+            String account_number_receiver = til_numCompteBeneficiaire.getEditText().getText().toString();
+            String montant = til_montantSmopaye.getEditText().getText().toString();
+            validator.clear();
+
+            /*Action à poursuivre si tous les champs sont remplis*/
+            if(validator.validate()){
+
+                //********************DEBUT***********
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // On ajoute un message à notre progress dialog
+                        progressDialog.setMessage(getString(R.string.connexionserver));
+                        // On donne un titre à notre progress dialog
+                        progressDialog.setTitle(getString(R.string.attenteReponseServer));
+                        // On spécifie le style
+                        //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                        // On affiche notre message
+                        progressDialog.show();
+                        //build.setPositiveButton("ok", new View.OnClickListener()
+                    }
+                });
+                //*******************FIN*****
+                retraitCompteACompteInSmopayeServer(montant, account_number_receiver);
+            }
+        } //carte
+        else {
+
+            if (!validateCompte(til_numCartSmopaye) | !validateMontant(til_montantSmopaye)) {
+                return;
+            }
+
+            String id_card = til_numCartSmopaye.getEditText().getText().toString();
+            String montant = til_montantSmopaye.getEditText().getText().toString();
+            validator.clear();
+            /*Action à poursuivre si tous les champs sont remplis*/
+            if (validator.validate()) {
+
+                //********************DEBUT***********
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // On ajoute un message à notre progress dialog
+                        progressDialog.setMessage(getString(R.string.connexionserver));
+                        // On donne un titre à notre progress dialog
+                        progressDialog.setTitle(getString(R.string.attenteReponseServer));
+                        // On spécifie le style
+                        //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                        // On affiche notre message
+                        progressDialog.show();
+                        //build.setPositiveButton("ok", new View.OnClickListener()
+                    }
+                });
+                //*******************FIN*****
+                retraitSmopaye(id_card, montant, tmp_card_number, tmp_number);
+            }
+
         }
-
-        String id_card = til_numCartSmopaye.getEditText().getText().toString();
-        String montant = til_montantSmopaye.getEditText().getText().toString();
-        validator.clear();
-        /*Action à poursuivre si tous les champs sont remplis*/
-        if(validator.validate()){
-
-            //********************DEBUT***********
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // On ajoute un message à notre progress dialog
-                    progressDialog.setMessage(getString(R.string.connexionserver));
-                    // On donne un titre à notre progress dialog
-                    progressDialog.setTitle(getString(R.string.attenteReponseServer));
-                    // On spécifie le style
-                    //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    // On affiche notre message
-                    progressDialog.show();
-                    //build.setPositiveButton("ok", new View.OnClickListener()
-                }
-            });
-            //*******************FIN*****
-            retraitSmopaye(id_card, montant, tmp_card_number, tmp_number);
-        }
-
     }
 
 
@@ -535,11 +615,16 @@ public class FragmentRetraitChezSmopaye extends Fragment implements Connectivity
             call.cancel();
             call = null;
         }
+
+        if(call2 != null){
+            call2.cancel();
+            call2 = null;
+        }
     }
 
     private void retraitSmopaye(String id_card, String montant, String idcard_donataire, String telephone) {
 
-        call = service.transaction(Float.parseFloat(montant), idcard_donataire, id_card, "RETRAIT_SMOPAYE");
+        call = service.transaction(Float.parseFloat(montant), idcard_donataire, id_card, operation);
         call.enqueue(new Callback<HomeResponse>() {
             @Override
             public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {
@@ -929,6 +1014,8 @@ public class FragmentRetraitChezSmopaye extends Fragment implements Connectivity
             TextView myTitle = (TextView) view.findViewById(R.id.descContent);
             myTitle.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
             desc.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.edittextborder_red));
+            TextView typRetraitTittle = (TextView) view.findViewById(R.id.typRetraitTittle);
+            typRetraitTittle.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
             //numero carte
             tie_numCartSmopaye.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryRed));
             tie_numCartSmopaye.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.edittextborder_red));
@@ -956,5 +1043,66 @@ public class FragmentRetraitChezSmopaye extends Fragment implements Connectivity
             getActivity().setTheme(appTheme);
         }
     }
+
+    private void retraitCompteACompteInSmopayeServer(String montant, String account_number_receiver) {
+
+        call2 = service.retrait_compte_A_Compte(Float.parseFloat(montant), account_number_receiver);
+        call2.enqueue(new Callback<AllMyHomeResponse>() {
+            @Override
+            public void onResponse(Call<AllMyHomeResponse> call, Response<AllMyHomeResponse> response) {
+                Log.w(TAG, "SMOPAYE_SERVER onResponse: " + response);
+                progressDialog.dismiss();
+
+                assert response.body() != null;
+                if(response.isSuccessful()){
+                    String msgReceiver = response.body().getMessage().getCompte_receiver().getNotif();
+                    String msgSender = response.body().getMessage().getSender().getNotif();
+
+                    successResponse("", msgReceiver);
+
+                }
+                else{
+
+                    if(response.code() == 422){
+                        handleErrors(response.errorBody());
+                    } else{
+                        ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                        Toast.makeText(getContext(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        errorResponse("", apiError.getMessage());
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<AllMyHomeResponse> call, Throwable t) {
+
+                progressDialog.dismiss();
+                Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
+
+                /*Vérification si la connexion internet accessible*/
+                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
+                if(!(activeInfo != null && activeInfo.isConnected())){
+                    authWindows.setVisibility(View.GONE);
+                    internetIndisponible.setVisibility(View.VISIBLE);
+                    Toast.makeText(getContext(), getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
+                }
+                /*Vérification si le serveur est inaccessible*/
+                else{
+                    authWindows.setVisibility(View.GONE);
+                    internetIndisponible.setVisibility(View.VISIBLE);
+                    conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
+                    titleNetworkLimited.setText(getString(R.string.connexionLimite));
+                    //msgNetworkLimited.setText();
+                    Toast.makeText(getContext(), getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+
+    }
+
 
 }

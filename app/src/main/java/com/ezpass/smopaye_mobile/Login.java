@@ -581,15 +581,15 @@ public class Login extends AppCompatActivity
 
                 } else{
 
+                    ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                    Toast.makeText(Login.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+
                     if(response.code() == 422){
                         handleErrors(response.errorBody());
-                    }
-                    else if(response.code() == 401) {
-                        //ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
-                        //Toast.makeText(Login.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
-                        errorResponse(response.message());
+                        Log.w(TAG, "onResponse: " + response.errorBody());
                     } else{
-                        errorResponse(response.message());
+                        Log.w(TAG, "onResponse: " + response.errorBody());
+                        errorResponse(apiError.getMessage());
                     }
                 }
             }

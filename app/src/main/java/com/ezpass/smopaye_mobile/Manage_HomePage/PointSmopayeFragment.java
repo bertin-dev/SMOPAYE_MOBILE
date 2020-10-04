@@ -6,11 +6,13 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.Manage_Assistance.AgenceSmopayeAdapter;
 import com.ezpass.smopaye_mobile.Manage_Assistance.AgenceSmopayeModel;
 import com.ezpass.smopaye_mobile.Manage_Assistance.DetailsAgenceSmopaye;
@@ -31,7 +34,10 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.SphericalUtil;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -50,9 +56,10 @@ public class PointSmopayeFragment extends Fragment implements
     private GoogleMap mMap;
     //markers all define place
     private ArrayList<LatLng> arrayList = new ArrayList<>();
-    private LatLng camair = new LatLng(3.8680644, 11.5187754);
-    private LatLng omnisport = new LatLng(3.8680946, 11.5187681);
-    private LatLng soa = new LatLng(3.0067328, 11.008078);
+    private LatLng camair = new LatLng(ChaineConnexion.getLatitude_camair(), ChaineConnexion.getLongitude_camair());
+    private LatLng omnisport = new LatLng(ChaineConnexion.getLatitude_omnisport(), ChaineConnexion.getLongitude_omnisport());
+    private LatLng soa_campus = new LatLng(ChaineConnexion.getLatitude_soa_campus(), ChaineConnexion.getLongitude_soa_campus());
+    private LatLng soa_marche = new LatLng(ChaineConnexion.getLatitude_marche_soa(), ChaineConnexion.getLongitude_marche_soa());
     private Double distance = 0.0;
     private DecimalFormat df = new DecimalFormat("0.00"); // import java.text.DecimalFormat;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
@@ -67,25 +74,35 @@ public class PointSmopayeFragment extends Fragment implements
     private LatLng currentPosition;
 
 
+    private LocationRequest locationRequest;
+    private Location lastLocation;
+    private Marker currentUserLocationMarker;
 
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
+
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_point_smopaye, container, false);
 
         getActivity().setTitle(getString(R.string.pointDeVenteSmopaye));
 
 
-        if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSION);
-        }else{
+        } else {
             startLocationService();
         }
 
+        //carte google map
+
+        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         //marker position
         arrayList.add(camair);
         arrayList.add(omnisport);
-        arrayList.add(soa);
+        arrayList.add(soa_campus);
+        arrayList.add(soa_marche);
 
         listView = view.findViewById(R.id.exp_list_view);
         list = new ArrayList<>();
@@ -159,18 +176,19 @@ public class PointSmopayeFragment extends Fragment implements
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(10 * 1000)        // 10 seconds, in milliseconds
-                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+                .setFastestInterval(1000); // 1 second, in milliseconds
 
 
-        //
+        //carte google map
+        mGoogleApiClient.connect();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if(requestCode == REQUEST_CODE_LOCATION_PERMISSION && grantResults.length > 0){
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == REQUEST_CODE_LOCATION_PERMISSION && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startLocationService();
             } else {
                 Toast.makeText(getContext(), getString(R.string.permissionRefuse), Toast.LENGTH_SHORT).show();
@@ -179,14 +197,12 @@ public class PointSmopayeFragment extends Fragment implements
     }
 
 
+    private String myConvert(LatLng depart, LatLng arrive) {
 
-
-    private String myConvert(LatLng depart, LatLng arrive){
-
-        if((SphericalUtil.computeDistanceBetween(depart, arrive)/1000) < 1){
+        if ((SphericalUtil.computeDistanceBetween(depart, arrive) / 1000) < 1) {
             return df.format(SphericalUtil.computeDistanceBetween(depart, arrive)) + " m";
-        } else{
-            return df.format(SphericalUtil.computeDistanceBetween(depart, arrive)/1000) + " km";
+        } else {
+            return df.format(SphericalUtil.computeDistanceBetween(depart, arrive) / 1000) + " km";
         }
     }
 
@@ -196,16 +212,16 @@ public class PointSmopayeFragment extends Fragment implements
         mMap = googleMap;
 
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 500);
             return;
         }
 
         mMap.clear();
         //marker
-        for(int i=0;i<arrayList.size();i++){
-            mMap.addMarker(new MarkerOptions().position(arrayList.get(i)).title("Point Marchant"));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(15.0f));
+        for (int i = 0; i < arrayList.size(); i++) {
+            mMap.addMarker(new MarkerOptions().position(arrayList.get(i)).title(getString(R.string.point_marchands)));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(7.0f));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(arrayList.get(i)));
         }
 
@@ -219,7 +235,7 @@ public class PointSmopayeFragment extends Fragment implements
     public void onResume() {
         super.onResume();
         //Now lets connect to the API
-        if(mGoogleApiClient != null){
+        if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
     }
@@ -230,12 +246,12 @@ public class PointSmopayeFragment extends Fragment implements
         Log.v(this.getClass().getSimpleName(), "onPause()");
 
         //Disconnect from API onPause()
-       if(mGoogleApiClient != null){
-           if (mGoogleApiClient.isConnected()) {
-               LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-               mGoogleApiClient.disconnect();
-           }
-       }
+        if (mGoogleApiClient != null) {
+            if (mGoogleApiClient.isConnected()) {
+                LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+                mGoogleApiClient.disconnect();
+            }
+        }
     }
 
     /**
@@ -244,6 +260,16 @@ public class PointSmopayeFragment extends Fragment implements
      */
     @Override
     public void onConnected(Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
         if (location == null) {
@@ -255,19 +281,24 @@ public class PointSmopayeFragment extends Fragment implements
             currentLongitude = location.getLongitude();
             //Toast.makeText(getContext(), currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
 
-
-
-
             currentPosition = new LatLng(currentLatitude, currentLongitude);
             //Toast.makeText(getActivity(), currentPosition.toString(), Toast.LENGTH_SHORT).show();
             list.clear();
             list.add(new String(getString(R.string.centre)));
             list.add(new AgenceSmopayeModel(getString(R.string.yde), getString(R.string.camair), myConvert(camair, currentPosition)));
             list.add(new AgenceSmopayeModel(getString(R.string.yde), getString(R.string.omnisport), myConvert(omnisport, currentPosition)));
-            list.add(new AgenceSmopayeModel(getString(R.string.yde), getString(R.string.soa), myConvert(soa, currentPosition)));
-
+            list.add(new AgenceSmopayeModel(getString(R.string.soa), getString(R.string.soa_campus), myConvert(soa_campus, currentPosition)));
+            list.add(new AgenceSmopayeModel(getString(R.string.soa), getString(R.string.soa_marche), myConvert(soa_marche, currentPosition)));
             listView.setAdapter(new AgenceSmopayeAdapter(getActivity().getApplicationContext(), list));
 
+            //CARTE GOOGLE MAP
+            locationRequest = new LocationRequest();
+            locationRequest.setInterval(1100);
+            locationRequest.setFastestInterval(1100);
+            locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+            if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
+            }
 
         }
     }
@@ -318,6 +349,38 @@ public class PointSmopayeFragment extends Fragment implements
 
         //Toast.makeText(getContext(), currentLatitude + " PIPO " + currentLongitude + "", Toast.LENGTH_LONG).show();
         currentPosition = new LatLng(currentLatitude, currentLongitude);
+
+
+
+
+        //CARTE GOOGLE MAP
+        lastLocation = location;
+        if(currentUserLocationMarker != null){
+            currentUserLocationMarker.remove();
+        }
+
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        markerOptions.title(getString(R.string.position));
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+
+        currentUserLocationMarker = mMap.addMarker(markerOptions);
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomBy(7.0f));
+
+        if(mGoogleApiClient != null){
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
+
+
+        distance = SphericalUtil.computeDistanceBetween(camair, latLng);
+        //Toast.makeText(this, distance/1000 + " km", Toast.LENGTH_SHORT).show();
+
     }
+
+
+
 
 }

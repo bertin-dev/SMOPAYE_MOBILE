@@ -39,6 +39,7 @@ public class Accueil_Carte extends AppCompatActivity {
     int appColor;
 
     private Toolbar toolbar;
+    private String idUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +59,15 @@ public class Accueil_Carte extends AppCompatActivity {
         Linear_SaveInBd = (LinearLayout) findViewById(R.id.Linear_SaveInBd);
         Linear_WriteInCard = (LinearLayout) findViewById(R.id.Linear_WriteInCard);
 
+        Intent intent = getIntent();
+        idUser = intent.getStringExtra("idUser");
 
 
         Linear_SaveInBd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), Menu_Save.class);
+                intent.putExtra("idUser", idUser);
                 startActivity(intent);
             }
         });

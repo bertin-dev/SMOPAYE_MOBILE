@@ -180,8 +180,9 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
         historiqueRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), HistoriqueTransactions.class);
-                intent.putExtra("typeHistoriqueTransaction", "RECHARGE");
+                Intent intent = new Intent(getApplicationContext(), TypeTransaction.class);
+                intent.putExtra("typeHistoriqueTransaction", "RECHARGE_CARTE_VIA_COMPTE");
+                intent.putExtra("typeHistoriqueTransaction2", "RECHARGE_COMPTE_VIA_MONETBIL");
                 startActivity(intent);
             }
         });
@@ -191,7 +192,8 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), HistoriqueTransactions.class);
-                intent.putExtra("typeHistoriqueTransaction", "PAYEMENT_VIA_QR-CODE");
+                intent.putExtra("typeHistoriqueTransaction", "PAYEMENT_VIA_QRCODE");
+                intent.putExtra("typeHistoriqueTransaction2", "");
                 startActivity(intent);
             }
         });
@@ -202,6 +204,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), HistoriqueTransactions.class);
                 intent.putExtra("typeHistoriqueTransaction", "DEBIT_CARTE");
+                intent.putExtra("typeHistoriqueTransaction2", "");
                 startActivity(intent);
             }
         });
@@ -210,8 +213,9 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
         historiqueTransfert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), HistoriqueTransactions.class);
-                intent.putExtra("typeHistoriqueTransaction", "TRANSFERT");
+                Intent intent = new Intent(getApplicationContext(), TypeTransaction.class);
+                intent.putExtra("typeHistoriqueTransaction", "TRANSFERT_CARTE_A_CARTE");
+                intent.putExtra("typeHistoriqueTransaction2", "TRANSFERT_COMPTE_A_COMPTE");
                 startActivity(intent);
             }
         });
@@ -222,6 +226,7 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), HistoriqueTransactions.class);
                 intent.putExtra("typeHistoriqueTransaction", "PAYEMENT_FACTURE");
+                intent.putExtra("typeHistoriqueTransaction2", "");
                 startActivity(intent);
             }
         });
@@ -230,8 +235,9 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
         historiqueRetrait.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), HistoriqueTransactions.class);
-                intent.putExtra("typeHistoriqueTransaction", "RETRAIT");
+                Intent intent = new Intent(getApplicationContext(), TypeTransaction.class);
+                intent.putExtra("typeHistoriqueTransaction", "RETRAIT_SMOPAYE");
+                intent.putExtra("typeHistoriqueTransaction2", "RETRAIT_COMPTE_VIA_MONETBILL");
                 startActivity(intent);
             }
         });
@@ -417,46 +423,46 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                     init();
                     for(int i=0; i<historique.size(); i++){
 
-                        if(historique.get(i).getTransaction_type().toLowerCase().contains("payement_facture")){
+                        if(historique.get(i).getOperation().toLowerCase().contains("payement_facture")){
 
                             //nbreFacture++;
                             //nbreEchecFacture =+ 2;
                             //totalFacture = totalFacture + Float.parseFloat(historique.get(i).getAmount());
-                            if(historique.get(i).getState().toLowerCase().contains("success")){
+                            if(historique.get(i).getStatus().toLowerCase().contains("success")){
                                 nbreFacture++;
-                                totalFacture = totalFacture + Float.parseFloat(historique.get(i).getAmount());
+                                totalFacture = totalFacture + Float.parseFloat(historique.get(i).getMontant());
                             } else{
                                 nbreEchecFacture++;
                             }
 
-                        } else if(historique.get(i).getTransaction_type().toLowerCase().contains("debit_carte")){
+                        } else if(historique.get(i).getOperation().toLowerCase().contains("debit_carte")){
 
                             //nbreDebit++;
                             //nbreEchecDebit += 2;
                             //totalDebit = totalDebit + Float.parseFloat(historique.get(i).getAmount());
-                            if(historique.get(i).getState().toLowerCase().contains("success")){
+                            if(historique.get(i).getStatus().toLowerCase().contains("success")){
                                 nbreDebit++;
-                                totalDebit = totalDebit + Float.parseFloat(historique.get(i).getAmount());
+                                totalDebit = totalDebit + Float.parseFloat(historique.get(i).getMontant());
                             } else {
                                 nbreEchecDebit++;
                             }
 
-                        } else if(historique.get(i).getTransaction_type().toLowerCase().contains("transfert")){
-
+                        } else if(historique.get(i).getOperation().toLowerCase().contains("transfert_compte_a_compte") ||
+                                historique.get(i).getOperation().toLowerCase().contains("transfert_carte_a_carte")){
                             //nbreTransfert++;
                             //nbreEchecTransfert+=2;
                             //totalTransfert = totalTransfert + Float.parseFloat(historique.get(i).getAmount());
-                            if(historique.get(i).getState().toLowerCase().contains("success")){
+                            if(historique.get(i).getStatus().toLowerCase().contains("success")){
                                 nbreTransfert++;
-                                totalTransfert = totalTransfert + Float.parseFloat(historique.get(i).getAmount());
+                                totalTransfert = totalTransfert + Float.parseFloat(historique.get(i).getMontant());
                             } else{
                                 nbreEchecTransfert++;
                             }
-                        } else if(historique.get(i).getTransaction_type().toLowerCase().contains("recharge")){
-
-                            if(historique.get(i).getState().toLowerCase().contains("success")){
+                        } else if(historique.get(i).getOperation().toLowerCase().contains("recharge_compte_via_monetbil") ||
+                                historique.get(i).getOperation().toLowerCase().contains("recharge_carte_via_compte")){
+                            if(historique.get(i).getStatus().toLowerCase().contains("success")){
                                 nbreRecharge++;
-                                totalRecharge = totalRecharge + Float.parseFloat(historique.get(i).getAmount());
+                                totalRecharge = totalRecharge + Float.parseFloat(historique.get(i).getMontant());
                             } else{
                                 nbreEchecRecharge++;
                             }
@@ -464,26 +470,26 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                             //nbreEchecRecharge+=2;
                             //totalRecharge = totalRecharge + Float.parseFloat(historique.get(i).getAmount());
 
-                        } else if(historique.get(i).getTransaction_type().toLowerCase().contains("retrait")){
-
+                        } else if(historique.get(i).getOperation().toLowerCase().contains("retrait_smopaye") ||
+                                historique.get(i).getOperation().toLowerCase().contains("retrait_compte_via_monetbill")){
                             //nbreRetrait++;
                             //nbreEchecRetrait+=2;
                             //totalRetrait = totalRetrait + Float.parseFloat(historique.get(i).getAmount());
-                            if(historique.get(i).getState().toLowerCase().contains("success")){
+                            if(historique.get(i).getStatus().toLowerCase().contains("success")){
                                 nbreRetrait++;
-                                totalRetrait = totalRetrait + Float.parseFloat(historique.get(i).getAmount());
+                                totalRetrait = totalRetrait + Float.parseFloat(historique.get(i).getMontant());
                             } else{
                                 nbreEchecRetrait++;
                             }
 
-                        } else if(historique.get(i).getTransaction_type().toLowerCase().contains("payement_via_qr-code")){
+                        } else if(historique.get(i).getOperation().toLowerCase().contains("payement_via_qrcode")){
 
                             //nbreCodeQR++;
                             //nbreEchecCodeQR+=2;
                             //totalCodeQR = totalCodeQR + Float.parseFloat(historique.get(i).getAmount());
-                            if(historique.get(i).getState().toLowerCase().contains("success")){
+                            if(historique.get(i).getStatus().toLowerCase().contains("success")){
                                 nbreCodeQR++;
-                                totalCodeQR = totalCodeQR + Float.parseFloat(historique.get(i).getAmount());
+                                totalCodeQR = totalCodeQR + Float.parseFloat(historique.get(i).getMontant());
                             } else{
                                 nbreEchecCodeQR++;
                             }
@@ -724,17 +730,20 @@ public class MenuHistoriqueTransaction extends AppCompatActivity {
                     init1();
                     for(int i=0; i<historique1.size(); i++){
 
-                        if(historique1.get(i).getTransaction_type().toLowerCase().contains("facture")){
+                        if(historique1.get(i).getOperation().toLowerCase().contains("payement_facture")){
                             nbreFacture1++;
-                        } else if(historique1.get(i).getTransaction_type().toLowerCase().contains("debit")){
+                        } else if(historique1.get(i).getOperation().toLowerCase().contains("debit_carte")){
                             nbreDebit1++;
-                        } else if(historique1.get(i).getTransaction_type().toLowerCase().contains("transfert")){
+                        } else if(historique1.get(i).getOperation().toLowerCase().contains("transfert_compte_a_compte") ||
+                                historique1.get(i).getOperation().toLowerCase().contains("transfert_carte_a_carte")){
                             nbreTransfert1++;
-                        } else if(historique1.get(i).getTransaction_type().toLowerCase().contains("recharge")){
+                        } else if(historique1.get(i).getOperation().toLowerCase().contains("recharge_compte_via_monetbil") ||
+                                historique1.get(i).getOperation().toLowerCase().contains("recharge_carte_via_compte")){
                             nbreRecharge1++;
-                        } else if(historique1.get(i).getTransaction_type().toLowerCase().contains("retrait")){
+                        } else if(historique.get(i).getOperation().toLowerCase().contains("retrait_smopaye") ||
+                                historique.get(i).getOperation().toLowerCase().contains("retrait_compte_via_monetbill")){
                             nbreRetrait1++;
-                        } else if(historique1.get(i).getTransaction_type().toLowerCase().contains("qrcode")){
+                        } else if(historique1.get(i).getOperation().toLowerCase().contains("payement_via_qrcode")){
                             nbreCodeQR1++;
                         }
                     }

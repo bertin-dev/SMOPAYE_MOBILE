@@ -1,6 +1,9 @@
 package com.ezpass.smopaye_mobile.web_service;
 
+import com.ezpass.smopaye_mobile.Manage_Administrator.WebService_Response.HomeUsersList;
 import com.ezpass.smopaye_mobile.Manage_Cards.SaveInDB.Response_Status;
+import com.ezpass.smopaye_mobile.Manage_Transactions.Manage_Payments.Manage_Withdrawal.WebServiceResponse.HomeRetrait;
+import com.ezpass.smopaye_mobile.Manage_Transactions.Manage_Payments.Manage_Withdrawal.WebServiceResponse.HomeRetraitAccount;
 import com.ezpass.smopaye_mobile.Profil_user.Card;
 import com.ezpass.smopaye_mobile.Profil_user.Categorie;
 import com.ezpass.smopaye_mobile.Profil_user.DataUser;
@@ -39,58 +42,58 @@ public interface ApiService {
     @POST("api/auth/register")
     @FormUrlEncoded
     Call<AllMyResponse> register(@Field("lastname") String lastname,
-                               @Field("firstname") String firstname,
-                               @Field("gender") String gender,
-                               @Field("phone") String phone,
-                               @Field("address") String address,
-                               @Field("category_id") String category_id,
-                               @Field("role_id") String role_id,
-                               @Field("cni") String cni,
-                               @Field("card_number") String card_number);
+                                 @Field("firstname") String firstname,
+                                 @Field("gender") String gender,
+                                 @Field("phone") String phone,
+                                 @Field("address") String address,
+                                 @Field("category_id") String category_id,
+                                 @Field("role_id") String role_id,
+                                 @Field("cni") String cni,
+                                 @Field("card_number") String card_number);
 
 
     /* Register Sub-Account*/
     @POST("api/subuser")
     @FormUrlEncoded
     Call<AllMyResponse> register_sub_account(@Field("firstname") String firstname,
-                                           @Field("lastname") String lastname,
-                                           @Field("gender") String gender,
-                                           @Field("phone") String phone1,
-                                           @Field("address") String address,
-                                           @Field("category_id") String category_id,
-                                           @Field("cni") String cni,
-                                           @Field("role_id") String role_id,
-                                           @Field("card_number") String card_number);
+                                             @Field("lastname") String lastname,
+                                             @Field("gender") String gender,
+                                             @Field("phone") String phone1,
+                                             @Field("address") String address,
+                                             @Field("category_id") String category_id,
+                                             @Field("cni") String cni,
+                                             @Field("role_id") String role_id,
+                                             @Field("card_number") String card_number);
 
 
     /* Update Profil */
     @PUT("api/user/{id}")
     @FormUrlEncoded
     Call<AllMyResponse> update_profil(@Field("lastname") String lastname,
-                               @Field("firstname") String firstname,
-                               @Field("gender") String gender,
-                               @Field("phone") String phone,
-                               @Field("address") String address,
-                               @Field("category_id") String category_id,
-                               @Field("role_id") String role_id,
-                               @Field("card_number") String card_number,
-                               @Path("id") String id);
+                                      @Field("firstname") String firstname,
+                                      @Field("gender") String gender,
+                                      @Field("phone") String phone,
+                                      @Field("address") String address,
+                                      @Field("category_id") String category_id,
+                                      @Field("role_id") String role_id,
+                                      @Field("card_number") String card_number,
+                                      @Path("id") String id);
 
     /*auto register */
     @POST("api/autoregister")
     @FormUrlEncoded
     Call<AllMyResponse> autoregister1(@Field("firstname") String firstname,
-                                   @Field("lastname") String lastname,
-                                   @Field("gender") String gender,
-                                   @Field("address") String address,
-                                   @Field("category_id") String category_id,
-                                   @Field("role_id") String role_id,
-                                   @Field("cni") String cni,
-                                   @Field("phone") String phone,
-                                   @Field("nom_img_recto") String nom_img_recto,
-                                   @Field("nom_img_verso") String nom_img_verso,
-                                   @Field("piece_recto") String piece_recto,
-                                   @Field("piece_verso") String piece_verso);
+                                      @Field("lastname") String lastname,
+                                      @Field("gender") String gender,
+                                      @Field("address") String address,
+                                      @Field("category_id") String category_id,
+                                      @Field("role_id") String role_id,
+                                      @Field("cni") String cni,
+                                      @Field("phone") String phone,
+                                      @Field("nom_img_recto") String nom_img_recto,
+                                      @Field("nom_img_verso") String nom_img_verso,
+                                      @Field("piece_recto") String piece_recto,
+                                      @Field("piece_verso") String piece_verso);
 
     /*auto register */
     @Multipart
@@ -166,6 +169,21 @@ public interface ApiService {
                                                         @Field("account_number_sender") String account_number_sender,
                                                         @Field("transaction_type") String transaction_type);
 
+    //Retrait (Compte à Compte) chez smopaye
+    @POST("api/account/transaction/payment")
+    @FormUrlEncoded
+    Call<AllMyHomeResponse> retrait_compte_A_Compte(@Field("amount") float amount,
+                                                        @Field("account_number") String account_number_sender);
+
+    //Retrait (Compte à Compte) chez operateur
+    @POST("api/account/{account_number}/retrait")
+    @FormUrlEncoded
+    Call<HomeRetraitAccount> retraitCompteOperator(@Path("account_number") String account_number,
+                                                   @Field("withDrawalAmount") float withDrawalAmount,
+                                                   @Field("phoneNumber") String phoneNumber);
+
+
+
     /* Basculer (Compte Unité vers Compte dépot et vis-vers ça)*/
     @POST("api/card/{card_id}/toggleUnityDeposit")
     @FormUrlEncoded
@@ -177,10 +195,10 @@ public interface ApiService {
     @POST("api/card/transaction/payment")
     @FormUrlEncoded
     Call<HomeResponse> debit(@Field("amount") float amount,
-                                   @Field("code_number_sender") String code_number_sender,
-                                   @Field("code_number_receiver") String code_number_receiver,
-                                   @Field("transaction_type") String transaction_type,
-                                   @Field("serial_number_device") String serial_number_device);
+                             @Field("code_number_sender") String code_number_sender,
+                             @Field("code_number_receiver") String code_number_receiver,
+                             @Field("transaction_type") String transaction_type,
+                             @Field("serial_number_device") String serial_number_device);
 
 
     /* Abonnement*/
@@ -193,9 +211,9 @@ public interface ApiService {
     /* Retrait Opérateur*/
     @POST("api/card/{card_id}/retrait")
     @FormUrlEncoded
-    Call<AllMyResponse> retrait_accepteur(@Field("withDrawalAmount") Float withDrawalAmount,
-                                          @Field("phoneNumber") String phoneNumber,
-                                          @Path("card_id") String card_id);
+    Call<HomeRetrait> retrait_accepteur(@Field("withDrawalAmount") Float withDrawalAmount,
+                                        @Field("phoneNumber") String phoneNumber,
+                                        @Path("card_id") String card_id);
 
 
     /* Manage_Recharge step 1*/
@@ -209,7 +227,7 @@ public interface ApiService {
     @PUT("api/account/{account_number}/checkpayment")
     @FormUrlEncoded
     Call<AllMyResponse> recharge_step2(@Path("account_number") String account_number,
-                                          @Field("paymentId") String paymentId);
+                                       @Field("paymentId") String paymentId);
 
     /* Retrait Accepteur*/
     /*@POST("api/card/{card_id}/retrait")
@@ -249,13 +267,12 @@ public interface ApiService {
     @POST("api/card/{card_id}/activation")
     @FormUrlEncoded
     Call<AllMyResponse> etat_carte(@Path("card_id") String card_id,
-                                 @Field("card_state") String card_state);
+                                   @Field("card_state") String card_state);
 
 
     /* Categories  */
     @GET("api/categorierole")
     Call<List<Categorie>> getAllCategories();
-
 
 
     /* Historique des Transactions filtré par date */
@@ -265,10 +282,13 @@ public interface ApiService {
 
 
     /* Historique des Transactions complètes */
-    @GET("api/transaction")
+    @GET("api/transaction/historique/utilisateur")
     Call<Home_AllHistoriques> allTransactions();
-    /*----------------------------------------------------------END SMOPAYE MOBILE-------------------------------------------------------*/
 
+    /* Lister all Smopaye Users */
+    @GET("api/particulier")
+    Call<HomeUsersList> findAllSmopayeUsers();
+    /*----------------------------------------------------------END SMOPAYE MOBILE-------------------------------------------------------*/
 
 
     /*----------------------------------------------------------CARD SMOPAYE-------------------------------------------------------*/
@@ -289,7 +309,6 @@ public interface ApiService {
     Call<ListAllUserCardResponse> findAllUserCards(@Path("user_id") int user_id);
 
 
-
     /* Recharge Card by User */
     @POST("api/account/{account_number}/rechargecarte")
     @FormUrlEncoded
@@ -302,10 +321,10 @@ public interface ApiService {
     @PUT("api/card/{card_id}")
     @FormUrlEncoded
     Call<AllMyResponse> updateCard(@Path("card_id") int card_id,
-                                  @Field("code_number") String code_number,
-                                  @Field("serial_number") String serial_number,
-                                  @Field("end_date") String end_date,
-                                  @Field("user_created") int user_created);
+                                   @Field("code_number") String code_number,
+                                   @Field("serial_number") String serial_number,
+                                   @Field("end_date") String end_date,
+                                   @Field("user_created") int user_created);
 
 
     /* delete Card */

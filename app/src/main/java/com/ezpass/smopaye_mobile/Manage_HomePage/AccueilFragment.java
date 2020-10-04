@@ -138,7 +138,6 @@ public class AccueilFragment extends Fragment {
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Animatoo.animateInAndOut(getContext());
                 reportDashboad.setVisibility(View.GONE);
             }
         });

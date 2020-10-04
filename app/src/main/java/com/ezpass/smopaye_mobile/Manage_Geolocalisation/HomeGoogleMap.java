@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -55,9 +56,10 @@ public class HomeGoogleMap extends AppCompatActivity
 
     //markers all define place
     ArrayList<LatLng> arrayList = new ArrayList<>();
-    LatLng camair = new LatLng(3.868155, 11.518804);
-    LatLng omnisport = new LatLng(3.2067328, 11.1708078);
-    LatLng soa = new LatLng(3.0067328, 11.008078);
+    private LatLng camair = new LatLng(ChaineConnexion.getLatitude_camair(), ChaineConnexion.getLongitude_camair());
+    private LatLng omnisport = new LatLng(ChaineConnexion.getLatitude_omnisport(), ChaineConnexion.getLongitude_omnisport());
+    private LatLng soa_campus = new LatLng(ChaineConnexion.getLatitude_soa_campus(), ChaineConnexion.getLongitude_soa_campus());
+    private LatLng soa_marche = new LatLng(ChaineConnexion.getLatitude_marche_soa(), ChaineConnexion.getLongitude_marche_soa());
     private Double distance = 0.0;
 
     //changement de couleur du theme
@@ -94,7 +96,12 @@ public class HomeGoogleMap extends AppCompatActivity
 
         arrayList.add(camair);
         arrayList.add(omnisport);
-        arrayList.add(soa);
+        arrayList.add(soa_campus);
+        arrayList.add(soa_marche);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeColorWidget();
+        }
     }
 
 
@@ -112,7 +119,7 @@ public class HomeGoogleMap extends AppCompatActivity
         }
         //marker
         for(int i=0;i<arrayList.size();i++){
-            mMap.addMarker(new MarkerOptions().position(arrayList.get(i)).title("Point Marchant"));
+            mMap.addMarker(new MarkerOptions().position(arrayList.get(i)).title(getString(R.string.point_marchands)));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(15.0f));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(arrayList.get(i)));
         }
@@ -173,7 +180,7 @@ public class HomeGoogleMap extends AppCompatActivity
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
-        markerOptions.title("Votre Position");
+        markerOptions.title(getString(R.string.position));
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 
         currentUserLocationMarker = mMap.addMarker(markerOptions);
@@ -187,7 +194,7 @@ public class HomeGoogleMap extends AppCompatActivity
 
 
         distance = SphericalUtil.computeDistanceBetween(camair, latLng);
-        Toast.makeText(this, distance/1000 + " km", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, distance/1000 + " km", Toast.LENGTH_SHORT).show();
     }
     @Override
     public void onConnected(@Nullable Bundle bundle) {

@@ -35,7 +35,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Manage_Url_Website.EspaceClients"/>
+        <activity android:name=".Manage_Transactions_History.TypeTransaction"
+            android:parentActivityName=".Manage_Transactions_History.MenuHistoriqueTransaction"/>
+        <activity
+            android:name=".Manage_Administrator.GestionUtilisateurs"
+            android:parentActivityName=".Manage_Administrator.Menu_GestionComptes" />
+        <activity
+            android:name=".Manage_Administrator.GestionAdministrateur"
+            android:parentActivityName=".Manage_Administrator.Menu_GestionComptes" />
+        <activity android:name=".Manage_Url_Website.EspaceClients" />
         <activity android:name=".Manage_Cards.SaveInDB.UpdateBD" />
 
         <meta-data
@@ -142,7 +150,7 @@
             android:parentActivityName=".MainActivity" />
         <activity android:name=".Manage_Register.Souscription" />
         <activity
-            android:name=".Manage_Administrator.GestionUtilisateursAgents"
+            android:name=".Manage_Administrator.GestionAgents"
             android:parentActivityName=".Manage_Administrator.Menu_GestionComptes" />
         <activity
             android:name=".Manage_Administrator.GestionAccepteur"

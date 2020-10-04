@@ -25,6 +25,18 @@ public class ChaineConnexion {
     private static final String security_keys = "56ZS5PQ1RF-eyJsaWNlbnNlSWQiOiI1NlpGVkIjpmYWxzZX0+-==" + rand;
     private static final String espace_clients = "http://e-zpass.smopaye.fr/";
 
+    private static final double Latitude_marche_soa = 3.9756296;
+    private static final double Longitude_marche_soa = 11.5935448;
+
+    private static final double Latitude_soa_campus = 3.9660964;
+    private static final double Longitude_soa_campus = 11.5935347;
+
+    private static final double Latitude_omnisport = 3.8906481;
+    private static final double Longitude_omnisport = 11.544921;
+
+    private static final double Latitude_camair = 3.8654263;
+    private static final double Longitude_camair = 11.5205789;
+
     public static String getAdresseURLsmopayeServer() {
         return adresseURLsmopayeServer;
     }
@@ -51,6 +63,38 @@ public class ChaineConnexion {
 
     public static String getEspace_clients() {
         return espace_clients;
+    }
+
+    public static double getLatitude_marche_soa() {
+        return Latitude_marche_soa;
+    }
+
+    public static double getLongitude_marche_soa() {
+        return Longitude_marche_soa;
+    }
+
+    public static double getLatitude_soa_campus() {
+        return Latitude_soa_campus;
+    }
+
+    public static double getLongitude_soa_campus() {
+        return Longitude_soa_campus;
+    }
+
+    public static double getLatitude_omnisport() {
+        return Latitude_omnisport;
+    }
+
+    public static double getLongitude_omnisport() {
+        return Longitude_omnisport;
+    }
+
+    public static double getLatitude_camair() {
+        return Latitude_camair;
+    }
+
+    public static double getLongitude_camair() {
+        return Longitude_camair;
     }
 
     /*//Encryption test

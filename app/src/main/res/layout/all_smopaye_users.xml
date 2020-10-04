@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="3dp"
+    app:cardUseCompatPadding="true">
+
+
+
+        <RelativeLayout
+            android:id="@+id/view_foreground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/profil"
+                android:layout_marginRight="10dp"
+                android:scaleType="centerCrop"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_account"/>
+
+            <RelativeLayout
+                android:id="@+id/smopaye_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/profil"
+                android:layout_toEndOf="@+id/profil">
+                <TextView
+                    android:id="@+id/nom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="@string/nom"
+                    android:textColor="@color/itemName"
+                    android:ellipsize="end"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/roboto_medium"/>
+
+
+                <ImageButton
+                    android:id="@+id/expandArrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_margin="8dp"
+                    android:visibility="visible"
+                    android:src="@android:drawable/arrow_down_float"/>
+
+
+                <TextView
+                    android:id="@+id/prenom"
+                    android:text="@string/prenom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/nom"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/roboto_italic"
+                    android:textColor="@color/Description"
+                    android:textSize="14sp" />
+
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/smopaye_user_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/profil"
+                android:layout_toEndOf="@+id/profil"
+                android:layout_below="@id/smopaye_user">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="0.5"
+                        android:layout_marginStart="5dp">
+
+                        <View
+                            android:id="@+id/div_user"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@color/colorDivider"/>
+
+                        <LinearLayout
+                            android:id="@+id/info1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/div_user"
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/infoUser"
+                                android:layout_below="@+id/uid"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/infoUser"
+                                android:textStyle="bold"
+                                android:gravity="left"
+                                android:textColor="@color/grisFonce"
+                                android:layout_gravity="center_horizontal|center_vertical"
+                                android:textSize="12sp"/>
+
+                            <TextView
+                                android:id="@+id/cni"
+                                android:text="@string/cni1"
+                                android:layout_below="@+id/infoUser"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto_italic"
+                                android:textColor="@color/Description"
+                                android:textSize="10sp" />
+                            <TextView
+                                android:id="@+id/genre"
+                                android:text="@string/genre"
+                                android:layout_below="@+id/cni"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto_italic"
+                                android:textColor="@color/Description"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/telephone"
+                                android:text="@string/telephone"
+                                android:layout_below="@+id/genre"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto_italic"
+                                android:textColor="@color/Description"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/adresse"
+                                android:text="@string/adresse"
+                                android:layout_below="@+id/telephone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto_italic"
+                                android:textColor="@color/Description"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/etat_user"
+                                android:text="@string/etat"
+                                android:layout_below="@+id/adresse"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto_italic"
+                                android:textColor="@color/Description"
+                                android:textSize="10sp" />
+
+
+                            <TextView
+                                android:id="@+id/date_creation"
+                                android:text="@string/create"
+                                android:layout_below="@+id/etat_user"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto_italic"
+                                android:textColor="@color/Description"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+
+                        <View
+                            android:id="@+id/div_role"
+                            android:layout_below="@+id/info1"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@color/colorDivider"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_below="@+id/div_role">
+
+                            <TextView
+                                android:id="@+id/infoRole"
+                                android:layout_below="@+id/div_role"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/infoRole"
+                                android:textStyle="bold"
+                                android:gravity="left"
+                                android:textColor="@color/grisFonce"
+                                android:layout_gravity="center_horizontal|center_vertical"
+                                android:textSize="12sp"/>
+
+                            <TextView
+                                android:id="@+id/role"
+                                android:text="@string/role"
+                                android:layout_below="@+id/infoRole"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto_italic"
+                                android:textColor="@color/Description"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/type_role"
+                                android:text="@string/typeRole"
+                                android:layout_below="@+id/role"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto_italic"
+                                android:textColor="@color/Description"
+                                android:textSize="10sp" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp">
+
+                        <RelativeLayout
+                            android:id="@+id/compte"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <View
+                                android:id="@+id/div_comptes"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginTop="10dp"
+                                android:background="@color/colorDivider"/>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_below="@+id/div_comptes">
+
+                                <TextView
+                                    android:id="@+id/infoCompte"
+                                    android:layout_below="@+id/div_comptes"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/infoCompte"
+                                    android:textStyle="bold"
+                                    android:gravity="left"
+                                    android:textColor="@color/grisFonce"
+                                    android:layout_gravity="center_horizontal|center_vertical"
+                                    android:textSize="12sp"/>
+
+                                <TextView
+                                    android:id="@+id/numCompte"
+                                    android:text="@string/numCompte"
+                                    android:layout_below="@+id/infoCompte"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/roboto_italic"
+                                    android:textColor="@color/Description"
+                                    android:textSize="10sp" />
+
+                                <TextView
+                                    android:id="@+id/company"
+                                    android:text="@string/compagnie"
+                                    android:layout_below="@+id/numCompte"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/roboto_italic"
+                                    android:textColor="@color/Description"
+                                    android:textSize="10sp" />
+
+                                <TextView
+                                    android:id="@+id/etat_compte"
+                                    android:text="@string/etatCompte"
+                                    android:layout_below="@+id/company"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/roboto_italic"
+                                    android:textColor="@color/Description"
+                                    android:textSize="10sp" />
+
+                                <TextView
+                                    android:id="@+id/montant_compte"
+                                    android:text="@string/montant"
+                                    android:layout_below="@+id/etat_compte"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/roboto_bold"
+                                    android:textColor="@color/Description"
+                                    android:textStyle="bold"
+                                    android:textSize="10sp" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+
+
+                        <RelativeLayout
+                            android:layout_below="@+id/compte"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <View
+                                android:id="@+id/div_carte"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginTop="10dp"
+                                android:background="@color/colorDivider"/>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_below="@+id/div_carte">
+
+                                <TextView
+                                    android:id="@+id/infoCard"
+                                    android:layout_below="@+id/div_carte"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/infoCard"
+                                    android:textStyle="bold"
+                                    android:gravity="left"
+                                    android:textColor="@color/grisFonce"
+                                    android:layout_gravity="center_horizontal|center_vertical"
+                                    android:textSize="12sp"/>
+
+                                <TextView
+                                    android:id="@+id/num_carte"
+                                    android:text="@string/numCarte"
+                                    android:layout_below="@+id/infoCard"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/roboto_italic"
+                                    android:textColor="@color/Description"
+                                    android:textSize="10sp" />
+
+                                <TextView
+                                    android:id="@+id/num_serie"
+                                    android:text="@string/serial"
+                                    android:layout_below="@+id/num_carte"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/roboto_italic"
+                                    android:textColor="@color/Description"
+                                    android:textSize="10sp" />
+
+                                <TextView
+                                    android:id="@+id/type_carte"
+                                    android:text="@string/typeCarte"
+                                    android:layout_below="@+id/num_serie"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/roboto_italic"
+                                    android:textColor="@color/Description"
+                                    android:textSize="10sp" />
+
+                                <TextView
+                                    android:id="@+id/etat_carte"
+                                    android:text="@string/etatCarte"
+                                    android:layout_below="@+id/type_carte"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/roboto_italic"
+                                    android:textColor="@color/Description"
+                                    android:textSize="10sp" />
+
+                                <TextView
+                                    android:id="@+id/unity"
+                                    android:text="@string/unite"
+                                    android:layout_below="@+id/etat_carte"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/roboto_bold"
+                                    android:textColor="@color/Description"
+                                    android:textStyle="bold"
+                                    android:textSize="10sp" />
+
+                                <TextView
+                                    android:id="@+id/deposit"
+                                    android:text="@string/depot"
+                                    android:layout_below="@+id/unity"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/roboto_bold"
+                                    android:textColor="@color/Description"
+                                    android:textStyle="bold"
+                                    android:textSize="10sp" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+
+</androidx.cardview.widget.CardView>

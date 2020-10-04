@@ -22,7 +22,7 @@ public class UserListQRCode {
     private String category_id;
     @SerializedName("particulier")
     @Expose
-    List<Particulier> particulier;
+    private List<Particulier> particulier;
 
     public String getId() {
         return id;

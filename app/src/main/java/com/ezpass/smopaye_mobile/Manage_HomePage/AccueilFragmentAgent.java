@@ -60,6 +60,7 @@ public class AccueilFragmentAgent extends Fragment {
     private ImageView close;
     private RelativeLayout reportDashboad;
 
+    @SuppressLint("SetTextI18n")
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         changeTheme();
         View view =  inflater.inflate(R.layout.fragment_accueil_agent, container, false);
@@ -104,7 +105,6 @@ public class AccueilFragmentAgent extends Fragment {
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Animatoo.animateInAndOut(getContext());
                 reportDashboad.setVisibility(View.GONE);
             }
         });

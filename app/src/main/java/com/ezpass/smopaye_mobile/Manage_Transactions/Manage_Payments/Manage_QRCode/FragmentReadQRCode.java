@@ -30,6 +30,7 @@ import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.NotifReceiver;
+import com.ezpass.smopaye_mobile.Profil_user.Particulier;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.RemoteFragments.APIService;
 import com.ezpass.smopaye_mobile.RemoteModel.User;
@@ -58,6 +59,7 @@ import com.google.zxing.integration.android.IntentResult;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import butterknife.BindView;
@@ -183,10 +185,17 @@ public class FragmentReadQRCode extends Fragment implements QRCodeModalDialog.Ex
                 assert response.body() != null;
                 if(response.isSuccessful()){
 
-                    nom_prenom_beneficiaire = response.body().getData().get(0).getUser().getParticulier().get(0).getLastname() + " " + response.body().getData().get(0).getUser().getParticulier().get(0).getFirstname();
-                    String message = getString(R.string.msg_paiementqrcode) + " " + nom_prenom_beneficiaire + "." + getString(R.string.entrez_le_montant);
+                    List<Particulier> result = response.body().getData().get(0).getUser().getParticulier();
+                    String message = getString(R.string.msg_paiementqrcode);
 
+                    if(result.isEmpty()){
+                        message = " l'Entreprise";
+                    }else {
+                        nom_prenom_beneficiaire = result.get(0).getLastname() + " " + result.get(0).getFirstname();
+                        message += " " + nom_prenom_beneficiaire;
+                    }
 
+                         message += "." + getString(R.string.entrez_le_montant);
                     QRCodeModalDialog exampleDialog = new QRCodeModalDialog().newInstanceCode(numcard_beneficiaire, message);
                     exampleDialog.show(getActivity().getSupportFragmentManager(), "example dialog");
 

@@ -17,6 +17,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+
+import com.ezpass.smopaye_mobile.Profil_user.Particulier;
+import com.ezpass.smopaye_mobile.web_service_response.UserListQRCode;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import androidx.core.app.NotificationCompat;
@@ -76,6 +79,7 @@ import com.google.zxing.integration.android.IntentResult;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import butterknife.ButterKnife;
@@ -257,10 +261,17 @@ public class MenuQRCode extends AppCompatActivity
                 assert response.body() != null;
                 if(response.isSuccessful()){
 
-                    nom_prenom_beneficiaire = response.body().getData().get(0).getUser().getParticulier().get(0).getLastname() + " " + response.body().getData().get(0).getUser().getParticulier().get(0).getFirstname();
-                    String message = getString(R.string.msg_paiementqrcode) + " " + nom_prenom_beneficiaire + "." + getString(R.string.entrez_le_montant);
+                    List<Particulier> result = response.body().getData().get(0).getUser().getParticulier();
+                    String message = getString(R.string.msg_paiementqrcode);
 
-
+                    if(result.isEmpty()){
+                        //Toast.makeText(MenuQRCode.this, "Votre Code QR est pour une entreprise", Toast.LENGTH_SHORT).show();
+                        message += " l' Entreprise.";
+                    }else {
+                        nom_prenom_beneficiaire = response.body().getData().get(0).getUser().getParticulier().get(0).getLastname() + " " + response.body().getData().get(0).getUser().getParticulier().get(0).getFirstname();
+                        message += " " + nom_prenom_beneficiaire + ".";
+                    }
+                    message += getString(R.string.entrez_le_montant);
                     QRCodeModalDialog exampleDialog = new QRCodeModalDialog().newInstanceCode(numcard_beneficiaire, message);
                     exampleDialog.show(getSupportFragmentManager(), "example dialog");
 
@@ -347,7 +358,7 @@ public class MenuQRCode extends AppCompatActivity
 
         String id_card = beneficiaireCard;
 
-        call = service.transaction(Float.parseFloat(montant), donataireCard, beneficiaireCard,"QRCODE");
+        call = service.transaction(Float.parseFloat(montant), donataireCard, beneficiaireCard,"PAYEMENT_VIA_QRCODE");
         call.enqueue(new Callback<HomeResponse>() {
             @Override
             public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {

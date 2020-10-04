@@ -35,7 +35,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_person_black_64dp"/>
+                android:src="@drawable/ic_people_black_64dp"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -81,6 +81,72 @@
                 android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
                 android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
                 android:text="@string/gesUserAgent"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/btnGesAdmin"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ripple_effect_click"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_people_black_64dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/bgColorStandard"
+                android:textSize="20sp"
+                android:textStyle="bold|italic"
+                android:background="@drawable/edittextborder"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
+                android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
+                android:text="@string/GesAdmin"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/btnGesUser"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ripple_effect_click"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_people_black_64dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/bgColorStandard"
+                android:textSize="20sp"
+                android:textStyle="bold|italic"
+                android:background="@drawable/edittextborder"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
+                android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
+                android:text="@string/GesUser"/>
         </LinearLayout>
 
 

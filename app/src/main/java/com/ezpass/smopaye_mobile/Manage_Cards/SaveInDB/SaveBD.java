@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.Constant;
+import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 import com.ezpass.smopaye_mobile.R;
@@ -33,7 +34,9 @@ import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
 import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
+import com.ezpass.smopaye_mobile.web_service_access.ApiError;
 import com.ezpass.smopaye_mobile.web_service_access.TokenManager;
+import com.ezpass.smopaye_mobile.web_service_access.Utils_manageError;
 import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 import com.telpo.tps550.api.TelpoException;
 import com.telpo.tps550.api.nfc.Nfc;
@@ -65,7 +68,7 @@ public class SaveBD extends AppCompatActivity {
     private long time1, time2;
     private ProgressDialog progressDialog;
     private AlertDialog.Builder build_error;
-    private String myId_card = "10";  //PAS ENCORE INITIALISER AVEC UNE VALEUR
+    private String myId_card;  //PAS ENCORE INITIALISER AVEC UNE VALEUR
 
     /* Déclaration des objets liés à la communication avec le web service*/
     private ApiService service;
@@ -105,11 +108,20 @@ public class SaveBD extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        Intent intent = getIntent();
+        myId_card = intent.getStringExtra("idUser");
+
         //initialisation des objets qui seront manipulés
         ButterKnife.bind(this);
         context = this;
         service = RetrofitBuilder.createService(ApiService.class);
+        service = RetrofitBuilder.createService(ApiService.class);
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        if(tokenManager.getToken() == null){
+            startActivity(new Intent(this, Login.class));
+            finish();
+        }
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
         progressDialog = new ProgressDialog(SaveBD.this);
         build_error = new AlertDialog.Builder(SaveBD.this);
 
@@ -221,7 +233,8 @@ public class SaveBD extends AppCompatActivity {
         String serial_card = numCartePublicAutoSaveBD.getText().toString();
         //expire_date.init(2021, 11, 30, null);
         //String exp = expire_date.getYear() + "-" + (expire_date.getMonth() + 1) + "-" +  expire_date.getDayOfMonth();
-        String exp = expire_date.getText().toString().trim();
+        //String exp = expire_date.getText().toString().trim();
+        String exp = "2021-11-30";
 
         if(id_card.trim().equalsIgnoreCase("") || serial_card.trim().equalsIgnoreCase("")){
             Toast.makeText(SaveBD.this, getString(R.string.champsVide), Toast.LENGTH_SHORT).show();
@@ -476,14 +489,13 @@ public class SaveBD extends AppCompatActivity {
 
                 if(response.isSuccessful()){
 
-                    if(response.body().isSuccess()){
-                        //tokenManager.saveToken(response.body());
-                        successResponse(response.message());
-                    } else {
-                        errorResponse(response.errorBody().toString());
-                    }
+                    assert response.body() != null;
+                    successResponse(response.body().getMessage());
+
                 } else{
-                        errorResponse(response.errorBody().toString());
+                    ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                    Toast.makeText(getApplicationContext(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                    errorResponse(apiError.getMessage());
                 }
 
             }
@@ -493,6 +505,7 @@ public class SaveBD extends AppCompatActivity {
 
                 progressDialog.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());
+                Toast.makeText(SaveBD.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -511,6 +524,9 @@ public class SaveBD extends AppCompatActivity {
         build_error.setCancelable(false);
         build_error.setView(view);
         build_error.show();
+
+        numCartePriveAutoSaveBD.setText("");
+        numCartePublicAutoSaveBD.setText("");
     }
 
     private void errorResponse(String response){

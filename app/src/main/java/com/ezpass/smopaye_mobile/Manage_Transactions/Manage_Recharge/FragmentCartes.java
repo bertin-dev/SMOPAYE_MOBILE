@@ -15,17 +15,24 @@ import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -41,6 +48,10 @@ import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Login;
+import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
+import com.ezpass.smopaye_mobile.Manage_Cards.SaveInDB.AdapterCardList;
+import com.ezpass.smopaye_mobile.Manage_Cards.SaveInDB.Model_Card;
+import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 import com.ezpass.smopaye_mobile.NotifReceiver;
 import com.ezpass.smopaye_mobile.Profil_user.DataUser;
 import com.ezpass.smopaye_mobile.Profil_user.DataUserCard;
@@ -72,8 +83,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.FileInputStream;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
@@ -309,63 +322,93 @@ public class FragmentCartes extends Fragment {
 
 
     /**************************************CLASSE EXTEND ARRAYADAPTER*************************************/
-    private class AdapterUserCardList extends ArrayAdapter<DataAllUserCard> {
+    private class AdapterUserCardList extends BaseAdapter {
 
         private Context context;
         private List<DataAllUserCard> myAllUserCard;
+        private LayoutInflater inflater;
+        private ArrayList<DataAllUserCard> arrayList;
 
         public AdapterUserCardList(Context context, List<DataAllUserCard> myAllUserCard){
-            super(context, R.layout.list_all_user_cards, myAllUserCard);
             this.context = context;
             this.myAllUserCard = myAllUserCard;
+            inflater = LayoutInflater.from(context);
+            this.arrayList = new ArrayList<>();
+            this.arrayList.addAll(myAllUserCard);
         }
 
+
+        @Override
+        public int getCount() {
+            return myAllUserCard.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return myAllUserCard.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
 
         @SuppressLint("SetTextI18n")
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            LayoutInflater layoutInflater = LayoutInflater.from(context);
-            convertView = layoutInflater.inflate(R.layout.list_all_user_cards, parent, false);
+
+
+            MyViewHolder myViewHolder;
+            if(convertView==null) {
+                myViewHolder = new MyViewHolder();
+                convertView = inflater.inflate(R.layout.list_all_user_cards, null);
+
+                myViewHolder.txtV_telUserCard = convertView.findViewById(R.id.telUserCard);
+                myViewHolder.txtV_create_at = convertView.findViewById(R.id.created_at);
+                myViewHolder.txtV_codeNumber = convertView.findViewById(R.id.code_number);
+                myViewHolder.txtV_serialNumber = convertView.findViewById(R.id.serial_number);
+                myViewHolder.txtV_cardState = convertView.findViewById(R.id.cardState);
+                myViewHolder.chk_State = convertView.findViewById(R.id.cardSelected);
+                myViewHolder.txtV_username = convertView.findViewById(R.id.username);
+                convertView.setTag(myViewHolder);
+
+
+            } else {
+                myViewHolder = (MyViewHolder) convertView.getTag();
+            }
+
+
 
             //info sur la carte
             List<DataUserCard> card = myAllUserCard.get(position).getCards();
-            for(int i=0; i<card.size();i++) {
 
                 //telephone du détenteur de carte
-                TextView txtV_telUserCard = (TextView) convertView.findViewById(R.id.telUserCard);
-                txtV_telUserCard.setText("Tel: " + myAllUserCard.get(position).getPhone());
+                myViewHolder.txtV_telUserCard.setText("Tel: " + myAllUserCard.get(position).getPhone());
 
                 //date de creation de la carte
-                TextView txtV_create_at = (TextView) convertView.findViewById(R.id.created_at);
-                txtV_create_at.setText(getString(R.string.create) + card.get(i).getCreated_at().substring(0,10));
+            myViewHolder.txtV_create_at.setText(getString(R.string.create) + card.get(position).getCreated_at().substring(0,10));
                 //numéro de carte
-                TextView txtV_codeNumber = (TextView) convertView.findViewById(R.id.code_number);
-                txtV_codeNumber.setText("N°"+card.get(i).getCode_number());
+            myViewHolder.txtV_codeNumber.setText("N°"+card.get(position).getCode_number());
                 //numéro de série
-                TextView txtV_serialNumber = (TextView) convertView.findViewById(R.id.serial_number);
-                txtV_serialNumber.setText(card.get(i).getSerial_number());
+            myViewHolder.txtV_serialNumber.setText(card.get(position).getSerial_number());
                 //etat de la carte
-                TextView txtV_cardState = (TextView) convertView.findViewById(R.id.cardState);
-                txtV_cardState.setText(getString(R.string.etat) + card.get(i).getCard_state());
+            myViewHolder.txtV_cardState.setText(getString(R.string.etat) + card.get(position).getCard_state());
                 //nom et prenom
                 //TextView txtV_exp_at = (TextView) convertView.findViewById(R.id.username);
                 //txtV_exp_at.setText(card.getEnd_date());
-
-                CheckBox chk_State = (CheckBox) convertView.findViewById(R.id.cardSelected);
-                int finalI = i;
-                chk_State.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            myViewHolder.chk_State.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if(isChecked){
-                            chk_State.setChecked(false);
+                            myViewHolder.chk_State.setChecked(false);
                             //Toast.makeText(context, card.get(finalI).getId(), Toast.LENGTH_SHORT).show();
 
                             View view = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_recharge_carte, null);
                             TextView title = (TextView) view.findViewById(R.id.title);
                             TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                            statutOperation.setText(getString(R.string.rechargeCard) + card.get(finalI).getCode_number() + " " + getString(R.string.amountPlease));
+                            statutOperation.setText(getString(R.string.rechargeCard) + card.get(position).getCode_number() + " " + getString(R.string.amountPlease));
                             EditText montant = (EditText) view.findViewById(R.id.edit_montant);
                             title.setText(getString(R.string.recharge));
                             build_error.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -373,7 +416,7 @@ public class FragmentCartes extends Fragment {
                                 public void onClick(DialogInterface dialog, int which) {
 
                                     if(!montant.getText().toString().equalsIgnoreCase("")){
-                                        rechargeYourCarte(card.get(finalI).getCode_number(), Float.parseFloat(montant.getText().toString()), temp_account);
+                                        rechargeYourCarte(card.get(position).getCode_number(), Float.parseFloat(montant.getText().toString()), temp_account);
                                     } else{
                                         Toast.makeText(context, getString(R.string.veuillezInsererMontant), Toast.LENGTH_SHORT).show();
                                     }
@@ -394,7 +437,7 @@ public class FragmentCartes extends Fragment {
                         }
                     }
                 });
-            }
+
 
 
 
@@ -402,8 +445,7 @@ public class FragmentCartes extends Fragment {
             List<Particulier> particuliers = myAllUserCard.get(position).getParticulier();
             for(int j=0; j<particuliers.size();j++){
                 //nom et prenom
-                TextView txtV_username = (TextView) convertView.findViewById(R.id.username);
-                txtV_username.setText(particuliers.get(j).getFirstname() + " " + particuliers.get(j).getLastname());
+                myViewHolder.txtV_username.setText(particuliers.get(j).getFirstname() + " " + particuliers.get(j).getLastname());
             }
 
 
@@ -419,6 +461,46 @@ public class FragmentCartes extends Fragment {
             return convertView;
         }
 
+        public void filter(String charText){
+            charText = charText.toLowerCase(Locale.getDefault());
+            myAllUserCard.clear();
+            if(charText.length()==0){
+                myAllUserCard.addAll(arrayList);
+            }else {
+                for (DataAllUserCard dataAllUserCard : arrayList){
+
+
+                    for (int i = 0; i < dataAllUserCard.getCards().size();i++){
+
+                        for(int j = 0; j < dataAllUserCard.getParticulier().size(); j++){
+
+                            if(dataAllUserCard.getPhone().toLowerCase(Locale.getDefault()).contains(charText) ||
+                                    dataAllUserCard.getCards().get(i).getCode_number().toLowerCase(Locale.getDefault()).contains(charText) ||
+                                    dataAllUserCard.getCards().get(i).getSerial_number().toLowerCase(Locale.getDefault()).contains(charText) ||
+                                    dataAllUserCard.getCards().get(i).getCard_state().toLowerCase(Locale.getDefault()).contains(charText) ||
+                                    dataAllUserCard.getCards().get(i).getType().toLowerCase(Locale.getDefault()).contains(charText) ||
+                                    dataAllUserCard.getCards().get(i).getCompany().toLowerCase(Locale.getDefault()).contains(charText) ||
+                                    dataAllUserCard.getCreated_at().toLowerCase(Locale.getDefault()).contains(charText) ||
+                                    dataAllUserCard.getParticulier().get(j).getFirstname().toLowerCase(Locale.getDefault()).contains(charText) ||
+                                    dataAllUserCard.getParticulier().get(j).getLastname().toLowerCase(Locale.getDefault()).contains(charText)) {
+
+                                myAllUserCard.add(dataAllUserCard);
+                            }
+
+                        }
+
+
+
+                    }
+
+
+
+
+
+                }
+            }
+            notifyDataSetChanged();
+        }
 
 
 
@@ -469,6 +551,15 @@ public class FragmentCartes extends Fragment {
 
 
 
+        public class MyViewHolder {
+            TextView txtV_telUserCard;
+            TextView txtV_create_at;
+            TextView txtV_codeNumber;
+            TextView txtV_serialNumber;
+            TextView txtV_cardState;
+            CheckBox chk_State;
+            TextView txtV_username;
+        }
     }
 
     private class AdapterOwnerCard extends ArrayAdapter<DataUserCard> {
@@ -903,4 +994,65 @@ public class FragmentCartes extends Fragment {
         }
     }
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);//utilisé dans le cas des fragments uniquement pour afficher l'option menu
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.toolbar_search_menu, menu);
+
+        //search listener
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+
+        //search listener
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                if(TextUtils.isEmpty(query)){
+                    adapterUserCardList.filter("");
+                    listView.clearTextFilter();
+                } else {
+                    adapterUserCardList.filter(query);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+
+                if(TextUtils.isEmpty(query)){
+                    adapterUserCardList.filter("");
+                    listView.clearTextFilter();
+                } else {
+                    adapterUserCardList.filter(query);
+                }
+                return true;
+            }
+        });
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.apropos) {
+            Intent intent = new Intent(getContext(), Apropos.class);
+            startActivity(intent);
+        }
+
+        if (id == R.id.tuto) {
+            Intent intent = new Intent(getContext(), TutorielUtilise.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

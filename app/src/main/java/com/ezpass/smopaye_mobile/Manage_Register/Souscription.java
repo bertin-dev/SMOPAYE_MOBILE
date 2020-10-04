@@ -24,6 +24,9 @@ import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
+import com.ezpass.smopaye_mobile.web_service_access.ApiErrorRegister;
+import com.ezpass.smopaye_mobile.web_service_access.Utils_manageErrorRegister;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -281,7 +284,7 @@ public class Souscription extends AppCompatActivity
 
                         Role myRole = mycategories.get(i).getRole();
 
-                        listAllSession.put(myRole.getId(),  myRole.getname());
+                        listAllSession.put(myRole.getId(),  myRole.getName());
                         listAllCategorie.put(mycategories.get(i).getId(), mycategories.get(i).getname());
                     }
                     List<StringWithTag> itemList = new ArrayList<>();
@@ -1188,12 +1191,12 @@ public class Souscription extends AppCompatActivity
                                              String status1) {
 
 
-        call = service.register(nom1, prenom1, sexe1, telephone1, adresse1, num_categorie, num_statut, cni1.toLowerCase(), num_carte1.toUpperCase());
+        call = service.register(nom1, prenom1, sexe1, telephone1, adresse1, num_categorie, num_statut, typePJ1.toLowerCase().trim(), num_carte1.toUpperCase());
         call.enqueue(new Callback<AllMyResponse>() {
             @Override
             public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
 
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER SUCCESS onResponse: " + response);
 
                 if(response.isSuccessful()){
@@ -1205,12 +1208,12 @@ public class Souscription extends AppCompatActivity
                                 status1, "service", response.body().getMessage()).execute();*/
 
 
-                    /*registerGoogleFirebase(nom1, prenom1, sexe1, telephone1, typePJ1,
+                    registerGoogleFirebase(nom1, prenom1, sexe1, telephone1, typePJ1,
                             cni1, statut.getSelectedItem().toString().toLowerCase(), adresse1, num_carte1, typeChauffeur.getSelectedItem().toString().toLowerCase().trim(),
-                            "sm" + telephone1 + "@smopaye.cm", "default", status1, "service", response.body().getMessage());*/
+                            "sm" + telephone1 + "@smopaye.cm", "default", status1, "service", response.body().getMessage());
 
 
-                    View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
+                    /*View view = LayoutInflater.from(Souscription.this).inflate(R.layout.alert_dialog_success, null);
                     TextView title = (TextView) view.findViewById(R.id.title);
                     TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
                     ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
@@ -1237,12 +1240,14 @@ public class Souscription extends AppCompatActivity
                     til_numeroTel.getEditText().setText("");
                     til_cni.getEditText().setText("");
                     til_adresse.getEditText().setText("");
-                    til_numCarte.getEditText().setText("");
+                    til_numCarte.getEditText().setText("");*/
 
 
                 } else{
 
-                    if(response.code() == 422){
+                    progressDialog.dismiss();
+
+                    if(response.code() == 400){
                         handleErrors(response.errorBody());
                     } else{
                         ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
@@ -1301,37 +1306,49 @@ public class Souscription extends AppCompatActivity
 
     private void handleErrors(ResponseBody responseBody){
 
-        ApiError apiError = Utils_manageError.convertErrors(responseBody);
+        ApiErrorRegister apiErrorRegister = Utils_manageErrorRegister.convertErrors(responseBody);
         /*
         boucle sur toutes les erreurs trouvées
          */
 
-        for(Map.Entry<String, List<String>> error: apiError.getErrors().entrySet()){
+        for(Map.Entry<String, List<String>> error: apiErrorRegister.getData().entrySet()){
 
             if(error.getKey().equals("lastname")){
                 til_nom.setError(error.getValue().get(0));
+                til_nom.setFocusable(true);
+                errorResponse(error.getValue().get(0));
             }
 
 
             if(error.getKey().equals("firstname")){
                 til_prenom.setError(error.getValue().get(0));
+                til_prenom.setFocusable(true);
+                errorResponse(error.getValue().get(0));
             }
 
 
             if(error.getKey().equals("phone")){
                 til_numeroTel.setError(error.getValue().get(0));
+                til_numeroTel.setFocusable(true);
+                errorResponse(error.getValue().get(0));
             }
 
             if(error.getKey().equals("cni")){
                 til_cni.setError(error.getValue().get(0));
+                til_cni.setFocusable(true);
+                errorResponse(error.getValue().get(0));
             }
 
             if(error.getKey().equals("address")){
                 til_adresse.setError(error.getValue().get(0));
+                til_adresse.setFocusable(true);
+                errorResponse(error.getValue().get(0));
             }
 
-            if(error.getKey().equals("numcarte")){
+            if(error.getKey().equals("card_number")){
                 til_numCarte.setError(error.getValue().get(0));
+                til_numCarte.setFocusable(true);
+                errorResponse(error.getValue().get(0));
             }
 
         }
@@ -1413,77 +1430,6 @@ public class Souscription extends AppCompatActivity
     }
 
 
-    //ETAPE 2: Envoi des données vers le serveur Google
-    private class AsyncTaskRegisterDataInGoogleFirebaseServer extends AsyncTask<Void,Void,String> {
-
-       private String nom1;
-       private String prenom1;
-       private String sexe1;
-       private String telephone1;
-       private String typePJ1;
-       private String cni1;
-       private String session1;
-       private String adresse1;
-       private String num_carte1;
-       private String typeUser1;
-       private String status1;
-       private String abonnement1;
-       private String response1;
-
-
-        public AsyncTaskRegisterDataInGoogleFirebaseServer(String nom1, String prenom1, String sexe1, String telephone1, String typePJ1,
-                                                           String cni1, String session1, String adresse1, String num_carte1,
-                                                           String typeUser1, String status1, String abonnement1, String response1) {
-            this.nom1 = nom1;
-            this.prenom1 = prenom1;
-            this.sexe1 = sexe1;
-            this.telephone1 = telephone1;
-            this.typePJ1 = typePJ1;
-            this.cni1 = cni1;
-            this.session1 = session1;
-            this.adresse1 = adresse1;
-            this.num_carte1 = num_carte1;
-            this.typeUser1 = typeUser1;
-            this.status1 = status1;
-            this.abonnement1 = abonnement1;
-            this.response1 = response1;
-        }
-
-        @Override
-        protected void onPreExecute() {
-
-            super.onPreExecute();
-            progressDialogGoogle = ProgressDialog.show(Souscription.this, getString(R.string.etape2EnvoiDesDonnees), getString(R.string.connexionServeurSmopaye),true,true);
-
-            //INITIALISATION DES SERVICES GOOGLE FIREBASE
-            auth = FirebaseAuth.getInstance();
-            apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
-            fuser = FirebaseAuth.getInstance().getCurrentUser();
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            progressDialogGoogle.dismiss();
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            registerGoogleFirebase(this.nom1, this.prenom1,this.sexe1, this.telephone1, this.typePJ1,
-                    this.cni1, "", this.adresse1, this.num_carte1, "",
-                    "sm" + this.telephone1 + "@smopaye.cm", "default",
-                    this.status1, this.abonnement1, this.response1);
-            return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            progressDialogGoogle.dismiss();
-        }
-    }
-
     private void registerGoogleFirebase(String nom1, String prenom1, String sexe1,
                                          String tel1, String typePJ1, String cni1, String session1,
                                          String adresse1, String id_carte1, String typeUser1,
@@ -1491,7 +1437,7 @@ public class Souscription extends AppCompatActivity
 
         //progressDialogGoogle = ProgressDialog.show(Souscription.this, getString(R.string.etape2EnvoiDesDonnees), getString(R.string.connexionServeurSmopaye),true,true);
 
-        runOnUiThread(new Runnable() {
+        /*runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 // On ajoute un message à notre progress dialog
@@ -1504,7 +1450,11 @@ public class Souscription extends AppCompatActivity
                 progressDialogGoogle.show();
                 //build.setPositiveButton("ok", new View.OnClickListener()
             }
-        });
+        });*/
+
+        auth = FirebaseAuth.getInstance();
+        apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
 
         auth.createUserWithEmailAndPassword(email1, tel1)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -1605,7 +1555,7 @@ public class Souscription extends AppCompatActivity
                                     build_error.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-
+                                            progressDialogGoogle.dismiss();
                                             Intent intent = new Intent(Souscription.this, QRCodeShow.class);
                                             intent.putExtra("id_carte", "E-ZPASS" +num_carte + getsecurity_keys());
                                             intent.putExtra("nom_prenom", nom1 + " " + prenom1);
@@ -1627,7 +1577,8 @@ public class Souscription extends AppCompatActivity
                             });
                         }
                         else{
-                            progressDialogGoogle.dismiss();
+                            //progressDialogGoogle.dismiss();
+                            progressDialog.dismiss();
                             ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                             dbHandler = new DbHandler(getApplicationContext());
                             aujourdhui = new Date();

@@ -69,8 +69,8 @@ public class MenuRetraitOperateur extends AppCompatActivity {
 
     private void addTabs(ViewPager viewPager) {
         ViewPagerAdapterRetrait adapter = new ViewPagerAdapterRetrait(getSupportFragmentManager());
-        adapter.addFrag(new FragmentRetraitChezSmopaye(), getString(R.string.smopaye));
-        adapter.addFrag(new FragmentRetraitChezOperateurs(), getString(R.string.operateur));
+        adapter.addFrag(new FragmentRetraitCompteChezOperateurs(), getString(R.string.comptes));
+        adapter.addFrag(new FragmentRetraitChezOperateurs(), getString(R.string.carte));
         viewPager.setAdapter(adapter);
     }
 

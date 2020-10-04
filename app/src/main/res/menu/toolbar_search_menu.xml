@@ -9,6 +9,19 @@
         android:icon="@android:drawable/ic_menu_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView"/>
+    <!--app:showAsAction="always"-->
+
+    <item android:id="@+id/apropos"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_info_black_24dp"
+        app:showAsAction="never"
+        android:title="@string/apropos"/>
+
+    <item android:id="@+id/tuto"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_description_black_24dp"
+        app:showAsAction="never"
+        android:title="@string/tuto"/>
 
 
 </menu>

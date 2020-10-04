@@ -21,6 +21,8 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+
+import com.ezpass.smopaye_mobile.Manage_Transactions.Manage_Payments.Manage_Withdrawal.WebServiceResponse.HomeRetrait;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -137,7 +139,7 @@ public class FragmentRetraitChezOperateurs extends Fragment
     private ApiService service;
     private TokenManager tokenManager;
     private AwesomeValidation validator;
-    private Call<AllMyResponse> call;
+    private Call<HomeRetrait> call;
 
     @BindView(R.id.til_numCarteAccepteur)
     TextInputLayout til_numCarteAccepteur;
@@ -597,20 +599,20 @@ public class FragmentRetraitChezOperateurs extends Fragment
 
 
         call = service.retrait_accepteur(Float.parseFloat(montant), telephone, id_card);
-        call.enqueue(new Callback<AllMyResponse>() {
+        call.enqueue(new Callback<HomeRetrait>() {
             @Override
-            public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
+            public void onResponse(Call<HomeRetrait> call, Response<HomeRetrait> response) {
                 Log.w(TAG, "SMOPAYE_SERVER onResponse: " + response);
                 progressDialog.dismiss();
 
                 if(response.isSuccessful()){
 
                     assert response.body() != null;
-                    successResponse(id_card, response.body().getMessage());
+                    successResponse(id_card, response.body().getMessage().getSender().getNotif());
 
                 } else{
 
-                    if(response.code() == 422){
+                    /*if(response.code() == 422){
                         handleErrors(response.errorBody());
                     } else if(response.code() == 401){
                         ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
@@ -619,12 +621,16 @@ public class FragmentRetraitChezOperateurs extends Fragment
                     }
                   else{
                         errorResponse(id_card, response.message());
-                    }
+                    }*/
+
+                    ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
+                    Toast.makeText(getContext(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                    errorResponse(id_card, apiError.getMessage());
                 }
             }
 
             @Override
-            public void onFailure(Call<AllMyResponse> call, Throwable t) {
+            public void onFailure(Call<HomeRetrait> call, Throwable t) {
 
                 progressDialog.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onFailure " + t.getMessage());

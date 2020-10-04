@@ -175,7 +175,7 @@
     <string name="gesAccepteurActif">Active Acceptors</string>
     <string name="gesAccepteurInActif">Acceptors Inactive</string>
     <string name="gesComptes">Accounts management</string>
-    <string name="gesUserAgent">User and Agent Management</string>
+    <string name="gesUserAgent">Agent Management</string>
     <string name="gesUserGoogle">Google User Management</string>
     <string name="google">Google</string>
     <string name="grandEntreprise">Enterprise</string>
@@ -357,7 +357,10 @@
     <string name="smopayePartarge">Smopaye QR Code Sharing</string>
     <string name="smopayePartargeEZPASS">E-ZPASS Sharing via</string>
     <string name="smopaye_sarl">SMOPAYE SARL</string>
+    <string name="soa_campus">Soa Campus Entrance</string>
+    <string name="soa_marche">Soa Market</string>
     <string name="soa">SOA</string>
+    <string name="point_marchands">Merchant points</string>
     <string name="sortir">EXIT</string>
     <string name="souscription">Subscription </string>
     <string name="souscriptionAbonnement">Subscription Subscription</string>
@@ -511,7 +514,7 @@
     <string name="ecrire">WRITE ON THE CARD</string>
 
     <string name="idCarte">CARD ID</string>
-    <string name="numCarteLong">Serial Number</string>
+    <string name="numCarteLong">Serial </string>
     <string name="numCarteCourt">Card Number</string>
     <string name="expireDate">30-11-2021</string>
 
@@ -649,4 +652,31 @@
     <string name="confirmExitMsg">Are you sure you want to exit</string>
     <string name="oui">Yes</string>
     <string name="non">No</string>
+    <string name="position">Your position</string>
+    <string name="infoCard">Card Information</string>
+    <string name="infoCompte">Account Information</string>
+    <string name="infoRole">Role Information</string>
+    <string name="infoUser">User Information</string>
+    <string name="compagnie">Company</string>
+    <string name="role">Role</string>
+    <string name="typeRole">Role Type</string>
+    <string name="emptyUserlist">You do not have users.</string>
+    <string name="dateCreation">Created at </string>
+    <string name="accepteursList">List of acceptors</string>
+    <string name="agentsList">List of agents</string>
+    <string name="usersList">Users list</string>
+    <string name="NombreUtilisateurs">Number of Users</string>
+    <string name="UtilisateursActifs">Active Users</string>
+    <string name="UtilisateursInactif">Inactive Users</string>
+    <string name="GesAdmin">Administrators management</string>
+    <string name="GesUser">User management</string>
+    <string name="NombreAdmin">Admin Number</string>
+    <string name="AdminActifs">active admin</string>
+    <string name="AdminInactif">inactive admin</string>
+    <string name="adminList">List of administrators</string>
+    <string name="userList">Users list</string>
+    <string name="typeRetrait">type of Withdrawal</string>
+    <string name="MsgDescRetraitCompteChezOperateur">Please enter your account number then follow the steps.</string>
+    <string name="carte">CARD</string>
+    <string name="comptes">ACCOUNT</string>
 </resources>

@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+
 import androidx.annotation.RequiresApi;
 
 import com.ezpass.smopaye_mobile.Login;
@@ -30,6 +31,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.Pulse;
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -67,22 +69,22 @@ import retrofit2.Response;
 
 public class HistoriqueTransactions extends AppCompatActivity {
 
+    private static final String TAG = "HistoriqueTransactions";
+    int appTheme;
+    int themeColor;
+    int appColor;
     private TextView mois, annee, titleTypeTransaction;
     private TabLayout tabLayout;
     private ViewPager vpContent;
     private String typeHistoriqueTransaction;
+    private String typeHistoriqueTransaction2;
     //changement de couleur du theme
     private Constant constant;
     private SharedPreferences.Editor editor;
     private SharedPreferences app_preferences;
-    int appTheme;
-    int themeColor;
-    int appColor;
     private Toolbar toolbar;
-
     private LineChart mChart;
     private Intent intent;
-    private static final String TAG = "HistoriqueTransactions";
     private ApiService service;
     private TokenManager tokenManager;
     private Call<Home_AllHistoriques> transaction;
@@ -97,7 +99,7 @@ public class HistoriqueTransactions extends AppCompatActivity {
         changeTheme();
         setContentView(R.layout.activity_historique_transactions);
 
-        progressBar = (ProgressBar)findViewById(R.id.spinKit_history);
+        progressBar = (ProgressBar) findViewById(R.id.spinKit_history);
         wave = new Pulse();
         progressBar.setIndeterminateDrawable(wave);
 
@@ -106,7 +108,7 @@ public class HistoriqueTransactions extends AppCompatActivity {
 
         //web service
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
-        if(tokenManager.getToken() == null){
+        if (tokenManager.getToken() == null) {
             startActivity(new Intent(this, Login.class));
             finish();
         }
@@ -118,46 +120,48 @@ public class HistoriqueTransactions extends AppCompatActivity {
 
         intent = getIntent();
         typeHistoriqueTransaction = intent.getStringExtra("typeHistoriqueTransaction");
+        typeHistoriqueTransaction2 = intent.getStringExtra("typeHistoriqueTransaction2");
 
-        if (typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("RECHARGE")) {
+        if (typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("RECHARGE_CARTE_VIA_COMPTE") ||
+                typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("RECHARGE_COMPTE_VIA_MONETBIL")) {
             titleTypeTransaction.setText(getString(R.string.recharge));
-            getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.recharge));
+            getSupportActionBar().setTitle(getString(R.string.historique) + " " + getString(R.string.recharge));
             toolbar.setSubtitle(getString(R.string.ezpass));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
-        } else if(typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("PAYEMENT_VIA_QR-CODE")){
+        } else if (typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("PAYEMENT_VIA_QRCODE")) {
             titleTypeTransaction.setText(getString(R.string.qrcode));
-            getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.qrcode));
+            getSupportActionBar().setTitle(getString(R.string.historique) + " " + getString(R.string.qrcode));
             toolbar.setSubtitle(getString(R.string.ezpass));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
-        } else if(typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("DEBIT_CARTE")){
+        } else if (typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("DEBIT_CARTE")) {
             titleTypeTransaction.setText(getString(R.string.debitCarte));
-            getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.debitCarte));
+            getSupportActionBar().setTitle(getString(R.string.historique) + " " + getString(R.string.debitCarte));
             toolbar.setSubtitle(getString(R.string.ezpass));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
-        } else if(typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("TRANSFERT")){
+        } else if (typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("TRANSFERT_CARTE_A_CARTE") ||
+                typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("TRANSFERT_COMPTE_A_COMPTE")) {
             titleTypeTransaction.setText(getString(R.string.transfert));
-            getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.transfert));
+            getSupportActionBar().setTitle(getString(R.string.historique) + " " + getString(R.string.transfert));
             toolbar.setSubtitle(getString(R.string.ezpass));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
-        }else if(typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("PAYEMENT_FACTURE")){
+        } else if (typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("PAYEMENT_FACTURE")) {
             titleTypeTransaction.setText(getString(R.string.facture));
-            getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.facture));
+            getSupportActionBar().setTitle(getString(R.string.historique) + " " + getString(R.string.facture));
             toolbar.setSubtitle(getString(R.string.ezpass));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
-        } else if(typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("RETRAIT")){
+        } else if (typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("RETRAIT_SMOPAYE") ||
+                typeHistoriqueTransaction.toUpperCase().equalsIgnoreCase("RETRAIT_COMPTE_VIA_MONETBILL")) {
             titleTypeTransaction.setText(getString(R.string.retrait));
-            getSupportActionBar().setTitle(getString(R.string.historique) +" "+ getString(R.string.retrait));
+            getSupportActionBar().setTitle(getString(R.string.historique) + " " + getString(R.string.retrait));
             toolbar.setSubtitle(getString(R.string.ezpass));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
-        }
-
-        else{
+        } else {
             getSupportActionBar().setTitle(getString(R.string.historiqueTransaction));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -167,11 +171,10 @@ public class HistoriqueTransactions extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         // String currentDate = DateFormat.getDateInstance().format(calendar.getTime());// 31.07.2019
         String currentDate2 = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
-        String[] part =currentDate2.split(" ");
-        if(part[0].equalsIgnoreCase(currentDate2)){
+        String[] part = currentDate2.split(" ");
+        if (part[0].equalsIgnoreCase(currentDate2)) {
             Toast.makeText(this, getString(R.string.dateSystemePosePB), Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
             mois.setText(part[2]);
             annee.setText(part[3]);
         }
@@ -238,9 +241,9 @@ public class HistoriqueTransactions extends AppCompatActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(Call<Home_AllHistoriques> call, Response<Home_AllHistoriques> response) {
-                Log.w(TAG, "SMOPAYE_SERVER onResponse Bottom Sheet " +response);
+                Log.w(TAG, "SMOPAYE_SERVER onResponse Bottom Sheet " + response);
 
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
 
                     assert response.body() != null;
                     historique = response.body().getData();
@@ -283,19 +286,19 @@ public class HistoriqueTransactions extends AppCompatActivity {
 
 
                     yVals.clear();
-                    for(int i=0; i<historique.size(); i++){
+                    for (int i = 0; i < historique.size(); i++) {
 
-                        if(historique.get(i).getTransaction_type().toLowerCase().equalsIgnoreCase(typeHistoriqueTransaction.toLowerCase())){
+                        if (historique.get(i).getOperation().toLowerCase().contains(typeHistoriqueTransaction.toLowerCase())) {
 
-                            if(historique.get(i).getState().toLowerCase().contains("success")){
+                            if (historique.get(i).getStatus().toLowerCase().contains("success")) {
                                 j++;
-                                yVals.add(new Entry(j, Float.parseFloat(historique.get(i).getAmount())));
+                                yVals.add(new Entry(j, Float.parseFloat(historique.get(i).getMontant())));
                             }
                         }
                     }
 
                     LineDataSet set1;
-
+////
                     if (mChart.getData() != null &&
                             mChart.getData().getDataSetCount() > 0) {
                         set1 = (LineDataSet) mChart.getData().getDataSetByIndex(0);
@@ -335,13 +338,13 @@ public class HistoriqueTransactions extends AppCompatActivity {
                         mChart.setData(data);
                     }
 
-                }
-                else{
+                } else {
                     tokenManager.deleteToken();
                     startActivity(new Intent(HistoriqueTransactions.this, Login.class));
                     finish();
                 }
             }
+
             @Override
             public void onFailure(Call<Home_AllHistoriques> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
@@ -359,27 +362,26 @@ public class HistoriqueTransactions extends AppCompatActivity {
         themeColor = appColor;
         constant.color = appColor;
 
-        if (themeColor == 0){
+        if (themeColor == 0) {
             setTheme(Constant.theme);
-        }else if (appTheme == 0){
+        } else if (appTheme == 0) {
             setTheme(Constant.theme);
-        }else{
+        } else {
             setTheme(appTheme);
         }
     }
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("ResourceType")
     private void changeColorWidget() {
 
-        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+        if (Constant.color == getResources().getColor(R.color.colorPrimaryRed)) {
             toolbar.setBackground(ContextCompat.getDrawable(this, R.color.colorPrimaryDarkRed));
 
             getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
-        } else{
+        } else {
             getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDark));
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
@@ -408,15 +410,14 @@ public class HistoriqueTransactions extends AppCompatActivity {
         int histJour, histMois, histAnnee;
 
         Iterator<Date> i = new DateIterator(d1, d2);
-        while(i.hasNext())
-        {
+        while (i.hasNext()) {
             Date date = i.next();
 
             //Toast.makeText(this, String.valueOf(date.getDay()) + " Jours", Toast.LENGTH_SHORT).show();
             //Toast.makeText(this, String.valueOf(date.getMonth()) + " Mois", Toast.LENGTH_SHORT).show();
             //Toast.makeText(this, String.valueOf(new SimpleDateFormat("yyyy").format(date)) + " Annee", Toast.LENGTH_SHORT).show();
 
-             currentDate3 = DateFormat.getDateInstance(DateFormat.FULL).format(date.getTime());
+            currentDate3 = DateFormat.getDateInstance(DateFormat.FULL).format(date.getTime());
 
             histJour = Integer.parseInt(new SimpleDateFormat("dd").format(date));
             histMois = Integer.parseInt(new SimpleDateFormat("MM").format(date));
@@ -430,7 +431,6 @@ public class HistoriqueTransactions extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         viewPager.setCurrentItem(30, true); //demarrage de la page par defaut
     }
-
 
 
     /*                    GESTION DU MENU DROIT                  */
@@ -459,15 +459,29 @@ public class HistoriqueTransactions extends AppCompatActivity {
             startActivity(intent);
         }
 
-        if(id == R.id.modifierCompte){
-            Intent intent = new Intent(getApplicationContext(), UpdatePassword.class);
-            startActivity(intent);
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     *
+     * @param newBase
+     * @since 2020
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (transaction != null) {
+            transaction.cancel();
+            transaction = null;
+        }
+    }
 
     static class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -503,26 +517,6 @@ public class HistoriqueTransactions extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
 
-    }
-
-    /**
-     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
-     * @param newBase
-     * @since 2020
-     */
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleHelper.onAttach(newBase));
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        if(transaction != null){
-            transaction.cancel();
-            transaction = null;
-        }
     }
 
 }

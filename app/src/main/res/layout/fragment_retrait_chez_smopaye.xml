@@ -81,6 +81,47 @@
             android:focusableInTouchMode="true"
             android:orientation="vertical">
 
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:drawablePadding="7dp"
+                android:gravity="center"
+                android:imeOptions="actionNext"
+                android:orientation="horizontal"
+                android:padding="7dp"
+                android:textStyle="bold|italic"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/typRetraitTittle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="45"
+                    android:text="@string/typeRetrait"
+                    android:textColor="@color/bgColorStandard"
+                    android:textColorHint="@color/bgColorStandard"
+                    android:textSize="17sp"
+                    android:textStyle="bold|italic" />
+
+                <Spinner
+                    android:id="@+id/typeRetrait"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="55"
+                    android:drawablePadding="7dp"
+                    android:entries="@array/type_tranfert"
+                    android:imeOptions="actionNext"
+                    android:padding="7dp"
+                    android:textColor="@color/bgColorStandard"
+                    android:textColorHint="@color/bgColorStandard"
+                    android:textStyle="bold|italic" />
+
+            </LinearLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_numCartSmopaye"
                 android:layout_width="match_parent"
@@ -110,6 +151,35 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_numCompteBeneficiaire"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:hint="@string/numCompte"
+                android:textColorHint="@color/bgColorStandard"
+                android:visibility="visible"
+                app:counterEnabled="true"
+                app:counterMaxLength="9"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tie_numCompteBeneficiaire"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/edittextborder"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:maxLength="9"
+                    android:maxLines="1"
+                    android:padding="10dp"
+                    android:textColor="@color/bgColorStandard"
+                    android:textStyle="bold|italic" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_montantSmopaye"
