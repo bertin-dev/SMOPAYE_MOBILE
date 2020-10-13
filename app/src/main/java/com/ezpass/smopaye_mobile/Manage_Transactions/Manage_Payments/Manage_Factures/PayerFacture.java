@@ -521,7 +521,7 @@ public class PayerFacture extends AppCompatActivity
                     for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                         User user = userSnapshot.getValue(User.class);
                         if (user.getId_carte().equals(id_cardSender)) {
-                            RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.paiementFacture), id_cardSender, "success");
+                            RemoteNotification(user.getId(), user.getPrenom(), getString(R.string.paiementFacture), msgSender, "success");
                             //Toast.makeText(RetraitAccepteur.this, "CARTE TROUVE", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(PayerFacture.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();

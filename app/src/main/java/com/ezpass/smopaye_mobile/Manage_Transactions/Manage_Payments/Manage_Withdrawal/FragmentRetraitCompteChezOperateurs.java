@@ -480,7 +480,7 @@ public class FragmentRetraitCompteChezOperateurs extends Fragment
 
 
 
-    public void openDialog() {
+    private void openDialog() {
         //ModalDialogRetraitOperateur exampleDialog = new ModalDialogRetraitOperateur();
         //exampleDialog.show(getActivity().getSupportFragmentManager(), "example dialog");
 

@@ -33,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class AccueilUserGoogle extends AppCompatActivity {
 
+    private static final String TAG = "AccueilUserGoogle";
     private Button totalAdmin, totalAccepteur, totalUser, totalAgent;
     private LinearLayout lnListUserGoogle, lnSouscriptionGoogleUser, lnEnvoiNotifOneGoogleUser;
     private FirebaseDatabase mDatabase;
@@ -83,13 +84,13 @@ public class AccueilUserGoogle extends AppCompatActivity {
                 for(DataSnapshot keyNode : dataSnapshot.getChildren()){
 
                     User user1 = keyNode.getValue(User.class);
-                    if(user1.getSession().toLowerCase().equalsIgnoreCase("administrateur")){
+                    if("Administrateur".equals(user1.getSession())){
                         admin++;
-                    } else if(user1.getSession().toLowerCase().equalsIgnoreCase("utilisateur")){
+                    } else if("Utilisateur".equals(user1.getSession())){
                         utilisateur++;
-                    } else if(user1.getSession().toLowerCase().equalsIgnoreCase("accepteur")){
+                    } else if("Accepteur".equals(user1.getSession())){
                         accepteur++;
-                    } else if(user1.getSession().toLowerCase().equalsIgnoreCase("agent")){
+                    } else if("Agent".equals(user1.getSession())){
                         agent++;
                     }
                 }

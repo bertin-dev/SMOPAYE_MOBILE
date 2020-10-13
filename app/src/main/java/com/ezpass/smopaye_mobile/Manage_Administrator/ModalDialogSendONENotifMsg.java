@@ -63,7 +63,7 @@ public class ModalDialogSendONENotifMsg extends AppCompatDialogFragment {
                     String nom = dataSnapshot1.child("nom").getValue(String.class);
                     String prenom = dataSnapshot1.child("prenom").getValue(String.class);
                     String id_carte = dataSnapshot1.child("id_carte").getValue(String.class);
-                    titleList.add(nom.toLowerCase() + " " + prenom.toLowerCase() + "-" + id_carte);
+                    titleList.add(nom + " " + prenom + "-" + id_carte);
                 }
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, titleList);
                 arrayAdapter.setDropDownViewResource(R.layout.spinner_item);

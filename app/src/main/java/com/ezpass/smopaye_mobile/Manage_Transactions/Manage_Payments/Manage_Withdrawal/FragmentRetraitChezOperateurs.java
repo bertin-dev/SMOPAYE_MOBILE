@@ -141,10 +141,10 @@ public class FragmentRetraitChezOperateurs extends Fragment
     private AwesomeValidation validator;
     private Call<HomeRetrait> call;
 
-    @BindView(R.id.til_numCarteAccepteur)
-    TextInputLayout til_numCarteAccepteur;
-    @BindView(R.id.tie_numCarteAccepteur)
-    TextInputEditText tie_numCarteAccepteur;
+    @BindView(R.id.til_numCarte)
+    TextInputLayout til_numCarte;
+    @BindView(R.id.tie_numCarte)
+    TextInputEditText tie_numCarte;
 
     @BindView(R.id.authWindows)
     LinearLayout authWindows;
@@ -214,7 +214,7 @@ public class FragmentRetraitChezOperateurs extends Fragment
         readTempCardInFile();
         readTempIDCARDInFile();
 
-        tie_numCarteAccepteur.setText(temp_card);
+        tie_numCarte.setText(temp_card);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             changeColorWidget(view);
@@ -230,13 +230,13 @@ public class FragmentRetraitChezOperateurs extends Fragment
      * */
     private void setupRulesValidatForm(){
         //coloration des champs lorsqu'il y a erreur
-        til_numCarteAccepteur.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
-        validator.addValidation(getActivity(), R.id.til_numCarteAccepteur, RegexTemplate.NOT_EMPTY, R.string.insererCompte);
+        til_numCarte.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+        validator.addValidation(getActivity(), R.id.til_numCarte, RegexTemplate.NOT_EMPTY, R.string.insererCompte);
     }
 
     @OnClick(R.id.btnRetraitAccepteur)
     void retraitAccepteur(){
-        if(!validateCompte(til_numCarteAccepteur)){
+        if(!validateCompte(til_numCarte)){
             return;
         }
         validator.clear();
@@ -538,7 +538,7 @@ public class FragmentRetraitChezOperateurs extends Fragment
 
 
 
-    public void openDialog() {
+    private void openDialog() {
         //ModalDialogRetraitOperateur exampleDialog = new ModalDialogRetraitOperateur();
         //exampleDialog.show(getActivity().getSupportFragmentManager(), "example dialog");
 
@@ -551,7 +551,7 @@ public class FragmentRetraitChezOperateurs extends Fragment
                 if(!montant.getText().toString().equalsIgnoreCase("")){
 
 
-                    String id_card = til_numCarteAccepteur.getEditText().getText().toString();
+                    String id_card = til_numCarte.getEditText().getText().toString();
                     String montant1 = montant.getText().toString().trim();
 
                     /*Action à poursuivre si tous les champs sont remplis*/
@@ -792,7 +792,7 @@ public class FragmentRetraitChezOperateurs extends Fragment
         for(Map.Entry<String, List<String>> error: apiError.getErrors().entrySet()){
 
             if(error.getKey().equals("card_number")){
-                til_numCarteAccepteur.setError(error.getValue().get(0));
+                til_numCarte.setError(error.getValue().get(0));
             }
         }
 
@@ -842,7 +842,7 @@ public class FragmentRetraitChezOperateurs extends Fragment
             Log.e(TAG, "readValueBtn fail!");
             Toast.makeText(getContext(), getString(R.string.operation_fail), Toast.LENGTH_SHORT).show();
         } else {
-            til_numCarteAccepteur.getEditText().setText(StringUtil.toHexString(data));
+            til_numCarte.getEditText().setText(StringUtil.toHexString(data));
         }
     }
 
@@ -952,8 +952,8 @@ public class FragmentRetraitChezOperateurs extends Fragment
             myTitle.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
             desc.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.edittextborder_red));
             //numero carte
-            tie_numCarteAccepteur.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryRed));
-            tie_numCarteAccepteur.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.edittextborder_red));
+            tie_numCarte.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryRed));
+            tie_numCarte.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.edittextborder_red));
 
             //Button
             view.findViewById(R.id.btnRetraitAccepteur).setBackground(ContextCompat.getDrawable(getContext(), R.drawable.btn_rounded_red));

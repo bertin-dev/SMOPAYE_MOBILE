@@ -85,7 +85,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_numCarteAccepteur"
+                android:id="@+id/til_numCarte"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
@@ -97,7 +97,7 @@
                 app:counterMaxLength="8">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_numCarteAccepteur"
+                    android:id="@+id/tie_numCarte"
                     android:textColor="@color/bgColorStandard"
                     android:layout_gravity="center"
                     android:maxLines="1"

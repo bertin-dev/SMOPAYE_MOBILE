@@ -343,11 +343,16 @@ public class FragmentCompte extends Fragment
         titleRecharge.setText(getString(R.string.attenteValidation));
          progressBar = (ProgressBar) dialogView.findViewById(R.id.progressbar);
         progressBar.setVisibility(View.VISIBLE);
+        Button btnValidateRecharge = dialogView.findViewById(R.id.btnValidateRecharge);
 
         countDownTimer = new CountDownTimer(60 * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 timerRecharge.setText(String.valueOf(millisUntilFinished / 1000));
+
+                if((millisUntilFinished / 1000) <= 35){
+                    btnValidateRecharge.setVisibility(View.VISIBLE);
+                }
             }
             @Override
             public void onFinish() {
@@ -356,7 +361,7 @@ public class FragmentCompte extends Fragment
         };
         countDownTimer.start();
 
-        Button btnValidateRecharge = dialogView.findViewById(R.id.btnValidateRecharge);
+
         btnValidateRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -605,6 +610,7 @@ public class FragmentCompte extends Fragment
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();
+                alertDialog1.dismiss();
                 til_montant1.getEditText().setText("");
             }
         });

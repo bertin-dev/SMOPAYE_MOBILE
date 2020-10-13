@@ -7,11 +7,18 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,11 +26,21 @@ import android.view.View;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.R;
+import com.ezpass.smopaye_mobile.RemoteAdapter.UserAdapter;
 import com.ezpass.smopaye_mobile.RemoteModel.User;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListUserGoogle extends AppCompatActivity {
@@ -38,6 +55,7 @@ public class ListUserGoogle extends AppCompatActivity {
     int appColor;
 
     private Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +102,116 @@ public class ListUserGoogle extends AppCompatActivity {
     /*                    GESTION DU MENU DROIT                  */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.toolbar_search_menu, menu);
+
+
+        //MenuItem item = menu.findItem(R.id.action_search);
+        //SearchView searchView = (SearchView) item.getActionView();
+        //search listener
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setQueryHint(getString(R.string.searchByName));
+
+        //search listener
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if(!TextUtils.isEmpty(query.trim())){
+                    searchUsers2(query);
+                }else {
+                    getAllUsers();
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+
+                if(!TextUtils.isEmpty(query.trim())){
+                    searchUsers2(query);
+                }else {
+                    getAllUsers();
+                }
+
+                return true;
+            }
+        });
+
         return true;
+    }
+
+    private void getAllUsers() {
+
+        //get current user
+        final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+        //get path of database named "Users" containing users info
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        //get all data from path
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                List<String> keys = new ArrayList<>();
+                List<User> userList = new ArrayList<>();
+
+                for(DataSnapshot ds: dataSnapshot.getChildren()){
+                    User modelUser = ds.getValue(User.class);
+                    //get all users except currently signed in user
+
+                    Log.w("Dadi", "AAA" + fUser.getUid() + "=" +  "AAA" + modelUser.getId());
+                   /* if(!fUser.getUid().equals(modelUser.getId())){
+                        keys.add(ds.getKey());
+                        userList.add(modelUser);
+
+                    }*/
+
+                    keys.add(ds.getKey());
+                    userList.add(modelUser);
+                    //Log.w("PIPO", modelUser + "++++++++++++++++++++++++: " + ds.getKey() );
+
+                    new RecyclerAdapter_Google().setConfig(mRecyclerView, ListUserGoogle.this, userList, keys);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void searchUsers2(String s) {
+        List<String> keys = new ArrayList<>();
+        List<User> userList = new ArrayList<>();
+
+        final FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
+        Query query = FirebaseDatabase.getInstance().getReference("Users").orderByChild("search")
+                .startAt(s)
+                .endAt(s+"\uf8ff");
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userList.clear();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    User user = snapshot.getValue(User.class);
+                    assert user != null;
+                    assert fuser != null;
+                   /* if(!fuser.getUid().equals(user.getId())){
+                        userList.add(user);
+                        keys.add(snapshot.getKey());
+                    }*/
+                    userList.add(user);
+                    keys.add(snapshot.getKey());
+                }
+                new RecyclerAdapter_Google().setConfig2(mRecyclerView, ListUserGoogle.this, userList, keys);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -104,11 +229,6 @@ public class ListUserGoogle extends AppCompatActivity {
 
         if (id == R.id.tuto) {
             Intent intent = new Intent(getApplicationContext(), TutorielUtilise.class);
-            startActivity(intent);
-        }
-
-        if(id == R.id.modifierCompte){
-            Intent intent = new Intent(getApplicationContext(), UpdatePassword.class);
             startActivity(intent);
         }
 

@@ -649,7 +649,7 @@
     <string name="points">Points : </string>
     <string name="bonus">Bonus : </string>
     <string name="confirmExit">Confirm Exit..!!!</string>
-    <string name="confirmExitMsg">Are you sure you want to exit</string>
+    <string name="confirmExitMsg">Are you sure you want to exit ?</string>
     <string name="oui">Yes</string>
     <string name="non">No</string>
     <string name="position">Your position</string>
@@ -679,4 +679,5 @@
     <string name="MsgDescRetraitCompteChezOperateur">Please enter your account number then follow the steps.</string>
     <string name="carte">CARD</string>
     <string name="comptes">ACCOUNT</string>
+    <string name="searchByName">Search by Name</string>
 </resources>

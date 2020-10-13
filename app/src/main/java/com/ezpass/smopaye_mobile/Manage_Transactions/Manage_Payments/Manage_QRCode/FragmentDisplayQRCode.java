@@ -15,6 +15,8 @@ import android.preference.PreferenceManager;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -139,8 +141,10 @@ public class FragmentDisplayQRCode extends Fragment {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     shareBitmap(viewToBitmap(qrcode, qrcode.getWidth(), qrcode.getHeight()));
+                    Log.w(TAG, "onClick: " + 1);
                 } else {
                     startShare();
+                    Log.w(TAG, "onClick: " + 2);
                 }
 
             }
@@ -255,6 +259,7 @@ public class FragmentDisplayQRCode extends Fragment {
             final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(Intent.EXTRA_TEXT, shareText);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
             intent.setType("image/png");
             startActivity(Intent.createChooser(intent, getString(R.string.smopayePartargeEZPASS)));

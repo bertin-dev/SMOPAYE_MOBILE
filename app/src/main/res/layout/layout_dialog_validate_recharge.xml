@@ -74,6 +74,7 @@
             android:layout_marginLeft="70dp"
             android:layout_marginRight="70dp"
             android:textStyle="bold"
+            android:visibility="gone"
             android:shadowDx="@android:integer/config_longAnimTime"
             android:background="@drawable/btn_rounded"
             android:text="@string/valider" />

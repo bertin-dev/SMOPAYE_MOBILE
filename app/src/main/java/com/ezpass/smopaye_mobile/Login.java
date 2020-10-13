@@ -998,7 +998,46 @@ public class Login extends AppCompatActivity
     }
 
 
+    @Override
+    public void onBackPressed() {
+        Deconnexion();
+    }
 
+    private void Deconnexion() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle(getString(R.string.confirmExit));
+        alertDialogBuilder.setIcon(R.drawable.ic_exit_to_app_black_24dp);
+        alertDialogBuilder.setMessage(getString(R.string.confirmExitMsg));
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setPositiveButton(getString(R.string.oui), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Login.super.onBackPressed();
+                Exit();
+            }
+        });
+        alertDialogBuilder.setNegativeButton(getString(R.string.non), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+
+    private void Exit() {
+        ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.deconnexion), getString(R.string.encours), true);
+        dialog.show();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                dialog.dismiss();
+                finish();
+            }
+        }, 2000); // 2000 milliseconds delay
+    }
 
     /**
      * verifyCode(String code) permet de verifier le code entrer par l'utilisateur avec google firebase. Mais je ne l'utilise pas

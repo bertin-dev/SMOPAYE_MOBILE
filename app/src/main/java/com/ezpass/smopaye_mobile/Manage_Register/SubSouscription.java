@@ -970,6 +970,7 @@ public class SubSouscription extends AppCompatActivity
             registerSubAccountDataInSmopayeServer(nom, prenom, genre, telephone, typePjustificative.getSelectedItem().toString().toLowerCase().trim(),
                     cni.toLowerCase().trim(), "", adresse, num_carte, "",
                     "offline");
+
         }
 
     }
@@ -1170,8 +1171,6 @@ public class SubSouscription extends AppCompatActivity
         call.enqueue(new Callback<AllMyResponse>() {
             @Override
             public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
-
-                dialog2.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER onResponse: " + response);
 
 
@@ -1182,14 +1181,13 @@ public class SubSouscription extends AppCompatActivity
                         */
                     assert response.body() != null;
 
-                    successResponse(response.body().getMessage());
-                    Toast.makeText(SubSouscription.this, "enregistrement éffectué", Toast.LENGTH_SHORT).show();
 
-                        /*new AsyncTaskRegisterDataInGoogleFirebaseServer(nom1, prenom1, sexe1, telephone1, typePJ1,
-                                cni1, session1, adresse1, num_carte1, typeUser1,
-                                status1, abonnement1, response.toString()).execute();*/
+                    registerGoogleFirebase(nom1, prenom1, sexe1, telephone1, typePJ1,
+                            cni1, statut.getSelectedItem().toString().toLowerCase(), adresse1, num_carte1, typeChauffeur.getSelectedItem().toString().toLowerCase().trim(),
+                            "sm" + telephone1 + "@smopaye.cm", "default", status1, "service", response.body().getMessage());
+
                 } else{
-
+                    dialog2.dismiss();
                     if(response.code() == 422){
                         handleErrors(response.errorBody());
                     } else{
@@ -1248,15 +1246,6 @@ public class SubSouscription extends AppCompatActivity
     }
 
     private void successResponse(String response) {
-        //////////////////////////////////NOTIFICATIONS LOCALE////////////////////////////////
-        LocalNotification(getString(R.string.souscription), response);
-
-        ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
-        dbHandler = new DbHandler(getApplicationContext());
-        aujourdhui = new Date();
-        shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-        dbHandler.insertUserDetails(getString(R.string.souscription), response, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
-
 
         View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.alert_dialog_success, null);
         TextView title = (TextView) view.findViewById(R.id.title);
@@ -1269,6 +1258,14 @@ public class SubSouscription extends AppCompatActivity
         build_error.setCancelable(false);
         build_error.setView(view);
         build_error.show();
+
+
+        til_nom.getEditText().setText("");
+        til_prenom.getEditText().setText("");
+        til_numeroTel.getEditText().setText("");
+        til_cni.getEditText().setText("");
+        til_adresse.getEditText().setText("");
+        til_numCarte.getEditText().setText("");
     }
 
     private void handleErrors(ResponseBody responseBody){
@@ -1386,7 +1383,7 @@ public class SubSouscription extends AppCompatActivity
 
 
     //ETAPE 2: Envoi des données vers le serveur Google
-    private class AsyncTaskRegisterDataInGoogleFirebaseServer extends AsyncTask<Void,Void,String> {
+    /*private class AsyncTaskRegisterDataInGoogleFirebaseServer extends AsyncTask<Void,Void,String> {
 
         private String nom1;
         private String prenom1;
@@ -1454,12 +1451,17 @@ public class SubSouscription extends AppCompatActivity
             super.onPostExecute(s);
             progressDialogGoogle.dismiss();
         }
-    }
+    }*/
 
     private void registerGoogleFirebase(String nom1, String prenom1, String sexe1,
                                         String tel1, String typePJ1, String cni1, String session1,
                                         String adresse1, String id_carte1, String typeUser1,
                                         String email1, String imageURL1, String status1, String abonnement1, String response1) {
+
+        auth = FirebaseAuth.getInstance();
+        apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
+
         auth.createUserWithEmailAndPassword(email1, tel1)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -1543,36 +1545,11 @@ public class SubSouscription extends AppCompatActivity
                                             adresse1, id_carte1, typeUser1,
                                             "default", "offline" , abonnement1, shortDateFormat.format(aujourdhui));
 
+                                    dialog2.dismiss();
 
-                                    String num_carte = id_carte1;
+                                    successResponse(response1);
+                                    Toast.makeText(SubSouscription.this, "enregistrement éffectué", Toast.LENGTH_SHORT).show();
 
-                                    View view = LayoutInflater.from(SubSouscription.this).inflate(R.layout.alert_dialog_success, null);
-                                    TextView title = (TextView) view.findViewById(R.id.title);
-                                    TextView statutOperation = (TextView) view.findViewById(R.id.statutOperation);
-                                    ImageButton imageButton = (ImageButton) view.findViewById(R.id.image);
-                                    title.setText(getString(R.string.information));
-                                    imageButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
-                                    statutOperation.setText(response1);
-                                    build_error.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            Intent intent = new Intent(SubSouscription.this, QRCodeShow.class);
-                                            intent.putExtra("id_carte", "E-ZPASS" +num_carte + getsecurity_keys());
-                                            intent.putExtra("nom_prenom", nom1 + " " + prenom1);
-                                            startActivity(intent);
-                                        }
-                                    });
-                                    build_error.setCancelable(false);
-                                    build_error.setView(view);
-                                    build_error.show();
-
-                                    til_nom.getEditText().setText("");
-                                    til_prenom.getEditText().setText("");
-                                    til_numeroTel.getEditText().setText("");
-                                    til_cni.getEditText().setText("");
-                                    til_adresse.getEditText().setText("");
-                                    til_numCarte.getEditText().setText("");
                                 }
                             });
                         }

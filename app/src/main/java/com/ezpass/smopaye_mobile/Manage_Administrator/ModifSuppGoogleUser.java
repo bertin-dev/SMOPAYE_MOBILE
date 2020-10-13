@@ -469,6 +469,7 @@ public class ModifSuppGoogleUser extends AppCompatActivity {
 
                                 //TOUT EST OK
                                 User user = new User();
+                                user.setId(key);
                                 user.setNom(nom.getText().toString());
                                 user.setPrenom(prenom.getText().toString());
                                 user.setTel(telephone.getText().toString());
@@ -478,6 +479,9 @@ public class ModifSuppGoogleUser extends AppCompatActivity {
                                 user.setSession(statut.getSelectedItem().toString());
                                 user.setTypeUser(typeChauffeur.getSelectedItem().toString());
                                 user.setId_carte(numCarte.getText().toString());
+                                user.setStatus("offline");
+                                user.setImageURL("default");
+                                user.setSearch(nom.getText().toString());
                                 user.setAbonnement(abonnement);
 
 

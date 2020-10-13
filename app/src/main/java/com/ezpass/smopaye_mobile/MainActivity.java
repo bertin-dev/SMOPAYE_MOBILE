@@ -705,9 +705,10 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            Deconnexion(false);
         }
         progressDialog.dismiss();
+
     }
 
     @Override
@@ -897,7 +898,7 @@ public class MainActivity extends AppCompatActivity
             }*/
         }
         else if (id == R.id.nav_deconnexion) {
-            Deconnexion();
+            Deconnexion(true);
         }
 
         else if (id == R.id.nav_QuestionFrequentes) {
@@ -921,7 +922,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void Deconnexion() {
+    private void Deconnexion(boolean exitGoogleFirebase) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(getString(R.string.confirmExit));
         alertDialogBuilder.setIcon(R.drawable.ic_exit_to_app_black_24dp);
@@ -930,7 +931,10 @@ public class MainActivity extends AppCompatActivity
         alertDialogBuilder.setPositiveButton(getString(R.string.oui), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Exit();
+                MainActivity.super.onBackPressed();
+                if(exitGoogleFirebase){
+                    Exit();
+                }
             }
         });
         alertDialogBuilder.setNegativeButton(getString(R.string.non), new DialogInterface.OnClickListener() {
@@ -1148,5 +1152,7 @@ public class MainActivity extends AppCompatActivity
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase));
     }
+
+
 
 }

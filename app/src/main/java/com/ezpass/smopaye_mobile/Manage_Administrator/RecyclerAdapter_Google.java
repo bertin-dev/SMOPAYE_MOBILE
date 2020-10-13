@@ -5,6 +5,8 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,17 @@ public class RecyclerAdapter_Google {
         recyclerView.setAdapter(mUserAdapterGoogle);
     }
 
+
+    public void setConfig2(RecyclerView recyclerView, Context context, List<User> user2, List<String> keys2){
+        mContext = context;
+        mUserAdapterGoogle = new UserAdapterGoogle(user2, keys2);
+        Log.w("PIPO", user2 + "+33333333333333+: ");
+        //refresh adapter
+        mUserAdapterGoogle.notifyDataSetChanged();
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        //Collections.reverse(user2);
+        recyclerView.setAdapter(mUserAdapterGoogle);
+    }
 
 
 

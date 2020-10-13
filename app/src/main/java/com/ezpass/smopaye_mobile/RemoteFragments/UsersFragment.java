@@ -94,7 +94,7 @@ public class UsersFragment extends Fragment {
                     User user = snapshot.getValue(User.class);
                     assert user != null;
                     assert fuser != null;
-                    if(!user.getId().equals(fuser.getUid())){
+                    if(!fuser.getUid().equals(user.getId())){
                         mUsers.add(user);
                     }
                 }

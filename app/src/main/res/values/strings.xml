@@ -729,7 +729,7 @@
     <string name="points">Points Cumulés :</string>
     <string name="bonus">Bonus :</string>
     <string name="confirmExit">Confirmer la sortie..!!!</string>
-    <string name="confirmExitMsg">Êtes-vous sûr de vouloir quitter</string>
+    <string name="confirmExitMsg">Êtes-vous sûr de vouloir quitter ?</string>
     <string name="oui">Oui</string>
     <string name="non">Non</string>
     <string name="position">Votre Position</string>
@@ -753,10 +753,11 @@
     <string name="NombreAdmin">Nbre Admin</string>
     <string name="AdminActifs">Admin Actifs</string>
     <string name="AdminInactif">Admin Inactif</string>
-    <string name="adminList">Liste des adminstrateurs</string>
+    <string name="adminList">Liste des administrateurs</string>
     <string name="userList">Liste des utilisateurs</string>
     <string name="typeRetrait">Type de Retrait</string>
     <string name="MsgDescRetraitCompteChezOperateur">Veuillez insérer votre numéro de compte puis suivre les étapes.</string>
     <string name="carte">CARTE</string>
     <string name="comptes">COMPTE</string>
+    <string name="searchByName">Rechercher par Nom</string>
 </resources>

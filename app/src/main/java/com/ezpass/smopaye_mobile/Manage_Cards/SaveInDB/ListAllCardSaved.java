@@ -121,7 +121,7 @@ public class ListAllCardSaved extends AppCompatActivity {
                     if(myResponse.isSuccess()){
                         //Toast.makeText(ListAllCardSaved.this, myResponse.getMessage(), Toast.LENGTH_SHORT).show();
                         List<Model_Card> myCardModel = myResponse.getData();
-                        adapterCardList = new AdapterCardList(getApplicationContext(), myCardModel);
+                        adapterCardList = new AdapterCardList(ListAllCardSaved.this, myCardModel);
                         listView.setAdapter(adapterCardList);
                     } else{
                         Toast.makeText(ListAllCardSaved.this, myResponse.getMessage(), Toast.LENGTH_SHORT).show();

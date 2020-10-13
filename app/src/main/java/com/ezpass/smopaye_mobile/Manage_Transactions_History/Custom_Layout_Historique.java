@@ -76,7 +76,11 @@ public class Custom_Layout_Historique extends ArrayAdapter<Users> {
 
         viewHolder.tvw1.setText(title_montant_valeur[position] + " Fcfa");
         viewHolder.tvw4.setText(startDateStrNewFormat);
-        viewHolder.tvw6.setText(title_frais[position] + " Fcfa");
+
+        if(title_frais[position] != null)
+            viewHolder.tvw6.setText(title_frais[position] + " Fcfa");
+        else
+            viewHolder.tvw6.setText(0 + " Fcfa");
 
 
         //interaction entre particulier uniquement
