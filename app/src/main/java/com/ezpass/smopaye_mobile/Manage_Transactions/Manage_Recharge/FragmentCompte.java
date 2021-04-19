@@ -1,5 +1,6 @@
 package com.ezpass.smopaye_mobile.Manage_Transactions.Manage_Recharge;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -9,10 +10,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -20,15 +24,20 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.Toolbar;
+
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -98,6 +107,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
@@ -197,6 +207,10 @@ public class FragmentCompte extends Fragment
     int appTheme;
     int themeColor;
     int appColor;
+
+
+    private static final int CONTACT_PERMISSION_CODE = 1;
+    private static final int CONTACT_PICK_CODE = 2;
 
     public FragmentCompte() {
         // Required empty public constructor
@@ -1220,4 +1234,103 @@ public class FragmentCompte extends Fragment
         }
     }
 
+
+    @OnClick(R.id.repertoire)
+    void Repertoire(){
+        //first we need to check read contact permission
+        if(checkContactPermission()){
+            //permission granted, pick contact
+            pickContactIntent();
+        } else{
+            //permission not granted, request
+            requestContactPermission();
+        }
+    }
+
+
+    private boolean checkContactPermission(){
+        //check if contact permission was granted or not
+        boolean result = ContextCompat.checkSelfPermission(
+                getActivity(),
+                Manifest.permission.READ_CONTACTS) == (PackageManager.PERMISSION_GRANTED);
+        return result; //true if permission granted, false if not
+    }
+
+    private void requestContactPermission(){
+        //permissions to request
+        String[] permission = {Manifest.permission.READ_CONTACTS};
+        ActivityCompat.requestPermissions(getActivity(), permission, CONTACT_PERMISSION_CODE);
+    }
+
+    private void pickContactIntent(){
+        //intent to pick contact
+        Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        startActivityForResult(intent, CONTACT_PICK_CODE);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //handle permission request result
+        if(requestCode == CONTACT_PERMISSION_CODE){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                //permission granted, can pick contact now
+                pickContactIntent();
+            }else {
+                //permission denied
+                Toast.makeText(getActivity(), "Permission denied...", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //handle intent results
+        if(resultCode == RESULT_OK){
+            //calls when user click a contact from list
+
+            if(requestCode == CONTACT_PICK_CODE){
+                tie_numCartePropreCompte1.setText("");
+                Cursor cursor1, cursor2;
+
+                //get data from intent
+                Uri uri = data.getData();
+                cursor1 = getActivity().getContentResolver().query(uri, null, null, null, null);
+
+                if(cursor1.moveToFirst()){
+                    //get contact details
+                    String contactId = cursor1.getString(cursor1.getColumnIndex(ContactsContract.Contacts._ID));
+                    String contactName = cursor1.getString(cursor1.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                    //String contactThumnail = cursor1.getString(cursor1.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI));
+                    String idResults = cursor1.getString(cursor1.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+                    int idResultHold = Integer.parseInt(idResults);
+
+                    //contactTv.append("ID: " + contactId);
+                    //contactTv.append("\nName: " + contactName);
+
+                    if(idResultHold == 1){
+                        cursor2 = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                                null,
+                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId,
+                                null,
+                                null);
+
+                        while (cursor2.moveToNext()){
+                            //get phone number
+                            String contactNumber = cursor2.getString(cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                            //set details
+                            tie_numCartePropreCompte1.setText(contactNumber.trim());
+                            Toast.makeText(getActivity(), contactName, Toast.LENGTH_LONG).show();
+                        }
+                        cursor2.close();
+                    }
+                    cursor1.close();
+                }
+
+            }
+
+        }
+    }
 }

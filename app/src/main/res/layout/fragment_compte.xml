@@ -82,34 +82,56 @@
             android:orientation="vertical">
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_numCartePropreCompte1"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
-                android:hint="@string/telephone"
-                android:textColorHint="@color/bgColorStandard"
-                app:errorEnabled="true"
-                app:counterEnabled="true"
-                app:counterMaxLength="9">
+                android:orientation="horizontal"
+                android:weightSum="100">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_numCartePropreCompte1"
-                    android:textColor="@color/bgColorStandard"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_numCartePropreCompte1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="80"
+                    android:hint="@string/telephone"
+                    android:textColorHint="@color/bgColorStandard"
+                    app:errorEnabled="true"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="9">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tie_numCartePropreCompte1"
+                        android:textColor="@color/bgColorStandard"
+                        android:layout_gravity="center"
+                        android:maxLines="1"
+                        android:textStyle="bold|italic"
+                        android:imeOptions="actionNext"
+                        android:padding="10dp"
+                        android:maxLength="9"
+                        android:inputType="text"
+                        android:background="@drawable/edittextborder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/repertoire"
+                    android:layout_width="0dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:elevation="1dp"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
                     android:layout_gravity="center"
-                    android:maxLines="1"
-                    android:textStyle="bold|italic"
-                    android:imeOptions="actionNext"
-                    android:padding="10dp"
-                    android:maxLength="9"
-                    android:inputType="text"
-                    android:background="@drawable/edittextborder"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_weight="20"
+                    android:paddingRight="10dp"
+                    android:src="@drawable/ic_baseline_supervised_user_circle_24" />
 
-
-            </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_montant1"
