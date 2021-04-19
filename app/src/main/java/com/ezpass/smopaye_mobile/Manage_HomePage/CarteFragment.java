@@ -296,12 +296,12 @@ public class CarteFragment extends Fragment
 
         ImageSlider imageSlider = view.findViewById(R.id.image_slider);
         List<SlideModel> slideModels = new ArrayList<>();
-        slideModels.add(new SlideModel(R.drawable.carte_smopaye, "Recto de ma Carte"));
-        slideModels.add(new SlideModel(R.drawable.pub_back_card, "Verso de ma carte"));
-        slideModels.add(new SlideModel(R.drawable.pub_qrcode, "Mon QR CODE"));
-        slideModels.add(new SlideModel(R.drawable.pub_distributor, "Ma solution de paiement"));
-        slideModels.add(new SlideModel(R.drawable.pub_kiosk, "Distributeur Smopaye"));
-        slideModels.add(new SlideModel(R.drawable.pub_parasol, "Parasole Smopaye"));
+        slideModels.add(new SlideModel(R.drawable.carte_smopaye, getString(R.string.FrontCard)));
+        slideModels.add(new SlideModel(R.drawable.pub_back_card, getString(R.string.BackCard)));
+        slideModels.add(new SlideModel(R.drawable.pub_qrcode, getString(R.string.myCodeQr)));
+        slideModels.add(new SlideModel(R.drawable.pub_distributor, getString(R.string.mySolution)));
+        slideModels.add(new SlideModel(R.drawable.pub_kiosk, getString(R.string.myDistributor)));
+        slideModels.add(new SlideModel(R.drawable.pub_parasol, getString(R.string.myPoint)));
         imageSlider.setImageList(slideModels, true);
         imageSlider.startSliding(5000);
 

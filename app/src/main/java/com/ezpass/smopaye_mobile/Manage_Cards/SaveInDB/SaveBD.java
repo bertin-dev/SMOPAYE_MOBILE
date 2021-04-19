@@ -110,6 +110,7 @@ public class SaveBD extends AppCompatActivity {
 
         Intent intent = getIntent();
         myId_card = intent.getStringExtra("idUser");
+        Toast.makeText(this, myId_card, Toast.LENGTH_SHORT).show();
 
         //initialisation des objets qui seront manipulés
         ButterKnife.bind(this);
@@ -484,7 +485,7 @@ public class SaveBD extends AppCompatActivity {
         call.enqueue(new Callback<AllMyResponse>() {
             @Override
             public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
-
+                Log.w(TAG, "onResponse CARD SAVE: " + response);
                 progressDialog.dismiss();
 
                 if(response.isSuccessful()){
@@ -493,6 +494,7 @@ public class SaveBD extends AppCompatActivity {
                     successResponse(response.body().getMessage());
 
                 } else{
+                    Log.w(TAG, "onResponse: "+ response.errorBody());
                     ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
                     Toast.makeText(getApplicationContext(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
                     errorResponse(apiError.getMessage());

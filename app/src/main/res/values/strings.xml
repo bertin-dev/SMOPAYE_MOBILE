@@ -760,4 +760,10 @@
     <string name="carte">CARTE</string>
     <string name="comptes">COMPTE</string>
     <string name="searchByName">Rechercher par Nom</string>
+    <string name="FrontCard">Recto de ma Carte</string>
+    <string name="BackCard">Verso de ma carte</string>
+    <string name="myCodeQr">Mon CODE QR</string>
+    <string name="mySolution">Ma solution de paiement</string>
+    <string name="myDistributor">Distributeur Smopaye</string>
+    <string name="myPoint">Points Smopaye</string>z
 </resources>

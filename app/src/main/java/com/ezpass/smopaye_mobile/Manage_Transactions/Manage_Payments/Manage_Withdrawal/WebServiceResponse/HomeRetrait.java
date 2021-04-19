@@ -5,7 +5,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class HomeRetrait {
-
     @SerializedName("success")
     @Expose
     private boolean success;

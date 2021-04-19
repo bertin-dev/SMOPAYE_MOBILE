@@ -12,4 +12,16 @@
     <dimen name="slide_title">25sp</dimen>
     <dimen name="slide_desc">16sp</dimen>
     <dimen name="desc_padding">20dp</dimen>
+
+
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="tap_target_menu_max_width">350dp</dimen>
+    <dimen name="example_button_width">140dp</dimen>
+    <dimen name="example_item_top_padding">8dp</dimen>
+    <dimen name="max_prompt_width">300dp</dimen>
+    <dimen name="centre_example_padding">90dp</dimen>
+    <dimen name="dp40">40dp</dimen>
+    <dimen name="dp60">60dp</dimen>
+    <dimen name="dp180">180dp</dimen>
 </resources>

@@ -14,8 +14,11 @@ import javax.crypto.spec.SecretKeySpec;
 public class ChaineConnexion {
 
 
-    private static final String adresseURLsmopayeServer = "https://cm.secure-ws-api-smp-excecute.smopaye.fr/index.php";
-    //private static final String adresseURLsmopayeServer = "https://webservice.domaine.tests.space.smopaye.fr/index.php";
+    //Domaine des Testes
+    //private static final String adresseURLsmopayeServer = "https://cm.secure-ws-api-smp-excecute.smopaye.fr/index.php";
+    //Domaine de Production
+    private static final String adresseURLsmopayeServer = "https://webservice.domaine.tests.space.smopaye.fr/index.php";
+
     private static final String adresseURLGoogleAPI = "https://fcm.googleapis.com/";
     private static final String urlSiteWeb = "https://smopaye.cm/";
     private static final String encrypted_password = "Iyz4BVU2Hlt0cIeIPBlB7Wq15kMDI4NGRmOTNi";

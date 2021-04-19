@@ -1196,7 +1196,7 @@ public class Souscription extends AppCompatActivity
             @Override
             public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
 
-                //progressDialog.dismiss();
+                progressDialog.dismiss();
                 Log.w(TAG, "SMOPAYE_SERVER SUCCESS onResponse: " + response);
 
                 if(response.isSuccessful()){
@@ -1437,7 +1437,7 @@ public class Souscription extends AppCompatActivity
 
         //progressDialogGoogle = ProgressDialog.show(Souscription.this, getString(R.string.etape2EnvoiDesDonnees), getString(R.string.connexionServeurSmopaye),true,true);
 
-        /*runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 // On ajoute un message à notre progress dialog
@@ -1450,7 +1450,7 @@ public class Souscription extends AppCompatActivity
                 progressDialogGoogle.show();
                 //build.setPositiveButton("ok", new View.OnClickListener()
             }
-        });*/
+        });
 
         auth = FirebaseAuth.getInstance();
         apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
@@ -1577,7 +1577,7 @@ public class Souscription extends AppCompatActivity
                             });
                         }
                         else{
-                            //progressDialogGoogle.dismiss();
+                            progressDialogGoogle.dismiss();
                             progressDialog.dismiss();
                             ////////////////////INITIALISATION DE LA BASE DE DONNEES LOCALE/////////////////////////
                             dbHandler = new DbHandler(getApplicationContext());

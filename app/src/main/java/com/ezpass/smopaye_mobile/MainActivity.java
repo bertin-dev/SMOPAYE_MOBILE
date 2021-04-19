@@ -331,11 +331,14 @@ public class MainActivity extends AppCompatActivity
 
 
                     //Listes des Cartes de l'utilisateur courant
-                    myCompte = dataUserCards.get(0).getCode_number();
-                    myId_card = dataUserCards.get(0).getId();
+                    if(!dataUserCards.isEmpty()){
+                        myCompte = dataUserCards.get(0).getCode_number();
+                        myId_card = dataUserCards.get(0).getId();
+                    }
 
 
-                    //Liste des Cartes de l'utilisateur courant
+
+                    //Liste des abonnements de l'utilisateur courant
                     for(int i=0; i<abonnement.size(); i++){
                         myAbon = abonnement.get(abonnement.size() - 1).getSubscription_type();
                         //myAbon = abonnement.get(i).getSubscription_type();
@@ -933,7 +936,8 @@ public class MainActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int which) {
                 MainActivity.super.onBackPressed();
                 if(exitGoogleFirebase){
-                    Exit();
+                    dialog.dismiss();
+                    FirebaseAuth.getInstance().signOut();
                 }
             }
         });
@@ -943,22 +947,25 @@ public class MainActivity extends AppCompatActivity
                 dialog.dismiss();
             }
         });
+
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
 
-    private void Exit() {
-        ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.deconnexion), getString(R.string.encours), true);
-        dialog.show();
+   /* private void Exit() {
+        ProgressDialog dialog2 = ProgressDialog.show(MainActivity.this, getString(R.string.deconnexion), getString(R.string.encours), true);
+        dialog2.show();
+
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
                 FirebaseAuth.getInstance().signOut();
-                dialog.dismiss();
+                dialog2.dismiss();
                 finish();
             }
         }, 2000); // 2000 milliseconds delay
-    }
+    }*/
 
     /*private void status(String status){
         HashMap<String, Object> hashMap = new HashMap<>();

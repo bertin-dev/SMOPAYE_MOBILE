@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;

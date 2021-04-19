@@ -35,6 +35,8 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
+
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -111,6 +113,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
@@ -500,6 +503,14 @@ public class DebitCarte extends AppCompatActivity
 
     @OnClick(R.id.btndebit)
     void debit(){
+
+        new MaterialTapTargetPrompt.Builder(this)
+                .setTarget(R.id.btndebit)
+                .setPrimaryText(R.string.debitCarte)
+                .setSecondaryText(R.string.MsgDescDebitCarte)
+                .setAnimationInterpolator(new FastOutSlowInInterpolator())
+                .setMaxTextWidth(R.dimen.tap_target_menu_max_width)
+                .show();
 
         if(!validateMontant(til_debitmontant)){
             FAILplayer.start();

@@ -1015,10 +1015,14 @@ public class FragmentCartes extends Fragment {
             public boolean onQueryTextSubmit(String query) {
 
                 if(TextUtils.isEmpty(query)){
-                    adapterUserCardList.filter("");
-                    listView.clearTextFilter();
+                    if (!allUserCard.isEmpty()) {
+                        adapterUserCardList.filter("");
+                        listView.clearTextFilter();
+                    }
                 } else {
-                    adapterUserCardList.filter(query);
+                    if (!allUserCard.isEmpty()) {
+                        adapterUserCardList.filter(query);
+                    }
                 }
                 return true;
             }
@@ -1027,10 +1031,14 @@ public class FragmentCartes extends Fragment {
             public boolean onQueryTextChange(String query) {
 
                 if(TextUtils.isEmpty(query)){
-                    adapterUserCardList.filter("");
-                    listView.clearTextFilter();
+                    if (!allUserCard.isEmpty()){
+                        adapterUserCardList.filter("");
+                        listView.clearTextFilter();
+                    }
                 } else {
-                    adapterUserCardList.filter(query);
+                    if (!allUserCard.isEmpty()) {
+                        adapterUserCardList.filter(query);
+                    }
                 }
                 return true;
             }

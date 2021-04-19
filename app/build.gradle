@@ -9,7 +9,7 @@ android {
         applicationId "com.ezpass.smopaye_mobile"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 65
+        versionCode 66
         versionName "1.3.1"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         multiDexEnabled true  //ADD THIS LINE
@@ -149,5 +149,9 @@ dependencies {
 
     //service permettant de gerer les graphes pour les statistiques (nécessite Androidx)
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    //library pour tutoriel ShowCaseView (TapTargetPrompt)
+    //implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.0'
+    implementation 'uk.co.samuelwall:material-tap-target-prompt:3.1.0'
 
 }

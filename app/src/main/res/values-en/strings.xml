@@ -680,4 +680,10 @@
     <string name="carte">CARD</string>
     <string name="comptes">ACCOUNT</string>
     <string name="searchByName">Search by Name</string>
+    <string name="FrontCard">Front of my Card</string>
+    <string name="BackCard">Back of my card</string>
+    <string name="myCodeQr">My QR CODE</string>
+    <string name="mySolution">My payment solution</string>
+    <string name="myDistributor">Smopaye Distributor</string>
+    <string name="myPoint">Smopaye points</string>
 </resources>

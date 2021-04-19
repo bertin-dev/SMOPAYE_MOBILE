@@ -1323,43 +1323,53 @@ public class EditProfil extends AppCompatActivity
                                 @Override
                                 public void DataIsUpdated() {
 
-                                    FirebaseUser userUpdate = FirebaseAuth.getInstance().getCurrentUser();
-                                    // Get auth credentials from the user for re-authentication
-                                    AuthCredential credential = EmailAuthProvider
-                                            .getCredential("sm" + numeroTel + "@smopaye.cm", numeroTel); // Current Login Credentials \\
-                                    // Prompt the user to re-provide their sign-in credentials
-                                    userUpdate.reauthenticate(credential)
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    Log.w(TAG, "User re-authenticated.");
-                                                    //Now change your email address \\
-                                                    //----------------Code for Changing Email Address----------\\
-                                                    FirebaseUser userUpdate1 = FirebaseAuth.getInstance().getCurrentUser();
-                                                    userUpdate1.updateEmail("sm" + telephone1 + "@smopaye.cm")
-                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<Void> task) {
-                                                                    if (task.isSuccessful()) {
-                                                                        Log.w(TAG, "User email address updated.");
-                                                                        successResponse(num_carte1, ResponseSmopayeServer);
-                                                                    } else {
-                                                                        progressDialog.dismiss();
-                                                                        Toast.makeText(EditProfil.this, getString(R.string.erreurSurvenue1), Toast.LENGTH_SHORT).show();
-                                                                        errorResponse(getString(R.string.erreurSurvenue1));
+                                    //verifier si le numéro de téléphone a été modifié
+                                    if(telephone1.equals(numeroTel.trim())){
+                                        progressDialog.dismiss();
+                                        Log.w(TAG, "User information updated.");
+                                        successResponse(num_carte1, ResponseSmopayeServer);
+                                    }
+                                    else {
+
+
+                                        FirebaseUser userUpdate = FirebaseAuth.getInstance().getCurrentUser();
+                                        // Get auth credentials from the user for re-authentication
+                                        AuthCredential credential = EmailAuthProvider
+                                                .getCredential("sm" + numeroTel + "@smopaye.cm", numeroTel); // Current Login Credentials \\
+                                        // Prompt the user to re-provide their sign-in credentials
+                                        userUpdate.reauthenticate(credential)
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        Log.w(TAG, "User re-authenticated.");
+                                                        //Now change your email address \\
+                                                        //----------------Code for Changing Email Address----------\\
+                                                        FirebaseUser userUpdate1 = FirebaseAuth.getInstance().getCurrentUser();
+                                                        userUpdate1.updateEmail("sm" + telephone1 + "@smopaye.cm")
+                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        if (task.isSuccessful()) {
+                                                                            Log.w(TAG, "User email address updated.");
+                                                                            successResponse(num_carte1, ResponseSmopayeServer);
+                                                                        } else {
+                                                                            progressDialog.dismiss();
+                                                                            Toast.makeText(EditProfil.this, getString(R.string.erreurSurvenue1), Toast.LENGTH_SHORT).show();
+                                                                            errorResponse(getString(R.string.erreurSurvenue1));
+                                                                        }
                                                                     }
-                                                                }
-                                                            })
-                                                            .addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            progressDialog.dismiss();
-                                                            Log.w(TAG, "onFailure-------------: " + e.getMessage());
-                                                        }
-                                                    });
-                                                    //----------------------------------------------------------\\
-                                                }
-                                            });
+                                                                })
+                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception e) {
+                                                                        progressDialog.dismiss();
+                                                                        Log.w(TAG, "onFailure-------------: " + e.getMessage());
+                                                                    }
+                                                                });
+                                                        //----------------------------------------------------------\\
+                                                    }
+                                                });
+                                    }
 
                                 }
 
@@ -1374,6 +1384,7 @@ public class EditProfil extends AppCompatActivity
                     }
                 }
                 else {
+                    progressDialog.dismiss();
                     Toast.makeText(EditProfil.this, "L'utilisateur ne possède pas de carte.", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -1447,7 +1458,10 @@ public class EditProfil extends AppCompatActivity
         shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
         dbHandler.insertUserDetails(getString(R.string.editProfil), msgSender, "0", R.drawable.ic_notifications_black_48dp, shortDateFormat.format(aujourdhui));
 
+        alertSuccessMsg(msgSender);
+    }
 
+    private void alertSuccessMsg(String msgSender) {
         AlertDialog.Builder build_error = new AlertDialog.Builder(EditProfil.this);
         View view = LayoutInflater.from(EditProfil.this).inflate(R.layout.alert_dialog_success, null);
         TextView title = (TextView) view.findViewById(R.id.title);
@@ -1460,13 +1474,13 @@ public class EditProfil extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(getApplicationContext(), Login.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 Animatoo.animateDiagonal(EditProfil.this);
-                //finish();
+                finish();
             }
         });
         build_error.setCancelable(false);
