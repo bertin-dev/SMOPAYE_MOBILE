@@ -686,4 +686,7 @@
     <string name="mySolution">My payment solution</string>
     <string name="myDistributor">Smopaye Distributor</string>
     <string name="myPoint">Smopaye points</string>
+    <string name="authorizationFailed">You do not have the required authorization</string>
+    <string name="id">ID</string>
+    <string name="rechargeEZPASS">E-ZPASS Recharge</string>
 </resources>

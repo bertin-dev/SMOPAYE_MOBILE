@@ -765,5 +765,8 @@
     <string name="myCodeQr">Mon CODE QR</string>
     <string name="mySolution">Ma solution de paiement</string>
     <string name="myDistributor">Distributeur Smopaye</string>
-    <string name="myPoint">Points Smopaye</string>z
+    <string name="myPoint">Points Smopaye</string>
+    <string name="authorizationFailed">Vous n\'avez pas l\'autorisation requise.</string>
+    <string name="id">ID</string>
+    <string name="rechargeEZPASS">Recharge E-ZPASS</string>
 </resources>

@@ -71,6 +71,141 @@
 
         </androidx.cardview.widget.CardView>
 
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="top"
+            android:foregroundGravity="top"
+            app:cardCornerRadius="25dp"
+            app:elevation="10dp"
+            app:cardElevation="10dp">
+
+            <LinearLayout
+                android:id="@+id/user_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:weightSum="100"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:orientation="horizontal">
+
+
+                <LinearLayout
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_weight="80"
+                    android:weightSum="100"
+                    android:layout_height="wrap_content">
+
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/myUser"
+                        android:layout_width="0dp"
+                        android:elevation="1dp"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerCrop"
+                        android:layout_gravity="center"
+                        android:layout_weight="25"
+                        android:src="@drawable/ic_baseline_person_pin_24" />
+
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="75"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/rep_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="left"
+                            android:paddingLeft="10dp"
+                            android:textStyle="bold"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/bgColorStandard"
+                            android:text="@string/id"
+                            android:textAllCaps="true"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/rep_nom"
+                            android:layout_below="@id/rep_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="left"
+                            android:paddingLeft="10dp"
+                            android:textStyle="bold"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/bgColorStandard"
+                            android:text="@string/nom"
+                            android:textAllCaps="true"
+                            android:textSize="14sp" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_below="@+id/rep_nom"
+                            android:paddingLeft="10dp"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/rep_numero"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="left"
+                                android:textStyle="bold"
+                                android:textAlignment="gravity"
+                                android:textColor="@color/bgColorStandard"
+                                android:text="@string/telephone"
+                                android:textSize="14sp" />
+
+                            <ImageView
+                                android:id="@+id/operator"
+                                android:src="@drawable/om"
+                                android:layout_toRightOf="@+id/rep_numero"
+                                android:scaleType="centerCrop"
+                                android:paddingLeft="10dp"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"/>
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:src="@drawable/ic_baseline_close_24"
+                        android:layout_width="match_parent"
+                        android:scaleType="centerCrop"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
         <LinearLayout
             android:id="@+id/authWindows"
             android:layout_width="match_parent"

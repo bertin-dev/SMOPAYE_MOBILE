@@ -26,6 +26,8 @@ import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -91,8 +93,10 @@ import com.telpo.tps550.api.util.StringUtil;
 
 import java.io.FileInputStream;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
@@ -309,7 +313,7 @@ public class FragmentCompte extends Fragment
      * */
     @OnClick(R.id.btnRecharge)
     void recharge(){
-        if(!validateCompte(til_numCartePropreCompte1) | !validateMontant(til_montant1)){
+        /*if(!validateCompte(til_numCartePropreCompte1) | !validateMontant(til_montant1)){
             return;
         }
 
@@ -326,8 +330,9 @@ public class FragmentCompte extends Fragment
                     .build();
             dialog2.show();
             recharge_step1(temp_account, montant, telephone);
-        }
+        }*/
 
+        BottomSheetDialogRecharge();
     }
 
 
@@ -1319,9 +1324,9 @@ public class FragmentCompte extends Fragment
 
                         while (cursor2.moveToNext()){
                             //get phone number
-                            String contactNumber = cursor2.getString(cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                            String contactNumber = cursor2.getString(cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)).trim();
                             //set details
-                            tie_numCartePropreCompte1.setText(contactNumber.trim());
+                            tie_numCartePropreCompte1.setText(contactNumber);
                             Toast.makeText(getActivity(), contactName, Toast.LENGTH_LONG).show();
                         }
                         cursor2.close();
@@ -1333,4 +1338,51 @@ public class FragmentCompte extends Fragment
 
         }
     }
+
+
+
+
+    private void BottomSheetDialogRecharge() {
+
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.BottomSheetDialogTheme);
+        View bottomSheetView = LayoutInflater.from(getContext())
+                .inflate(
+                        R.layout.layout_bottom_sheet_recharge,
+                        (LinearLayout)bottomSheetDialog.findViewById(R.id.bottomSheetContainerRecharge)
+                );
+        TextView amount_recharge = bottomSheetView.findViewById(R.id.amount_recharge);
+        TextView telephone_recharge = bottomSheetView.findViewById(R.id.telephone_recharge);
+        TextView accountEZPASS = bottomSheetView.findViewById(R.id.accountEZPASS);
+        TextView name_recharge = bottomSheetView.findViewById(R.id.name_recharge);
+        TextView account_number = bottomSheetView.findViewById(R.id.account_number);
+        TextView state_account = bottomSheetView.findViewById(R.id.state_account);
+        Button btnValidRecharge = bottomSheetView.findViewById(R.id.btnValidRecharge);
+        TextView subAccount = bottomSheetView.findViewById(R.id.proprietaire);
+
+
+        //compte
+        account_number.setText("");
+        state_account.setText("");
+        subAccount.setText("");
+
+        btnValidRecharge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), getString(R.string.fermeture), Toast.LENGTH_SHORT).show();
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            TextView tt = bottomSheetView.findViewById(R.id.showDetail);
+            if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+                tt.setBackground(ContextCompat.getDrawable(getContext(), R.color.colorPrimaryRed));
+                tt.setTextColor(getResources().getColor(R.color.white));
+            }
+        }*/
+
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
+    }
+
 }

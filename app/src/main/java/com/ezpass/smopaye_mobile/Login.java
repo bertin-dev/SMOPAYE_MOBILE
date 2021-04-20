@@ -1,5 +1,6 @@
 package com.ezpass.smopaye_mobile;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -19,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
@@ -26,10 +29,14 @@ import com.ezpass.smopaye_mobile.Manage_Register.SouscriptionUploadIMGidCard;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -111,43 +118,10 @@ import retrofit2.Response;
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
 public class Login extends AppCompatActivity
-        implements ModalDialog_PasswordForgot.ExampleDialogListener, ConnectivityReceiver.ConnectivityReceiverListener{
+        implements ModalDialog_PasswordForgot.ExampleDialogListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
     private static final String TAG = "Login";
-    private ProgressDialog dialog;
-    private AlertDialog.Builder build_error;
-    private ACProgressPie dialog2;
     String currentLanguage = (Locale.getDefault().getLanguage().contentEquals("fr")) ? "fr" : "en", currentLang;
-
-
-    /* Déclaration des objets liés à la communication avec le web service*/
-    private ApiService service;
-    private TokenManager tokenManager;
-    private AwesomeValidation validator;
-    private Call<AccessToken> call;
-    private Call<AllMyResponse> call2;
-
-
-    /*Déclaration des objets du service Google Firebase*/
-    private FirebaseAuth auth;
-    private DatabaseReference reference;
-    private String verificationId;
-    private FirebaseUser firebaseUser;
-    private APIService apiService;
-    private FirebaseUser fuser;
-
-    //BD LOCALE
-    private DbHandler dbHandler;
-    private Date aujourdhui;
-    private DateFormat shortDateFormat;
-
-
-    /*Déclaration des objets qui permettent d'écrire sur le fichier*/
-    private String tmp_number = "tmp_number";
-    private String fileContents;
-    private int c;
-    private String temp_number = "";
-
     /*Récupération des id des widgets xml avec la library ButterKnife*/
     @BindView(R.id.til_telephone)
     TextInputLayout til_telephone;
@@ -157,7 +131,6 @@ public class Login extends AppCompatActivity
     TextInputEditText tie_telephone;
     @BindView(R.id.tie_password)
     TextInputEditText tie_password;
-
     @BindView(R.id.authWindows)
     LinearLayout authWindows;
     @BindView(R.id.internetIndisponible)
@@ -168,15 +141,9 @@ public class Login extends AppCompatActivity
     TextView titleNetworkLimited;
     @BindView(R.id.msgNetworkLimited)
     TextView msgNetworkLimited;
-
-    //changement de couleur du theme
-    private Constant constant;
-    private SharedPreferences.Editor editor;
-    private SharedPreferences app_preferences;
     int appTheme;
     int themeColor;
     int appColor;
-
     @BindView(R.id.titleLogin)
     TextView titleLogin;
     @BindView(R.id.btnlogin)
@@ -185,7 +152,72 @@ public class Login extends AppCompatActivity
     Button btnAutoRegister1;
     @BindView(R.id.txt_passwordForgot)
     TextView txt_passwordForgot;
+    private ProgressDialog dialog;
+    private AlertDialog.Builder build_error;
+    private ACProgressPie dialog2;
+    /* Déclaration des objets liés à la communication avec le web service*/
+    private ApiService service;
+    private TokenManager tokenManager;
+    private AwesomeValidation validator;
+    private Call<AccessToken> call;
+    private Call<AllMyResponse> call2;
+    /*Déclaration des objets du service Google Firebase*/
+    private FirebaseAuth auth;
+    private DatabaseReference reference;
+    private String verificationId;
+    private FirebaseUser firebaseUser;
+    private APIService apiService;
+    private FirebaseUser fuser;
+    //BD LOCALE
+    private DbHandler dbHandler;
+    private Date aujourdhui;
+    private DateFormat shortDateFormat;
+    /*Déclaration des objets qui permettent d'écrire sur le fichier*/
+    private String tmp_number = "tmp_number";
+    private String fileContents;
+    private int c;
+    private String temp_number = "";
+    //changement de couleur du theme
+    private Constant constant;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences app_preferences;
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks
+            mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
+        @Override
+        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+            super.onCodeSent(s, forceResendingToken);
+            verificationId = s;
+        }
+
+        @Override
+        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+            String code = phoneAuthCredential.getSmsCode();
+            if (code != null) {
+                //inputCodeSMS.setText(code);
+                verifyCode(code);
+            }
+        }
+
+        @Override
+        public void onVerificationFailed(FirebaseException e) {
+            Toast.makeText(Login.this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    };
+
+
+    static final int PERMISSION_READ_STATE = 123;
+    private String strPhoneType = "";
+
+    public static boolean isTranslucentNavigationBar(Activity activity) {
+        Window w = activity.getWindow();
+        WindowManager.LayoutParams lp = w.getAttributes();
+        int flags = lp.flags;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+                && (flags & WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+                == WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
+
+    }
 
     @Override
     protected void onStart() {
@@ -196,16 +228,35 @@ public class Login extends AppCompatActivity
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         //langue par défaut
         currentLanguage = getIntent().getStringExtra(currentLang);
+
+
+        //Permission pour avoir les infos sur le telehone de l'utilisateur
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+        if(permissionCheck == PackageManager.PERMISSION_GRANTED){
+
+            // Fetching the stored data
+            // from the SharedPreference
+            SharedPreferences sh = getSharedPreferences("MyPref", MODE_PRIVATE);
+
+            if(sh.getString("IMEINumber", null) == null || sh.getString("SIMSerialNumber", null) == null){
+                Toast.makeText(this, "0", Toast.LENGTH_SHORT).show();
+                MyTelephoneManager();
+            }else {
+                Toast.makeText(this, "1", Toast.LENGTH_SHORT).show();
+            }
+        }else {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_PHONE_STATE}, PERMISSION_READ_STATE);
+        }
     }
 
     /**
+     * @param savedInstanceState Callback method onCreate() she using for the started activity
      * @author bertin mounok
      * @powered by smopaye sarl
      * @Copyright 2019-2020
-     * @param savedInstanceState Callback method onCreate() she using for the started activity
-     * @since 2019
      * @version 1.2.7
-     * */
+     * @since 2019
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -251,7 +302,7 @@ public class Login extends AppCompatActivity
             titleLogin.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder));
         }*/
 
-        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+        if (Constant.color == getResources().getColor(R.color.colorPrimaryRed)) {
             titleLogin.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
             titleLogin.setBackground(ContextCompat.getDrawable(this, R.drawable.edittextborder_red));
             txt_passwordForgot.setTextColor(getResources().getColor(R.color.colorPrimaryRed));
@@ -277,7 +328,7 @@ public class Login extends AppCompatActivity
             //setTheme(R.style.colorPrimaryDark);
             //getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
-        } else{
+        } else {
             //getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDark));
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
@@ -290,24 +341,24 @@ public class Login extends AppCompatActivity
         themeColor = appColor;
         constant.color = appColor;
 
-        if (themeColor == 0){
+        if (themeColor == 0) {
             setTheme(Constant.theme);
-        }else if (appTheme == 0){
+        } else if (appTheme == 0) {
             setTheme(Constant.theme);
-        }else{
+        } else {
             setTheme(appTheme);
         }
     }
 
-
     /**
      * login() méthode permettant d'éffectuer la requête d'authentification vers le serveur smopaye et google firebase
+     *
      * @since 2019
-     * */
+     */
     @OnClick(R.id.btnlogin)
-    void login(){
+    void login() {
 
-        if(!validateTelephone(til_telephone) | !validatePassword(til_password)){
+        if (!validateTelephone(til_telephone) | !validatePassword(til_password)) {
             return;
         }
 
@@ -316,7 +367,7 @@ public class Login extends AppCompatActivity
         validator.clear();
 
         /*Action à poursuivre si tous les champs sont remplis*/
-        if(validator.validate()){
+        if (validator.validate()) {
 
             dialog2 = new ACProgressPie.Builder(this)
                     .ringColor(Color.WHITE)
@@ -332,15 +383,16 @@ public class Login extends AppCompatActivity
 
     /**
      * checkNetworkConnectionStatus() méthode permettant de verifier si la connexion existe ou si le serveur est accessible
+     *
      * @since 2019
-     * */
+     */
     @OnClick(R.id.btnReessayer)
     void checkNetworkConnectionStatus() {
         boolean isConnected = ConnectivityReceiver.isConnected();
 
         showSnackBar(isConnected);
 
-        if(isConnected){
+        if (isConnected) {
             changeActivity();
         }
     }
@@ -348,7 +400,7 @@ public class Login extends AppCompatActivity
     private void changeActivity() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
-        if(activeInfo != null && activeInfo.isConnected()){
+        if (activeInfo != null && activeInfo.isConnected()) {
             dialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
             dialog.show();
             Handler handler = new Handler();
@@ -361,7 +413,7 @@ public class Login extends AppCompatActivity
                 }
             }, 2000); // 2000 milliseconds delay
 
-        } else{
+        } else {
             dialog.dismiss();
             authWindows.setVisibility(View.GONE);
             internetIndisponible.setVisibility(View.VISIBLE);
@@ -375,21 +427,21 @@ public class Login extends AppCompatActivity
         Snackbar snackbar;
         View view;
 
-        if(isConnected){
+        if (isConnected) {
             message = getString(R.string.networkOnline);
             snackbar = Snackbar.make(findViewById(R.id.login), message, Snackbar.LENGTH_LONG);
             view = snackbar.getView();
             TextView textView = view.findViewById(com.google.android.material.R.id.snackbar_text);
             textView.setTextColor(color);
-            if(Constant.color == getResources().getColor(R.color.colorPrimaryRed))
-            textView.setBackgroundResource(R.color.colorPrimaryRed);
+            if (Constant.color == getResources().getColor(R.color.colorPrimaryRed))
+                textView.setBackgroundResource(R.color.colorPrimaryRed);
             else
                 textView.setBackgroundColor(Color.parseColor("#039BE5"));
             textView.setGravity(Gravity.CENTER);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
             }
-        } else{
+        } else {
             message = getString(R.string.networkOffline);
             snackbar = Snackbar.make(findViewById(R.id.login), message, Snackbar.LENGTH_INDEFINITE);
             view = snackbar.getView();
@@ -402,13 +454,13 @@ public class Login extends AppCompatActivity
         }
 
 
-        if (isTranslucentNavigationBar(this)){
+        if (isTranslucentNavigationBar(this)) {
             final FrameLayout snackBarView = (FrameLayout) snackbar.getView();
             final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackBarView.getChildAt(0).getLayoutParams();
             params.setMargins(params.leftMargin,
                     params.topMargin,
                     params.rightMargin,
-                    params.bottomMargin );
+                    params.bottomMargin);
 
             snackBarView.getChildAt(0).setLayoutParams(params);
         }
@@ -416,16 +468,6 @@ public class Login extends AppCompatActivity
         snackbar.show();
     }
 
-
-    public static boolean isTranslucentNavigationBar(Activity activity) {
-        Window w = activity.getWindow();
-        WindowManager.LayoutParams lp = w.getAttributes();
-        int flags = lp.flags;
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
-                && (flags & WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
-                == WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
-
-    }
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         /*if(!isConnected){
@@ -451,16 +493,17 @@ public class Login extends AppCompatActivity
     /**
      * resetPasswordOpenDialog() méthode permettant d'ouvrir une boite de dialogue afin que l'utilisateur insert les éléments clés de son identification afin
      * d'reinitialiser son mot de passe
+     *
      * @since 2020
-     * */
+     */
     @OnClick(R.id.txt_passwordForgot)
-    void resetPasswordOpenDialog(){
+    void resetPasswordOpenDialog() {
         ModalDialog_PasswordForgot exampleDialog = new ModalDialog_PasswordForgot();
         exampleDialog.show(getSupportFragmentManager(), "example dialog");
     }
 
     @OnClick(R.id.btnAutoRegister)
-    void autoRegister(){
+    void autoRegister() {
         Intent intent = new Intent(getApplicationContext(), Souscription_User_AutoEnreg.class);
         startActivity(intent);
     }
@@ -488,18 +531,17 @@ public class Login extends AppCompatActivity
             @Override
             public void onResponse(Call<AllMyResponse> call, Response<AllMyResponse> response) {
                 dialog2.dismiss();
-                Log.w(TAG, "SMOPAYE_SERVER onResponse " +response);
+                Log.w(TAG, "SMOPAYE_SERVER onResponse " + response);
 
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     //tokenManager.saveToken(response.body());
                     assert response.body() != null;
-                    if(response.body().isSuccess()){
+                    if (response.body().isSuccess()) {
                         successResponse(tel, response.body().getMessage()); //ID CARTE A RECUPERER DANS LE WEB SERVICE
-                    } else{
+                    } else {
                         errorResponse(response.body().getMessage());
                     }
-                }
-                else{
+                } else {
                    /* if(response.code() == 422){
                         handleErrors(response.errorBody());
                         //errorResponse(response.message());
@@ -525,13 +567,13 @@ public class Login extends AppCompatActivity
                 /*Vérification si la connexion internet accessible*/
                 ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
-                if(!(activeInfo != null && activeInfo.isConnected())){
+                if (!(activeInfo != null && activeInfo.isConnected())) {
                     authWindows.setVisibility(View.GONE);
                     internetIndisponible.setVisibility(View.VISIBLE);
                     Toast.makeText(Login.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
                 }
                 /*Vérification si le serveur est inaccessible*/
-                else{
+                else {
                     authWindows.setVisibility(View.GONE);
                     internetIndisponible.setVisibility(View.VISIBLE);
                     conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
@@ -546,10 +588,10 @@ public class Login extends AppCompatActivity
 
     /**
      * @param numero1 soumission du numéro de téléphone de l'utilisateur qui essaie de se connecter
-     * @param psw1 soumission du mot de passe de l'utilisateur
+     * @param psw1    soumission du mot de passe de l'utilisateur
      * @throws t
      * @since 2020
-     * */
+     */
     private void submitDataInSmopayeServer(String numero1, String psw1) {
 
         call = service.login(numero1, psw1, "Cnqactz7vnCGKBB7E12yN+17a+2Q/+d7PTkv1jOgcus=");
@@ -557,15 +599,15 @@ public class Login extends AppCompatActivity
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
                 dialog2.dismiss();
-                Log.w(TAG, "SMOPAYE_SERVER onResponse " +response);
+                Log.w(TAG, "SMOPAYE_SERVER onResponse " + response);
 
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
 
                     writeTempNumberInFile();
                     assert response.body() != null;
                     tokenManager.saveToken(response.body());
 
-                    if(firebaseUser != null){
+                    if (firebaseUser != null) {
                         // ouverture d'une session
                         Toast.makeText(getApplicationContext(), getString(R.string.ouvertureEncours), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -574,20 +616,20 @@ public class Login extends AppCompatActivity
                         startActivity(intent);
                         Animatoo.animateDiagonal(Login.this);
                         finish();
-                    } else{
+                    } else {
                         submitDataInGoogleFirebaseServer("sm" + numero1 + "@smopaye.cm", numero1);
                     }
 
 
-                } else{
+                } else {
 
                     ApiError apiError = Utils_manageError.convertErrors(response.errorBody());
                     Toast.makeText(Login.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
 
-                    if(response.code() == 422){
+                    if (response.code() == 422) {
                         handleErrors(response.errorBody());
                         Log.w(TAG, "onResponse: " + response.errorBody());
-                    } else{
+                    } else {
                         Log.w(TAG, "onResponse: " + response.errorBody());
                         errorResponse(apiError.getMessage());
                     }
@@ -603,13 +645,13 @@ public class Login extends AppCompatActivity
                 /*Vérification si la connexion internet accessible*/
                 ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
-                if(!(activeInfo != null && activeInfo.isConnected())){
+                if (!(activeInfo != null && activeInfo.isConnected())) {
                     authWindows.setVisibility(View.GONE);
                     internetIndisponible.setVisibility(View.VISIBLE);
                     Toast.makeText(Login.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
                 }
                 /*Vérification si le serveur est inaccessible*/
-                else{
+                else {
                     authWindows.setVisibility(View.GONE);
                     internetIndisponible.setVisibility(View.VISIBLE);
                     conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
@@ -649,7 +691,7 @@ public class Login extends AppCompatActivity
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                         User user = userSnapshot.getValue(User.class);
                         if (user.getTel().equals(telephone)) {
@@ -659,8 +701,7 @@ public class Login extends AppCompatActivity
                             Toast.makeText(Login.this, getString(R.string.numeroInexistant), Toast.LENGTH_SHORT).show();
                         }
                     }
-                }
-                else{
+                } else {
                     Toast.makeText(Login.this, getString(R.string.impossibleSendNotification), Toast.LENGTH_SHORT).show();
                 }
 
@@ -694,8 +735,8 @@ public class Login extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(Login.this, Demarrage.class);
-                 startActivity(intent);
-                 finish();
+                startActivity(intent);
+                finish();
             }
         });
         build_error.setCancelable(false);
@@ -708,7 +749,7 @@ public class Login extends AppCompatActivity
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
 
                             /* ouverture d'une session */
                             Toast.makeText(getApplicationContext(), getString(R.string.ouvertureEncours), Toast.LENGTH_SHORT).show();
@@ -717,54 +758,52 @@ public class Login extends AppCompatActivity
                             intent.putExtra("telephone", tel1);
                             startActivity(intent);
                             finish();
-                        }
-                        else
-                        {
+                        } else {
                             Toast.makeText(Login.this, getString(R.string.echecAuthenfication), Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Google Firebase server onFailure" + e.getMessage());
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Google Firebase server onFailure" + e.getMessage());
 
-                /*Vérification si la connexion internet accessible*/
-                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
-                if(!(activeInfo != null && activeInfo.isConnected())){
-                    authWindows.setVisibility(View.GONE);
-                    internetIndisponible.setVisibility(View.VISIBLE);
-                    Toast.makeText(Login.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
-                }
-                /*Vérification si le serveur est inaccessible*/
-                else{
-                    authWindows.setVisibility(View.GONE);
-                    internetIndisponible.setVisibility(View.VISIBLE);
-                    conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
-                    titleNetworkLimited.setText(getString(R.string.connexionLimite));
-                    //msgNetworkLimited.setText();
-                    Toast.makeText(Login.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
-                }
+                        /*Vérification si la connexion internet accessible*/
+                        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                        NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
+                        if (!(activeInfo != null && activeInfo.isConnected())) {
+                            authWindows.setVisibility(View.GONE);
+                            internetIndisponible.setVisibility(View.VISIBLE);
+                            Toast.makeText(Login.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
+                        }
+                        /*Vérification si le serveur est inaccessible*/
+                        else {
+                            authWindows.setVisibility(View.GONE);
+                            internetIndisponible.setVisibility(View.VISIBLE);
+                            conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
+                            titleNetworkLimited.setText(getString(R.string.connexionLimite));
+                            //msgNetworkLimited.setText();
+                            Toast.makeText(Login.this, getString(R.string.connexionLimite), Toast.LENGTH_SHORT).show();
+                        }
 
-            }
-        });
+                    }
+                });
     }
-
 
     /**
      * validateTelephone() méthode permettant de verifier si le mot de passe inséré est valide
+     *
      * @param til_password1
      * @return Boolean
      * @since 2019
-     * */
-    private boolean validatePassword(TextInputLayout til_password1){
+     */
+    private boolean validatePassword(TextInputLayout til_password1) {
         String psw = til_password1.getEditText().getText().toString().trim();
-        if(psw.isEmpty()){
+        if (psw.isEmpty()) {
             til_password1.setError(getString(R.string.insererPassword));
             til_password1.requestFocus();
             return false;
-        } else if(psw.length() < 5){
+        } else if (psw.length() < 5) {
             til_password1.setError(getString(R.string.passwordCourt));
             til_password1.requestFocus();
             return false;
@@ -774,20 +813,20 @@ public class Login extends AppCompatActivity
         }
     }
 
-
     /**
      * validateTelephone() méthode permettant de verifier si le numéro de téléphone inséré est valide
+     *
      * @param til_telephone1
      * @return Boolean
      * @since 2019
-     * */
-    private Boolean validateTelephone(TextInputLayout til_telephone1){
+     */
+    private Boolean validateTelephone(TextInputLayout til_telephone1) {
         String myTel = til_telephone1.getEditText().getText().toString().trim();
-        if(myTel.isEmpty()){
+        if (myTel.isEmpty()) {
             til_telephone1.setError(getString(R.string.insererTelephone));
             til_telephone1.requestFocus();
             return false;
-        } else if(myTel.length() < 9){
+        } else if (myTel.length() < 9) {
             til_telephone1.setError(getString(R.string.telephoneCourt));
             til_telephone1.requestFocus();
             return false;
@@ -797,63 +836,61 @@ public class Login extends AppCompatActivity
         }
     }
 
-
-
     /**
      * setupRulesValidatForm() méthode permettant de changer la couleur des champs de saisie en cas d'érreur et vérifi si les champs de saisie sont vides
+     *
      * @since 2020
-     * */
-    private void setupRulesValidatForm(){
+     */
+    private void setupRulesValidatForm() {
 
         //coloration des champs lorsqu'il y a erreur
-        til_telephone.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
-        til_password.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135,206,250)));
+        til_telephone.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135, 206, 250)));
+        til_password.setErrorTextColor(ColorStateList.valueOf(Color.rgb(135, 206, 250)));
 
         validator.addValidation(this, R.id.til_telephone, RegexTemplate.NOT_EMPTY, R.string.verifierNumero);
         validator.addValidation(this, R.id.til_password, RegexTemplate.NOT_EMPTY, R.string.insererPassword);
     }
 
-
     /**
      * handleErrors() méthode permettant de boucler sur toutes les erreurs trouvées dans les données retournées par l'API Rest
+     *
      * @param responseBody
      * @since 2020
-     * */
-    private void handleErrors(ResponseBody responseBody){
+     */
+    private void handleErrors(ResponseBody responseBody) {
 
         ApiError apiError = Utils_manageError.convertErrors(responseBody);
-        for(Map.Entry<String, List<String>> error: apiError.getErrors().entrySet()){
+        for (Map.Entry<String, List<String>> error : apiError.getErrors().entrySet()) {
 
-            if(error.getKey().equals("phone")){
+            if (error.getKey().equals("phone")) {
                 til_telephone.setError(error.getValue().get(0));
             }
 
-            if(error.getKey().equals("password")){
+            if (error.getKey().equals("password")) {
                 til_password.setError(error.getValue().get(0));
             }
         }
 
     }
 
-
     /**
      * readTempNumberInFile() methodes permettant la lecture du contenu du fichier tmp_number
      * et insertion de celui-ci dans le tie_telephone à travers un setText()
+     *
+     * @throws e
      * @since 2020
-     * @exception e
-     * */
+     */
     private void readTempNumberInFile() {
-        try{
+        try {
             FileInputStream fInTel = openFileInput(tmp_number);
-            while ((c = fInTel.read()) != -1){
-                temp_number = temp_number + Character.toString((char)c);
+            while ((c = fInTel.read()) != -1) {
+                temp_number = temp_number + Character.toString((char) c);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Log.w(TAG, e.getMessage());
             e.printStackTrace();
         }
-        if(!temp_number.equalsIgnoreCase("")){
+        if (!temp_number.equalsIgnoreCase("")) {
             tie_telephone.setText(temp_number);
         }
     }
@@ -861,58 +898,57 @@ public class Login extends AppCompatActivity
     /**
      * writeTempNumberInFile() methodes permettant l'écriture du numéro de téléphone dans le fichier tmp_number
      * et insertion de celui-ci dans le tie_telephone
+     *
+     * @throws e
      * @since 2020
-     * @exception e
-     * */
-    private void writeTempNumberInFile(){
+     */
+    private void writeTempNumberInFile() {
         fileContents = til_telephone.getEditText().getText().toString().trim();
-        try{
+        try {
             //ecrire du numero de telephone
             FileOutputStream fOut = openFileOutput(tmp_number, MODE_PRIVATE);
             fOut.write(fileContents.getBytes());
             fOut.close();
             File fileDir = new File(getFilesDir(), tmp_number);
             //Toast.makeText(getBaseContext(), "File Saved at " + fileDir, Toast.LENGTH_LONG).show();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
      * readNumberAfterUpdate() methode permettant de lire le nouveau numéro de téléphone provenant du module modification du compte
+     *
      * @since 2019
      */
-    private void readNumberAfterUpdate(){
+    private void readNumberAfterUpdate() {
         //numéro provenant de la modification du compte
         Intent in = getIntent();
-        if(in.getStringExtra("telephone") != null)
+        if (in.getStringExtra("telephone") != null)
             til_telephone.getEditText().setText(in.getStringExtra("telephone"));
     }
 
-
-
     /**
      * onDestroy() methode Callback qui permet de détruire une activity et libérer l'espace mémoire
+     *
      * @since 2020
      */
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        if(call != null){
+        if (call != null) {
             call.cancel();
             call = null;
         }
 
-        if(call2 != null){
+        if (call2 != null) {
             call2.cancel();
             call2 = null;
         }
     }
 
-
-
-    private void RemoteNotification(final String receiver, final String username, final String title, final String message, final String statut_notif){
+    private void RemoteNotification(final String receiver, final String username, final String title, final String message, final String statut_notif) {
 
         //service google firebase
         apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
@@ -923,7 +959,7 @@ public class Login extends AppCompatActivity
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Token token = snapshot.getValue(Token.class);
 
                     Data data = new Data(fuser.getUid(), R.mipmap.logo_official, username + ": " + message, title, receiver, statut_notif);
@@ -932,8 +968,8 @@ public class Login extends AppCompatActivity
                             .enqueue(new Callback<MyResponse>() {
                                 @Override
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                                    if(response.code() == 200){
-                                        if(response.body().success != 1){
+                                    if (response.code() == 200) {
+                                        if (response.body().success != 1) {
                                             Toast.makeText(Login.this, getString(R.string.echoue), Toast.LENGTH_SHORT).show();
                                         }
                                     }
@@ -954,8 +990,7 @@ public class Login extends AppCompatActivity
         });
     }
 
-
-    public void LocalNotification(String titles, String subtitles){
+    public void LocalNotification(String titles, String subtitles) {
 
         ///////////////DEBUT NOTIFICATIONS///////////////////////////////
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
@@ -986,9 +1021,9 @@ public class Login extends AppCompatActivity
         ////////////////////////////////////FIN NOTIFICATIONS/////////////////////
     }
 
-
     /**
      * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     *
      * @param newBase
      * @since 2020
      */
@@ -996,7 +1031,6 @@ public class Login extends AppCompatActivity
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase));
     }
-
 
     @Override
     public void onBackPressed() {
@@ -1026,7 +1060,6 @@ public class Login extends AppCompatActivity
         alertDialog.show();
     }
 
-
     private void Exit() {
         ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.deconnexion), getString(R.string.encours), true);
         dialog.show();
@@ -1041,12 +1074,11 @@ public class Login extends AppCompatActivity
 
     /**
      * verifyCode(String code) permet de verifier le code entrer par l'utilisateur avec google firebase. Mais je ne l'utilise pas
+     *
      * @param code
      * @since 2019
      */
     /* -----------------------------------------------AUTHENTIFICATION VIA NUMERO DE TELEPHONE SOUS GOOGLE FIREBASE --(PAS UTILISE)-----------------------------------*/
-
-
     private void verifyCode(String code) {
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
         signInWithCredential(credential);
@@ -1054,6 +1086,7 @@ public class Login extends AppCompatActivity
 
     /**
      * signInWithCredential(String code) d'enregistrer un numéro de téléphone au service google firebase. Mais je ne l'utilise pas
+     *
      * @param credential
      * @since 2019
      */
@@ -1114,6 +1147,7 @@ public class Login extends AppCompatActivity
 
     /**
      * sendVerificationCode(String code) permet d'envoyer le code de verification par sms à l'utilisateur avec google firebase. Mais je ne l'utilise pas
+     *
      * @param number
      * @since 2019
      */
@@ -1129,29 +1163,67 @@ public class Login extends AppCompatActivity
 
     }
 
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks
-            mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+    /*-------------------------------------------------------------------------------FIN----------------------------------------------------------------*/
 
-        @Override
-        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-            super.onCodeSent(s, forceResendingToken);
-            verificationId = s;
-        }
 
-        @Override
-        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-            String code = phoneAuthCredential.getSmsCode();
-            if (code != null) {
-                //inputCodeSMS.setText(code);
-                verifyCode(code);
+
+    /*-------------------------------------------------------------------------------DETAILS PHONE USER----------------------------------------------------------------*/
+    private void MyTelephoneManager() {
+
+        SharedPreferences pref = getSharedPreferences("MyPref", MODE_PRIVATE); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+
+            TelephonyManager manager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            int phoneType = manager.getPhoneType();
+            switch (phoneType){
+                case (TelephonyManager.PHONE_TYPE_CDMA):
+                    strPhoneType = "CDMA";
+                    break;
+
+                case (TelephonyManager.PHONE_TYPE_GSM):
+                    strPhoneType = "GSM";
+                    break;
+                case (TelephonyManager.PHONE_TYPE_NONE):
+                    strPhoneType = "NONE";
+                    break;
+            }
+
+            boolean isRoaming = manager.isNetworkRoaming();
+            String PhoneType = strPhoneType;
+            String IMEINumber = manager.getDeviceId();
+            String subscriberID = manager.getDeviceId();
+            String SIMSerialNumber = manager.getSimSerialNumber();
+            String networkCountryISO = manager.getNetworkCountryIso();
+            String SIMCountryISO = manager.getSimCountryIso();
+            String softwareVersion = manager.getDeviceSoftwareVersion();
+            String voiceMailNumber = manager.getVoiceMailNumber();
+
+
+            // Storing data
+            editor.putString("key_PhoneType", PhoneType);
+            editor.putString("key_IMEINumber", IMEINumber);
+            editor.putString("key_subscriberID", subscriberID);
+            editor.putString("key_SIMSerialNumber", SIMSerialNumber);
+            editor.putString("key_networkCountryISO", networkCountryISO);
+            editor.putString("key_SIMCountryISO", SIMCountryISO);
+            editor.putString("key_softwareVersion", softwareVersion);
+            editor.putString("key_voiceMailNumber", voiceMailNumber);
+            editor.putBoolean("key_isRoaming", isRoaming);
+            editor.apply();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSION_READ_STATE) {
+            if (grantResults.length >= 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                MyTelephoneManager();
+            } else {
+                Toast.makeText(this, getString(R.string.authorizationFailed), Toast.LENGTH_SHORT).show();
             }
         }
 
-        @Override
-        public void onVerificationFailed(FirebaseException e) {
-            Toast.makeText(Login.this, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-    };
 
-    /*-------------------------------------------------------------------------------FIN----------------------------------------------------------------*/
+    }
 }
