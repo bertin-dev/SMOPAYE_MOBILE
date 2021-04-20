@@ -19,13 +19,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.ezpass.smopaye_mobile.Profil_user.Entreprise;
+import com.ezpass.smopaye_mobile.Provider.PrefManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -33,6 +36,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -102,56 +106,10 @@ import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ConnectivityReceiver.ConnectivityReceiverListener{
+        implements NavigationView.OnNavigationItemSelectedListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
 
     private static final String TAG = "MainActivity";
-    private ProgressDialog progressDialog;
-    private BottomBar bottomBar;
-    private DbHandler db;
-    private BottomBarTab nearby;
-    private Dialog myDialog;
-    private ACProgressFlower dialog;
-
-    private TextView txt_role, txt_profile, txtclose, txt_telephone;
-
-    private String profil_complet = "";
-    private String session = ""; // Accepteur, Administrateur, Utilisateur, Agent
-    private String etat = ""; // Actif, Inactif, Offline
-    private String myPhone = ""; //694048925
-    private String myAbon = ""; //hebdomadaire, service, mensuel
-    private String myCompte = ""; // BDAADA51
-    private String myId_card = ""; //1;
-    private String myCategorie = "";
-    private String myPersonalAccountNumber = "";
-    private String myPersonalAccountState = "";
-    private String myPersonalAccountAmount = "";
-    private String myPersonalAccountId = "";
-    /*Déclaration des objets qui permettent d'écrire sur le fichier*/
-    private String tmp_card_number = "tmp_card_number";
-    private String telephone1 = "";
-    private String tmp_card_id = "tmp_card_id";
-    private String tmp_account = "tmp_account";
-
-    //web service
-    private ApiService service;
-    private TokenManager tokenManager;
-    private Call<DataUser> call;
-
-    //service google firebase
-    private FirebaseUser fuser;
-    //DatabaseReference reference;
-
-    //update account
-    private String nom;
-    private String prenom;
-    private String numeroTel;
-    private String cni;
-    private String adresse;
-    private String numero_card;
-    private String idUser;
-
-
     @BindView(R.id.authWindows)
     LinearLayout authWindows;
     @BindView(R.id.internetIndisponible)
@@ -162,18 +120,54 @@ public class MainActivity extends AppCompatActivity
     TextView titleNetworkLimited;
     @BindView(R.id.msgNetworkLimited)
     TextView msgNetworkLimited;
-
-
     //changement de couleur du theme
     Constant constant;
-    SharedPreferences.Editor editor;
     SharedPreferences app_preferences;
     int appTheme;
     int themeColor;
     int appColor;
-
+    private ProgressDialog progressDialog;
+    private BottomBar bottomBar;
+    private DbHandler db;
+    private BottomBarTab nearby;
+    private Dialog myDialog;
+    private ACProgressFlower dialog;
+    private TextView txt_role, txt_profile, txtclose, txt_telephone;
+    private String profil_complet = "";
+    private String session = ""; // Accepteur, Administrateur, Utilisateur, Agent
+    private String etat = ""; // Actif, Inactif, Offline
+    private String myPhone = ""; //694048925
+    private String myAbon = ""; //hebdomadaire, service, mensuel
+    private String myCompte = ""; // BDAADA51
+    private String myId_card = ""; //1;
+    private String myCategorie = "";
+    private String myPersonalAccountNumber = "";
+    //DatabaseReference reference;
+    private String myPersonalAccountState = "";
+    private String myPersonalAccountAmount = "";
+    private String myPersonalAccountId = "";
+    /*Déclaration des objets qui permettent d'écrire sur le fichier*/
+    private String tmp_card_number = "tmp_card_number";
+    private String telephone1 = "";
+    private String tmp_card_id = "tmp_card_id";
+    private String tmp_account = "tmp_account";
+    //web service
+    private ApiService service;
+    private TokenManager tokenManager;
+    private Call<DataUser> call;
+    //service google firebase
+    private FirebaseUser fuser;
+    //update account
+    private String nom;
+    private String prenom;
+    private String numeroTel;
+    private String cni;
+    private String adresse;
+    private String numero_card;
+    private String idUser;
     private int bonus;
     private int points;
+    private PrefManager prf;
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -215,7 +209,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         toolbar.setBackgroundColor(Constant.color);
-
+        prf = new PrefManager(getApplicationContext());
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,9 +231,9 @@ public class MainActivity extends AppCompatActivity
         txt_profile = (TextView) header.findViewById(R.id.txt_profile);
         txt_telephone = (TextView) header.findViewById(R.id.txt_number);
 
-        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed))
+        if (Constant.color == getResources().getColor(R.color.colorPrimaryRed))
             header.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryRed));
-         else
+        else
             header.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
 
 
@@ -254,7 +248,6 @@ public class MainActivity extends AppCompatActivity
         progressDialog = new ProgressDialog(this);
 
 
-
         Intent intent = getIntent();
         telephone1 = intent.getStringExtra("telephone");
 
@@ -263,7 +256,7 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         //verification si on a pas le token dans les sharepreferences alors on retourne vers le login activity
-        if(tokenManager.getToken() == null){
+        if (tokenManager.getToken() == null) {
             startActivity(new Intent(MainActivity.this, Login.class));
             finish();
         }
@@ -279,10 +272,10 @@ public class MainActivity extends AppCompatActivity
             @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(Call<DataUser> call, Response<DataUser> response) {
-                Log.w(TAG, "SMOPAYE_SERVER onResponse " +response);
+                Log.w(TAG, "SMOPAYE_SERVER onResponse " + response);
 
 
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
 
                     assert response.body() != null;
                     Fragment selectedFragment1 = null;
@@ -308,7 +301,7 @@ public class MainActivity extends AppCompatActivity
 
 
                     //utilisateur ou entreprise courante
-                    if(particulier.isEmpty()){
+                    if (particulier.isEmpty()) {
                         profil_complet = (entreprise.get(0).getRaison_social()).toUpperCase();
                         nom = entreprise.get(0).getRaison_social();
                         prenom = "";
@@ -331,25 +324,24 @@ public class MainActivity extends AppCompatActivity
 
 
                     //Listes des Cartes de l'utilisateur courant
-                    if(!dataUserCards.isEmpty()){
+                    if (!dataUserCards.isEmpty()) {
                         myCompte = dataUserCards.get(0).getCode_number();
                         myId_card = dataUserCards.get(0).getId();
                     }
 
 
-
                     //Liste des abonnements de l'utilisateur courant
-                    for(int i=0; i<abonnement.size(); i++){
+                    for (int i = 0; i < abonnement.size(); i++) {
                         myAbon = abonnement.get(abonnement.size() - 1).getSubscription_type();
                         //myAbon = abonnement.get(i).getSubscription_type();
                     }
 
 
                     //calcul des bonnus et points cumulés par l'utilisateur courant
-                    if(response.body().getBonus() != null)
-                    points = Integer.parseInt(response.body().getBonus());
-                    if(response.body().getBonus_valider() != null && response.body().getBonus_non_valider() != null)
-                    bonus = Integer.parseInt(response.body().getBonus_valider()) + Integer.parseInt(response.body().getBonus_non_valider());
+                    if (response.body().getBonus() != null)
+                        points = Integer.parseInt(response.body().getBonus());
+                    if (response.body().getBonus_valider() != null && response.body().getBonus_non_valider() != null)
+                        bonus = Integer.parseInt(response.body().getBonus_valider()) + Integer.parseInt(response.body().getBonus_non_valider());
 
                     //update account
                     numeroTel = myPhone;
@@ -359,20 +351,49 @@ public class MainActivity extends AppCompatActivity
                     writeTempCardIDInFile(myId_card);
                     writeTempAccountInFile(myPersonalAccountNumber);
 
+                    //store data
+                    if((prf.getString("key_myPhoneUser")).equalsIgnoreCase("")){
+                        Toast.makeText(MainActivity.this, "saved", Toast.LENGTH_SHORT).show();
+                        prf.setString("key_idUser", idUser);
+                        prf.setString("key_etatUser", etat);
+                        prf.setString("key_myPhoneUser", myPhone);
+                        prf.setString("key_adresseUser", adresse);
+                        prf.setString("key_myCategorieUser", myCategorie);
+                        prf.setString("key_profil_completUser", profil_complet);
+                        prf.setString("key_cniUser", cni);
+                        prf.setString("key_RoleUser", session);
+                        prf.setString("key_myPersonalAccountNumberUser", myPersonalAccountNumber);
+                        prf.setString("key_myPersonalAccountStateUser", myPersonalAccountState);
+                        prf.setString("key_myPersonalAccountAmountUser", myPersonalAccountAmount);
+                        prf.setString("key_myPersonalAccountIdUser", myPersonalAccountId);
+                        prf.setString("key_myCompteUser", myCompte);
+                        prf.setString("key_myId_cardUser", myId_card);
+                        prf.setString("key_myAbonUser", myAbon);
+                        prf.setInt("key_points", points);
+                        prf.setInt("key_bonus", bonus);
+                    }else {
+                        Toast.makeText(MainActivity.this, "not saved", Toast.LENGTH_SHORT).show();
+                    }
+
+
+
+
+
+
                     /************************************************DEBUT**************/
 
                     txt_role.setText(session); // Accepteur, Administrateur, Utilisateur, Agent
                     txt_profile.setText(profil_complet); //Bertin Mounok
-                    if(particulier.isEmpty()){
+                    if (particulier.isEmpty()) {
                         txt_telephone.setText(role.getType().toUpperCase() + " Tel: +237 " + myPhone); //+237 694048925
-                    }else {
+                    } else {
                         txt_telephone.setText("+237 " + myPhone); //+237 694048925
                     }
 
-                    if(session.toLowerCase().equalsIgnoreCase("administrateur")){
+                    if (session.toLowerCase().equalsIgnoreCase("administrateur")) {
                         /*--------------------------------AJOUT DES ELEMENTS DANS LE HEADER DU  nav_header_main.xml---------------*/
 
-                        if(etat.toLowerCase().equalsIgnoreCase("activer")) {
+                        if (etat.toLowerCase().equalsIgnoreCase("activer")) {
                             bundle1.putString("telephone", myPhone);
                             bundle1.putString("compte", myCompte);
                             bundle1.putString("role", session);
@@ -382,8 +403,7 @@ public class MainActivity extends AppCompatActivity
                             bundle1.putInt("bonus", bonus);
                             selectedFragment1 = new AccueilFragmentAdmin();
                             selectedFragment1.setArguments(bundle1);
-                        }
-                        else {
+                        } else {
                             bundle1.putString("telephone", myPhone);
                             bundle1.putString("compte", myCompte);
                             bundle1.putString("role", session);
@@ -396,8 +416,7 @@ public class MainActivity extends AppCompatActivity
                             selectedFragment1.setArguments(bundle1);
                             txt_role.setText(getString(R.string.utilisateur));
                         }
-                    }
-                    else if(session.toLowerCase().equalsIgnoreCase("utilisateur")){
+                    } else if (session.toLowerCase().equalsIgnoreCase("utilisateur")) {
                         bundle1.putString("telephone", myPhone);
                         bundle1.putString("compte", myCompte);
                         bundle1.putString("role", session);
@@ -408,11 +427,8 @@ public class MainActivity extends AppCompatActivity
                         bundle1.putInt("bonus", bonus);
                         selectedFragment1 = new AccueilFragmentUser();
                         selectedFragment1.setArguments(bundle1);
-                    }
-                    else if(session.toLowerCase().equalsIgnoreCase("agent"))
-                    {
-                        if(etat.toLowerCase().equalsIgnoreCase("activer"))
-                        {
+                    } else if (session.toLowerCase().equalsIgnoreCase("agent")) {
+                        if (etat.toLowerCase().equalsIgnoreCase("activer")) {
                             bundle1.putString("telephone", myPhone);
                             bundle1.putString("compte", myCompte);
                             bundle1.putString("role", session);
@@ -422,8 +438,7 @@ public class MainActivity extends AppCompatActivity
                             bundle1.putInt("bonus", bonus);
                             selectedFragment1 = new AccueilFragmentAgent();
                             selectedFragment1.setArguments(bundle1);
-                        }
-                        else {
+                        } else {
                             bundle1.putString("telephone", myPhone);
                             bundle1.putString("compte", myCompte);
                             bundle1.putString("role", session);
@@ -436,10 +451,9 @@ public class MainActivity extends AppCompatActivity
                             selectedFragment1.setArguments(bundle1);
                             txt_role.setText(getString(R.string.utilisateur));
                         }
-                    }
-                    else if(session.toLowerCase().equalsIgnoreCase("accepteur"))  //il s 'agit d'un accepteur
+                    } else if (session.toLowerCase().equalsIgnoreCase("accepteur"))  //il s 'agit d'un accepteur
                     {
-                        if(etat.toLowerCase().equalsIgnoreCase("activer")) {
+                        if (etat.toLowerCase().equalsIgnoreCase("activer")) {
                             bundle1.putString("telephone", myPhone);
                             bundle1.putString("compte", myCompte);
                             bundle1.putString("role", session);
@@ -449,8 +463,7 @@ public class MainActivity extends AppCompatActivity
                             bundle1.putInt("bonus", bonus);
                             selectedFragment1 = new AccueilFragment();
                             selectedFragment1.setArguments(bundle1);
-                        }
-                        else {
+                        } else {
                             bundle1.putString("telephone", myPhone);
                             bundle1.putString("compte", myCompte);
                             bundle1.putString("role", session);
@@ -477,8 +490,7 @@ public class MainActivity extends AppCompatActivity
                     /************************************************FIN**********************/
 
 
-
-                      /**************************************************BOTTOM BAR**************************/
+                    /**************************************************BOTTOM BAR**************************/
 
                     bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
                         @Override
@@ -487,14 +499,13 @@ public class MainActivity extends AppCompatActivity
                             Fragment selectedFragment = null;
                             Bundle bundle = new Bundle();
 
-                            switch (tabId){
+                            switch (tabId) {
                                 case R.id.nav_Accueil:
                                     getSupportActionBar().setTitle(getString(R.string.accueil));
                                     toolbar.setSubtitle(getString(R.string.ezpass));
                                     //selectedFragment = new AccueilFragment();
-                                    if(session.toLowerCase().equalsIgnoreCase("administrateur"))
-                                    {
-                                        if(etat.toLowerCase().equalsIgnoreCase("activer")) {
+                                    if (session.toLowerCase().equalsIgnoreCase("administrateur")) {
+                                        if (etat.toLowerCase().equalsIgnoreCase("activer")) {
                                             bundle.putString("telephone", myPhone);
                                             bundle.putString("compte", myCompte);
                                             bundle.putString("role", session);
@@ -504,8 +515,7 @@ public class MainActivity extends AppCompatActivity
                                             bundle.putInt("bonus", bonus);
                                             selectedFragment = new AccueilFragmentAdmin();
                                             selectedFragment.setArguments(bundle);
-                                        }
-                                        else {
+                                        } else {
                                             bundle.putString("telephone", myPhone);
                                             bundle.putString("compte", myCompte);
                                             bundle.putString("role", session);
@@ -517,8 +527,7 @@ public class MainActivity extends AppCompatActivity
                                             selectedFragment = new AccueilFragmentUser();
                                             selectedFragment.setArguments(bundle);
                                         }
-                                    }
-                                    else if(session.toLowerCase().equalsIgnoreCase("utilisateur")){
+                                    } else if (session.toLowerCase().equalsIgnoreCase("utilisateur")) {
 
                                         bundle.putString("telephone", myPhone);
                                         bundle.putString("compte", myCompte);
@@ -530,10 +539,7 @@ public class MainActivity extends AppCompatActivity
                                         bundle.putInt("bonus", bonus);
                                         selectedFragment = new AccueilFragmentUser();
                                         selectedFragment.setArguments(bundle);
-                                    }
-
-                                    else if(session.toLowerCase().equalsIgnoreCase("agent"))
-                                    {
+                                    } else if (session.toLowerCase().equalsIgnoreCase("agent")) {
                                         bundle.putString("telephone", myPhone);
                                         bundle.putString("compte", myCompte);
                                         bundle.putString("role", session);
@@ -543,10 +549,9 @@ public class MainActivity extends AppCompatActivity
                                         bundle.putInt("bonus", bonus);
                                         selectedFragment = new AccueilFragmentAgent();
                                         selectedFragment.setArguments(bundle);
-                                    }
-                                    else //accepteur
+                                    } else //accepteur
                                     {
-                                        if(etat.toLowerCase().equalsIgnoreCase("activer")) {
+                                        if (etat.toLowerCase().equalsIgnoreCase("activer")) {
                                             bundle.putString("telephone", myPhone);
                                             bundle.putString("compte", myCompte);
                                             bundle.putString("role", session);
@@ -556,8 +561,7 @@ public class MainActivity extends AppCompatActivity
                                             bundle.putInt("bonus", bonus);
                                             selectedFragment = new AccueilFragment();
                                             selectedFragment.setArguments(bundle);
-                                        }
-                                        else {
+                                        } else {
                                             bundle.putString("telephone", myPhone);
                                             bundle.putString("compte", myCompte);
                                             bundle.putString("role", session);
@@ -610,7 +614,7 @@ public class MainActivity extends AppCompatActivity
 
                     updateToken(FirebaseInstanceId.getInstance().getToken());
 
-                } else{
+                } else {
                     tokenManager.deleteToken();
                     startActivity(new Intent(MainActivity.this, Login.class));
                     finish();
@@ -630,13 +634,13 @@ public class MainActivity extends AppCompatActivity
                 //Vérification si la connexion internet accessible
                 ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
-                if(!(activeInfo != null && activeInfo.isConnected())){
+                if (!(activeInfo != null && activeInfo.isConnected())) {
                     authWindows.setVisibility(View.GONE);
                     internetIndisponible.setVisibility(View.VISIBLE);
                     Toast.makeText(MainActivity.this, getString(R.string.pasDeConnexionInternet), Toast.LENGTH_SHORT).show();
                 }
                 //Vérification si le serveur est inaccessible
-                else{
+                else {
                     authWindows.setVisibility(View.GONE);
                     internetIndisponible.setVisibility(View.VISIBLE);
                     conStatusIv.setImageResource(R.drawable.ic_action_limited_network);
@@ -656,7 +660,7 @@ public class MainActivity extends AppCompatActivity
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void changeColorWidget() {
-        if(Constant.color == getResources().getColor(R.color.colorPrimaryRed)){
+        if (Constant.color == getResources().getColor(R.color.colorPrimaryRed)) {
             //network not available ic_wifi_red
             conStatusIv.setImageResource(R.drawable.ic_wifi_red);
             titleNetworkLimited.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryRed));
@@ -666,26 +670,26 @@ public class MainActivity extends AppCompatActivity
             //setTheme(R.style.colorPrimaryDark);
             getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkRed));
-        } else{
+        } else {
             getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDark));
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
     }
 
     private void changeTheme() {
-            app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            appColor = app_preferences.getInt("color", 0);
-            appTheme = app_preferences.getInt("theme", 0);
-            themeColor = appColor;
-            constant.color = appColor;
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        appColor = app_preferences.getInt("color", 0);
+        appTheme = app_preferences.getInt("theme", 0);
+        themeColor = appColor;
+        constant.color = appColor;
 
-            if (themeColor == 0){
-                setTheme(Constant.theme);
-            }else if (appTheme == 0){
-                setTheme(Constant.theme);
-            }else{
-                setTheme(appTheme);
-            }
+        if (themeColor == 0) {
+            setTheme(Constant.theme);
+        } else if (appTheme == 0) {
+            setTheme(Constant.theme);
+        } else {
+            setTheme(appTheme);
+        }
     }
 
 
@@ -745,7 +749,7 @@ public class MainActivity extends AppCompatActivity
             Animatoo.animateZoom(this);  //fire the zoom animation
         }
 
-        if(id == R.id.modifierCompte){
+        if (id == R.id.modifierCompte) {
             //Toast.makeText(this, telephone, Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getApplicationContext(), UpdatePassword.class);
             intent.putExtra("telephone", myPhone);
@@ -785,9 +789,9 @@ public class MainActivity extends AppCompatActivity
 
             //startActivity(new Intent(getApplicationContext(), WebSite.class));
 
-        }else if(id==R.id.nav_clients){
+        } else if (id == R.id.nav_clients) {
 
-              Uri uri = Uri.parse(ChaineConnexion.getEspace_clients());
+            Uri uri = Uri.parse(ChaineConnexion.getEspace_clients());
             Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
             // To count with Play market backstack, After pressing back button,
             // to taken back to our application, we need to add following flags to intent.
@@ -817,7 +821,7 @@ public class MainActivity extends AppCompatActivity
             }*/
 
 
-        } else if (id == R.id.nav_transfert){
+        } else if (id == R.id.nav_transfert) {
             Intent intent = new Intent(getApplicationContext(), HomeTransfer.class);
             intent.putExtra("myId_card", myId_card);
             intent.putExtra("telephone", myPhone);
@@ -825,7 +829,7 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra("myPersonalAccountNumber", myPersonalAccountNumber);
             startActivity(intent);
             Animatoo.animateFade(this);  //fire the zoom animation
-        } else if (id == R.id.nav_abonnement){
+        } else if (id == R.id.nav_abonnement) {
             Intent intent = new Intent(getApplicationContext(), Home_Subscriptions.class);
             intent.putExtra("myId_card", myId_card);
             intent.putExtra("myAbon", myAbon);
@@ -841,18 +845,18 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         }*/
 
-        else if(id == R.id.nav_Assistance_EnLigne){
+        else if (id == R.id.nav_Assistance_EnLigne) {
             Intent intent = new Intent(getApplicationContext(), HomeAssistanceOnline.class);
             //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("telephone", myPhone);
             intent.putExtra("role", session);
             startActivity(intent);
             Animatoo.animateFade(this);  //fire the zoom animation
-        }else if(id == R.id.nav_share){
+        } else if (id == R.id.nav_share) {
             //partager votre lien avec unique ID
             myDialog = new Dialog(this);
             myDialog.setContentView(R.layout.layout_dialog_invite_friends);
-            txtclose =(TextView) myDialog.findViewById(R.id.txtclose);
+            txtclose = (TextView) myDialog.findViewById(R.id.txtclose);
             txtclose.setText("X");
             txtclose.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -863,7 +867,7 @@ public class MainActivity extends AppCompatActivity
             myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             myDialog.show();
 
-        } else if(id == R.id.nav_notation){
+        } else if (id == R.id.nav_notation) {
             //Toast.makeText(this, "noter nous sur playstore", Toast.LENGTH_SHORT).show();
            /* try {
                 Intent viewIntent =
@@ -899,12 +903,9 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(Intent.ACTION_VIEW,
                         Uri.parse("http://play.google.com/store/apps/details?id=" + this.getPackageName())));
             }*/
-        }
-        else if (id == R.id.nav_deconnexion) {
+        } else if (id == R.id.nav_deconnexion) {
             Deconnexion(true);
-        }
-
-        else if (id == R.id.nav_QuestionFrequentes) {
+        } else if (id == R.id.nav_QuestionFrequentes) {
             Toast.makeText(this, getString(R.string.questionFrequentes), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_parametres) {
             Intent intent = new Intent(getApplicationContext(), Setting.class);
@@ -935,7 +936,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 MainActivity.super.onBackPressed();
-                if(exitGoogleFirebase){
+                if (exitGoogleFirebase) {
                     dialog.dismiss();
                     FirebaseAuth.getInstance().signOut();
                 }
@@ -982,12 +983,11 @@ public class MainActivity extends AppCompatActivity
     }*/
 
 
-    private void updateToken(String token){
+    private void updateToken(String token) {
         DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Tokens");
         Token token1 = new Token(token);
         reference1.child(fuser.getUid()).setValue(token1);
     }
-
 
 
     //Intégration de l'API REST
@@ -995,30 +995,30 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
 
-        if(call != null){
+        if (call != null) {
             call.cancel();
             call = null;
         }
     }
 
 
-
     /**
      * writeTempCardNumberInFile() methodes permettant l'écriture du numéro de téléphone dans le fichier tmp_number
      * et insertion de celui-ci dans le tie_telephone
+     *
      * @param fileContents
+     * @throws e
      * @since 2020
-     * @exception e
-     * */
-    private void writeTempCardNumberInFile(String fileContents){
-        try{
+     */
+    private void writeTempCardNumberInFile(String fileContents) {
+        try {
             //ecrire du numero de telephone
             FileOutputStream fOut = openFileOutput(tmp_card_number, MODE_PRIVATE);
             fOut.write(fileContents.getBytes());
             fOut.close();
             File fileDir = new File(getFilesDir(), tmp_card_number);
             //Toast.makeText(getBaseContext(), "File Saved at " + fileDir, Toast.LENGTH_LONG).show();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1026,47 +1026,48 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * writeTempCardIDInFile() methodes permettant l'écriture de l'ID CARTE dans le fichier tmp_card
+     *
      * @param fileContents
+     * @throws e
      * @since 2020
-     * @exception e
-     * */
-    private void writeTempCardIDInFile(String fileContents){
-        try{
+     */
+    private void writeTempCardIDInFile(String fileContents) {
+        try {
             //ecrire de l'ID CARD
             FileOutputStream fOut = openFileOutput(tmp_card_id, MODE_PRIVATE);
             fOut.write(fileContents.getBytes());
             fOut.close();
             File fileDir = new File(getFilesDir(), tmp_card_id);
             //Toast.makeText(getBaseContext(), "File Saved at " + fileDir, Toast.LENGTH_LONG).show();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void writeTempAccountInFile(String fileContents){
-        try{
+    private void writeTempAccountInFile(String fileContents) {
+        try {
             //ecrire de l'ID CARD
             FileOutputStream fOut = openFileOutput(tmp_account, MODE_PRIVATE);
             fOut.write(fileContents.getBytes());
             fOut.close();
             File fileDir = new File(getFilesDir(), tmp_account);
             //Toast.makeText(getBaseContext(), "File Saved at " + fileDir, Toast.LENGTH_LONG).show();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
-
     /**
      * checkNetworkConnectionStatus() méthode permettant de verifier si la connexion existe ou si le serveur est accessible
+     *
      * @since 2019
-     * */
+     */
     @OnClick(R.id.btnReessayer)
-    void checkNetworkConnectionStatus(){
+    void checkNetworkConnectionStatus() {
         boolean isConnected = ConnectivityReceiver.isConnected();
         showSnackBar(isConnected);
-        if(isConnected){
+        if (isConnected) {
             changeActivity();
         }
     }
@@ -1074,7 +1075,7 @@ public class MainActivity extends AppCompatActivity
     private void changeActivity() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
-        if(activeInfo != null && activeInfo.isConnected()){
+        if (activeInfo != null && activeInfo.isConnected()) {
             progressDialog = ProgressDialog.show(this, getString(R.string.connexion), getString(R.string.encours), true);
             progressDialog.show();
             Handler handler = new Handler();
@@ -1085,7 +1086,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }, 2000); // 2000 milliseconds delay
 
-        } else{
+        } else {
             progressDialog.dismiss();
             authWindows.setVisibility(View.GONE);
             internetIndisponible.setVisibility(View.VISIBLE);
@@ -1100,13 +1101,13 @@ public class MainActivity extends AppCompatActivity
         Snackbar snackbar;
         View view;
 
-        if(isConnected){
+        if (isConnected) {
             message = getString(R.string.networkOnline);
             snackbar = Snackbar.make(findViewById(R.id.drawer_layout), message, Snackbar.LENGTH_LONG);
             view = snackbar.getView();
             TextView textView = view.findViewById(com.google.android.material.R.id.snackbar_text);
             textView.setTextColor(color);
-            if(Constant.color == getResources().getColor(R.color.colorPrimaryRed))
+            if (Constant.color == getResources().getColor(R.color.colorPrimaryRed))
                 textView.setBackgroundResource(R.color.colorPrimaryRed);
             else
                 textView.setBackgroundColor(Color.parseColor("#039BE5"));
@@ -1114,7 +1115,7 @@ public class MainActivity extends AppCompatActivity
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
             }
-        } else{
+        } else {
             message = getString(R.string.networkOffline);
             snackbar = Snackbar.make(findViewById(R.id.drawer_layout), message, Snackbar.LENGTH_INDEFINITE);
             view = snackbar.getView();
@@ -1152,6 +1153,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     *
      * @param newBase
      * @since 2020
      */
@@ -1159,7 +1161,6 @@ public class MainActivity extends AppCompatActivity
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase));
     }
-
 
 
 }

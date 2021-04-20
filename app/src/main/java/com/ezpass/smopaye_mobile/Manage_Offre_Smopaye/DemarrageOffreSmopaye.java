@@ -6,11 +6,12 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import androidx.annotation.RequiresApi;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +24,9 @@ import android.widget.TextView;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.Manage_Url_Website.WebViewMonetbil;
+import com.ezpass.smopaye_mobile.Provider.PrefManager;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
-import com.ezpass.smopaye_mobile.Manage_Url_Website.PrefManager;
 
 public class DemarrageOffreSmopaye extends AppCompatActivity {
 
@@ -39,7 +40,6 @@ public class DemarrageOffreSmopaye extends AppCompatActivity {
 
     //changement de couleur du theme
     Constant constant;
-    SharedPreferences.Editor editor;
     SharedPreferences app_preferences;
     int appTheme;
     int themeColor;
