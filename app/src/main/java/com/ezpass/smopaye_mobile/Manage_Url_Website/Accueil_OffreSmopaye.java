@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ezpass.smopaye_mobile.Login;
+import com.ezpass.smopaye_mobile.Provider.PrefManager;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 
