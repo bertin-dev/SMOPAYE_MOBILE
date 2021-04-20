@@ -78,7 +78,7 @@
                 android:id="@+id/telephone_recharge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="694048925"
+                android:text="Tel: 694048925"
                 android:gravity="center"
                 android:textStyle="bold"
                 android:textColor="@color/textColorBlack"
@@ -115,18 +115,18 @@
             <TextView
                 android:id="@+id/accountEZPASS"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="N°123456789"
+                android:layout_height="33dp"
                 android:gravity="center"
-                android:textStyle="bold"
+                android:text="N°123456789"
                 android:textColor="@color/textColorBlack"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/name_recharge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Bertin Mounok"
+                android:text="Tel: 6990903867"
                 android:gravity="center"
                 android:textStyle="bold"
                 android:textColor="@color/textColorBlack"
@@ -287,20 +287,6 @@
     </LinearLayout>
 
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/colorDivider"/>
-
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/colorDivider"/>
-
     <LinearLayout
         android:gravity="center"
         android:layout_marginTop="10dp"
@@ -327,6 +313,12 @@
             android:background="@drawable/btn_rounded"
             android:text="@string/valider" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorDivider"/>
 
 
 </LinearLayout>
