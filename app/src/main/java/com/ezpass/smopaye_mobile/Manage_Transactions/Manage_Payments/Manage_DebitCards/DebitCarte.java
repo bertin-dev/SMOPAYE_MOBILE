@@ -26,6 +26,8 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -35,7 +37,6 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -57,7 +58,6 @@ import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
-import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.NotifApp;
@@ -113,7 +113,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
@@ -228,7 +227,7 @@ public class DebitCarte extends AppCompatActivity
         progressDialog = new ProgressDialog(DebitCarte.this);
         build_error = new AlertDialog.Builder(DebitCarte.this);
         //service google firebase
-        apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
+        apiService = Client.getClient(Global.adresseURLGoogleAPI).create(APIService.class);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
         databaseManager = new DatabaseManager(this);
         FAILplayer = MediaPlayer.create(DebitCarte.this, R.raw.fail1);
@@ -463,7 +462,7 @@ public class DebitCarte extends AppCompatActivity
             usbThermalPrinter.addString("CARD NO:" + spaceString + cardNum1);
             usbThermalPrinter.addString("TRANS TYPE:                GOODS");
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date curDate = new Date(System.currentTimeMillis());//获取当前时间
+            Date curDate = new Date(System.currentTimeMillis());
             String str = formatter.format(curDate);
             usbThermalPrinter.addString("DATE/TIME:   " + str);
             usbThermalPrinter.addString("EXP DATE:             " + expDate);//format de date: 2019-12-30
@@ -503,14 +502,6 @@ public class DebitCarte extends AppCompatActivity
 
     @OnClick(R.id.btndebit)
     void debit(){
-
-        new MaterialTapTargetPrompt.Builder(this)
-                .setTarget(R.id.btndebit)
-                .setPrimaryText(R.string.debitCarte)
-                .setSecondaryText(R.string.MsgDescDebitCarte)
-                .setAnimationInterpolator(new FastOutSlowInInterpolator())
-                .setMaxTextWidth(R.dimen.tap_target_menu_max_width)
-                .show();
 
         if(!validateMontant(til_debitmontant)){
             FAILplayer.start();
@@ -565,7 +556,7 @@ public class DebitCarte extends AppCompatActivity
                     case SHOW_NFC_DATA: {
                         byte[] uid_data = (byte[]) msg.obj;
                         if (uid_data[0] == 0x42) {
-                            // TYPE B类（暂时只支持cpu卡）
+                            // TYPE B
                             byte[] atqb = new byte[uid_data[16]];
                             byte[] pupi = new byte[4];
                             String type = null;

@@ -19,6 +19,7 @@
             android:id="@+id/rechargeEZ"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:visibility="gone"
             android:src="@drawable/ic_twotone_account_balance_wallet_48"
             android:scaleType="centerCrop"/>
 
@@ -60,7 +61,7 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/orange_money"
+                android:src="@drawable/ic_twotone_account_balance_wallet_48"
                 android:layout_margin="1dp"
                 android:scaleType="centerCrop"/>
 

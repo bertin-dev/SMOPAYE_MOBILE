@@ -23,9 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
-import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.RemoteAdapter.MessageAdapter;
@@ -111,7 +111,7 @@ public class MessageActivity extends AppCompatActivity {
         });*/
 
 
-        apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
+        apiService = Client.getClient(Global.adresseURLGoogleAPI).create(APIService.class);
 
         recyclerView = findViewById(R.id.recycler_viewMsgChat);
         recyclerView.setHasFixedSize(true);

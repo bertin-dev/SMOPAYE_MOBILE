@@ -21,7 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.ezpass.smopaye_mobile.ChaineConnexion;
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.ezpass.smopaye_mobile.Manage_Assistance.AgenceSmopayeAdapter;
 import com.ezpass.smopaye_mobile.Manage_Assistance.AgenceSmopayeModel;
 import com.ezpass.smopaye_mobile.Manage_Assistance.DetailsAgenceSmopaye;
@@ -56,10 +56,10 @@ public class PointSmopayeFragment extends Fragment implements
     private GoogleMap mMap;
     //markers all define place
     private ArrayList<LatLng> arrayList = new ArrayList<>();
-    private LatLng camair = new LatLng(ChaineConnexion.getLatitude_camair(), ChaineConnexion.getLongitude_camair());
-    private LatLng omnisport = new LatLng(ChaineConnexion.getLatitude_omnisport(), ChaineConnexion.getLongitude_omnisport());
-    private LatLng soa_campus = new LatLng(ChaineConnexion.getLatitude_soa_campus(), ChaineConnexion.getLongitude_soa_campus());
-    private LatLng soa_marche = new LatLng(ChaineConnexion.getLatitude_marche_soa(), ChaineConnexion.getLongitude_marche_soa());
+    private LatLng camair = new LatLng(Global.Latitude_camair, Global.Longitude_camair);
+    private LatLng omnisport = new LatLng(Global.Latitude_omnisport, Global.Longitude_omnisport);
+    private LatLng soa_campus = new LatLng(Global.Latitude_soa_campus, Global.Longitude_soa_campus);
+    private LatLng soa_marche = new LatLng(Global.Latitude_marche_soa, Global.Longitude_marche_soa);
     private Double distance = 0.0;
     private DecimalFormat df = new DecimalFormat("0.00"); // import java.text.DecimalFormat;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
@@ -165,7 +165,7 @@ public class PointSmopayeFragment extends Fragment implements
 
     private void startLocationService() {
         mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                // The next two lines tell the new client that “this” current class will handle connection stuff
+                // The next two lines tell the new client that this current class will handle connection stuff
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 //fourth line adds the LocationServices API endpoint from GooglePlayServices

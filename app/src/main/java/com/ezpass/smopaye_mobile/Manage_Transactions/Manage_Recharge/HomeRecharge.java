@@ -73,6 +73,10 @@ public class HomeRecharge extends AppCompatActivity {
         }
     }
 
+    /**
+     * permet de charger les fragments du viewPager
+     * @param viewPager
+     */
     private void addTabs(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new FragmentCompte(), getString(R.string.maCarteSmopaye));
@@ -89,7 +93,7 @@ public class HomeRecharge extends AppCompatActivity {
     /**
      * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
      * @param newBase
-     * @since 2020
+     * @since 2019
      */
     @Override
     protected void attachBaseContext(Context newBase) {

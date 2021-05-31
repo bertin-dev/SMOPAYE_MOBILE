@@ -1,4 +1,4 @@
-package com.ezpass.smopaye_mobile;
+package com.ezpass.smopaye_mobile.Config;
 
 import android.util.Log;
 
@@ -11,94 +11,34 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class ChaineConnexion {
+/**
+ * Class en charge de la configuration globale des paramètres
+ */
 
+public class Global {
 
-    //Domaine des Testes
-    //private static final String adresseURLsmopayeServer = "https://cm.secure-ws-api-smp-excecute.smopaye.fr/index.php";
-    //Domaine de Production
-    private static final String adresseURLsmopayeServer = "https://webservice.domaine.tests.space.smopaye.fr/index.php";
+    public static final String URL_API = "http://wbser.cm.21052112.smopaye.cm/public/";
+    public static final String adresseURLGoogleAPI = "https://fcm.googleapis.com/";
+    public static final String urlSiteWeb = "https://smopaye.cm/";
+    public static final String encrypted_password = "Iyz4BVU2Hlt0cIeIPBlB7Wq15kMDI4NGRmOTNi";
+    public static final String salt = "d0284df93b";
 
-    private static final String adresseURLGoogleAPI = "https://fcm.googleapis.com/";
-    private static final String urlSiteWeb = "https://smopaye.cm/";
-    private static final String encrypted_password = "Iyz4BVU2Hlt0cIeIPBlB7Wq15kMDI4NGRmOTNi";
-    private static final String salt = "d0284df93b";
+    public static double rand = Math.random();
+    public static final String security_keys = "56ZS5PQ1RF-eyJsaWNlbnNlSWQiOiI1NlpGVkIjpmYWxzZX0+-==" + rand;
+    public static final String espace_clients = "http://espace-client.smopaye.cm";
 
-    private static double rand = Math.random();
-    private static final String security_keys = "56ZS5PQ1RF-eyJsaWNlbnNlSWQiOiI1NlpGVkIjpmYWxzZX0+-==" + rand;
-    private static final String espace_clients = "http://e-zpass.smopaye.fr/";
+    public static final double Latitude_marche_soa = 3.9756296;
+    public static final double Longitude_marche_soa = 11.5935448;
 
-    private static final double Latitude_marche_soa = 3.9756296;
-    private static final double Longitude_marche_soa = 11.5935448;
+    public static final double Latitude_soa_campus = 3.9660964;
+    public static final double Longitude_soa_campus = 11.5935347;
 
-    private static final double Latitude_soa_campus = 3.9660964;
-    private static final double Longitude_soa_campus = 11.5935347;
+    public static final double Latitude_omnisport = 3.8906481;
+    public static final double Longitude_omnisport = 11.544921;
 
-    private static final double Latitude_omnisport = 3.8906481;
-    private static final double Longitude_omnisport = 11.544921;
+    public static final double Latitude_camair = 3.8654263;
+    public static final double Longitude_camair = 11.5205789;
 
-    private static final double Latitude_camair = 3.8654263;
-    private static final double Longitude_camair = 11.5205789;
-
-    public static String getAdresseURLsmopayeServer() {
-        return adresseURLsmopayeServer;
-    }
-
-    public static String getAdresseURLGoogleAPI() {
-        return adresseURLGoogleAPI;
-    }
-
-    public static String getUrlSiteWeb() {
-        return urlSiteWeb;
-    }
-
-    public static String getEncrypted_password() {
-        return encrypted_password;
-    }
-
-    public static String getSalt() {
-        return salt;
-    }
-
-    public static String getsecurity_keys() {
-        return security_keys;
-    }
-
-    public static String getEspace_clients() {
-        return espace_clients;
-    }
-
-    public static double getLatitude_marche_soa() {
-        return Latitude_marche_soa;
-    }
-
-    public static double getLongitude_marche_soa() {
-        return Longitude_marche_soa;
-    }
-
-    public static double getLatitude_soa_campus() {
-        return Latitude_soa_campus;
-    }
-
-    public static double getLongitude_soa_campus() {
-        return Longitude_soa_campus;
-    }
-
-    public static double getLatitude_omnisport() {
-        return Latitude_omnisport;
-    }
-
-    public static double getLongitude_omnisport() {
-        return Longitude_omnisport;
-    }
-
-    public static double getLatitude_camair() {
-        return Latitude_camair;
-    }
-
-    public static double getLongitude_camair() {
-        return Longitude_camair;
-    }
 
     /*//Encryption test
         String string = "bonjour";
@@ -116,8 +56,15 @@ public class ChaineConnexion {
         }*/
 
 
-
-    //cryptage du qr code
+    /**
+     * permet de crypter le code qr
+     *
+     * @see encryptBytes
+     *
+     * @param plainTextBytes
+     * @param passwordString
+     * @return un objet de type HashMap
+     */
     public static HashMap<String, byte[]> encryptBytes(byte[] plainTextBytes, String passwordString)
     {
         HashMap<String, byte[]> map = new HashMap<String, byte[]>();
@@ -190,5 +137,4 @@ public class ChaineConnexion {
 
         return decrypted;
     }
-
 }

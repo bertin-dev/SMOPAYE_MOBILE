@@ -41,9 +41,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
-import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbUser;
 import com.ezpass.smopaye_mobile.NotifReceiver;
@@ -189,7 +189,7 @@ public class SouscriptionGoogleOnly extends AppCompatActivity {
 
         //SERVICE GOOGLE FIREBASE
         auth = FirebaseAuth.getInstance();
-        apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
+        apiService = Client.getClient(Global.adresseURLGoogleAPI).create(APIService.class);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
 
@@ -424,7 +424,7 @@ public class SouscriptionGoogleOnly extends AppCompatActivity {
                     case SHOW_NFC_DATA: {
                         byte[] uid_data = (byte[]) msg.obj;
                         if (uid_data[0] == 0x42) {
-                            // TYPE B类（暂时只支持cpu卡）
+                            // TYPE B
                             byte[] atqb = new byte[uid_data[16]];
                             byte[] pupi = new byte[4];
                             String type = null;

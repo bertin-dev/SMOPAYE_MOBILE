@@ -20,6 +20,8 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -46,7 +48,6 @@ import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
-import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.NotifApp;
@@ -95,6 +96,11 @@ import retrofit2.Response;
 
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
+/**
+ * Activity permettant de modifier le profil utilisateur
+ *
+ * @see UpdatePassword
+ */
 public class UpdatePassword extends AppCompatActivity
                             implements ConnectivityReceiver.ConnectivityReceiverListener{
 
@@ -190,7 +196,7 @@ public class UpdatePassword extends AppCompatActivity
         validator = new AwesomeValidation(ValidationStyle.TEXT_INPUT_LAYOUT);
         build_error = new AlertDialog.Builder(UpdatePassword.this);
         //service google firebase
-        apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
+        apiService = Client.getClient(Global.adresseURLGoogleAPI).create(APIService.class);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
 

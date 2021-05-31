@@ -1,5 +1,13 @@
 package com.ezpass.smopaye_mobile.RemoteModel;
 
+
+/**
+ * Structure du model de la classe Chatlist
+ *
+ * @see Chatlist
+ */
+
+
 public class Chatlist {
 
     public String id;

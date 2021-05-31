@@ -39,9 +39,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
-import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbUser;
 import com.ezpass.smopaye_mobile.NotifReceiver;
@@ -213,10 +213,10 @@ public class Modification extends AppCompatActivity {
                                 builder.appendQueryParameter("login", "updateUser");
                                 builder.appendQueryParameter("iduserlist", idUsers.getText().toString().trim());
                                 //builder.appendQueryParameter("numUser", temp_number);
-                                builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
-                                builder.appendQueryParameter("uhtdgG18", ChaineConnexion.getSalt());
+                                builder.appendQueryParameter("fgfggergJHGS", Global.encrypted_password);
+                                builder.appendQueryParameter("uhtdgG18", Global.salt);
                                 //URL url = new URL("http://192.168.20.11:1234/listing.php"+builder.build().toString());
-                                URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
+                                URL url = new URL(Global.URL_API + builder.build().toString());
                                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                                 httpURLConnection.setConnectTimeout(5000);
                                 httpURLConnection.setRequestMethod("POST");
@@ -344,7 +344,7 @@ public class Modification extends AppCompatActivity {
                                         builder.appendQueryParameter("idUser",idUsers.toString().trim());
                                         //builder.appendQueryParameter("numUser", temp_number);
                                         //URL url = new URL("http://192.168.20.11:1234/deleteUser.php"+builder.build().toString());
-                                        URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
+                                        URL url = new URL(Global.URL_API + builder.build().toString());
                                         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                                         httpURLConnection.setConnectTimeout(5000);
                                         httpURLConnection.setRequestMethod("POST");
@@ -524,14 +524,14 @@ public class Modification extends AppCompatActivity {
                                     builder.appendQueryParameter("IDCathegorie", typeChauffeur.getSelectedItem().toString().trim());
                                     //builder.appendQueryParameter("typeAbon", abonnement);
                                     builder.appendQueryParameter("uniquser", temp_number);
-                                    builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
-                                    builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
+                                    builder.appendQueryParameter("fgfggergJHGS", Global.encrypted_password);
+                                    builder.appendQueryParameter("uhtdgG18", Global.salt);
                                     //builder.appendQueryParameter("operateur",operateur.getSelectedItem().toString());
 
 
 
                                     //URL url = new URL("http://192.168.20.11:1234/updateUser.php"+builder.build().toString());
-                                    URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
+                                    URL url = new URL(Global.URL_API + builder.build().toString());
                                     HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                                     httpURLConnection.setConnectTimeout(5000);
                                     httpURLConnection.setRequestMethod("POST");
@@ -712,7 +712,7 @@ public class Modification extends AppCompatActivity {
                     case SHOW_NFC_DATA: {
                         byte[] uid_data = (byte[]) msg.obj;
                         if (uid_data[0] == 0x42) {
-                            // TYPE B类（暂时只支持cpu卡）
+                            // TYPE B
                             byte[] atqb = new byte[uid_data[16]];
                             byte[] pupi = new byte[4];
                             String type = null;

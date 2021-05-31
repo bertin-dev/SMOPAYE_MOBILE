@@ -21,6 +21,11 @@ import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 
+/**
+ * activity qui affiche les services indisponibles
+ * {@link AppCompatActivity}
+ * @see ServicesIndisponible
+ */
 public class ServicesIndisponible extends AppCompatActivity {
 
     //changement de couleur du theme

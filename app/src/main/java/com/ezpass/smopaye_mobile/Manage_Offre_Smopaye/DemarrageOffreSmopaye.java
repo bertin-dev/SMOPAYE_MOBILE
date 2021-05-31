@@ -232,17 +232,17 @@ public class DemarrageOffreSmopaye extends AppCompatActivity {
                 public void onClick(View v) {
                     if(position == 0) {
                         Intent intent = new Intent(getApplicationContext(), WebViewMonetbil.class);
-                        intent.putExtra("urlMonetbil", "https://smopaye.cm.smopaye.cm/detail_carte");
+                        intent.putExtra("urlMonetbil", "https://smopaye.cm/");
                         startActivity(intent);
                     }
                     if(position == 1){
                         Intent intent = new Intent(getApplicationContext(), WebViewMonetbil.class);
-                        intent.putExtra("urlMonetbil", "https://smopaye.cm.smopaye.cm/detail_tpe");
+                        intent.putExtra("urlMonetbil", "https://smopaye.cm/");
                         startActivity(intent);
                     }
                     if(position == 2){
                         Intent intent = new Intent(getApplicationContext(), WebViewMonetbil.class);
-                        intent.putExtra("urlMonetbil", "https://smopaye.cm.smopaye.cm/detail_tpe");
+                        intent.putExtra("urlMonetbil", "https://smopaye.cm/");
                         startActivity(intent);
                     }
                 }

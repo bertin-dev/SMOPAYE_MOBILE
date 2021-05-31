@@ -44,13 +44,11 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ezpass.smopaye_mobile.ChaineConnexion;
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
-import com.ezpass.smopaye_mobile.Manage_Cards.SaveInDB.AdapterCardList;
-import com.ezpass.smopaye_mobile.Manage_Cards.SaveInDB.Model_Card;
 import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 import com.ezpass.smopaye_mobile.NotifReceiver;
 import com.ezpass.smopaye_mobile.Profil_user.DataUser;
@@ -179,7 +177,7 @@ public class FragmentCartes extends Fragment {
         }
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
 
-        apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
+        apiService = Client.getClient(Global.adresseURLGoogleAPI).create(APIService.class);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
         build_error = new AlertDialog.Builder(getContext());

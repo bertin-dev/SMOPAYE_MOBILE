@@ -120,7 +120,7 @@ public class Setting extends AppCompatActivity {
                     "Changer votre Thème",
                     "Informations légales",
                     "Fournir des commentaires",
-                    "Á propos de l'Application"
+                    "A propos de l'Application"
             };
         } else {
             // Initializing a String Array

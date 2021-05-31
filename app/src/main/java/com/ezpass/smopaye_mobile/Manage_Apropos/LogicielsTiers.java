@@ -11,8 +11,12 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Assistance.Menu_Assistance;
@@ -20,10 +24,11 @@ import com.ezpass.smopaye_mobile.Methods;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 
+import org.w3c.dom.Text;
+
 public class LogicielsTiers extends AppCompatActivity {
 
     private SharedPreferences app_preferences;
-    private SharedPreferences.Editor editor;
     private Methods methods;
     int appTheme;
     int themeColor;
@@ -47,6 +52,10 @@ public class LogicielsTiers extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             changeColorWidget();
         }
+
+        TextView details = (TextView) findViewById(R.id.details);
+        details.setText(Html.fromHtml(getString(R.string.html)));
+        details.setMovementMethod(LinkMovementMethod.getInstance());
 
     }
 

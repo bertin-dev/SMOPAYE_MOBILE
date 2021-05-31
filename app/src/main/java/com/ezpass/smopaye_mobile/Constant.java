@@ -2,8 +2,11 @@ package com.ezpass.smopaye_mobile;
 
 import java.io.Serializable;
 
+
 /**
- * Created by delaroy on 3/21/17.
+ * permet d'initier le theme et la couleur comme constante
+ * @see java.io.Serializable
+ * @see Constant
  */
 public class Constant implements Serializable {
 

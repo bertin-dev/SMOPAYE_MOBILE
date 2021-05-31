@@ -1,5 +1,14 @@
 package com.ezpass.smopaye_mobile.RemoteModel;
 
+
+import com.ezpass.smopaye_mobile.RemoteNotifications.Sender;
+
+/**
+ * Structure du model de la classe User
+ *
+ * @see User
+ */
+
 public class User {
 
     private String id;

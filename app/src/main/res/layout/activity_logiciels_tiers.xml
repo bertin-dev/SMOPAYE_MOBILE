@@ -21,73 +21,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/textColorBlack"
-                android:textStyle="bold"
-                android:padding="20dp"
-                android:textSize="25sp"
-                android:text="@string/SeekArc"
-                />
 
             <TextView
+                android:id="@+id/details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:textSize="15sp"
+                android:textSize="12sp"
                 android:text="@string/licenceDistribue"/>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/textColorBlack"
-                android:textStyle="bold"
-                android:padding="20dp"
-                android:textSize="25sp"
-                android:text="@string/Changelog"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:textSize="15sp"
-                android:text="@string/librarieChangelog"/>
-        </LinearLayout>
-
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/textColorBlack"
-                android:textStyle="bold"
-                android:padding="20dp"
-                android:textSize="25sp"
-                android:text="@string/volley"
-                />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:textSize="15sp"
-                android:text="@string/openSourceProject"
-                />
         </LinearLayout>
 
 

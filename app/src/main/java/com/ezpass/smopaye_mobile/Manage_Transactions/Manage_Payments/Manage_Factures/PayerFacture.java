@@ -20,6 +20,8 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -45,7 +47,6 @@ import android.widget.Toast;
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
-import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
@@ -207,7 +208,7 @@ public class PayerFacture extends AppCompatActivity
         progressDialog = new ProgressDialog(PayerFacture.this);
         build_error = new AlertDialog.Builder(PayerFacture.this);
         //service google firebase
-        apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
+        apiService = Client.getClient(Global.adresseURLGoogleAPI).create(APIService.class);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
 
@@ -698,7 +699,7 @@ public class PayerFacture extends AppCompatActivity
                     case SHOW_NFC_DATA: {
                         byte[] uid_data = (byte[]) msg.obj;
                         if (uid_data[0] == 0x42) {
-                            // TYPE B类（暂时只支持cpu卡）
+                            // TYPE B
                             byte[] atqb = new byte[uid_data[16]];
                             byte[] pupi = new byte[4];
                             String type = null;

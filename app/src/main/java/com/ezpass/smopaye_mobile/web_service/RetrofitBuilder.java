@@ -13,17 +13,25 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.moshi.MoshiConverterFactory;
 
+/**
+ * cette classe me permet de faire des appels réseau et intercepte les requêtes
+ *
+ * @see RetrofitBuilder
+ */
 public class RetrofitBuilder {
-    //Domaine Test
-    //private static final String BASE_URL = "https://smp1020.webservice.api.domaine.test.ezpass.smopaye.fr/public/";
+    //New Domaine
+    private static final String BASE_URL = "http://wbser.cm.21052112.smopaye.cm/public/";
 
-    //Domaine de production
-    private static final String BASE_URL = "https://webservice.domaineteste.space.smopaye.fr/public/";
+    //Old Domaine de production
+    //private static final String BASE_URL = "https://webservice.domaineteste.space.smopaye.fr/public/";
 
     private final static OkHttpClient client = buildClient();
     private final static Retrofit retrofit = buildRetrofit(client);
 
-    //cette methode permet d'intercepter la requête, ajouter les Headers correspondant ensuite de renvoyer à nouveau la requête
+    /**
+     * cette methode permet d'intercepter la requête, ajouter les Headers correspondant ensuite de renvoyer à nouveau la requête
+     * @return une instance de OkHttpClient
+     */
     private static OkHttpClient buildClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
@@ -42,6 +50,7 @@ public class RetrofitBuilder {
                     }
                 });
 
+        //cette condition permet de verifier si l'on est en mode debug. si oui alors builder.addNetworkInterceptor(new StethoInterceptor());
         if (BuildConfig.DEBUG) {
             builder.addNetworkInterceptor(new StethoInterceptor());
         }
@@ -51,6 +60,11 @@ public class RetrofitBuilder {
     }
 
 
+    /**
+     * permet de créer une instance de retrofit qui prend en paramètre le client
+     * @param client
+     * @return
+     */
     private static Retrofit buildRetrofit(OkHttpClient client) {
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -64,8 +78,13 @@ public class RetrofitBuilder {
         return retrofit.create(service);
     }
 
-    /*
-    méthode permettant d'accéder aux ressources privées afin d'obtenir les authorizations
+    /**
+     * méthode permettant d'accéder aux ressources privées afin d'obtenir les authorizations
+     *
+     * @param service
+     * @param tokenManager
+     * @param <T>
+     * @return une classe de type T
      */
     public static <T> T createServiceWithAuth(Class<T> service, final TokenManager tokenManager) {
 

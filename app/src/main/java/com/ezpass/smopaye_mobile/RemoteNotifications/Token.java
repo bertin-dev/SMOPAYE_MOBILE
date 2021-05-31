@@ -1,5 +1,10 @@
 package com.ezpass.smopaye_mobile.RemoteNotifications;
 
+/**
+ * Structure du model de la classe Token pour le chat
+ *
+ * @see Token
+ */
 public class Token {
 
     private String token;

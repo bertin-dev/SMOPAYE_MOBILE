@@ -6,6 +6,11 @@ import android.content.Intent;
 import androidx.core.app.NotificationManagerCompat;
 import android.widget.Toast;
 
+/**
+ *
+ * @see NotifReceiver
+ * @see BroadcastReceiver
+ */
 public class NotifReceiver extends BroadcastReceiver {
 
     @Override

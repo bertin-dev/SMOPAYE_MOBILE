@@ -14,7 +14,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,7 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
-import com.ezpass.smopaye_mobile.MainActivity;
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.ezpass.smopaye_mobile.Manage_Administrator.GoogleUtilisateur;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.snackbar.Snackbar;
@@ -62,7 +61,6 @@ import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
-import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbUser;
 import com.ezpass.smopaye_mobile.Login;
@@ -70,7 +68,6 @@ import com.ezpass.smopaye_mobile.NotifApp;
 import com.ezpass.smopaye_mobile.NotifReceiver;
 import com.ezpass.smopaye_mobile.Profil_user.Categorie;
 import com.ezpass.smopaye_mobile.Profil_user.Role;
-import com.ezpass.smopaye_mobile.Manage_Transactions.Manage_Payments.Manage_QRCode.QRCodeShow;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.RemoteFragments.APIService;
 import com.ezpass.smopaye_mobile.RemoteModel.User;
@@ -92,7 +89,6 @@ import com.ezpass.smopaye_mobile.web_service_response.AllMyResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -125,9 +121,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.content.ContentValues.TAG;
-import static com.ezpass.smopaye_mobile.ChaineConnexion.getsecurity_keys;
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
 public class EditProfil extends AppCompatActivity
@@ -392,7 +385,7 @@ public class EditProfil extends AppCompatActivity
 
         //SERVICE GOOGLE FIREBASE
         auth = FirebaseAuth.getInstance();
-        apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
+        apiService = Client.getClient(Global.adresseURLGoogleAPI).create(APIService.class);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
         
 
@@ -686,7 +679,7 @@ public class EditProfil extends AppCompatActivity
                     case SHOW_NFC_DATA: {
                         byte[] uid_data = (byte[]) msg.obj;
                         if (uid_data[0] == 0x42) {
-                            // TYPE B类（暂时只支持cpu卡）
+                            // TYPE B
                             byte[] atqb = new byte[uid_data[16]];
                             byte[] pupi = new byte[4];
                             String type = null;

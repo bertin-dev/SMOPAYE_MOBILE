@@ -21,7 +21,7 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
-import com.ezpass.smopaye_mobile.ChaineConnexion;
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
@@ -29,6 +29,12 @@ import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 
+/**
+ * Activity qui permet de charger tout l'espace client
+ *
+ * {@link http://e-zpass.smopaye.fr/}
+ * @see EspaceClients
+ */
 public class EspaceClients extends AppCompatActivity {
 
     private WebView mywebView;
@@ -85,7 +91,7 @@ public class EspaceClients extends AppCompatActivity {
         });
         mywebView.getSettings().setJavaScriptEnabled(true);
         mywebView.setVerticalScrollBarEnabled(false);
-        mywebView.loadUrl(ChaineConnexion.getEspace_clients());
+        mywebView.loadUrl(Global.espace_clients);
         progressBarH.setProgress(0);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

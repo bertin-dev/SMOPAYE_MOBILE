@@ -9,6 +9,11 @@ import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
 
+/**
+ * class NotifApp qui hérite de la classe Application me permet d'initialiser stetho pour intercepter mes requetes ou encore createNotificationChannel
+ * @see NotifApp
+ * @see Application
+ */
 public class NotifApp extends Application {
     public static final String CHANNEL_ID = "exampleChannel";
 
@@ -25,6 +30,9 @@ public class NotifApp extends Application {
     }
 
 
+    /**
+     * permet de créer une chaine de notification
+     */
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
@@ -38,7 +46,12 @@ public class NotifApp extends Application {
         }
     }
 
-    private void  initInterceptor(){
+    /**
+     * permet d'intercepter les fuites de mémoires dans l'application
+     *
+     * @see initInterceptor
+     */
+    private void initInterceptor(){
         //initialisation de stetho pour l'interption des requêtes HTTP
         Stetho.initializeWithDefaults(this);
 
@@ -52,11 +65,22 @@ public class NotifApp extends Application {
         // Normal app init code...
     }
 
-    //check network
+    /**
+     *
+     * @return mInstance de type NotifApp
+     */
     public static synchronized NotifApp getInstance(){
         return mInstance;
     }
-    //check network
+
+    /**
+     * permet d'ecouter l'etat de la connexion internet
+     *
+     * @see setConnectivityListener
+     *
+     *
+     * @param listener
+     */
     public void setConnectivityListener(ConnectivityReceiver.ConnectivityReceiverListener listener){
         ConnectivityReceiver.connectivityReceiverListener = listener;
     }

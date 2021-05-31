@@ -27,17 +27,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.ezpass.smopaye_mobile.Config.Global;
+import com.ezpass.smopaye_mobile.Provider.PrefManager;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
-import androidx.appcompat.widget.Toolbar;
 
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -57,7 +59,6 @@ import android.widget.Toast;
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
-import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.Login;
@@ -93,10 +94,8 @@ import com.telpo.tps550.api.util.StringUtil;
 
 import java.io.FileInputStream;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
@@ -106,6 +105,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressPie;
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -182,6 +182,20 @@ public class FragmentCompte extends Fragment
     TextView titleNetworkLimited;
     @BindView(R.id.msgNetworkLimited)
     TextView msgNetworkLimited;
+    @BindView(R.id.rep_id)
+    TextView rep_id;
+    @BindView(R.id.rep_nom)
+    TextView rep_nom;
+    @BindView(R.id.rep_numero)
+    TextView rep_numero;
+    @BindView(R.id.thumbnail_rep)
+    CircleImageView thumbnail_rep;
+    @BindView(R.id.user_info)
+    CardView user_info;
+
+
+
+
 
 
     private TextView msgValidateRecharge;
@@ -206,7 +220,6 @@ public class FragmentCompte extends Fragment
 
     //changement de couleur du theme
     private Constant constant;
-    private SharedPreferences.Editor editor;
     private SharedPreferences app_preferences;
     int appTheme;
     int themeColor;
@@ -215,6 +228,7 @@ public class FragmentCompte extends Fragment
 
     private static final int CONTACT_PERMISSION_CODE = 1;
     private static final int CONTACT_PICK_CODE = 2;
+    private PrefManager prf;
 
     public FragmentCompte() {
         // Required empty public constructor
@@ -244,7 +258,7 @@ public class FragmentCompte extends Fragment
         progressDialog = new ProgressDialog(getActivity());
         build_error = new AlertDialog.Builder(getActivity());
         //service google firebase
-        apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
+        apiService = Client.getClient(Global.adresseURLGoogleAPI).create(APIService.class);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
 
@@ -255,6 +269,8 @@ public class FragmentCompte extends Fragment
 
         //////////////////////////////////NOTIFICATIONS////////////////////////////////
         notificationManager = NotificationManagerCompat.from(getContext());
+
+        prf = new PrefManager(getActivity());
 
         Intent idCarteTelecollecte = getActivity().getIntent();
         if(idCarteTelecollecte.getStringExtra("id_carte") != null){
@@ -313,7 +329,7 @@ public class FragmentCompte extends Fragment
      * */
     @OnClick(R.id.btnRecharge)
     void recharge(){
-        /*if(!validateCompte(til_numCartePropreCompte1) | !validateMontant(til_montant1)){
+        if(!validateCompte(til_numCartePropreCompte1) | !validateMontant(til_montant1)){
             return;
         }
 
@@ -323,16 +339,8 @@ public class FragmentCompte extends Fragment
 
         //Action à poursuivre si tous les champs sont remplis
         if(validator.validate()){
-            dialog2 = new ACProgressPie.Builder(getContext())
-                    .ringColor(Color.WHITE)
-                    .pieColor(Color.WHITE)
-                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
-                    .build();
-            dialog2.show();
-            recharge_step1(temp_account, montant, telephone);
-        }*/
-
-        BottomSheetDialogRecharge();
+            BottomSheetDialogRecharge(telephone, montant);
+        }
     }
 
 
@@ -764,7 +772,7 @@ public class FragmentCompte extends Fragment
                     case SHOW_NFC_DATA: {
                         byte[] uid_data = (byte[]) msg.obj;
                         if (uid_data[0] == 0x42) {
-                            // TYPE B类（暂时只支持cpu卡）
+                            // TYPE B
                             byte[] atqb = new byte[uid_data[16]];
                             byte[] pupi = new byte[4];
                             String type = null;
@@ -1255,10 +1263,8 @@ public class FragmentCompte extends Fragment
 
     private boolean checkContactPermission(){
         //check if contact permission was granted or not
-        boolean result = ContextCompat.checkSelfPermission(
-                getActivity(),
-                Manifest.permission.READ_CONTACTS) == (PackageManager.PERMISSION_GRANTED);
-        return result; //true if permission granted, false if not
+        return ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS) == (PackageManager.PERMISSION_GRANTED);
+         //true if permission granted, false if not
     }
 
     private void requestContactPermission(){
@@ -1308,7 +1314,7 @@ public class FragmentCompte extends Fragment
                     //get contact details
                     String contactId = cursor1.getString(cursor1.getColumnIndex(ContactsContract.Contacts._ID));
                     String contactName = cursor1.getString(cursor1.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                    //String contactThumnail = cursor1.getString(cursor1.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI));
+                    String contactThumnail = cursor1.getString(cursor1.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI));
                     String idResults = cursor1.getString(cursor1.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
                     int idResultHold = Integer.parseInt(idResults);
 
@@ -1325,8 +1331,24 @@ public class FragmentCompte extends Fragment
                         while (cursor2.moveToNext()){
                             //get phone number
                             String contactNumber = cursor2.getString(cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)).trim();
+                            //before setting image, check if have or not
+                            if(contactThumnail != null){
+                                thumbnail_rep.setImageURI(Uri.parse(contactThumnail));
+                            } else{
+                                thumbnail_rep.setImageResource(R.drawable.ic_baseline_person_pin_24);
+                            }
                             //set details
-                            tie_numCartePropreCompte1.setText(contactNumber);
+                            rep_id.setText(contactId);
+                            rep_nom.setText(contactName);
+                            rep_numero.setText(contactNumber);
+
+                            String phone = contactNumber.replace("+237", "").trim();
+                            phone = phone.replace("237", "").trim();
+                            phone = phone.replace("00237", "").trim();
+                            phone = phone.replace("-", "").trim();
+
+                            tie_numCartePropreCompte1.setText(phone);
+                            user_info.setVisibility(View.VISIBLE);
                             Toast.makeText(getActivity(), contactName, Toast.LENGTH_LONG).show();
                         }
                         cursor2.close();
@@ -1339,10 +1361,8 @@ public class FragmentCompte extends Fragment
         }
     }
 
-
-
-
-    private void BottomSheetDialogRecharge() {
+    @SuppressLint("SetTextI18n")
+    private void BottomSheetDialogRecharge(String telephone, String montant) {
 
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.BottomSheetDialogTheme);
         View bottomSheetView = LayoutInflater.from(getContext())
@@ -1359,17 +1379,33 @@ public class FragmentCompte extends Fragment
         Button btnValidRecharge = bottomSheetView.findViewById(R.id.btnValidRecharge);
         TextView subAccount = bottomSheetView.findViewById(R.id.proprietaire);
 
+        //mobile monney
+        telephone_recharge.setText("Tel: " + telephone);
+        amount_recharge.setText(montant + " FCFA");
 
         //compte
-        account_number.setText("");
-        state_account.setText("");
-        subAccount.setText("");
+        account_number.setText(prf.getString("key_myPersonalAccountNumberUser"));
+        state_account.setText(prf.getString("key_myPersonalAccountStateUser"));
+        subAccount.setText(prf.getString("key_profil_completUser"));
+
+        accountEZPASS.setText("N° " + prf.getString("key_myPersonalAccountNumberUser"));
+        name_recharge.setText("Tel: " + prf.getString("key_myPhoneUser"));
 
         btnValidRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), getString(R.string.fermeture), Toast.LENGTH_SHORT).show();
                 bottomSheetDialog.dismiss();
+
+                dialog2 = new ACProgressPie.Builder(getContext())
+                            .ringColor(Color.WHITE)
+                            .pieColor(Color.WHITE)
+                            .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                            .build();
+                    dialog2.show();
+                    recharge_step1(temp_account, montant, telephone);
+
+
             }
         });
 
@@ -1383,6 +1419,11 @@ public class FragmentCompte extends Fragment
 
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
+    }
+
+    @OnClick(R.id.close_rep)
+    void close(){
+        user_info.setVisibility(View.GONE);
     }
 
 }

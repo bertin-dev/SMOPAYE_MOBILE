@@ -1,5 +1,12 @@
 package com.ezpass.smopaye_mobile.RemoteNotifications;
 
+
+/**
+ * Structure du model de la classe Data
+ *
+ * @see Data
+ */
+
 public class Data {
 
     private String user;

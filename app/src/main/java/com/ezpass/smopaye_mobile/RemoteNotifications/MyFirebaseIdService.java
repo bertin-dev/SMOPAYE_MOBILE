@@ -21,6 +21,12 @@ public class MyFirebaseIdService extends FirebaseInstanceIdService {
         }
     }
 
+    /**
+     * methode permettant de recupérer une instance de l'utilisateur connecté et met à jour le refresh token
+     * @param refreshToken
+     * @see updateToken
+     * @return cette fonction ne renvoi rien
+     */
     private void updateToken(String refreshToken) {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");

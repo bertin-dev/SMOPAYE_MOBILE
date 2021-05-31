@@ -1,5 +1,11 @@
 package com.ezpass.smopaye_mobile.NotifFragmentModel;
 
+/**
+ * Structure du model de la classe Item
+ *
+ * @see Item
+ */
+
 public class Item {
 
     private int thumbnail;

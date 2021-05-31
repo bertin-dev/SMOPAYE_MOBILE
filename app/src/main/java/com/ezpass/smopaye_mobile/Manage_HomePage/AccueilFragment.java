@@ -5,20 +5,23 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-
-import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
+import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -289,6 +292,9 @@ public class AccueilFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             changeColorWidget();
         }
+
+        //playTutorial(view);
+
         return view;
     }
 
@@ -333,6 +339,106 @@ public class AccueilFragment extends Fragment {
             getActivity().setTheme(appTheme);
         }
     }
+
+
+    /*private void playTutorial(View view) {
+        //Tutorial Animate
+        new MaterialTapTargetSequence()
+
+                .addPrompt(new MaterialTapTargetPrompt.Builder(getActivity())
+                        .setTarget(view.findViewById(R.id.times))
+                        .setIcon(R.drawable.ic_play)
+                        .setFocalPadding(R.dimen.dp40)
+                        .setBackgroundColour(getResources().getColor(R.color.red))
+                        .setFocalColour(getResources().getColor(R.color.white))
+                        .setPrimaryText(R.string.rechargeComptes)
+                        .setSecondaryText(R.string.MsgDescRecharge)
+                        .setSecondaryTextColour(getResources().getColor(R.color.white))
+                        .setBackButtonDismissEnabled(true)
+                        .setMaxTextWidth(R.dimen.tap_target_menu_max_width)
+                        .setAnimationInterpolator(new FastOutSlowInInterpolator())
+                        //.setPromptBackground(new RectanglePromptBackground())
+                        .setFocalRadius(R.dimen.dp60)
+                )
+
+                .addPrompt(new MaterialTapTargetPrompt.Builder(getActivity())
+                        .setTarget(view.findViewById(R.id.btnRechargeAvecCashChauffeur))
+                        .setIcon(R.drawable.ic_close_black_24dp)
+                        .setBackgroundColour(getResources().getColor(R.color.bgColorStandard))
+                        .setFocalColour(getResources().getColor(R.color.white))
+                        .setPrimaryText(R.string.rechargeComptes)
+                        .setSecondaryText(R.string.MsgDescRecharge)
+                        .setSecondaryTextColour(getResources().getColor(R.color.white)))
+
+//                .addPrompt(new MaterialTapTargetPrompt.Builder(getActivity())
+//                        .setTarget(view.findViewById(R.id.myRole))
+//                        .setPrimaryText(getString(R.string.etatStatut))
+//                        .setSecondaryText("Toutes entreprises ou personnes qui disposent de nos terminaux de paiements")
+//                        .setFocalPadding(R.dimen.dp40)
+//                        .create(), 4000)
+
+                .addPrompt(new MaterialTapTargetPrompt.Builder(getActivity())
+                        .setTarget(view.findViewById(R.id.consulterHistoriqueAccepteur))
+                        .setPrimaryText(getString(R.string.consulter))
+                        .setSecondaryText(getString(R.string.MsgConsulterHistorique))
+                        .setPromptBackground(new RectanglePromptBackground())
+                        .setPromptFocal(new RectanglePromptFocal()))
+
+
+
+                .addPrompt(new MaterialTapTargetPrompt.Builder(getActivity())
+                        .setTarget(view.findViewById(R.id.btnMenuRechargeTelecollecte))
+                        .setPrimaryText(getString(R.string.retrait))
+                        .setSecondaryText(getString(R.string.MsgDescRetraitChezSmopaye))
+                        .setAnimationInterpolator(new LinearOutSlowInInterpolator())
+                        .setFocalPadding(R.dimen.dp40)
+                        .setIcon(R.drawable.telecollecte_retrait_icon))
+
+
+
+                .addPrompt(new MaterialTapTargetPrompt.Builder(getActivity())
+                        .setTarget(view.findViewById(R.id.btnQrCode))
+                        .setPrimaryText(getString(R.string.qrcode))
+                        .setSecondaryText(getString(R.string.paiementQRCode))
+                        .setAnimationInterpolator(new LinearOutSlowInInterpolator())
+                        .setFocalPadding(R.dimen.dp40)
+                        .setIcon(R.drawable.qrcode_icon))
+
+                .addPrompt(new MaterialTapTargetPrompt.Builder(getActivity())
+                        .setTarget(view.findViewById(R.id.btnDebitCarteChauffeur))
+                        .setPrimaryText(getString(R.string.debitCarte))
+                        .setSecondaryText(getString(R.string.MsgDescDebitCarte))
+                        .setAnimationInterpolator(new LinearOutSlowInInterpolator())
+                        .setFocalPadding(R.dimen.dp40)
+                        .setIcon(R.drawable.debit_carte_icon))
+
+                .addPrompt(new MaterialTapTargetPrompt.Builder(getActivity())
+                        .setTarget(view.findViewById(R.id.btnPayerFacture))
+                        .setPrimaryText(getString(R.string.payerFacture))
+                        .setSecondaryText(getString(R.string.MsgDescPayerFacture))
+                        .setAnimationInterpolator(new LinearInterpolator())
+                        .setFocalPadding(R.dimen.dp60))
+
+
+                .addPrompt(new MaterialTapTargetPrompt.Builder(getActivity())
+                        .setTarget(view.findViewById(R.id.btnVerifierNumCarteChauffeur))
+                        .setPrimaryText(getString(R.string.verification))
+                        .setAnimationInterpolator(new LinearOutSlowInInterpolator())
+                        .setFocalPadding(R.dimen.dp40)
+                        .setIcon(R.drawable.debit_carte_icon))
+
+
+                .addPrompt(new MaterialTapTargetPrompt.Builder(getActivity())
+                        .setTarget(view.findViewById(R.id.reportDashboad))
+                        .setPrimaryText(getString(R.string.points))
+                        .setSecondaryText("Bonus sur les voyages après avoir cumulés les points")
+                        .setPromptBackground(new FullscreenPromptBackground())
+                        .setPromptFocal(new RectanglePromptFocal()))
+
+
+                .show();
+    }*/
+
 
 }
 

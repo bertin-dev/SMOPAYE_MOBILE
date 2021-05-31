@@ -24,13 +24,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
-import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
+import com.ezpass.smopaye_mobile.web_service.RetrofitBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -201,12 +202,12 @@ public class ListeAccepteurs extends AppCompatActivity {
                     builder.appendQueryParameter("auth","Users");
                     builder.appendQueryParameter("login", "listing");
                     builder.appendQueryParameter("uniquser", temp_number);
-                    builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
-                    builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
+                    builder.appendQueryParameter("fgfggergJHGS", Global.encrypted_password);
+                    builder.appendQueryParameter("uhtdgG18", Global.salt);
 
                     //Connexion au serveur
                     //URL url = new URL("http://192.168.20.11:1234/listing.php"+builder.build().toString());
-                    URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
+                    URL url = new URL(Global.URL_API + builder.build().toString());
                     HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                     httpURLConnection.setConnectTimeout(5000);
                     httpURLConnection.setRequestMethod("POST");

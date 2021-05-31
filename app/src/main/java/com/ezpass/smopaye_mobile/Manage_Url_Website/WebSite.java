@@ -21,14 +21,20 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
-import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.TranslateItem.LocaleHelper;
 import com.ezpass.smopaye_mobile.Manage_Tutoriel.TutorielUtilise;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
 
+/**
+ * Activity qui permet de charger tout le site web
+ *
+ * {@link http://smopaye.cm}
+ * @see WebSite
+ */
 public class WebSite extends AppCompatActivity {
 
     private WebView mywebView;
@@ -89,7 +95,7 @@ public class WebSite extends AppCompatActivity {
         });
         mywebView.getSettings().setJavaScriptEnabled(true);
         mywebView.setVerticalScrollBarEnabled(false);
-        mywebView.loadUrl(ChaineConnexion.getUrlSiteWeb());
+        mywebView.loadUrl(Global.urlSiteWeb);
         progressBarH.setProgress(0);
 
         /*mywebView.setWebViewClient(new WebViewClient(){

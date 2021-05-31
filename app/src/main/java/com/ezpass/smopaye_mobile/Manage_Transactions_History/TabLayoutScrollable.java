@@ -16,9 +16,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.ezpass.smopaye_mobile.ChaineConnexion;
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.ezpass.smopaye_mobile.Login;
 import com.ezpass.smopaye_mobile.R;
 import com.ezpass.smopaye_mobile.web_service.ApiService;
@@ -248,12 +247,12 @@ public class TabLayoutScrollable extends Fragment {
             builder.appendQueryParameter("dateDeal", fullDate);
             builder.appendQueryParameter("TelDeal", temp_number);
             builder.appendQueryParameter("TypeDeal", typHistTransaction);
-            builder.appendQueryParameter("fgfggergJHGS", ChaineConnexion.getEncrypted_password());
-            builder.appendQueryParameter("uhtdgG18",ChaineConnexion.getSalt());
+            builder.appendQueryParameter("fgfggergJHGS", Global.encrypted_password);
+            builder.appendQueryParameter("uhtdgG18", Global.salt);
 
             //Connexion au serveur
             //URL url = new URL("http://192.168.20.11:1234/listing.php"+builder.build().toString());
-            URL url = new URL(ChaineConnexion.getAdresseURLsmopayeServer() + builder.build().toString());
+            URL url = new URL(Global.URL_API + builder.build().toString());
 
             // URL url = new URL(urlAddress+"?auth="+param1+"&login="+param2+"&dateDeal="+param3+"&TelDeal="+param4+"&TypeDeal="+param5+"&fgfggergJHGS="+param6+"&uhtdgG18="+param7);
             HttpURLConnection con = (HttpURLConnection)url.openConnection();

@@ -1,7 +1,10 @@
 package com.ezpass.smopaye_mobile;
 
+
 /**
- * Created by delaroy on 3/21/17.
+ * @see Methods
+ *
+ * class permettant de définir la couleur du thème
  */
 public class Methods {
 

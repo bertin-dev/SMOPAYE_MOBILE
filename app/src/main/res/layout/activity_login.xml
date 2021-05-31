@@ -106,6 +106,7 @@
                     app:errorEnabled="true"
                     app:counterEnabled="true"
                     app:counterMaxLength="5"
+                    app:passwordToggleTint="@color/bgColorStandard"
                     app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -119,10 +120,7 @@
                         android:background="@drawable/edittextborder"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:maxLength="5"
-                        app:drawable_hide="@drawable/ic_visibility_off_black_24dp"
-                        app:drawable_show="@drawable/ic_visibility_black_24dp"
-                        app:tint_color="@color/colorPrimary"/>
+                        android:maxLength="5"/>
 
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -196,13 +194,13 @@
 
                             <TextView
                                 android:id="@+id/txt_passwordForgot"
-                                android:text="@string/forgotPassword"
-                                android:textStyle="bold|italic"
-                                android:textSize="15sp"
-                                android:textColorHint="@color/bgColorStandard"
-                                android:textColor="@color/bgColorStandard"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="match_parent"
+                                android:text="@string/forgotPassword"
+                                android:textColor="@color/bgColorStandard"
+                                android:textColorHint="@color/bgColorStandard"
+                                android:textSize="15sp"
+                                android:textStyle="bold|italic" />
                         </LinearLayout>
 
 

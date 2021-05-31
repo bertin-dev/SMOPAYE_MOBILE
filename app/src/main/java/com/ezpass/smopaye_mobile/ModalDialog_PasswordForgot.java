@@ -25,8 +25,17 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
+/**
+ * @see ModalDialog_PasswordForgot
+ * @see AppCompatDialogFragment
+ *
+ * Boîte de dialogue modal permettant à l'utilisateur de remplir les champs de saisis pour reinitialiser son mot de passe
+ */
 public class ModalDialog_PasswordForgot extends AppCompatDialogFragment {
 
+    /**
+     * initialisation des variables et objets
+     */
     private ModalDialog_PasswordForgot.ExampleDialogListener listener;
     private TextInputLayout telRetrieve, cniRetrieve;
     private TextInputEditText telNumber, cniNumber;
@@ -209,7 +218,13 @@ public class ModalDialog_PasswordForgot extends AppCompatDialogFragment {
         return builder.create();
     }
 
-
+    /**
+     * vérifie si le numéro de téléphone existe ou encore s'il est conforme
+     *
+     * @see validateTelephone
+     *
+     * @return un boolean
+     */
     private Boolean validateTelephone(){
         String numero = telRetrieve.getEditText().getText().toString().trim();
         if(numero.isEmpty()){
@@ -225,6 +240,13 @@ public class ModalDialog_PasswordForgot extends AppCompatDialogFragment {
     }
 
 
+    /**
+     * vérifie si la pièce jointe existe ou encore si elle est conforme
+     *
+     * @see validatePJ
+     *
+     * @return un boolean
+     */
     private Boolean validatePJ(){
         String numero = cniRetrieve.getEditText().getText().toString().trim();
         if(numero.isEmpty()){
@@ -239,6 +261,12 @@ public class ModalDialog_PasswordForgot extends AppCompatDialogFragment {
         }
     }
 
+    /**
+     * Methode callback permettant d'assigner une instance de context caster en modal dialog
+     * @param context
+     * @exception e
+     * @return ne retourne rien
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

@@ -192,7 +192,7 @@
                 android:imeOptions="actionNext"
                 android:padding="10dp"
                 android:inputType="text"
-                android:enabled="false"
+                android:enabled="true"
                 android:textStyle="bold|italic"
                 android:background="@drawable/edittextborder"
                 android:layout_width="match_parent"

@@ -14,7 +14,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.ezpass.smopaye_mobile.web_service_access.ApiErrorRegister;
 import com.ezpass.smopaye_mobile.web_service_access.Utils_manageErrorRegister;
 import com.google.android.material.snackbar.Snackbar;
@@ -57,7 +57,6 @@ import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
-import com.ezpass.smopaye_mobile.ChaineConnexion;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbHandler;
 import com.ezpass.smopaye_mobile.DBLocale_Notifications.DbUser;
 import com.ezpass.smopaye_mobile.Login;
@@ -119,7 +118,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.ezpass.smopaye_mobile.ChaineConnexion.getsecurity_keys;
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
 public class Souscription extends AppCompatActivity
@@ -645,7 +643,7 @@ public class Souscription extends AppCompatActivity
                     case SHOW_NFC_DATA: {
                         byte[] uid_data = (byte[]) msg.obj;
                         if (uid_data[0] == 0x42) {
-                            // TYPE B类（暂时只支持cpu卡）
+                            // TYPE B
                             byte[] atqb = new byte[uid_data[16]];
                             byte[] pupi = new byte[4];
                             String type = null;
@@ -1453,7 +1451,7 @@ public class Souscription extends AppCompatActivity
         });
 
         auth = FirebaseAuth.getInstance();
-        apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
+        apiService = Client.getClient(Global.adresseURLGoogleAPI).create(APIService.class);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
         auth.createUserWithEmailAndPassword(email1, tel1)
@@ -1557,7 +1555,7 @@ public class Souscription extends AppCompatActivity
                                         public void onClick(DialogInterface dialog, int which) {
                                             progressDialogGoogle.dismiss();
                                             Intent intent = new Intent(Souscription.this, QRCodeShow.class);
-                                            intent.putExtra("id_carte", "E-ZPASS" +num_carte + getsecurity_keys());
+                                            intent.putExtra("id_carte", "E-ZPASS" +num_carte + Global.security_keys);
                                             intent.putExtra("nom_prenom", nom1 + " " + prenom1);
                                             startActivity(intent);
                                             Animatoo.animateDiagonal(Souscription.this);

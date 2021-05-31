@@ -12,6 +12,10 @@ import android.os.Build;
 
 import com.ezpass.smopaye_mobile.BuildConfig;
 
+
+/**
+ * classe qui permet de gérer les notifications et compatible à partir de la version Android 8
+ */
 public class OreoNotification extends ContextWrapper {
 
     private static final String CHANNEL_ID = BuildConfig.APPLICATION_ID; //"com.ezpass.smopaye_mobile"

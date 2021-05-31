@@ -18,7 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.ezpass.smopaye_mobile.ChaineConnexion;
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -56,10 +56,10 @@ public class HomeGoogleMap extends AppCompatActivity
 
     //markers all define place
     ArrayList<LatLng> arrayList = new ArrayList<>();
-    private LatLng camair = new LatLng(ChaineConnexion.getLatitude_camair(), ChaineConnexion.getLongitude_camair());
-    private LatLng omnisport = new LatLng(ChaineConnexion.getLatitude_omnisport(), ChaineConnexion.getLongitude_omnisport());
-    private LatLng soa_campus = new LatLng(ChaineConnexion.getLatitude_soa_campus(), ChaineConnexion.getLongitude_soa_campus());
-    private LatLng soa_marche = new LatLng(ChaineConnexion.getLatitude_marche_soa(), ChaineConnexion.getLongitude_marche_soa());
+    private LatLng camair = new LatLng(Global.Latitude_camair, Global.Longitude_camair);
+    private LatLng omnisport = new LatLng(Global.Latitude_omnisport, Global.Longitude_omnisport);
+    private LatLng soa_campus = new LatLng(Global.Latitude_soa_campus, Global.Longitude_soa_campus);
+    private LatLng soa_marche = new LatLng(Global.Latitude_marche_soa, Global.Longitude_marche_soa);
     private Double distance = 0.0;
 
     //changement de couleur du theme

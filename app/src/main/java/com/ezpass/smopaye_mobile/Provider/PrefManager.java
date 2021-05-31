@@ -3,7 +3,13 @@ package com.ezpass.smopaye_mobile.Provider;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.ezpass.smopaye_mobile.RemoteFragments.APIService;
 
+/**
+ * permet de définir la structure des sharedpreferences qui seront utilisés dans toute l'application
+ *
+ * @see PrefManager
+ */
 public class PrefManager {
 
     SharedPreferences pref;

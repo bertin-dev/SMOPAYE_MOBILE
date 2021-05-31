@@ -2,6 +2,11 @@ package com.ezpass.smopaye_mobile.web_service_access;
 
 import android.content.SharedPreferences;
 
+/**
+ * Class qui me permet de sauvegarder, supprimer ou récuperer l'access token et le refresh token de l'utilisateur
+ *
+ * @see TokenManager
+ */
 public class TokenManager {
 
     private SharedPreferences prefs;
@@ -14,6 +19,11 @@ public class TokenManager {
         this.editor = prefs.edit();
     }
 
+    /**
+     * permet d'eviter qu'il soit partagé entre plusieurs threads
+     * @param prefs
+     * @return nous retourne un TokenManager
+     */
     public static synchronized TokenManager getInstance(SharedPreferences prefs){
         if(INSTANCE == null){
             INSTANCE = new TokenManager(prefs);

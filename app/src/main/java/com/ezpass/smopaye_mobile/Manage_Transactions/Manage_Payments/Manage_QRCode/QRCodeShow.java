@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
@@ -49,7 +50,6 @@ import java.util.Hashtable;
 
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
-import static com.ezpass.smopaye_mobile.ChaineConnexion.getsecurity_keys;
 
 public class QRCodeShow extends AppCompatActivity {
 
@@ -97,7 +97,7 @@ public class QRCodeShow extends AppCompatActivity {
         nom_prenom = intent.getStringExtra("nom_prenom");
 
 
-        String carteCrypte = "E-ZPASS" + carte.toLowerCase() + getsecurity_keys();
+        String carteCrypte = "E-ZPASS" + carte.toLowerCase() + Global.security_keys;
 
         if(!carteCrypte.isEmpty()){
             try {

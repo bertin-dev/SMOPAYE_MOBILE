@@ -689,4 +689,296 @@
     <string name="authorizationFailed">You do not have the required authorization</string>
     <string name="id">ID</string>
     <string name="rechargeEZPASS">E-ZPASS Recharge</string>
+
+    <string name="html">
+        <![CDATA[
+
+        <h2><strong><u>Glide</u></strong></h2>
+        <p>Copyright &#169; bumptech. All rights reserved.</p>
+        <h6>Compatibility</h6>
+        <p>
+        <ul>
+        <li>-Minimum Android SDK: Glide v4 requires a minimum API level of 14.</li>
+        <li>-Compile Android SDK: Glide v4 requires you to compile against API 26 or later.</li>
+        </ul> <br/>
+        <a href="https://github.com/bumptech/glide">https://github.com/bumptech/glide</a>
+         </p>
+        <br/>
+
+
+        <h2><strong><u>Glide-transformations</u></strong></h2>
+        <p>Copyright &#169;  wasabeef. All rights reserved.</p>
+        <p>
+        <a href="https://github.com/wasabeef/glide-transformations">https://github.com/wasabeef/glide-transformations</a>
+         </p>
+        <br/>
+
+        <h2><strong><u>CircleImageView</u></strong></h2>
+        <p>Copyright &#169; hdodenhof. All rights reserved.</p>
+        <h6>Gradle</h6>
+        <p>
+        dependencies {
+        implementation "de.hdodenhof:circleimageview:3.1.0" } <br/>
+        <a href="https://github.com/hdodenhof/CircleImageView">https://github.com/hdodenhof/CircleImageView</a>
+        </p>
+
+
+        <h2><strong><u>BottomBar</u></strong></h2>
+        <p>Copyright &#169;  roughike. All rights reserved.</p>
+        <h6>BottomBar (Deprecated)</h6>
+        <p>
+        I don t have time to maintain this anymore. I basically wrote the whole library in a rush, without tests, while being a serious expert beginner at the time. As a result, there s a lot of unpredictable moving parts and the tests probably aren t that great either. Don t really know, since I haven t touched this in ages.
+        I d recommend you to use the official BottomNavigationView from Google and urge them to implement the features you need. Or use another 3rd party library.
+        <br/>
+        <h6>Badges</h6>
+        You can easily add badges for showing an unread message count or new items / whatever you like.
+           BottomBarTab nearby = bottomBar.getTabWithId(R.id.tab_nearby);
+           nearby.setBadgeCount(5);
+         nearby.removeBadge();
+         <br/>
+        <a href="https://github.com/roughike/BottomBar">https://github.com/roughike/BottomBar</a>
+         </p>
+        <br/>
+
+        <h2><strong><u>Services Google</u></strong></h2>
+        <p>Copyright &#169;  Google Firebase. All rights reserved.</p>
+        <ol>
+        <li>firebase-auth</li> <br/>
+        <li>firebase-database</li><br/>
+        <li>firebase-storage</li><br/>
+        <li>firebase-core</li><br/>
+        <li>firebase-messaging</li><br/>
+        <li> <a href="https://firebase.google.com/docs/auth/android/start">https://firebase.google.com/docs/auth/android/start</a></li>
+        </ol>
+        <p>Copyright &#169;  Google Play service. All rights reserved.</p>
+        <ol>
+        <li>play-services-maps</li> <br/>
+        <li>play-services-location</li> <br/>
+        <li>android-maps-utils</li> <br/>
+        <li> <a href="https://firebase.google.com/docs/android/android-play-services">https://firebase.google.com/docs/android/android-play-services</a></li>
+        </ol>
+
+        <h2><strong><u>Retrofit</u></strong></h2>
+        <p>Copyright &#169; square. All rights reserved.</p>
+        <p>
+        <h6>Download</h6>
+        Download the latest JAR or grab from Maven central at the coordinates com.squareup.retrofit2:retrofit:2.9.0.
+        Snapshots of the development version are available in Sonatype\'s snapshots repository.
+        Retrofit requires at minimum Java 8+ or Android API 21+.
+
+        <h6>R8 / ProGuard</h6>
+         If you are using R8 the shrinking and obfuscation rules are included automatically.
+         ProGuard users must manually add the options from retrofit2.pro. You might also need rules for OkHttp and Okio which are dependencies of this library.
+         <br/>
+         <a href="https://github.com/square/retrofit">https://github.com/square/retrofit</a>
+        </p>
+
+        <h2><strong><u>Okhttp 3</u></strong></h2>
+        <p>Copyright &#169; square. All rights reserved.</p>
+        <p>
+        <h6>Requirements</h6>
+        OkHttp works on Android 5.0+ (API level 21+) and Java 8+.
+        OkHttp depends on Okio for high-performance I/O and the Kotlin standard library. Both are small libraries with strong backward-compatibility.
+        We highly recommend you keep OkHttp up-to-date. As with auto-updating web browsers, staying current with HTTPS clients is an important defense against potential security problems. We track the dynamic TLS ecosystem and adjust OkHttp to improve connectivity and security.
+        OkHttp uses your platform\'s built-in TLS implementation. On Java platforms OkHttp also supports Conscrypt, which integrates BoringSSL with Java. OkHttp will use Conscrypt if it is the first security provider:
+        Security.insertProviderAt(Conscrypt.newProvider(), 1);
+         <br/>
+         The OkHttp 3.12.x branch supports Android 2.3+ (API level 9+) and Java 7+. These platforms lack support for TLS 1.2 and should not be used. But because upgrading is difficult, we will backport critical fixes to the 3.12.x branch through December 31, 2021.
+         <br/>
+         <a href="https://github.com/square/okhttp">https://github.com/square/okhttp</a>
+        </p>
+
+        <h2><strong><u>Moshi</u></strong></h2>
+        <p>Copyright &#169; square. All rights reserved.</p>
+        <p>
+        <h6>R8 / ProGuard</h6>
+        Moshi contains minimally required rules for its own internals to work without need for consumers to embed their own.
+        However if you are using reflective serialization and R8 or ProGuard, you must add keep rules in your proguard configuration file for your reflectively serialized classes.
+         <br/>
+         <a href="https://github.com/square/moshi">https://github.com/square/moshi</a>
+        </p>
+
+        <h2><strong><u>Gson</u></strong></h2>
+        <p>Copyright &#169; square. All rights reserved.</p>
+        <p>
+        <h6>Gson Converter</h6>
+         A Converter which uses Gson for serialization to and from JSON.
+         A default Gson instance will be created or one can be configured and passed to the GsonConverterFactory to further control the serialization.
+         <br/>
+          <a href="https://github.com/square/retrofit/tree/master/retrofit-converters/gson">https://github.com/square/retrofit/tree/master/retrofit-converters/gson</a>
+        </p>
+
+         <h2><strong><u>Badges</u></strong></h2>
+        <p>Copyright &#169;  arturogutierrez. All rights reserved.</p>
+        <p>
+        <h6>Badges</h6>
+         Small library to show badges in app icons for unread messages on most common manufacturers: LG, Sony, Samsung and HTC.
+         <br/>
+         <a href="https://github.com/square/retrofit/tree/master/retrofit-converters/gson">https://github.com/square/retrofit/tree/master/retrofit-converters/gson</a>
+        </p>
+
+        <h2><strong><u>Zxing-android-embedded</u></strong></h2>
+        <p>Copyright &#169;  journeyapps. All rights reserved.</p>
+        <p>
+        <h6>ZXing Android Embedded</h6>
+         Barcode scanning library for Android, using ZXing for decoding.
+         The project is loosely based on the ZXing Android Barcode Scanner application, but is not affiliated with the official ZXing project.
+         Features: <br/>
+         Can be used via Intents (little code required).<br/>
+         Can be embedded in an Activity, for advanced customization of UI and logic.<br/>
+         Scanning can be performed in landscape or portrait mode.<br/>
+         Camera is managed in a background thread, for fast startup time.<br/>
+         A sample application is available in Releases.By default, Android SDK 24+ is required because of zxing:core 3.4.0. To support SDK 14+, see Older SDK versions.
+         <br/>
+         <a href="https://github.com/square/retrofit/tree/master/retrofit-converters/gson">https://github.com/square/retrofit/tree/master/retrofit-converters/gson</a>
+        </p>
+
+
+        <h2><strong><u>AwesomeValidation</u></strong></h2>
+        <p>Copyright &#169; Thyrlian . All rights reserved.</p>
+        <p>
+        <h6>AwesomeValidation</h6>
+        Implement validation for Android within only 3 steps. Developers should focus on their awesome code, and let the library do the boilerplate. And what\'s more, this could help keep your layout file clean.
+         <strong>Steps</strong> <br/>
+         Declare validation style;<br/>
+         <br/>
+         <a href="https://github.com/thyrlian/AwesomeValidation">https://github.com/thyrlian/AwesomeValidation</a>
+        </p>
+
+
+        <h2><strong><u>Stetho</u></strong></h2>
+        <p>Copyright &#169; Facebook. All rights reserved.</p>
+        <p>
+        <h6>Stetho</h6>
+        Stetho is a sophisticated debug bridge for Android applications. When enabled, developers have access to the Chrome Developer Tools feature natively part of the Chrome desktop browser.
+         Developers can also choose to enable the optional dumpapp tool which offers a powerful command-line interface to application internals.
+         Once you complete the set-up instructions below, just start your app and point your laptop browser to chrome://inspect. Click the "Inspect" button to begin.
+         <br/>
+         <a href="https://github.com/facebook/stetho">https://github.com/facebook/stetho</a>
+        </p>
+
+        <h2><strong><u>Leakcanary</u></strong></h2>
+        <p>Copyright &#169; square. All rights reserved.</p>
+        <p>
+        <h6>LeakCanary</h6>
+         A memory leak detection library for Android. square.github.io/leakcanary 🙏 If you like LeakCanary you can show support by starring ⭐ this repository.
+         <br/>
+         <a href="https://github.com/square/leakcanary">https://github.com/square/leakcanary</a>
+         </p>
+
+
+         <h2><strong><u>Butterknife</u></strong></h2>
+        <p>Copyright &#169;  JakeWharton. All rights reserved.</p>
+        <p>
+        <h6>Butter Knife</h6>
+         Attention: This tool is now deprecated. Please switch to view binding. Existing versions will continue to work, obviously,
+          but only critical bug fixes for integration with AGP will be considered. Feature development and general bug fixes have stopped.
+         <br/>
+         <a href="https://github.com/JakeWharton/butterknife">https://github.com/JakeWharton/butterknife</a>
+         </p>
+
+
+           <h2><strong><u>ACProgressLite</u></strong></h2>
+        <p>Copyright &#169; cloudist. All rights reserved.</p>
+        <p>
+        <h6>ACProgressLite</h6>
+         English Version / 中文版本
+         An Android loading widget library. Lite and easy to use, strong customizability. Can be used to implement "iOS" like loading dialog efficiently.
+         Similar to iOS MBProgressHUD Keywords Progressbar, Progresswheel, HUD, Android, Loading
+         Minimum SDK Version: API 9 ( Android 2.3 )
+         <br/>
+         <a href="https://github.com/cloudist/ACProgressLite">https://github.com/cloudist/ACProgressLite</a>
+         </p>
+
+
+        <h2><strong><u>ImageSlideshow</u></strong></h2>
+        <p>Copyright &#169; denzcoskun. All rights reserved.</p>
+        <p>
+        <h6>Android Image Slide</h6>
+         This is an android image slider library. Just add the images you want to view. You can use automatic scrolling for the time you set. You can also add the title you want to the images.
+         You can set corner radius images. You can use with Java or Kotlin.
+         <br/>
+         <a href="https://github.com/denzcoskun/ImageSlideshow">https://github.com/denzcoskun/ImageSlideshow</a>
+         </p>
+
+        <h2><strong><u>Animatoo</u></strong></h2>
+        <p>Copyright &#169; AtifSayings. All rights reserved.</p>
+        <p>
+        <h6>Animatoo</h6>
+         Bored with same animation for activity transition? Animatoo is a lightweight and easy to use Android library that provides many activity transition animations
+         min SDK 16 (Android Jellybean 4.1)
+         written in Java
+         A lightweight, easy-to-use Android library that provides awesome activity transition animations
+         <br/>
+         <a href="https://github.com/AtifSayings/Animatoo">https://github.com/AtifSayings/Animatoo</a>
+         </p>
+
+
+        <h2><strong><u>Android-Rate</u></strong></h2>
+        <p>Copyright &#169; hotchemi. All rights reserved.</p>
+        <p>
+        <h6>Android-Rate</h6>
+       Android-Rate is a library to help you promote your android app by prompting users to rate the app after using it for a few days.
+         <br/>
+         <a href="https://github.com/hotchemi/Android-Rate">https://github.com/hotchemi/Android-Rate</a>
+         </p>
+
+
+           <h2><strong><u>Android-SpinKit</u></strong></h2>
+        <p>Copyright &#169; ybq. All rights reserved.</p>
+        <p>
+        <h6>Android-SpinKit</h6>
+       Android loading animations(I wrote a android edition according SpinKit)
+         <br/>
+         <li> <a href="https://github.com/ybq/Android-SpinKit">https://github.com/ybq/Android-SpinKit</a></li>
+         </p>
+
+
+        <h2><strong><u>MPAndroidChart</u></strong></h2>
+        <p>Copyright &#169;  PhilJay. All rights reserved.</p>
+        <p>
+        <h6>MPAndroidChart</h6>
+       ⚡ A powerful & easy to use chart library for Android ⚡
+         Charts is the iOS version of this library
+         <br/>
+         <a href="https://github.com/PhilJay/MPAndroidChart">https://github.com/PhilJay/MPAndroidChart</a>
+         </p>
+
+
+        <h2><strong><u>MaterialTapTargetPrompt</u></strong></h2>
+        <p>Copyright &#169;  sjwall. All rights reserved.</p>
+        <p>
+        <h6>Material Tap Target Prompt</h6>
+         A Tap Target implementation in Android based on Material Design Onboarding guidelines. For more information on tap targets check out the guidelines.
+         JavaDocs, examples and a sample app with examples implemented are available.
+         <br/>
+         <a href="https://github.com/sjwall/MaterialTapTargetPrompt">https://github.com/sjwall/MaterialTapTargetPrompt</a>
+         </p>
+
+        <h2><strong><u>Android Developer at SMOPAYE SARL</u></strong></h2>
+        <p>Copyright &#169;  Bertin-dev. All rights reserved.</p>
+        <p>
+        <h6>Android And Flutter Apps</h6>
+        <p>designer of the ezpass mobile electronic payment solution</p>
+        <a href="https://www.bertin-mounok.cm/">https://www.bertin-mounok.cm/</a> <br/>
+        <a href="https://github.com/bertin-dev">https://github.com/bertin-dev</a>
+         </p>
+        <br/>
+        <br/>
+        <br/>
+        ]]>
+    </string>
+    <string name="sloganEzpass">is the secure payment solution for all your transactions; Using your card or a QR code, collect your recipes more easily and simply</string>
+    <string name="welcome">WELCOME</string>
+    <string name="tpeMobile">TPE Mobile</string>
+    <string name="sloganEzpass2">The E-ZPASS by SMOPAYE solution integrates an electronic payment platform and acceptance and acquisition services.</string>
+    <string name="sloganEzpassTpe">With our TPE Mobile, you can receive payments anywhere, it\'s up to you.</string>
+    <string name="cardEzpass">EZPASS CARD</string>
+    <string name="sloganEzpassCard">With our EZPASS CARD you can make payments anywhere.</string>
+    <string name="homeDescription">Application home page</string>
+    <string name="maCarteDesc">You can view your account information or lock your card in the event of loss.</string>
+    <string name="pointSmopayeDes">You can view your account information or lock your card in the event of loss.</string>
+    <string name="notificationsBottom">List of all notifications on your transactions</string>
+    <string name="cliked">You clicked the outer circle!</string>
+    <string name="chez">TO</string>
 </resources>

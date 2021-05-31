@@ -25,7 +25,9 @@ import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.ezpass.smopaye_mobile.Manage_Register.SouscriptionUploadIMGidCard;
+import com.ezpass.smopaye_mobile.Provider.PrefManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -117,9 +119,36 @@ import retrofit2.Response;
 
 import static com.ezpass.smopaye_mobile.NotifApp.CHANNEL_ID;
 
+
+/**
+ *   <b>Login est la classe représentant l'activity d'authentification.</b>
+ *   <p>
+ *   cette page permet à l'utilisateur de faire 3 chose:
+ *   <ul>
+ *   <li>s'authentifier</li>
+ *   <li>s'auto-enregistrer</li>
+ *   <li>Reinitialiser le mot de passe</li>
+ *   </ul>
+ *   </p>
+ *
+ * Classe Login qui hérite AppCompatActivity et implemente ModalDialog_PasswordForgot.ExampleDialogListener, ConnectivityReceiver.ConnectivityReceiverListener
+ *
+ * @see Login
+ * @see AppCompatActivity
+ *
+ * @author Bertin-dev
+ * @powered by smopaye sarl
+ * @version 1.4.0
+ * @since 2019
+ * @Copyright 2019-2021
+ */
+
 public class Login extends AppCompatActivity
         implements ModalDialog_PasswordForgot.ExampleDialogListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
+    /**
+     * Initialisation des variables et des objets utilisé dans la page login
+     */
     private static final String TAG = "Login";
     String currentLanguage = (Locale.getDefault().getLanguage().contentEquals("fr")) ? "fr" : "en", currentLang;
     /*Récupération des id des widgets xml avec la library ButterKnife*/
@@ -179,7 +208,6 @@ public class Login extends AppCompatActivity
     private String temp_number = "";
     //changement de couleur du theme
     private Constant constant;
-    private SharedPreferences.Editor editor;
     private SharedPreferences app_preferences;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks
             mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -208,7 +236,17 @@ public class Login extends AppCompatActivity
 
     static final int PERMISSION_READ_STATE = 123;
     private String strPhoneType = "";
+    private PrefManager prf;
 
+    /**
+     *permet de rendre la toolbar isTranslucentNavigationBar
+     *
+     * @see isTranslucentNavigationBar
+     * @param activity
+     * @return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+     *                 && (flags & WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+     *                 == WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION
+     */
     public static boolean isTranslucentNavigationBar(Activity activity) {
         Window w = activity.getWindow();
         WindowManager.LayoutParams lp = w.getAttributes();
@@ -219,6 +257,13 @@ public class Login extends AppCompatActivity
 
     }
 
+    /**
+     * Methode callback qui permet de demander la permission à l'utilisateur de recuperer les informations de l'utilisateur
+     *
+     * @see onStart
+     *
+     * @return ne retourne rien
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -228,21 +273,15 @@ public class Login extends AppCompatActivity
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         //langue par défaut
         currentLanguage = getIntent().getStringExtra(currentLang);
+        prf = new PrefManager(getApplicationContext());
 
 
         //Permission pour avoir les infos sur le telehone de l'utilisateur
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
         if(permissionCheck == PackageManager.PERMISSION_GRANTED){
 
-            // Fetching the stored data
-            // from the SharedPreference
-            SharedPreferences sh = getSharedPreferences("MyPref", MODE_PRIVATE);
-
-            if(sh.getString("IMEINumber", null) == null || sh.getString("SIMSerialNumber", null) == null){
-                Toast.makeText(this, "0", Toast.LENGTH_SHORT).show();
+            if((prf.getString("key_IMEINumber")).equalsIgnoreCase("") || (prf.getString("key_SIMSerialNumber")).equalsIgnoreCase("")){
                 MyTelephoneManager();
-            }else {
-                Toast.makeText(this, "1", Toast.LENGTH_SHORT).show();
             }
         }else {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_PHONE_STATE}, PERMISSION_READ_STATE);
@@ -251,13 +290,7 @@ public class Login extends AppCompatActivity
 
     /**
      * @param savedInstanceState Callback method onCreate() she using for the started activity
-     * @author bertin mounok
-     * @powered by smopaye sarl
-     * @Copyright 2019-2020
-     * @version 1.2.7
-     * @since 2019
      */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -494,7 +527,8 @@ public class Login extends AppCompatActivity
      * resetPasswordOpenDialog() méthode permettant d'ouvrir une boite de dialogue afin que l'utilisateur insert les éléments clés de son identification afin
      * d'reinitialiser son mot de passe
      *
-     * @since 2020
+     * @see resetPasswordOpenDialog
+     * @since 2019
      */
     @OnClick(R.id.txt_passwordForgot)
     void resetPasswordOpenDialog() {
@@ -502,12 +536,27 @@ public class Login extends AppCompatActivity
         exampleDialog.show(getSupportFragmentManager(), "example dialog");
     }
 
+    /**
+     * autoRegister() méthode permettant d'ouvrir l'activity d'auto-enregistrement
+     *
+     * @see autoRegister
+     * @since 2019
+     */
     @OnClick(R.id.btnAutoRegister)
     void autoRegister() {
         Intent intent = new Intent(getApplicationContext(), Souscription_User_AutoEnreg.class);
         startActivity(intent);
     }
 
+    /**
+     * Récupération des données inseré par l'utilisateur dans la boite de dialogue
+     *
+     * @see applyTexts
+     * @param getTel
+     * @param getPJ
+     *
+     * @return ne retourne rien
+     */
     @Override
     public void applyTexts(String getTel, String getPJ) {
         //Toast.makeText(this, getTel + "---" + getPJ, Toast.LENGTH_SHORT).show();
@@ -515,6 +564,11 @@ public class Login extends AppCompatActivity
         sendRequestResetPassword(getTel, getPJ);
     }
 
+    /**
+     * Methode permettant d'envoyer les paramètres dans la webservice afin de reinitialiser le mot de passe de l'utilisateur
+     * @param tel
+     * @param pj
+     */
     private void sendRequestResetPassword(String tel, String pj) {
 
         //********************DEBUT***********
@@ -587,13 +641,14 @@ public class Login extends AppCompatActivity
     }
 
     /**
+     *
+     * @see submitDataInSmopayeServer
      * @param numero1 soumission du numéro de téléphone de l'utilisateur qui essaie de se connecter
      * @param psw1    soumission du mot de passe de l'utilisateur
-     * @throws t
-     * @since 2020
+     * @exception t
+     * @return ne retourne rien
      */
     private void submitDataInSmopayeServer(String numero1, String psw1) {
-
         call = service.login(numero1, psw1, "Cnqactz7vnCGKBB7E12yN+17a+2Q/+d7PTkv1jOgcus=");
         call.enqueue(new Callback<AccessToken>() {
             @Override
@@ -664,6 +719,13 @@ public class Login extends AppCompatActivity
         });
     }
 
+    /**
+     * permet d'afficher la boite de dialogue en cas d'erreur
+     *
+     * @see errorResponse
+     * @param message
+     * @return ne retourne rien
+     */
     private void errorResponse(String message) {
         View view = LayoutInflater.from(Login.this).inflate(R.layout.alert_dialog_success, null);
         TextView title = (TextView) view.findViewById(R.id.title);
@@ -678,6 +740,15 @@ public class Login extends AppCompatActivity
         build_error.show();
     }
 
+
+    /**
+     *
+     * permet de rechercher l'utilisateur courant et le notifier
+     * @see successResponse
+     * @param telephone
+     * @param response
+     * @return ne retourne rien
+     */
     private void successResponse(String telephone, String response) {
 
         /////////////////////SERVICE GOOGLE FIREBASE CLOUD MESSAGING///////////////////////////
@@ -744,6 +815,15 @@ public class Login extends AppCompatActivity
         build_error.show();
     }
 
+    /**
+     * methode qui permet de soumettre les données de l'utilisateur pour authentification à google firebase
+     * @see submitDataInGoogleFirebaseServer
+     *
+     * @param email1
+     * @param tel1
+     * @exception e
+     * @return ouvre le MainActivity en cas de succès de l'opération ou encore envoi un toast en cas d'erreur
+     */
     private void submitDataInGoogleFirebaseServer(String email1, String tel1) {
         auth.signInWithEmailAndPassword(email1, tel1)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -793,9 +873,9 @@ public class Login extends AppCompatActivity
     /**
      * validateTelephone() méthode permettant de verifier si le mot de passe inséré est valide
      *
+     * @see validatePassword
      * @param til_password1
      * @return Boolean
-     * @since 2019
      */
     private boolean validatePassword(TextInputLayout til_password1) {
         String psw = til_password1.getEditText().getText().toString().trim();
@@ -816,9 +896,9 @@ public class Login extends AppCompatActivity
     /**
      * validateTelephone() méthode permettant de verifier si le numéro de téléphone inséré est valide
      *
+     * @see validateTelephone
      * @param til_telephone1
      * @return Boolean
-     * @since 2019
      */
     private Boolean validateTelephone(TextInputLayout til_telephone1) {
         String myTel = til_telephone1.getEditText().getText().toString().trim();
@@ -838,8 +918,7 @@ public class Login extends AppCompatActivity
 
     /**
      * setupRulesValidatForm() méthode permettant de changer la couleur des champs de saisie en cas d'érreur et vérifi si les champs de saisie sont vides
-     *
-     * @since 2020
+     * @return change la couleur des champs de saisi selectionnés en cas d'erreur
      */
     private void setupRulesValidatForm() {
 
@@ -854,8 +933,9 @@ public class Login extends AppCompatActivity
     /**
      * handleErrors() méthode permettant de boucler sur toutes les erreurs trouvées dans les données retournées par l'API Rest
      *
+     * @see handleErrors
      * @param responseBody
-     * @since 2020
+     * @return affiche les messages d'erreurs dans til_telephone et til_password
      */
     private void handleErrors(ResponseBody responseBody) {
 
@@ -877,8 +957,8 @@ public class Login extends AppCompatActivity
      * readTempNumberInFile() methodes permettant la lecture du contenu du fichier tmp_number
      * et insertion de celui-ci dans le tie_telephone à travers un setText()
      *
-     * @throws e
-     * @since 2020
+     * @exception e
+     * @return ne retourne rien
      */
     private void readTempNumberInFile() {
         try {
@@ -899,8 +979,7 @@ public class Login extends AppCompatActivity
      * writeTempNumberInFile() methodes permettant l'écriture du numéro de téléphone dans le fichier tmp_number
      * et insertion de celui-ci dans le tie_telephone
      *
-     * @throws e
-     * @since 2020
+     * @exception e
      */
     private void writeTempNumberInFile() {
         fileContents = til_telephone.getEditText().getText().toString().trim();
@@ -918,8 +997,6 @@ public class Login extends AppCompatActivity
 
     /**
      * readNumberAfterUpdate() methode permettant de lire le nouveau numéro de téléphone provenant du module modification du compte
-     *
-     * @since 2019
      */
     private void readNumberAfterUpdate() {
         //numéro provenant de la modification du compte
@@ -948,10 +1025,25 @@ public class Login extends AppCompatActivity
         }
     }
 
+    /**
+     * fonction permettant de notifier les utilisateurs distants
+     *
+     * @see RemoteNotification
+     *
+     * @param receiver
+     * @param username
+     * @param title
+     * @param message
+     * @param statut_notif
+     *
+     * @exception t
+     *
+     * @return ne retourne rien
+     */
     private void RemoteNotification(final String receiver, final String username, final String title, final String message, final String statut_notif) {
 
         //service google firebase
-        apiService = Client.getClient(ChaineConnexion.getAdresseURLGoogleAPI()).create(APIService.class);
+        apiService = Client.getClient(Global.adresseURLGoogleAPI).create(APIService.class);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
@@ -990,6 +1082,12 @@ public class Login extends AppCompatActivity
         });
     }
 
+    /**
+     * permet de s'auto notifier après une opération éffectuée
+     * @param titles
+     * @param subtitles
+     * @return ne renvoi rien
+     */
     public void LocalNotification(String titles, String subtitles) {
 
         ///////////////DEBUT NOTIFICATIONS///////////////////////////////
@@ -1025,7 +1123,6 @@ public class Login extends AppCompatActivity
      * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
      *
      * @param newBase
-     * @since 2020
      */
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -1060,6 +1157,10 @@ public class Login extends AppCompatActivity
         alertDialog.show();
     }
 
+
+    /**
+     * permet d'initialiser la rotation de la boite de dialogue pendant 2 seconde ensuite la ferme et ferme l'application
+     */
     private void Exit() {
         ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.deconnexion), getString(R.string.encours), true);
         dialog.show();
@@ -1075,6 +1176,7 @@ public class Login extends AppCompatActivity
     /**
      * verifyCode(String code) permet de verifier le code entrer par l'utilisateur avec google firebase. Mais je ne l'utilise pas
      *
+     * @see verifyCode
      * @param code
      * @since 2019
      */
@@ -1087,6 +1189,7 @@ public class Login extends AppCompatActivity
     /**
      * signInWithCredential(String code) d'enregistrer un numéro de téléphone au service google firebase. Mais je ne l'utilise pas
      *
+     * @see signInWithCredential
      * @param credential
      * @since 2019
      */
@@ -1168,10 +1271,13 @@ public class Login extends AppCompatActivity
 
 
     /*-------------------------------------------------------------------------------DETAILS PHONE USER----------------------------------------------------------------*/
-    private void MyTelephoneManager() {
 
-        SharedPreferences pref = getSharedPreferences("MyPref", MODE_PRIVATE); // 0 - for private mode
-        SharedPreferences.Editor editor = pref.edit();
+    /**
+     * recupère les informations du téléphone de l'utilisateur
+     *
+     * @see MyTelephoneManager
+     */
+    private void MyTelephoneManager() {
 
             TelephonyManager manager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
             int phoneType = manager.getPhoneType();
@@ -1198,20 +1304,28 @@ public class Login extends AppCompatActivity
             String softwareVersion = manager.getDeviceSoftwareVersion();
             String voiceMailNumber = manager.getVoiceMailNumber();
 
-
             // Storing data
-            editor.putString("key_PhoneType", PhoneType);
-            editor.putString("key_IMEINumber", IMEINumber);
-            editor.putString("key_subscriberID", subscriberID);
-            editor.putString("key_SIMSerialNumber", SIMSerialNumber);
-            editor.putString("key_networkCountryISO", networkCountryISO);
-            editor.putString("key_SIMCountryISO", SIMCountryISO);
-            editor.putString("key_softwareVersion", softwareVersion);
-            editor.putString("key_voiceMailNumber", voiceMailNumber);
-            editor.putBoolean("key_isRoaming", isRoaming);
-            editor.apply();
+        prf.setString("key_PhoneType", PhoneType);
+        prf.setString("key_IMEINumber", IMEINumber);
+        prf.setString("key_subscriberID", subscriberID);
+        prf.setString("key_SIMSerialNumber", SIMSerialNumber);
+        prf.setString("key_networkCountryISO", networkCountryISO);
+        prf.setString("key_SIMCountryISO", SIMCountryISO);
+        prf.setString("key_softwareVersion", softwareVersion);
+        prf.setString("key_voiceMailNumber", voiceMailNumber);
+        prf.setBoolean("key_isRoaming", isRoaming);
     }
 
+    /**
+     * demande la permission à l'utilisateur de recupérer ses informations de téléphone
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     *
+     * @see onRequestPermissionsResult
+     *
+     * @return en cas de succès alors la fonction MyTelephoneManager() est appelé. en cas d'échec alors un toast est affiché à l'utilisateur
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.ezpass.smopaye_mobile.Constant;
 import com.ezpass.smopaye_mobile.Manage_Apropos.Apropos;
 import com.ezpass.smopaye_mobile.Manage_Update_ProfilUser.UpdatePassword;
@@ -44,7 +45,6 @@ import java.io.IOException;
 
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
-import static com.ezpass.smopaye_mobile.ChaineConnexion.getsecurity_keys;
 
 public class AffichageQRCode extends AppCompatActivity {
 
@@ -91,7 +91,7 @@ public class AffichageQRCode extends AppCompatActivity {
         String cardNumber = temp_card; // 12345678
 
 
-        String carteCrypte = "E-ZPASS" + cardNumber.toLowerCase() + getsecurity_keys();
+        String carteCrypte = "E-ZPASS" + cardNumber.toLowerCase() + Global.security_keys;
 
         if(!carteCrypte.isEmpty()){
             try {

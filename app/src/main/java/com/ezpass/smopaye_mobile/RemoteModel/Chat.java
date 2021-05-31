@@ -1,5 +1,11 @@
 package com.ezpass.smopaye_mobile.RemoteModel;
 
+/**
+ * Structure du model de la classe Chat
+ *
+ * @see Chat
+ */
+
 public class Chat {
 
     private String sender;

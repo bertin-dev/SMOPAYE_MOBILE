@@ -11,7 +11,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -23,8 +26,12 @@ import android.preference.PreferenceManager;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.ezpass.smopaye_mobile.Config.Global;
 import com.ezpass.smopaye_mobile.Profil_user.Entreprise;
 import com.ezpass.smopaye_mobile.Provider.PrefManager;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -37,7 +44,11 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -105,10 +116,43 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
+/**
+ *   <b>MainActivity est la classe représentant l'activity d'accueil.</b>
+ *   <p>
+ *   Un utilisateur y accède après s'être authentifié. cette activity contient plusieurs fragments parmi lesquels nous avons:
+ *   <ul>
+ *   <li>AccueilFragmentAdmin pour le role administrateur</li>
+ *   <li>AccueilFragment pour le role accepteur</li>
+ *   <li>AccueilFragmentAgent pour le role Agent</li>
+ *   <li>AccueilFragmentUser pour le role utilisateur</li>
+ *   </ul>
+ *   </p>
+ *   <p>
+ *   Tous ces rôles sont générés par la web service et donc en fonction du role, je fais appel au fragment correspondant
+ *   </p>
+ *
+ *
+ * Classe MainActivity qui hérite AppCompatActivity et implemente NavigationView.OnNavigationItemSelectedListener, ConnectivityReceiver.ConnectivityReceiverListener
+ *
+ * @see MainActivity
+ * @see AppCompatActivity
+ *
+ * @author Bertin-dev
+ * @since 2019
+ * @version 1.4.0
+ * @powered by smopaye sarl
+ * {@link https://smopaye.cm/}
+ * {@link https://play.google.com/store/apps/details?id=com.ezpass.smopaye_mobile&showAllReviews=true}
+ * @Copyright 2019-2021
+ */
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
 
+    /**
+     * Déclaration de toutes les variables et objects utilisés pour la mise en place de la page d'accueil
+     */
     private static final String TAG = "MainActivity";
     @BindView(R.id.authWindows)
     LinearLayout authWindows;
@@ -168,7 +212,12 @@ public class MainActivity extends AppCompatActivity
     private int bonus;
     private int points;
     private PrefManager prf;
+    private Toolbar toolbar;
 
+    /**
+     * Méthode callback de java android (onPostCreate) qui permet d'éxécuter une fonction ACProgressFlower qui est chargé de faire appel à un loading DIRECT_CLOCKWISE
+     * @param savedInstanceState
+     */
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -199,17 +248,28 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Methode onCreate appelé en premier lors du chargement de l'activity
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         changeTheme();
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        /**
+         * toolbar permet d'insérer la toolbar sur la page d'accueil
+         */
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         toolbar.setBackgroundColor(Constant.color);
         prf = new PrefManager(getApplicationContext());
+        /**
+         * FloatingActionButton Méthode inutilisé pour cette activity
+         */
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,22 +297,35 @@ public class MainActivity extends AppCompatActivity
             header.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
 
 
-        //Instanciation de la base de données locale
+        /**
+         *  Instanciation de la base de données locale
+         */
         db = new DbHandler(getApplicationContext());
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
 
-        //Initialisation de la Bottom bar et les icons de notifications
+        /**
+         * Initialisation de la Bottom bar et les icons de notifications
+         */
         nearby = bottomBar.getTabWithId(R.id.nav_notifications);
         nearby.setBadgeCount(Integer.parseInt(db.GetNumNotifications()));
 
         progressDialog = new ProgressDialog(this);
 
 
+        /**
+         * vérifie si l'activity précédente possède un numéro de téléphone si oui alors le recupère et le stock dans la variable telephone1
+         *
+         * @see Intent
+         */
         Intent intent = getIntent();
         telephone1 = intent.getStringExtra("telephone");
 
 
-        //Integration de la rest API
+        /**
+         * Integration de la rest API
+         * initialisation des service retrofit 2 et des ressources avec le Binding du code java et xml via la methode ButterKnife
+         * vérification et recupération de l'access token dans les sharedpreferences si cela existe si non alors redirection dans la page login de l'utilisateur
+         */
         ButterKnife.bind(this);
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         //verification si on a pas le token dans les sharepreferences alors on retourne vers le login activity
@@ -265,6 +338,7 @@ public class MainActivity extends AppCompatActivity
         //google firebase
         fuser = FirebaseAuth.getInstance().getCurrentUser();
         //reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+
 
         //web service
         call = service.profil(telephone1);
@@ -353,7 +427,7 @@ public class MainActivity extends AppCompatActivity
 
                     //store data
                     if((prf.getString("key_myPhoneUser")).equalsIgnoreCase("")){
-                        Toast.makeText(MainActivity.this, "saved", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, "saved", Toast.LENGTH_SHORT).show();
                         prf.setString("key_idUser", idUser);
                         prf.setString("key_etatUser", etat);
                         prf.setString("key_myPhoneUser", myPhone);
@@ -371,13 +445,7 @@ public class MainActivity extends AppCompatActivity
                         prf.setString("key_myAbonUser", myAbon);
                         prf.setInt("key_points", points);
                         prf.setInt("key_bonus", bonus);
-                    }else {
-                        Toast.makeText(MainActivity.this, "not saved", Toast.LENGTH_SHORT).show();
                     }
-
-
-
-
 
 
                     /************************************************DEBUT**************/
@@ -656,8 +724,22 @@ public class MainActivity extends AppCompatActivity
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             changeColorWidget();
         }
+
+        if (prf.getBoolean("tutorial")) {
+            prf.setBoolean("tutorial",false);
+            tutorial();
+        }
     }
 
+    /**
+     * Méthode privé changeColorWidget qui permet de changer la couleur des widget que nous avons défini
+     *
+     * elle ne prend aucun paramètre. elle est accessible à partir de la version LOLLIPOP d'Android
+     *
+     * @see changeColorWidget
+     *
+     * @return ne rerourne rien du tout
+     */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void changeColorWidget() {
         if (Constant.color == getResources().getColor(R.color.colorPrimaryRed)) {
@@ -676,6 +758,15 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Méthode privé changeTheme qui permet de changer la couleur des widget que nous avons défini
+     *
+     * elle ne prend aucun paramètre.
+     *
+     * @see changeTheme()
+     *
+     * @return null
+     */
     private void changeTheme() {
         app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
         appColor = app_preferences.getInt("color", 0);
@@ -693,6 +784,15 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Methode callback onPostResume() il permet d'afficher le nombre de notification contenu dans la base de données locale de l'utilisateur
+     *
+     * elle ne prend aucun paramètre
+     *
+     * @see onPostResume
+     *
+     * @exception e
+     */
     @Override
     protected void onPostResume() {
         nearby.setBadgeCount(Integer.parseInt(db.GetNumNotifications()));
@@ -706,6 +806,13 @@ public class MainActivity extends AppCompatActivity
         super.onPostResume();
     }
 
+    /**
+     * Methode callback onBackPressed() permet d'ouvrir ou fermé le DrawerLayout et deconnecter l'utilisateur au cas ou
+     *
+     * elle ne prend aucun paramètre
+     *
+     * @see onBackPressed
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -718,6 +825,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Affiche List des éléments contenu dans le menu
+     * @see onCreateOptionsMenu
+     * @param menu
+     * @return true
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -725,6 +838,13 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
+    /**
+     * permet d'ouvrir une activity en fonction des éléments cliqué dans le menu
+     * @see onOptionsItemSelected
+     * @param item
+     * @return super.onOptionsItemSelected(item)
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -742,6 +862,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (id == R.id.tuto) {
+            prf.setBoolean("tutorial",true);
             Intent intent = new Intent(getApplicationContext(), TutorielUtilise.class);
             intent.putExtra("role", session);
             intent.putExtra("telephone", myPhone);
@@ -760,6 +881,12 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * permet de lister et ouvrir chaque élément contenu dans le DrawerLayout de gauche
+     * @see onNavigationItemSelected
+     * @param item
+     * @return true
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -791,7 +918,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_clients) {
 
-            Uri uri = Uri.parse(ChaineConnexion.getEspace_clients());
+            Uri uri = Uri.parse(Global.espace_clients);
             Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
             // To count with Play market backstack, After pressing back button,
             // to taken back to our application, we need to add following flags to intent.
@@ -802,7 +929,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(goToMarket);
             } catch (ActivityNotFoundException e) {
                 startActivity(new Intent(Intent.ACTION_VIEW,
-                        Uri.parse(ChaineConnexion.getEspace_clients())));
+                        Uri.parse(Global.espace_clients)));
             }
 
             /*Intent intent = new Intent(getApplicationContext(), EspaceClients.class);
@@ -926,6 +1053,14 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
+    /**
+     * fonction permettant d'ouvrir une boite de dialogue et demande à l'utilisateur s'il souhaite sortir de l'application.
+     * si oui alors il est deconnecté de tous les services ensuite l'application se ferme
+     * @see Deconnexion
+     *
+     * @param exitGoogleFirebase
+     */
     private void Deconnexion(boolean exitGoogleFirebase) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(getString(R.string.confirmExit));
@@ -939,6 +1074,8 @@ public class MainActivity extends AppCompatActivity
                 if (exitGoogleFirebase) {
                     dialog.dismiss();
                     FirebaseAuth.getInstance().signOut();
+                    finish();
+                    finishAffinity();
                 }
             }
         });
@@ -983,6 +1120,12 @@ public class MainActivity extends AppCompatActivity
     }*/
 
 
+    /**
+     * methode permettant de recupérer une instance de l'utilisateur connecté et met à jour la base de données realtime database de firebase
+     * @param token
+     * @see updateToken
+     * @return cette fonction ne renvoi rien
+     */
     private void updateToken(String token) {
         DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Tokens");
         Token token1 = new Token(token);
@@ -990,7 +1133,9 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    //Intégration de l'API REST
+    /**
+     * methode callback qui permet à la base de detruire une activity et vide egalement la variable call
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -1008,7 +1153,7 @@ public class MainActivity extends AppCompatActivity
      *
      * @param fileContents
      * @throws e
-     * @since 2020
+     * @since 2019
      */
     private void writeTempCardNumberInFile(String fileContents) {
         try {
@@ -1029,7 +1174,7 @@ public class MainActivity extends AppCompatActivity
      *
      * @param fileContents
      * @throws e
-     * @since 2020
+     * @since 2019
      */
     private void writeTempCardIDInFile(String fileContents) {
         try {
@@ -1044,6 +1189,14 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * writeTempAccountInFile() methodes permettant l'écriture du numéro de compte dans le fichier tmp_account
+     *
+     * @see writeTempAccountInFile
+     * @param fileContents
+     * @throws e
+     * @since 2019
+     */
     private void writeTempAccountInFile(String fileContents) {
         try {
             //ecrire de l'ID CARD
@@ -1061,6 +1214,8 @@ public class MainActivity extends AppCompatActivity
     /**
      * checkNetworkConnectionStatus() méthode permettant de verifier si la connexion existe ou si le serveur est accessible
      *
+     * @see checkNetworkConnectionStatus
+     * @return ne retourne rien
      * @since 2019
      */
     @OnClick(R.id.btnReessayer)
@@ -1072,6 +1227,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+    /**
+     * permet de recreer une activity  lorque la connexion etait inaccessible la premiere fois
+     * @return ne retourne rien du tout
+     */
     private void changeActivity() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
@@ -1095,6 +1255,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    /**
+     * permet d'afficher un snackbar avec un message en fonction de l'etat de la connexion internet
+     * @see showSnackBar
+     * @param isConnected
+     * @return ne retourne rien du tout
+     */
     private void showSnackBar(boolean isConnected) {
         String message;
         int color = Color.WHITE;
@@ -1129,6 +1295,10 @@ public class MainActivity extends AppCompatActivity
         snackbar.show();
     }
 
+    /**
+     * verifi l'etat de la connexion en temps réel
+     * @param isConnected
+     */
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         /*if(!isConnected){
@@ -1137,6 +1307,9 @@ public class MainActivity extends AppCompatActivity
         showSnackBar(isConnected);
     }
 
+    /**
+     * Methode appelé apres que l'activity a été affiché de manière complète
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -1152,10 +1325,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page login
+     * attachBaseContext(Context newBase) methode callback permet de verifier la langue au demarrage de la page MainActivity
      *
+     * @see attachBaseContext
      * @param newBase
-     * @since 2020
+     * @since 2019
      */
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -1163,4 +1337,121 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    /**
+     * permet d'afficher un tutoriel descriptif des fonctionnalités disponible avec animation
+     */
+    private void tutorial() {
+        toolbar.inflateMenu(R.menu.main);
+        //toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.ic_arrow_back_white_24dp));
+        // We load a drawable and create a location to show a tap target here
+        // We need the display to get the width and height at this point in time
+        final Display display = getWindowManager().getDefaultDisplay();
+        // Load our little droid guy
+        final Drawable droid = ContextCompat.getDrawable(this, R.drawable.ezpass);
+        final Drawable droid2 = ContextCompat.getDrawable(this, R.drawable.tpe11);
+        final Drawable droid3 = ContextCompat.getDrawable(this, R.drawable.ic_baseline_credit_card_48);
+        // Tell our droid buddy where we want him to appear
+        // final Rect droidTarget = new Rect(0, 0, droid.getIntrinsicWidth() * 2, droid.getIntrinsicHeight() * 2);
+        final Rect droidTarget = new Rect(0, 0, droid.getIntrinsicWidth(), droid.getIntrinsicHeight());
+        final Rect droidTarget2 = new Rect(0, 0, 0, droid2.getIntrinsicHeight());
+        final Rect droidTarget3 = new Rect(0, 0, 0, droid2.getIntrinsicHeight());
+        // Using deprecated methods makes you look way cool
+        droidTarget.offset(display.getWidth() / 2, display.getHeight() / 2);
+        droidTarget2.offset(display.getWidth() / 2, display.getHeight() / 2);
+        droidTarget3.offset(display.getWidth() / 2, display.getHeight() / 2);
+
+        final TapTargetSequence seq = new TapTargetSequence(this)
+                .targets(
+
+                        TapTarget.forBounds(droidTarget, getString(R.string.ezpassBySmopaye), getString(R.string.sloganEzpass))
+                                .cancelable(false)
+                                .icon(droid)
+                                .tintTarget(false)
+                                .id(1),
+
+                        TapTarget.forBounds(droidTarget2, getString(R.string.tpeMobile), getString(R.string.sloganEzpassTpe))
+                                .cancelable(false)
+                                .icon(droid2)
+                                .tintTarget(false)
+                                .id(2),
+
+                        TapTarget.forBounds(droidTarget3, getString(R.string.cardEzpass), getString(R.string.sloganEzpassCard))
+                                .cancelable(false)
+                                .icon(droid3)
+                                .tintTarget(false)
+                                .id(3),
+
+
+
+                        /*TapTarget.forToolbarNavigationIcon(toolbar, "This is the back button", sassyDesc).id(2),
+                        TapTarget.forToolbarOverflow(toolbar, "This will show more options", "But they're not useful :(").id(3),
+                        TapTarget.forToolbarMenuItem(toolbar, R.id.search, "This is a search icon", "As you can see, it has gotten pretty dark around here...")
+                                .dimColor(android.R.color.black)
+                                .outerCircleColor(R.color.secondary_color)
+                                .targetCircleColor(android.R.color.black)
+                                .transparentTarget(true)
+                                .textColor(android.R.color.black)
+                                .id(4),*/
+                        TapTarget.forView(findViewById(R.id.nav_Accueil), getString(R.string.accueil), getString(R.string.homeDescription))
+                                .dimColor(android.R.color.darker_gray)
+                                .outerCircleColor(R.color.bgColorStandard)
+                                .targetCircleColor(R.color.white)
+                                .cancelable(false)
+                                .drawShadow(true)
+                                .titleTextDimen(R.dimen.title_text_size)
+                                .textColor(android.R.color.white)
+                                .id(4),
+                        TapTarget.forView(findViewById(R.id.nav_maCarte), getString(R.string.maCarteBottomNav), getString(R.string.maCarteDesc)).id(6),
+                        TapTarget.forView(findViewById(R.id.nav_pointSmopaye), getString(R.string.pointSmopayeBottomNav), getString(R.string.pointSmopayeDes)).id(7),
+                        TapTarget.forView(findViewById(R.id.nav_notifications), getString(R.string.notificationBottomNav), getString(R.string.notificationsBottom)).id(5)
+                )
+                .listener(new TapTargetSequence.Listener() {
+                    @Override
+                    public void onSequenceFinish() {
+
+                    }
+
+                    @Override
+                    public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+
+                    }
+
+                    @Override
+                    public void onSequenceCanceled(TapTarget lastTarget) {
+
+                    }
+                });
+
+
+
+
+
+        // You don't always need a sequence, and for that there's a single time tap target
+        final SpannableString spannedDesc = new SpannableString(getString(R.string.chez) + " " + getString(R.string.ezpassBySmopaye));
+        spannedDesc.setSpan(new UnderlineSpan(), spannedDesc.length() - getString(R.string.ezpassBySmopaye).length(), spannedDesc.length(), 0);
+        TapTargetView.showFor(this, TapTarget.forView(findViewById(R.id.fab), getString(R.string.welcome), spannedDesc)
+                .cancelable(false)
+                .drawShadow(true)
+                .titleTextDimen(R.dimen.title_text_size)
+                .tintTarget(false), new TapTargetView.Listener() {
+            @Override
+            public void onTargetClick(TapTargetView view) {
+                super.onTargetClick(view);
+                // .. which evidently starts the sequence we defined earlier
+                seq.start();
+            }
+
+            @Override
+            public void onOuterCircleClick(TapTargetView view) {
+                super.onOuterCircleClick(view);
+                Toast.makeText(view.getContext(), getString(R.string.cliked), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
+                Log.d("TapTargetViewSample", "You dismissed me :(");
+            }
+        });
+
+    }
 }
