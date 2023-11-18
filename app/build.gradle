@@ -9,8 +9,8 @@ android {
         applicationId "com.ezpass.smopaye_mobile"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 67
-        versionName "1.4.0"
+        versionCode 71
+        versionName "1.4.1"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         multiDexEnabled true  //ADD THIS LINE
     }
@@ -111,9 +111,9 @@ dependencies {
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
 
     //service permettant de gerer les fuites de mémoire en mode debuggage
-    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
+    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
 
 
     //service permettant de gerer le binding entre xml et java (utilise minimum api 24 (la gestion des vues))

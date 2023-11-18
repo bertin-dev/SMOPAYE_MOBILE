@@ -9,6 +9,7 @@ import com.ezpass.smopaye_mobile.checkInternetDynamically.ConnectivityReceiver;
 import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
 
+
 /**
  * class NotifApp qui hérite de la classe Application me permet d'initialiser stetho pour intercepter mes requetes ou encore createNotificationChannel
  * @see NotifApp
@@ -47,11 +48,9 @@ public class NotifApp extends Application {
     }
 
     /**
-     * permet d'intercepter les fuites de mémoires dans l'application
-     *
-     * @see initInterceptor
+     * permet de controler les fuites de mémoire
      */
-    private void initInterceptor(){
+    private void  initInterceptor(){
         //initialisation de stetho pour l'interption des requêtes HTTP
         Stetho.initializeWithDefaults(this);
 
@@ -64,6 +63,7 @@ public class NotifApp extends Application {
         LeakCanary.install(this);
         // Normal app init code...
     }
+
 
     /**
      *

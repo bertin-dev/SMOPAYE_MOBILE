@@ -20,9 +20,9 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
  */
 public class RetrofitBuilder {
     //New Domaine
-    private static final String BASE_URL = "http://wbser.cm.21052112.smopaye.cm/public/";
+    private static final String BASE_URL = "https://wbser.cm.21052112.smopaye.cm/public/";
 
-    //Old Domaine de production
+    //Old Domaine
     //private static final String BASE_URL = "https://webservice.domaineteste.space.smopaye.fr/public/";
 
     private final static OkHttpClient client = buildClient();
@@ -49,14 +49,11 @@ public class RetrofitBuilder {
 
                     }
                 });
-
         //cette condition permet de verifier si l'on est en mode debug. si oui alors builder.addNetworkInterceptor(new StethoInterceptor());
         if (BuildConfig.DEBUG) {
             builder.addNetworkInterceptor(new StethoInterceptor());
         }
-
         return builder.build();
-
     }
 
 
