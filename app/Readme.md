@@ -16,4 +16,4 @@ Elle permet :
 
 ## License
 
-This web App is open-sourced software (http://bertin-mounok.com).
+This Android App is open-sourced software (http://bertin-mounok.com).
